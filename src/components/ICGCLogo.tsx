@@ -69,12 +69,12 @@ export const ICGCLogo: React.FC<ICGCLogoProps> = ({
   const emblem = (
     <div 
       className={`relative flex items-center justify-center shrink-0 select-none ${dims.wrapper}`}
-      title="International Central Gospel Church - Wisdom Temple"
+      title="Wisdom Temple"
     >
       {!imageError ? (
         <img
           src={logoSrc}
-          alt="ICGC Wisdom Temple Emblem"
+          alt="Wisdom Temple Emblem"
           width={524}
           height={448}
           className={`${dims.img} aspect-[131/112] object-contain drop-shadow-sm transition-transform duration-200 group-hover:scale-105`}
@@ -134,16 +134,11 @@ export const ICGCLogo: React.FC<ICGCLogoProps> = ({
     <div className={`flex items-center space-x-3 select-none ${className}`}>
       {emblem}
       <div className="flex flex-col justify-center">
-        <div className="flex items-center space-x-1.5">
-          <span className={`text-[11px] font-extrabold tracking-widest uppercase ${isLight ? 'text-[#063c24]' : 'text-white'}`}>
-            ICGC
-          </span>
-          <span className={`${dims.title} tracking-tight font-serif-title ${isLight ? 'text-[#063c24]' : 'text-white'}`}>
-            WISDOM TEMPLE
-          </span>
-        </div>
+        <span className={`${dims.title} tracking-tight font-serif-title ${isLight ? 'text-[#063c24]' : 'text-white'}`}>
+          WISDOM TEMPLE
+        </span>
         <span className={`${dims.tagline} tracking-wider uppercase font-semibold ${isLight ? 'text-[#0a5c37]' : 'text-white'}`}>
-          International Central Gospel Church • Ghana
+          Raising Leaders • Shaping Visions
         </span>
       </div>
     </div>

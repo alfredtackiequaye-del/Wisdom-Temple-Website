@@ -109,7 +109,7 @@ export default function App() {
       adultsCount: 2,
       childrenCount: 2,
       needAssistance: false,
-      specialNeeds: 'First time visiting ICGC, eager to check children into Kingdom Kids.',
+      specialNeeds: 'First time visiting, eager to check children into Kingdom Kids.',
       dateSubmitted: 'Sep 19, 2026',
       status: 'planned',
     }
@@ -343,7 +343,7 @@ export default function App() {
         <VideoModal
           sermon={activeVideoSermon}
           onClose={() => setActiveVideoSermon(null)}
-          onShare={() => handleOpenShare(activeVideoSermon.title, `Watch this message from ICGC Wisdom Temple: ${activeVideoSermon.scripture}`)}
+          onShare={() => handleOpenShare(activeVideoSermon.title, `Watch this message from Wisdom Temple: ${activeVideoSermon.scripture}`)}
         />
       )}
 

@@ -58,7 +58,7 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
       <section className="bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
           <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
-            BODY OF CHRIST • ICGC WISDOM TEMPLE
+            BODY OF CHRIST • WISDOM TEMPLE
           </span>
           <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
             MINISTRIES DIRECTORY

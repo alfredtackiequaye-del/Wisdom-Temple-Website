@@ -338,8 +338,13 @@ export const AdminView: React.FC<AdminViewProps> = ({
                 <tbody className="divide-y divide-slate-100 font-mono text-slate-800">
                   <tr>
                     <td className="p-3.5 font-bold">Pastoral Oversight</td>
-                    <td className="p-3.5 text-[#07472c] font-bold">[PASTOR NAME]</td>
-                    <td className="p-3.5"><span className="text-[#07472c] bg-[#eef6f1] px-2 py-0.5 rounded border border-[#c2decc]">Active Token</span></td>
+                    <td className="p-3.5 text-[#07472c] font-bold">Rev. Gabriel Dela & Lady Dr. Helena Dela</td>
+                    <td className="p-3.5"><span className="text-[#07472c] bg-[#eef6f1] px-2 py-0.5 rounded border border-[#c2decc] font-semibold">Configured</span></td>
+                  </tr>
+                  <tr>
+                    <td className="p-3.5 font-bold">Pastoral Portrait</td>
+                    <td className="p-3.5 text-[#07472c] font-bold">Official Portrait Configured (1706x2560 HQ)</td>
+                    <td className="p-3.5"><span className="text-[#07472c] bg-[#eef6f1] px-2 py-0.5 rounded border border-[#c2decc] font-semibold">Active</span></td>
                   </tr>
                   <tr>
                     <td className="p-3.5 font-bold">Church Location</td>

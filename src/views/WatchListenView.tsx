@@ -149,7 +149,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
                   <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
                   <span>LATEST MESSAGE</span>
                 </span>
-                <span className="text-xs text-[#f5cf72] font-mono font-semibold">ICGC Wisdom Temple YouTube Broadcast</span>
+                <span className="text-xs text-[#f5cf72] font-mono font-semibold">Wisdom Temple YouTube Broadcast</span>
               </div>
 
               {sermons[0].youtubeUrl && (
@@ -172,7 +172,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
                 {sermons[0].videoEmbedUrl ? (
                   <iframe
                     src={`${sermons[0].videoEmbedUrl}?rel=0`}
-                    title={`${sermons[0].title} - ICGC Wisdom Temple`}
+                    title={`${sermons[0].title} - Wisdom Temple`}
                     className="w-full h-full border-0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
@@ -222,7 +222,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
                   </button>
 
                   <button
-                    onClick={() => onShare(sermons[0].title, `Watch '${sermons[0].title}' from ICGC Wisdom Temple: https://www.youtube.com/watch?v=cnVwK9eU7EI`)}
+                    onClick={() => onShare(sermons[0].title, `Watch '${sermons[0].title}' from Wisdom Temple: https://www.youtube.com/watch?v=cnVwK9eU7EI`)}
                     className="px-4 py-2.5 bg-[#042819] hover:bg-[#063821] text-emerald-200 font-bold text-xs rounded-xl border border-[#084c2e] transition-all flex items-center space-x-1.5 cursor-pointer"
                   >
                     <Share2 className="w-3.5 h-3.5 text-[#c99726]" />
@@ -339,7 +339,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
                     </button>
 
                     <button
-                      onClick={() => onShare(sermon.title, `Listen to this message from ICGC Wisdom Temple: ${sermon.scripture}`)}
+                      onClick={() => onShare(sermon.title, `Listen to this message from Wisdom Temple: ${sermon.scripture}`)}
                       className="p-2 text-slate-400 hover:text-slate-800 rounded-lg hover:bg-stone-100 transition-colors cursor-pointer"
                       title="Share Sermon"
                     >

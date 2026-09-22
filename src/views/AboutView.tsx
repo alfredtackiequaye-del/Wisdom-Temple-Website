@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PageId } from '../types';
 import { CHURCH_INFO, BELIEFS } from '../data/churchData';
+import { PASTORAL_COUPLE_IMAGE } from '../assets/pastoralImage';
 import { 
   Target, 
   Compass, 
@@ -31,10 +32,10 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
       <section className="bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e] relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
           <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
-            INTERNATIONAL CENTRAL GOSPEL CHURCH • GHANA
+            STAR JUNCTION, TABORA • ACCRA, GHANA
           </span>
           <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            ABOUT ICGC WISDOM TEMPLE
+            ABOUT WISDOM TEMPLE
           </h1>
           <p className="text-base sm:text-lg text-emerald-200/80 max-w-2xl mx-auto leading-relaxed">
             {CHURCH_INFO.description}
@@ -87,7 +88,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                 A Christ-Centered Assembly in Ghana
               </h2>
               <p className="text-base text-slate-700 leading-relaxed">
-                ICGC Wisdom Temple is a Bible-believing, charismatic church committed to raising leaders, shaping visions, and influencing society through Jesus Christ. We belong to the global family of the International Central Gospel Church (ICGC), an evangelical charismatic movement headquartered in Accra, Ghana.
+                Wisdom Temple is a Bible-believing, charismatic church committed to raising leaders, shaping visions, and influencing society through Jesus Christ, located in Star Junction, Tabora - Accra, Ghana.
               </p>
               <p className="text-base text-slate-700 leading-relaxed">
                 At Wisdom Temple, we believe every human being possesses God-given potential waiting to be activated through the Word of God, charismatic prayer, and practical discipleship. Whether you are a student, an artisan, a corporate executive, or a parent, you will find a home where your faith is grounded, your gifts are sharpened, and your purpose is unleased.
@@ -141,6 +142,49 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                   <p className="text-lg font-bold text-white mt-1">Every Wednesday at 7:00 PM</p>
                   <p className="text-xs text-emerald-300/70 mt-1">Midweek Prayer, Worship and Encounter</p>
                 </div>
+              </div>
+            </div>
+
+            {/* Pastoral Leadership Feature on Who We Are */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#d6e5dc] shadow-sm flex flex-col md:flex-row gap-6 items-center">
+              <div 
+                onClick={() => setActiveTab('leadership')}
+                className="w-full md:w-56 shrink-0 aspect-[3/4] rounded-2xl overflow-hidden bg-[#032014] border-2 border-[#c99726]/40 shadow-md relative group cursor-pointer"
+              >
+                <img
+                  src={PASTORAL_COUPLE_IMAGE}
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/rev_gabriel_and_helena_dela.jpg'; }}
+                  alt="Rev. Gabriel Dela and Lady Dr. Helena Dela - Shepherd and First Lady of Wisdom Temple"
+                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#02180e]/90 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute bottom-2.5 left-2.5 right-2.5 text-white">
+                  <span className="text-[9px] font-mono text-[#f5cf72] font-bold uppercase tracking-wider block">
+                    PASTORAL LEADERSHIP
+                  </span>
+                  <p className="text-xs font-bold font-serif-title leading-tight text-white mt-0.5">
+                    Rev. Gabriel Dela & Lady Dr. Helena Dela
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3 flex-1 text-center md:text-left">
+                <span className="text-xs font-mono text-[#07472c] font-bold uppercase tracking-widest bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc] inline-block">
+                  SHEPHERD OF WISDOM TEMPLE
+                </span>
+                <h3 className="text-xl sm:text-2xl font-extrabold text-[#032014] font-serif-title">
+                  Rev. Gabriel Dela & Lady Dr. Helena Dela
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  Serving as the Shepherd and Senior Minister of ICGC Wisdom Temple alongside his wife, Lady Dr. Helena Dela, shepherding the family with passionate biblical exposition, pastoral compassion, and prophetic intercession.
+                </p>
+                <button
+                  onClick={() => setActiveTab('leadership')}
+                  className="inline-flex items-center space-x-2 text-xs font-bold text-[#07472c] hover:text-[#c99726] transition-colors uppercase font-mono tracking-wider cursor-pointer pt-1"
+                >
+                  <span>Read Full Leadership Profile & Vision</span>
+                  <span>→</span>
+                </button>
               </div>
             </div>
           </div>
@@ -256,40 +300,87 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                 Our Pastoral Leadership
               </h2>
               <p className="text-sm text-slate-600">
-                Dedicated servant-leaders guiding ICGC Wisdom Temple with pastoral care, biblical counsel, and vision.
+                Dedicated servant-leaders guiding Wisdom Temple with pastoral care, biblical counsel, and vision.
               </p>
             </div>
 
-            {/* Senior Minister Profile Card (Placeholder strictly preserved) */}
-            <div className="bg-white rounded-3xl p-8 border border-[#d6e5dc] shadow-sm grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-              <div className="md:col-span-4 aspect-[3/4] rounded-2xl bg-[#032014] overflow-hidden relative flex items-center justify-center text-slate-400">
+            {/* Senior Minister & Shepherd Profile Card */}
+            <div className="bg-white rounded-3xl p-6 sm:p-10 border border-[#d6e5dc] shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <div className="lg:col-span-5 rounded-2xl bg-[#032014] overflow-hidden relative border-2 border-[#c99726]/40 shadow-xl group aspect-[3/4] flex items-center justify-center">
                 <img
-                  src="https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=800&q=80"
-                  alt="Pastor of ICGC Wisdom Temple"
-                  className="w-full h-full object-cover opacity-80"
+                  src={PASTORAL_COUPLE_IMAGE}
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/rev_gabriel_and_helena_dela.jpg'; }}
+                  alt="Rev. Gabriel Dela and Lady Dr. Helena Dela - Shepherd and First Lady of Wisdom Temple"
+                  className="w-full h-full object-cover object-top group-hover:scale-102 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#02180e] via-transparent to-transparent" />
-                <span className="absolute bottom-4 left-4 font-mono text-xs text-[#f5cf72] font-bold">
-                  [PASTOR NAME]
-                </span>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#02180e]/90 via-[#02180e]/20 to-transparent pointer-events-none" />
+                <div className="absolute bottom-4 left-4 right-4">
+                  <span className="text-[10px] font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#02180e]/90 px-2.5 py-1 rounded-md border border-[#c99726]/40 inline-block mb-1">
+                    PASTORAL COUPLE
+                  </span>
+                  <p className="font-serif-title font-bold text-base sm:text-lg text-white leading-tight">
+                    Rev. Gabriel Dela & Lady Dr. Helena Dela
+                  </p>
+                  <p className="text-[11px] text-emerald-200/80 font-mono">
+                    Shepherd & First Lady • ICGC Wisdom Temple
+                  </p>
+                </div>
               </div>
 
-              <div className="md:col-span-8 space-y-4">
+              <div className="lg:col-span-7 space-y-5">
                 <div>
-                  <span className="text-xs font-mono text-[#07472c] font-bold uppercase tracking-widest">
-                    SENIOR MINISTER
+                  <span className="text-xs font-mono text-[#07472c] font-bold uppercase tracking-widest bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc] inline-block mb-2">
+                    SHEPHERD OF WISDOM TEMPLE
                   </span>
-                  <h3 className="text-2xl font-bold text-[#032014] font-serif-title">[PASTOR NAME]</h3>
-                  <p className="text-xs text-slate-500 font-mono mt-0.5">Senior Pastor, ICGC Wisdom Temple</p>
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-[#032014] font-serif-title">
+                    Rev. Gabriel Dela
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-2 mt-1">
+                    <span className="text-xs text-[#c99726] font-bold font-mono">Shepherd & Senior Minister</span>
+                    <span className="text-slate-300">•</span>
+                    <span className="text-xs text-slate-600 font-medium">With <strong className="text-[#032014]">Lady Dr. Helena Dela</strong></span>
+                  </div>
                 </div>
 
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Serving with deep commitment to the ICGC vision of raising leaders and shaping visions. Through systematic teaching of the Scriptures, charismatic prayer, and a heart for family life, [PASTOR NAME] leads the assembly to experience spiritual wisdom and societal influence.
-                </p>
+                <div className="space-y-3 text-sm text-slate-600 leading-relaxed">
+                  <p>
+                    <strong className="text-[#032014]">Rev. Gabriel Dela</strong> is the Shepherd and Senior Minister of ICGC Wisdom Temple. Called with an apostolic heart and an unquenchable passion for the Kingdom of God, Rev. Gabriel leads the Wisdom Temple congregation with doctrinal clarity, prophetic insight, and a shepherd's compassionate care.
+                  </p>
+                  <p>
+                    Ministering side-by-side with him is his beloved wife, <strong className="text-[#032014]">Lady Dr. Helena Dela</strong>, who serves graciously as the First Lady of Wisdom Temple. Lady Dr. Helena Dela is a pillar of wisdom, prayer, and encouragement, actively nurturing the women's fellowship, family life ministries, and raising believers who embody godly dignity and professional excellence.
+                  </p>
+                  <p>
+                    Together, Rev. Gabriel Dela and Lady Dr. Helena Dela are committed to fulfilling the God-given mandate of Wisdom Temple: <em>"Raising Leaders, Shaping Visions, and Influencing Society Through Christ."</em> Under their pastoral oversight, Wisdom Temple has flourished as a vibrant house of prayer, leadership excellence, and transformative ministry in Tabora, Accra, and across Ghana.
+                  </p>
+                </div>
 
-                <div className="p-4 bg-[#f4f7f4] rounded-xl border border-[#d6e5dc] text-xs text-slate-600 space-y-1">
-                  <p className="font-semibold text-[#032014]">Pastoral Consultation Hours:</p>
-                  <p>Tuesdays & Thursdays by appointment via the Church Office: <span className="font-mono text-[#07472c] font-bold">{CHURCH_INFO.phone}</span></p>
+                {/* Key Ministry Pillars under their Pastoral Care */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                  <div className="p-3 bg-[#f4f7f4] rounded-xl border border-[#d6e5dc]">
+                    <span className="text-[10px] font-mono text-[#07472c] font-bold uppercase block">Core Emphasis</span>
+                    <p className="text-xs font-bold text-[#032014] mt-0.5">Biblical Exposition</p>
+                    <span className="text-[10px] text-slate-500 block mt-0.5">Practical life application</span>
+                  </div>
+                  <div className="p-3 bg-[#f4f7f4] rounded-xl border border-[#d6e5dc]">
+                    <span className="text-[10px] font-mono text-[#07472c] font-bold uppercase block">Prayer Altar</span>
+                    <p className="text-xs font-bold text-[#032014] mt-0.5">The Secret Place</p>
+                    <span className="text-[10px] text-slate-500 block mt-0.5">Midweek prayer & power</span>
+                  </div>
+                  <div className="p-3 bg-[#f4f7f4] rounded-xl border border-[#d6e5dc]">
+                    <span className="text-[10px] font-mono text-[#07472c] font-bold uppercase block">Leadership</span>
+                    <p className="text-xs font-bold text-[#032014] mt-0.5">Wisdom Summit</p>
+                    <span className="text-[10px] text-slate-500 block mt-0.5">Annual leadership conference</span>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-[#eef6f1] rounded-xl border border-[#c2decc] text-xs text-slate-700 space-y-1">
+                  <p className="font-bold text-[#032014] flex items-center space-x-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#07472c]"></span>
+                    <span>Pastoral Counsel & Consultation:</span>
+                  </p>
+                  <p>
+                    Pastoral sessions are available by scheduled appointment through the Church Administration Office at Wisdom Temple, Star Junction, Tabora.
+                  </p>
                 </div>
               </div>
             </div>
@@ -334,10 +425,10 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                 OUR JOURNEY OF FAITH
               </span>
               <h2 className="text-3xl font-extrabold text-[#032014] font-serif-title mt-2">
-                The Heritage of ICGC & Wisdom Temple
+                The Heritage & Journey of Wisdom Temple
               </h2>
               <p className="text-base text-slate-700 leading-relaxed">
-                The International Central Gospel Church (ICGC) was inaugurated on February 26, 1984 in Accra, Ghana. From humble beginnings, God has expanded this movement into hundreds of branches across Ghana, Europe, North America, and across the African continent.
+                Wisdom Temple was established in Accra, Ghana, with an uncompromising mandate to raise leaders, shape visions, and influence society through the transforming gospel of Jesus Christ.
               </p>
             </div>
 
@@ -346,7 +437,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                 <span className="text-xs font-mono text-[#07472c] font-bold">FOUNDATIONAL PHILOSOPHY</span>
                 <h3 className="text-xl font-bold text-[#032014] font-serif-title">Dignity, Excellence & Empowerment</h3>
                 <p className="text-sm text-slate-600 leading-relaxed">
-                  ICGC pioneered a fresh charismatic wave in Ghana focused on human dignity, self-reliance, leadership development, and societal influence. ICGC Wisdom Temple carries this mantle with fervor in Star Junction, Tabora - Accra.
+                  Wisdom Temple champions a powerful charismatic wave focused on human dignity, self-reliance, leadership development, and societal influence. Wisdom Temple carries this mantle with fervor in Star Junction, Tabora - Accra.
                 </p>
               </div>
 
@@ -354,7 +445,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                 <span className="text-xs font-mono text-[#07472c] font-bold">LOOKING TO THE FUTURE</span>
                 <h3 className="text-xl font-bold text-[#032014] font-serif-title">Building for Generations</h3>
                 <p className="text-sm text-slate-600 leading-relaxed">
-                  Today, ICGC Wisdom Temple continues to expand its community reach, raising children in kingdom righteousness, equipping youth for modern challenges, and hosting conferences like the annual Wisdom Summit.
+                  Today, Wisdom Temple continues to expand its community reach, raising children in kingdom righteousness, equipping youth for modern challenges, and hosting conferences like the annual Wisdom Summit.
                 </p>
               </div>
             </div>

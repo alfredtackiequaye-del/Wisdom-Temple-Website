@@ -147,7 +147,7 @@ export const ContactView: React.FC<ContactViewProps> = ({
                   <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#c99726] to-[#e5b138] text-[#021a10] flex items-center justify-center mx-auto shadow-lg animate-bounce">
                     <MapPin className="w-5 h-5 fill-[#021a10]" />
                   </div>
-                  <strong className="block text-white text-xs font-serif-title">ICGC Wisdom Temple</strong>
+                  <strong className="block text-white text-xs font-serif-title">Wisdom Temple</strong>
                   <p className="text-[11px] text-emerald-200 font-mono">{CHURCH_INFO.location}</p>
                 </div>
               </div>
@@ -155,7 +155,7 @@ export const ContactView: React.FC<ContactViewProps> = ({
                 Located near {CHURCH_INFO.landmark}. Accessible via public transport and rideshare services (Uber, Bolt, Yango).
               </p>
               <a
-                href="https://www.google.com/maps/search/?api=1&query=ICGC+Wisdom+Temple+Star+Junction+Tabora+Accra"
+                href="https://www.google.com/maps/search/?api=1&query=Wisdom+Temple+Star+Junction+Tabora+Accra"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full py-2.5 px-4 bg-[#eef6f1] hover:bg-[#e0eee4] text-[#07472c] font-bold text-xs rounded-xl flex items-center justify-center space-x-1.5 transition-all border border-[#c2decc]"

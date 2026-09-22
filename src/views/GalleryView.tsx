@@ -40,7 +40,7 @@ export const GalleryView: React.FC<GalleryViewProps> = ({ photos, onNavigate }) 
             </h1>
 
             <p className="text-emerald-100/80 text-sm sm:text-base leading-relaxed max-w-2xl">
-              Witness the glory of God at work at ICGC Wisdom Temple. Browse high-resolution highlights from our Sunday celebrations, prophetic midweek altars, youth camps, and transformative annual leadership summits.
+              Witness the glory of God at work at Wisdom Temple. Browse high-resolution highlights from our Sunday celebrations, prophetic midweek altars, youth camps, and transformative annual leadership summits.
             </p>
 
             {/* Quick Stats Pill Strip */}

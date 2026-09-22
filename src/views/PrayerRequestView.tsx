@@ -79,7 +79,7 @@ export const PrayerRequestView: React.FC<PrayerRequestViewProps> = ({
           <div className="space-y-1">
             <h3 className="font-bold text-[#032014] text-lg font-serif-title">Strict Pastoral Confidentiality</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Every request is handled with spiritual reverence. If you select confidential, only Senior Pastor [PASTOR NAME] and the designated pastoral team receive your petition.
+              Every request is handled with spiritual reverence. If you select confidential, only Shepherd Rev. Gabriel Dela and the designated pastoral prayer intercessors receive your petition.
             </p>
           </div>
         </div>

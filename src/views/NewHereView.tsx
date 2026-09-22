@@ -62,7 +62,7 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
             PLAN YOUR VISIT
           </h1>
           <p className="text-base sm:text-lg text-emerald-200/80 max-w-2xl mx-auto leading-relaxed">
-            Visiting a church for the first time should be warm, refreshing, and inspiring. We can't wait to welcome you to ICGC Wisdom Temple.
+            Visiting a church for the first time should be warm, refreshing, and inspiring. We can't wait to welcome you to Wisdom Temple.
           </p>
         </div>
       </section>

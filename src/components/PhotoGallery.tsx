@@ -42,7 +42,7 @@ type CategoryFilter = typeof CATEGORIES[number];
 export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
   photos,
   title = "CHURCH LIFE & MOMENTS",
-  subtitle = "A glimpse into our vibrant charismatic gatherings, spiritual summits, and community impact across ICGC Wisdom Temple.",
+  subtitle = "A glimpse into our vibrant charismatic gatherings, spiritual summits, and community impact across Wisdom Temple.",
   showFilters = true,
   limit,
   onViewAll,
@@ -119,7 +119,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
   const handleShare = (photo: ChurchPhoto) => {
     if (navigator.share) {
       navigator.share({
-        title: `${photo.title} | ICGC Wisdom Temple`,
+        title: `${photo.title} | Wisdom Temple`,
         text: photo.caption,
         url: window.location.href,
       }).catch(() => {});

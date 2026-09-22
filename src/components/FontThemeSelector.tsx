@@ -14,13 +14,22 @@ interface FontThemeOption {
 
 export const FONT_OPTIONS: FontThemeOption[] = [
   {
+    id: 'modern',
+    name: 'Modern Contemporary',
+    subtitle: 'Outfit & Plus Jakarta Sans (Sleek, High-Impact Church)',
+    headingFont: 'Outfit Bold',
+    bodyFont: 'Plus Jakarta Sans',
+    sampleText: 'Experience God • Trust His Word • Follow His Lead',
+    tag: 'Legacy Hills Style'
+  },
+  {
     id: 'cinzel',
     name: 'Majestic Imperial',
-    subtitle: 'Sacred Reverence & Authority',
+    subtitle: 'Sacred Reverence & Classical Altar',
     headingFont: 'Cinzel',
     bodyFont: 'Outfit',
     sampleText: 'Raising Leaders, Shaping Visions',
-    tag: 'Official Recommended'
+    tag: 'Traditional Classical'
   },
   {
     id: 'playfair',
@@ -30,15 +39,6 @@ export const FONT_OPTIONS: FontThemeOption[] = [
     bodyFont: 'Outfit',
     sampleText: 'Wisdom Temple Charismatic Altar',
     tag: 'Warm & Literary'
-  },
-  {
-    id: 'modern',
-    name: 'Modern Megachurch',
-    subtitle: 'Sleek, High-Energy & Clean',
-    headingFont: 'Outfit Bold',
-    bodyFont: 'Plus Jakarta Sans',
-    sampleText: 'Experience God In High Definition',
-    tag: 'Contemporary'
   },
   {
     id: 'cormorant',
@@ -121,7 +121,7 @@ export const FontThemeSelector: React.FC<FontThemeSelectorProps> = ({
                 <span>PREMIUM FONT PAIRINGS</span>
               </div>
               <p className="text-[11px] text-slate-300 mt-0.5">
-                Select your preferred typographical aesthetic for ICGC Wisdom Temple.
+                Select your preferred typographical aesthetic for Wisdom Temple.
               </p>
             </div>
           </div>

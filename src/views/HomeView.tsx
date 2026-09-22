@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { PageId, Sermon, ChurchEvent, Ministry, PrayerRequest, Testimony, ChurchPhoto } from '../types';
 import { CHURCH_INFO, INITIAL_CHURCH_PHOTOS } from '../data/churchData';
+import { PASTORAL_COUPLE_IMAGE } from '../assets/pastoralImage';
 import { PhotoGallery } from '../components/PhotoGallery';
 import { 
   Play, 
@@ -147,9 +148,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* 1. HERO SECTION - ICGC Official Deep Forest & Gold */}
       {/* ========================================================================= */}
       <section className="relative min-h-[92vh] lg:min-h-[90vh] bg-[#02180e] flex items-center justify-center overflow-hidden" id="hero-section">
-        {/* Official Church Banner Image - Clearly visible with cinematic grading */}
-        <div className="absolute inset-0 z-0">
-          <img
+        {/* Official Church Banner Image - Elevated visibility with smooth cinematic Ken Burns animation */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <motion.img
             src="/hero_icgc_banner.jpg"
             onError={(e) => {
               const target = e.currentTarget;
@@ -157,75 +158,97 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 target.src = 'https://i.imgur.com/0ULg34j.png';
               }
             }}
-            alt="ICGC Wisdom Temple Official Banner"
-            className="w-full h-full object-cover object-center opacity-85 transition-opacity duration-700"
+            alt="Wisdom Temple Official Banner"
+            initial={{ scale: 1.04, opacity: 0.9 }}
+            animate={{
+              scale: [1.04, 1.12, 1.04],
+              y: [0, -10, 0],
+            }}
+            transition={{
+              scale: { duration: 18, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' },
+              y: { duration: 22, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' },
+            }}
+            className="w-full h-full object-cover object-center filter brightness-95 contrast-105"
             referrerPolicy="no-referrer"
           />
-          {/* Multi-layered cinematic gradient: Darkened top and base, with focused radial dark contrast behind the text */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#02180e]/95 via-[#02180e]/75 to-[#02180e]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(2,24,14,0.85)_0%,_rgba(2,24,14,0.65)_55%,_rgba(2,24,14,0.98)_100%)] pointer-events-none" />
-          {/* Subtle Ambient Gold Highlight */}
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[38rem] h-[38rem] bg-[#c99726]/12 rounded-full blur-3xl pointer-events-none" />
+
+          {/* Balanced cinematic grading: Lighter overlay so the image is clearly visible, with focused center vignette for text clarity */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#02180e]/75 via-[#02180e]/40 to-[#02180e]/95 pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(2,24,14,0.45)_0%,_rgba(2,24,14,0.7)_65%,_rgba(2,24,14,0.95)_100%)] pointer-events-none" />
+
+          {/* Dynamic Breathing Gold Ambient Light */}
+          <motion.div
+            animate={{
+              opacity: [0.12, 0.26, 0.12],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 7,
+              repeat: Infinity,
+              repeatType: 'reverse',
+              ease: 'easeInOut',
+            }}
+            className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[44rem] h-[44rem] bg-[#c99726]/20 rounded-full blur-3xl pointer-events-none"
+          />
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center flex flex-col items-center">
-          {/* Top Badge: Assembly Identity */}
+          {/* Top Badge: Assembly Identity & Service Time */}
           <motion.div
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-[#032014]/95 border-2 border-[#c99726]/70 text-[#fce49e] text-xs font-black tracking-widest uppercase mb-6 shadow-2xl backdrop-blur-md"
+            className="inline-flex items-center space-x-2.5 px-5 py-2 rounded-full bg-[#02180e]/90 border border-[#c99726]/60 text-[#fce49e] text-xs font-bold tracking-widest uppercase mb-6 shadow-2xl backdrop-blur-md"
           >
-            <span className="w-2 h-2 rounded-full bg-[#fce49e] animate-pulse" />
-            <span>INTERNATIONAL CENTRAL GOSPEL CHURCH • GHANA</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-[#c99726] shadow-[0_0_10px_#c99726] animate-pulse" />
+            <span className="text-white/90">ICGC WISDOM TEMPLE</span>
+            <span className="text-[#c99726]">•</span>
+            <span>SUNDAYS AT 8:00 AM</span>
           </motion.div>
 
-          {/* Headline with High-Contrast Shadows for Razor-Sharp Readability */}
+          {/* Headline - Legacy Hills Bold Contemporary Typography */}
           <motion.h1
             initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.08] max-w-5xl font-serif-title drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white tracking-tight leading-[0.98] max-w-5xl font-serif-title drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)] uppercase"
           >
-            WELCOME TO <br className="hidden sm:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#fce49e] to-[#e5b138] drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)]">
-              ICGC WISDOM TEMPLE
-            </span>
+            WELCOME <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#fce49e] to-[#e5b138]">HOME</span>
           </motion.h1>
 
-          {/* Supporting Text */}
+          {/* Legacy Hills Style Guiding Motto & Vision */}
           <motion.p
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
-            className="mt-6 text-xl sm:text-2xl md:text-3xl text-white font-bold max-w-3xl leading-snug drop-shadow-[0_2px_12px_rgba(0,0,0,1)]"
+            className="mt-6 text-lg sm:text-xl md:text-2xl text-[#fce49e] font-extrabold max-w-3xl leading-snug drop-shadow-[0_2px_12px_rgba(0,0,0,1)] tracking-wider uppercase"
           >
-            Raising Leaders. Shaping Visions. Influencing Society Through Christ.
+            EXPERIENCE GOD'S LOVE • TRUST HIS WORD • FOLLOW HIS LEAD
           </motion.p>
 
           <motion.p
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.42, ease: 'easeOut' }}
-            className="mt-3 text-base sm:text-lg text-emerald-100 font-medium max-w-2xl drop-shadow-[0_2px_8px_rgba(0,0,0,1)]"
+            className="mt-4 text-base sm:text-lg text-emerald-100/90 font-medium max-w-2xl leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,1)]"
           >
-            A vibrant charismatic family anchored in the Word of God, fervent prayer, and kingdom impact in Ghana and beyond.
+            Raising leaders, shaping visions, and influencing society through Christ. Join us in person at Star Junction, Tabora, or experience our service live online.
           </motion.p>
 
-          {/* Primary & Secondary CTAs in ICGC Official Gold */}
+          {/* Primary & Secondary CTAs - Plan A Visit & Watch Message */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.52, ease: 'easeOut' }}
-            className="mt-8 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
+            className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
           >
             <motion.button
               whileHover={{ scale: 1.04, y: -2 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => onNavigate('new-here')}
-              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] font-black text-base shadow-2xl transition-all flex items-center justify-center space-x-2 cursor-pointer border border-[#f5cf72]/70"
+              className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] font-black text-sm sm:text-base shadow-xl hover:shadow-[#c99726]/30 transition-all flex items-center justify-center space-x-2.5 cursor-pointer border border-[#f5cf72]/70 tracking-wider uppercase"
             >
-              <span>JOIN US THIS SUNDAY</span>
+              <span>PLAN YOUR VISIT</span>
               <ArrowRight className="w-4 h-4" />
             </motion.button>
 
@@ -233,14 +256,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
               whileHover={{ scale: 1.04, y: -2 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => latestSermon && onWatchVideo(latestSermon)}
-              className="w-full sm:w-auto px-7 py-4 rounded-xl bg-[#042819]/95 hover:bg-[#07472c] text-white font-bold text-base border-2 border-[#c99726]/50 backdrop-blur-md transition-all flex items-center justify-center space-x-2.5 cursor-pointer shadow-2xl"
+              className="w-full sm:w-auto px-7 py-4 rounded-full bg-[#02180e]/90 hover:bg-[#07472c] text-white font-bold text-sm sm:text-base border border-emerald-500/40 hover:border-[#c99726] backdrop-blur-md transition-all flex items-center justify-center space-x-2.5 cursor-pointer shadow-xl tracking-wider uppercase"
             >
               <Play className="w-4 h-4 text-[#f5cf72] fill-[#f5cf72]" />
-              <span>WATCH A MESSAGE</span>
+              <span>WATCH ONLINE</span>
             </motion.button>
           </motion.div>
 
-          {/* Service Information Badges */}
+          {/* Service Information Badges - Architectural Glass Panels */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -249,55 +272,55 @@ export const HomeView: React.FC<HomeViewProps> = ({
           >
             {/* Sunday Service */}
             <motion.div
-              whileHover={{ y: -4, borderColor: 'rgba(201, 151, 38, 0.8)' }}
+              whileHover={{ y: -4 }}
               transition={{ duration: 0.2 }}
-              className="p-4 rounded-2xl bg-gradient-to-b from-[#05321f] to-[#02180e] border-t-2 border-t-[#c99726] border-[#084c2e] backdrop-blur-md flex items-start space-x-3.5 group transition-all min-w-0 shadow-2xl"
+              className="p-5 rounded-2xl bg-[#02180e]/85 hover:bg-[#032014]/95 border border-[#c99726]/40 hover:border-[#c99726] backdrop-blur-md flex items-start space-x-4 transition-all shadow-xl"
             >
               <div className="p-3 rounded-xl bg-gradient-to-br from-[#c99726] to-[#e5b138] text-[#021a10] font-black shadow-lg shadow-[#c99726]/20 shrink-0">
                 <Clock className="w-5 h-5 stroke-[2.5]" />
               </div>
               <div className="min-w-0 flex-1">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-[#f5cf72] font-bold block">Weekly Service</span>
-                <h4 className="text-sm font-bold text-white">Sunday Celebration</h4>
-                <p className="text-lg font-black text-[#f5cf72] mt-0.5">8:00 AM</p>
-                <span className="text-xs text-emerald-200/90 block">Main Sanctuary & Online</span>
+                <span className="text-[11px] font-mono uppercase tracking-wider text-[#f5cf72] font-bold block">Weekend Gathering</span>
+                <h4 className="text-base font-bold text-white">Sunday Celebration</h4>
+                <p className="text-xl font-black text-[#f5cf72] mt-0.5">8:00 AM</p>
+                <span className="text-xs text-emerald-200/90 block mt-0.5">Sanctuary & Live Stream</span>
               </div>
             </motion.div>
 
             {/* The Secret Place */}
             <motion.div
-              whileHover={{ y: -4, borderColor: 'rgba(245, 207, 114, 0.8)' }}
+              whileHover={{ y: -4 }}
               transition={{ duration: 0.2 }}
-              className="p-4 rounded-2xl bg-gradient-to-b from-[#05321f] to-[#02180e] border-t-2 border-t-[#f5cf72] border-[#084c2e] backdrop-blur-md flex items-start space-x-3.5 group transition-all min-w-0 shadow-2xl"
+              className="p-5 rounded-2xl bg-[#02180e]/85 hover:bg-[#032014]/95 border border-emerald-500/30 hover:border-[#f5cf72] backdrop-blur-md flex items-start space-x-4 transition-all shadow-xl"
             >
               <div className="p-3 rounded-xl bg-[#c99726]/20 text-[#f5cf72] border border-[#c99726]/40 shrink-0">
                 <Flame className="w-5 h-5 text-[#f5cf72]" />
               </div>
               <div className="min-w-0 flex-1">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-[#f5cf72] font-bold block">Midweek Encounter</span>
-                <h4 className="text-sm font-bold text-white">The Secret Place</h4>
-                <p className="text-lg font-black text-[#f5cf72] mt-0.5">Wednesday | 7:00 PM</p>
-                <span className="text-xs text-emerald-200/90 block">Prayer, Worship & Prophetic</span>
+                <span className="text-[11px] font-mono uppercase tracking-wider text-[#f5cf72] font-bold block">Midweek Service</span>
+                <h4 className="text-base font-bold text-white">The Secret Place</h4>
+                <p className="text-xl font-black text-[#f5cf72] mt-0.5">Wednesdays • 7:00 PM</p>
+                <span className="text-xs text-emerald-200/90 block mt-0.5">Prayer, Worship & Prophetic</span>
               </div>
             </motion.div>
 
             {/* Location Badge */}
             <motion.div
-              whileHover={{ y: -4, borderColor: 'rgba(16, 185, 129, 0.8)' }}
+              whileHover={{ y: -4 }}
               transition={{ duration: 0.2 }}
-              className="p-4 rounded-2xl bg-gradient-to-b from-[#05321f] to-[#02180e] border-t-2 border-t-emerald-400 border-[#084c2e] backdrop-blur-md flex items-start space-x-3.5 group transition-all min-w-0 overflow-hidden shadow-2xl"
+              className="p-5 rounded-2xl bg-[#02180e]/85 hover:bg-[#032014]/95 border border-emerald-500/30 hover:border-emerald-400 backdrop-blur-md flex items-start space-x-4 transition-all shadow-xl"
             >
               <div className="p-3 rounded-xl bg-[#07472c] text-emerald-200 border border-[#09603a] shrink-0">
                 <MapPin className="w-5 h-5 text-[#f5cf72]" />
               </div>
               <div className="min-w-0 flex-1">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-emerald-300 font-bold block">Church Location</span>
-                <h4 className="text-sm font-bold text-white">Wisdom Temple Auditorium</h4>
-                <p className="text-xs font-bold text-[#f5cf72] mt-0.5 leading-snug break-words">
-                  Star Junction, Tabora – Accra
+                <span className="text-[11px] font-mono uppercase tracking-wider text-emerald-300 font-bold block">Sanctuary Location</span>
+                <h4 className="text-base font-bold text-white">Wisdom Temple</h4>
+                <p className="text-sm font-bold text-[#f5cf72] mt-0.5">
+                  Star Junction, Tabora
                 </p>
-                <span className="text-xs text-emerald-200/90 block mt-0.5 leading-tight">
-                  Landmark: Star Junction • Compound Parking
+                <span className="text-xs text-emerald-200/90 block mt-0.5">
+                  Accra, Ghana • Secure Parking
                 </span>
               </div>
             </motion.div>
@@ -318,7 +341,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               YOU'RE WELCOME HERE
             </h2>
             <p className="text-slate-700 text-base sm:text-lg mt-3 leading-relaxed">
-              Stepping into a new church should feel warm, uplifting, and inspiring. At ICGC Wisdom Temple, you are received as honored family from the moment you arrive.
+              Stepping into a new church should feel warm, uplifting, and inspiring. At Wisdom Temple, you are received as honored family from the moment you arrive.
             </p>
           </div>
 
@@ -340,7 +363,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       <Users className="w-7 h-7 stroke-[2.2]" />
                     </div>
                     <span className="px-3 py-1 rounded-full bg-amber-100/90 text-amber-900 border border-amber-300 font-mono font-bold text-[11px] uppercase tracking-wider">
-                      01 • WARM WELCOME
+                      GUEST HOSPITALITY
                     </span>
                   </div>
                   <h3 className="text-2xl font-black text-[#032014] font-serif-title tracking-tight">
@@ -402,7 +425,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       <Sparkles className="w-7 h-7 stroke-[2.2]" />
                     </div>
                     <span className="px-3 py-1 rounded-full bg-emerald-100/90 text-emerald-900 border border-emerald-300 font-mono font-bold text-[11px] uppercase tracking-wider">
-                      02 • WORSHIP & THE WORD
+                      WORSHIP & THE WORD
                     </span>
                   </div>
                   <h3 className="text-2xl font-black text-[#032014] font-serif-title tracking-tight">
@@ -464,7 +487,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       <Shield className="w-7 h-7 stroke-[2.2]" />
                     </div>
                     <span className="px-3 py-1 rounded-full bg-teal-100/90 text-teal-900 border border-teal-300 font-mono font-bold text-[11px] uppercase tracking-wider">
-                      03 • PURPOSE & FAMILY
+                      FAMILY & MINISTRIES
                     </span>
                   </div>
                   <h3 className="text-2xl font-black text-[#032014] font-serif-title tracking-tight">
@@ -759,7 +782,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   ANNUAL FLAGSHIP CONFERENCE
                 </span>
                 <button
-                  onClick={() => onShare(featuredSummit.name, `${featuredSummit.theme} - Join us for Wisdom Summit 2026 at ICGC Wisdom Temple`)}
+                  onClick={() => onShare(featuredSummit.name, `${featuredSummit.theme} - Join us for Wisdom Summit 2026 at Wisdom Temple`)}
                   className="p-2 rounded-lg bg-[#042819] hover:bg-[#07472c] text-emerald-200 hover:text-white transition-colors flex items-center space-x-1.5 text-xs font-semibold cursor-pointer border border-[#094c2d]"
                 >
                   <Share2 className="w-3.5 h-3.5 text-[#c99726]" />
@@ -942,7 +965,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-6 space-y-6">
               <span className="text-xs font-mono font-bold tracking-widest text-[#07472c] uppercase bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc]">
-                ABOUT ICGC WISDOM TEMPLE
+                ABOUT WISDOM TEMPLE
               </span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#032014] leading-tight font-serif-title">
                 RAISING LEADERS. <br />
@@ -953,7 +976,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 {CHURCH_INFO.description}
               </p>
               <p className="text-sm text-slate-600 leading-relaxed">
-                As a local assembly of the International Central Gospel Church (ICGC) in Ghana, our heart is to build believers who reflect Christ's character, excel in their careers and callings, and bring transformative godly leadership to every sphere of human endeavor.
+                As a vibrant charismatic church in Ghana, our heart is to build believers who reflect Christ's character, excel in their careers and callings, and bring transformative godly leadership to every sphere of human endeavor.
               </p>
 
               <div className="flex flex-wrap gap-4 pt-2">
@@ -977,7 +1000,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <div className="rounded-2xl overflow-hidden aspect-[4/5] bg-slate-100">
                   <img
                     src="/open_bible.jpg"
-                    alt="Open Holy Bible - God's Word at ICGC Wisdom Temple"
+                    alt="Open Holy Bible - God's Word at Wisdom Temple"
                     className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
                   />
@@ -993,17 +1016,30 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
               <div className="space-y-4 pt-8">
                 <div className="p-5 bg-[#032014] text-white rounded-2xl border border-[#084c2e] shadow-xl">
-                  <span className="text-[#f5cf72] font-serif-title font-bold text-xl block">ICGC Heritage</span>
+                  <span className="text-[#f5cf72] font-serif-title font-bold text-xl block">Kingdom Heritage</span>
                   <p className="text-xs text-emerald-200/80 mt-1 leading-relaxed">
                     Committed to holistic human development: spiritual, intellectual, and socioeconomic transformation in Africa.
                   </p>
                 </div>
-                <div className="rounded-2xl overflow-hidden aspect-[4/5] bg-slate-100">
+                <div 
+                  onClick={() => onNavigate('about', 'leadership')}
+                  className="rounded-2xl overflow-hidden aspect-[4/5] bg-[#02180e] relative border-2 border-[#c99726]/40 shadow-xl cursor-pointer group"
+                >
                   <img
-                    src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=800&q=80"
-                    alt="Spiritual empowerment and fellowship"
-                    className="w-full h-full object-cover"
+                    src={PASTORAL_COUPLE_IMAGE}
+                    onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/rev_gabriel_and_helena_dela.jpg'; }}
+                    alt="Rev. Gabriel Dela and Lady Dr. Helena Dela - Shepherd and First Lady of Wisdom Temple"
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#02180e]/95 via-[#02180e]/30 to-transparent" />
+                  <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
+                    <span className="text-[10px] font-mono text-[#f5cf72] uppercase tracking-wider block font-bold">
+                      SHEPHERD & FIRST LADY
+                    </span>
+                    <p className="text-xs sm:text-sm font-bold font-serif-title leading-tight text-white mt-0.5">
+                      Rev. Gabriel Dela & Lady Dr. Helena Dela
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

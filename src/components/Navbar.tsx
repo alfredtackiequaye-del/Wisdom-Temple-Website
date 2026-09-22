@@ -55,6 +55,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, unreadA
         </div>
         <div className="flex items-center space-x-5">
           <button 
+            onClick={() => handleNavClick('about', 'leadership')}
+            className="hover:text-[#f5cf72] transition-colors font-medium cursor-pointer text-[#e5b138]"
+          >
+            Our Leadership
+          </button>
+          <span className="text-emerald-900">•</span>
+          <button 
             onClick={() => handleNavClick('new-here')}
             className="hover:text-[#f5cf72] transition-colors font-medium cursor-pointer"
           >
@@ -96,7 +103,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, unreadA
             <ICGCLogo size="md" variant="horizontal" theme="dark" forceWhite={true} />
           </div>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop Navigation Links - Legacy Hills Church Streamlined Structure */}
           <nav className="hidden xl:flex items-center space-x-1 lg:space-x-2 text-sm font-medium">
             <button
               onClick={() => handleNavClick('home')}
@@ -107,6 +114,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, unreadA
               }`}
             >
               HOME
+            </button>
+
+            {/* Plan A Visit (Signature Modern Church Navigation) */}
+            <button
+              onClick={() => handleNavClick('new-here')}
+              className={`px-3 py-2 rounded-md transition-all font-semibold ${
+                currentPage === 'new-here'
+                  ? 'text-[#fce49e] bg-[#07472c] font-bold border-b-2 border-[#c99726]'
+                  : 'text-emerald-100 hover:text-white hover:bg-[#063821]'
+              }`}
+            >
+              PLAN A VISIT
             </button>
 
             {/* About Dropdown */}
@@ -185,7 +204,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, unreadA
                     : 'text-emerald-100 hover:text-white hover:bg-[#063821]'
                 }`}
               >
-                <span>WATCH & LISTEN</span>
+                <span>WATCH</span>
                 <ChevronDown className="w-3.5 h-3.5 text-[#c99726]" />
               </button>
 
@@ -338,13 +357,19 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, unreadA
             </div>
           </nav>
 
-          {/* Right Action: Prominent GIVE Button in ICGC Gold */}
-          <div className="hidden sm:flex items-center space-x-3">
+          {/* Right Action: Plan A Visit & Give Buttons */}
+          <div className="hidden sm:flex items-center space-x-2.5">
+            <button
+              onClick={() => handleNavClick('new-here')}
+              className="px-4 py-2 rounded-full bg-[#042819] hover:bg-[#07472c] text-emerald-100 hover:text-[#fce49e] border border-[#c99726]/40 text-xs font-bold transition-all cursor-pointer shadow-sm tracking-wide"
+            >
+              PLAN A VISIT
+            </button>
             <motion.button
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.96 }}
               onClick={() => handleNavClick('give')}
-              className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] font-black text-sm tracking-wide shadow-lg hover:shadow-[#c99726]/30 transition-all cursor-pointer border border-[#f5cf72]/40"
+              className="inline-flex items-center space-x-2 px-5 py-2 rounded-full bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] font-black text-sm tracking-wide shadow-lg hover:shadow-[#c99726]/30 transition-all cursor-pointer border border-[#f5cf72]/40"
               id="nav-give-btn"
             >
               <Heart className="w-4 h-4 fill-[#021a10] text-[#021a10]" />
@@ -418,6 +443,12 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, unreadA
                 className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-100 hover:bg-[#07472c] hover:text-[#f5cf72] transition-colors"
               >
                 ABOUT THE CHURCH
+              </button>
+              <button
+                onClick={() => handleNavClick('about', 'leadership')}
+                className="w-full text-left pl-6 pr-3 py-2 rounded-md text-xs font-semibold text-[#f5cf72] hover:bg-[#07472c] flex items-center space-x-1.5 transition-colors"
+              >
+                <span>↳ Our Pastoral Leadership</span>
               </button>
               <button
                 onClick={() => handleNavClick('watch-listen')}

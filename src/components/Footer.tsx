@@ -270,7 +270,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
         {/* Bottom Bar: Copyright & Legal */}
         <div className="mt-12 pt-8 border-t border-[#084c2e] flex flex-col sm:flex-row justify-between items-center text-xs text-emerald-400/70 gap-4">
-          <p>© 2026 ICGC Wisdom Temple. All rights reserved. A Christ-centered charismatic assembly.</p>
+          <p>© 2026 Wisdom Temple. All rights reserved. A Christ-centered charismatic assembly.</p>
           <div className="flex items-center space-x-6">
             <button onClick={() => handleNav('about', 'beliefs')} className="hover:text-white transition-colors">
               Statement of Faith

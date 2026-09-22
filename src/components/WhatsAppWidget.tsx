@@ -17,7 +17,7 @@ export const WhatsAppWidget: React.FC = () => {
                 <MessageCircle className="w-4 h-4 text-[#f5cf72]" />
               </div>
               <div>
-                <h4 className="text-sm font-bold leading-tight font-serif-title text-white">ICGC Wisdom Temple</h4>
+                <h4 className="text-sm font-bold leading-tight font-serif-title text-white">Wisdom Temple</h4>
                 <span className="text-[10px] text-[#f5cf72] font-medium">Official Church WhatsApp Helpdesk</span>
               </div>
             </div>
@@ -34,7 +34,7 @@ export const WhatsAppWidget: React.FC = () => {
             <div className="p-3 bg-[#042819] rounded-xl border border-[#084c2e] text-emerald-100/90 space-y-1.5">
               <p className="font-semibold text-white">Peace and Grace to you! 🙏</p>
               <p className="text-emerald-200/80">
-                Welcome to ICGC Wisdom Temple. How can our pastoral care and welcoming team assist you today?
+                Welcome to Wisdom Temple. How can our pastoral care and welcoming team assist you today?
               </p>
             </div>
 
@@ -60,7 +60,7 @@ export const WhatsAppWidget: React.FC = () => {
             </div>
 
             <a
-              href={`https://wa.me/?text=Hello%20ICGC%20Wisdom%20Temple,%20I%20would%20like%20to%20connect%20with%20the%20church.`}
+              href={`https://wa.me/?text=Hello%20Wisdom%20Temple,%20I%20would%20like%20to%20connect%20with%20the%20church.`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full py-2.5 bg-[#25D366] hover:bg-[#20ba59] text-white font-bold rounded-xl flex items-center justify-center space-x-2 shadow-lg transition-all"
@@ -76,7 +76,7 @@ export const WhatsAppWidget: React.FC = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center space-x-2 px-4 py-3 bg-[#032014] hover:bg-[#063821] text-white rounded-full shadow-2xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer border-2 border-[#c99726]"
-        aria-label="Contact ICGC Wisdom Temple on WhatsApp"
+        aria-label="Contact Wisdom Temple on WhatsApp"
         id="whatsapp-floating-btn"
       >
         <MessageCircle className="w-5 h-5 text-[#f5cf72] fill-[#f5cf72]" />

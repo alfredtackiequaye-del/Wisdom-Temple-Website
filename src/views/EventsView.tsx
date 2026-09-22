@@ -59,7 +59,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
                 ANNUAL FLAGSHIP CONFERENCE
               </span>
               <button
-                onClick={() => onShare(featuredSummit.name, `${featuredSummit.theme} - Register now for Wisdom Summit 2026 at ICGC Wisdom Temple`)}
+                onClick={() => onShare(featuredSummit.name, `${featuredSummit.theme} - Register now for Wisdom Summit 2026 at Wisdom Temple`)}
                 className="p-2 rounded-lg bg-[#042819] hover:bg-[#063821] text-emerald-200 hover:text-white transition-colors flex items-center space-x-1.5 text-xs font-semibold cursor-pointer border border-[#084c2e]"
               >
                 <Share2 className="w-3.5 h-3.5 text-[#c99726]" />

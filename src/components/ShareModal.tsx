@@ -14,7 +14,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, title, 
   if (!isOpen) return null;
 
   const currentUrl = window.location.href;
-  const shareText = `${title} - ICGC Wisdom Temple. ${description}`;
+  const shareText = `${title} - Wisdom Temple. ${description}`;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(`${shareText}\n${currentUrl}`);
@@ -64,7 +64,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, title, 
         </div>
 
         <div className="pt-2 text-center text-[11px] text-emerald-300/70 font-mono">
-          Official Media • ICGC Wisdom Temple Ghana
+          Official Media • Wisdom Temple Ghana
         </div>
       </div>
     </div>

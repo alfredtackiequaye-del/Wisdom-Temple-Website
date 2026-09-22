@@ -87,7 +87,7 @@ export const GiveView: React.FC<GiveViewProps> = () => {
               </h2>
               <p className="text-emerald-100/90 text-sm leading-relaxed max-w-xl">
                 Send your seed directly via official MTN Mobile Money or CBG Bank Account under 
-                <strong className="text-[#f5cf72]"> ICGC Wisdom Temple (Kokomlemle)</strong>.
+                <strong className="text-[#f5cf72]"> Wisdom Temple (Kokomlemle)</strong>.
               </p>
               
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
@@ -101,7 +101,7 @@ export const GiveView: React.FC<GiveViewProps> = () => {
                 </button>
                 <a
                   href="/giving_details_official.jpg"
-                  download="ICGC_Wisdom_Temple_Giving_Details.jpg"
+                  download="Wisdom_Temple_Giving_Details.jpg"
                   className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white font-bold text-xs rounded-xl border border-white/20 transition-all flex items-center space-x-2 cursor-pointer"
                 >
                   <Download className="w-4 h-4 text-[#f5cf72]" />
@@ -123,7 +123,7 @@ export const GiveView: React.FC<GiveViewProps> = () => {
                     target.src = 'https://i.imgur.com/DCRspmB.png';
                   }
                 }}
-                alt="ICGC Wisdom Temple Giving Details"
+                alt="Wisdom Temple Giving Details"
                 className="w-full h-auto object-cover"
                 referrerPolicy="no-referrer"
               />
@@ -302,7 +302,7 @@ export const GiveView: React.FC<GiveViewProps> = () => {
                       {GIVING_DETAILS.momo.mtn}
                     </span>
                     <span className="text-[11px] text-slate-600 block">
-                      Account: <strong>ICGC Wisdom Temple (Kokomlemle)</strong>
+                      Account: <strong>Wisdom Temple (Kokomlemle)</strong>
                     </span>
                   </div>
                   <button
@@ -317,7 +317,7 @@ export const GiveView: React.FC<GiveViewProps> = () => {
               </div>
 
               <p className="text-[11px] text-slate-500 leading-relaxed">
-                Merchant / Subscriber Account: <strong className="text-[#032014]">ICGC Wisdom Temple (Kokomlemle)</strong>
+                Merchant / Subscriber Account: <strong className="text-[#032014]">Wisdom Temple (Kokomlemle)</strong>
               </p>
             </div>
 
@@ -407,11 +407,11 @@ export const GiveView: React.FC<GiveViewProps> = () => {
         <div className="bg-[#032014] text-white rounded-3xl p-8 sm:p-12 border border-[#084c2e] space-y-4 shadow-xl">
           <div className="flex items-center space-x-2 text-[#f5cf72] text-xs font-mono font-bold uppercase">
             <ShieldCheck className="w-4 h-4" />
-            <span>FINANCIAL INTEGRITY & ICGC GOVERNANCE</span>
+            <span>FINANCIAL INTEGRITY & GOVERNANCE</span>
           </div>
           <h3 className="text-2xl font-bold font-serif-title text-white">Our Stewardship Commitment</h3>
           <p className="text-emerald-100/90 text-sm leading-relaxed max-w-3xl">
-            At ICGC Wisdom Temple, we manage all kingdom funds with the highest standard of ethical governance, financial auditing, and biblical stewardship. Every cedi given fuels ministry operations, gospel outreach, pastoral care, and community benevolence. Audited accounts are reported annually to the ICGC General Overseer and Church Board.
+            At Wisdom Temple, we manage all kingdom funds with the highest standard of ethical governance, financial auditing, and biblical stewardship. Every cedi given fuels ministry operations, gospel outreach, pastoral care, and community benevolence. Audited accounts are reported annually to the Church Board.
           </p>
         </div>
       </div>
@@ -438,7 +438,7 @@ export const GiveView: React.FC<GiveViewProps> = () => {
               <div className="flex items-center justify-between border-b border-[#084c2e] pb-3">
                 <div>
                   <h3 className="font-bold text-white text-lg font-serif-title">Official Giving Details Flyer</h3>
-                  <p className="text-xs text-emerald-300/80">ICGC Wisdom Temple (Kokomlemle)</p>
+                  <p className="text-xs text-emerald-300/80">Wisdom Temple (Kokomlemle)</p>
                 </div>
                 <button
                   onClick={() => setFlyerModalOpen(false)}
@@ -473,7 +473,7 @@ export const GiveView: React.FC<GiveViewProps> = () => {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   href="/giving_details_official.jpg"
-                  download="ICGC_Wisdom_Temple_Giving.jpg"
+                  download="Wisdom_Temple_Giving.jpg"
                   className="px-4 py-2 bg-gradient-to-r from-[#c99726] to-[#e5b138] text-[#021a10] font-black rounded-xl text-xs flex items-center space-x-1.5 cursor-pointer shadow-md"
                 >
                   <Download className="w-3.5 h-3.5" />
