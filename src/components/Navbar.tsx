@@ -512,7 +512,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, unreadA
                 className="w-full py-3 rounded-xl bg-gradient-to-r from-[#c99726] to-[#e5b138] text-[#021a10] font-black text-center flex items-center justify-center space-x-2 shadow-lg"
               >
                 <Heart className="w-4 h-4 fill-[#021a10]" />
-                <span>GIVE / TITHES & OFFERINGS</span>
+                <span>GIVE / FIRST FRUIT & OFFERINGS</span>
               </motion.button>
             </div>
           </motion.div>

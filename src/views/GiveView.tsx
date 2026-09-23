@@ -19,7 +19,7 @@ interface GiveViewProps {
 }
 
 export const GiveView: React.FC<GiveViewProps> = () => {
-  const [selectedFund, setSelectedFund] = useState<string>('Tithes');
+  const [selectedFund, setSelectedFund] = useState<string>('FirstFruit');
   const [currency, setCurrency] = useState<'GHS' | 'USD'>('GHS');
   const [amount, setAmount] = useState<string>('100');
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
@@ -28,9 +28,12 @@ export const GiveView: React.FC<GiveViewProps> = () => {
   const [flyerModalOpen, setFlyerModalOpen] = useState(false);
 
   const funds = [
-    { id: 'Tithes', label: 'Tithes (Malachi 3:10)', desc: 'Honor God with the first tenth of your income.' },
+    { 
+      id: 'FirstFruit', 
+      label: 'First Fruit (Malachi 3:10)', 
+      desc: '"Bring all the tithes and first fruits into the storehouse, that there may be food in My house..." — Malachi 3:10' 
+    },
     { id: 'Offering', label: 'Sunday / General Offering', desc: 'Freewill thanksgiving seed for worship.' },
-    { id: 'Firstfruit', label: 'Firstfruit Seed', desc: 'Consecrating your beginning harvest unto the Lord.' },
     { id: 'Pledges', label: 'Pledges & Vows', desc: 'Redeeming sacred vows made before God.' },
     { id: 'Wisdom-Summit', label: 'Wisdom Summit 2026 Seed', desc: 'Partner towards conference staging, media, and guest hospitality.' },
     { id: 'Building', label: 'Temple Expansion Project', desc: 'Sanctuary development, seating, and media infrastructure.' },

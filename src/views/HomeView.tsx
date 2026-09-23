@@ -274,7 +274,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <motion.div
               whileHover={{ y: -4 }}
               transition={{ duration: 0.2 }}
-              className="p-5 rounded-2xl bg-[#02180e]/85 hover:bg-[#032014]/95 border border-[#c99726]/40 hover:border-[#c99726] backdrop-blur-md flex items-start space-x-4 transition-all shadow-xl"
+              className="p-5 rounded-2xl bg-[#02180e]/85 hover:bg-[#032014]/95 border border-[#c99726]/40 hover:border-[#c99726] backdrop-blur-md flex items-start space-x-4 transition-all shadow-xl h-full"
             >
               <div className="p-3 rounded-xl bg-gradient-to-br from-[#c99726] to-[#e5b138] text-[#021a10] font-black shadow-lg shadow-[#c99726]/20 shrink-0">
                 <Clock className="w-5 h-5 stroke-[2.5]" />
@@ -282,7 +282,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <div className="min-w-0 flex-1">
                 <span className="text-[11px] font-mono uppercase tracking-wider text-[#f5cf72] font-bold block">Weekend Gathering</span>
                 <h4 className="text-base font-bold text-white">Sunday Celebration</h4>
-                <p className="text-xl font-black text-[#f5cf72] mt-0.5">8:00 AM</p>
+                <p className="text-sm font-bold text-[#f5cf72] mt-0.5">Sundays • 8:00 AM</p>
                 <span className="text-xs text-emerald-200/90 block mt-0.5">Sanctuary & Live Stream</span>
               </div>
             </motion.div>
@@ -291,7 +291,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <motion.div
               whileHover={{ y: -4 }}
               transition={{ duration: 0.2 }}
-              className="p-5 rounded-2xl bg-[#02180e]/85 hover:bg-[#032014]/95 border border-emerald-500/30 hover:border-[#f5cf72] backdrop-blur-md flex items-start space-x-4 transition-all shadow-xl"
+              className="p-5 rounded-2xl bg-[#02180e]/85 hover:bg-[#032014]/95 border border-emerald-500/30 hover:border-[#f5cf72] backdrop-blur-md flex items-start space-x-4 transition-all shadow-xl h-full"
             >
               <div className="p-3 rounded-xl bg-[#c99726]/20 text-[#f5cf72] border border-[#c99726]/40 shrink-0">
                 <Flame className="w-5 h-5 text-[#f5cf72]" />
@@ -299,7 +299,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <div className="min-w-0 flex-1">
                 <span className="text-[11px] font-mono uppercase tracking-wider text-[#f5cf72] font-bold block">Midweek Service</span>
                 <h4 className="text-base font-bold text-white">The Secret Place</h4>
-                <p className="text-xl font-black text-[#f5cf72] mt-0.5">Wednesdays • 7:00 PM</p>
+                <p className="text-sm font-bold text-[#f5cf72] mt-0.5">Wednesdays • 7:00 PM</p>
                 <span className="text-xs text-emerald-200/90 block mt-0.5">Prayer, Worship & Prophetic</span>
               </div>
             </motion.div>
@@ -308,7 +308,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <motion.div
               whileHover={{ y: -4 }}
               transition={{ duration: 0.2 }}
-              className="p-5 rounded-2xl bg-[#02180e]/85 hover:bg-[#032014]/95 border border-emerald-500/30 hover:border-emerald-400 backdrop-blur-md flex items-start space-x-4 transition-all shadow-xl"
+              className="p-5 rounded-2xl bg-[#02180e]/85 hover:bg-[#032014]/95 border border-emerald-500/30 hover:border-emerald-400 backdrop-blur-md flex items-start space-x-4 transition-all shadow-xl h-full"
             >
               <div className="p-3 rounded-xl bg-[#07472c] text-emerald-200 border border-[#09603a] shrink-0">
                 <MapPin className="w-5 h-5 text-[#f5cf72]" />
@@ -1327,7 +1327,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               onClick={() => onNavigate('give')}
               className="px-8 py-3.5 bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] font-black text-sm rounded-xl shadow-xl transition-all cursor-pointer inline-flex items-center space-x-2 border border-[#f5cf72]/40"
             >
-              <span>GIVE TITHES & OFFERINGS</span>
+              <span>GIVE FIRST FRUIT & OFFERINGS</span>
               <ArrowRight className="w-4 h-4" />
             </motion.button>
           </div>
