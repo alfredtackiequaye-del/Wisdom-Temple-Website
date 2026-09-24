@@ -138,7 +138,7 @@ export const FontThemeSelector: React.FC<FontThemeSelectorProps> = ({
                   }}
                   className={`w-full text-left p-3 rounded-xl transition-all border cursor-pointer flex flex-col justify-between space-y-1.5 ${
                     isSelected
-                      ? 'bg-gradient-to-r from-[#07472c] to-[#042819] border-[#c99726] shadow-md ring-1 ring-[#c99726]/50'
+                      ? 'bg-[#07472c] border-[#c99726] shadow-sm ring-1 ring-[#c99726]/50'
                       : 'bg-white/5 hover:bg-white/10 border-white/5 hover:border-white/20'
                   }`}
                 >

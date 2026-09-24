@@ -74,7 +74,7 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({ sermon, onClose 
 
             <button
               onClick={togglePlay}
-              className="w-10 h-10 rounded-full bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] flex items-center justify-center shadow transition-all cursor-pointer"
+              className="w-10 h-10 rounded-full bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] flex items-center justify-center shadow-sm transition-colors cursor-pointer"
             >
               {isPlaying ? <Pause className="w-5 h-5 fill-[#021a10]" /> : <Play className="w-5 h-5 fill-[#021a10] ml-0.5" />}
             </button>

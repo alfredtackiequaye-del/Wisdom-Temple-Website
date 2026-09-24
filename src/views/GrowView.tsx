@@ -206,7 +206,7 @@ export const GrowView: React.FC<GrowViewProps> = ({ onNavigate }) => {
                   </div>
                   <button
                     type="submit"
-                    className="w-full py-3 bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] font-black text-xs rounded-xl shadow-lg transition-all cursor-pointer"
+                    className="w-full py-3 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
                   >
                     ENROLL IN FOUNDATION SCHOOL
                   </button>

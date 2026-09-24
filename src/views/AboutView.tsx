@@ -9,7 +9,8 @@ import {
   UserCheck, 
   History, 
   CheckCircle2, 
-  Shield
+  Shield,
+  X
 } from 'lucide-react';
 
 interface AboutViewProps {
@@ -19,6 +20,7 @@ interface AboutViewProps {
 
 export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
   const [activeTab, setActiveTab] = useState<string>('who-we-are');
+  const [showCouncilModal, setShowCouncilModal] = useState<boolean>(false);
 
   useEffect(() => {
     if (initialSubTab) {
@@ -157,7 +159,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                   alt="Rev. Gabriel Dela and Lady Dr. Helena Dela - Shepherd and First Lady of Wisdom Temple"
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#02180e]/90 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-black/40 pointer-events-none" />
                 <div className="absolute bottom-2.5 left-2.5 right-2.5 text-white">
                   <span className="text-[9px] font-mono text-[#f5cf72] font-bold uppercase tracking-wider block">
                     PASTORAL LEADERSHIP
@@ -313,7 +315,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                   alt="Rev. Gabriel Dela and Lady Dr. Helena Dela - Shepherd and First Lady of Wisdom Temple"
                   className="w-full h-full object-cover object-top group-hover:scale-102 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#02180e]/90 via-[#02180e]/20 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-black/40 pointer-events-none" />
                 <div className="absolute bottom-4 left-4 right-4">
                   <span className="text-[10px] font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#02180e]/90 px-2.5 py-1 rounded-md border border-[#c99726]/40 inline-block mb-1">
                     PASTORAL COUPLE
@@ -385,33 +387,91 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
               </div>
             </div>
 
-            {/* Church Board & Pastoral Council Placeholders */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4">
-              <div className="bg-white p-6 rounded-2xl border border-[#d6e5dc] text-center space-y-2">
-                <div className="w-12 h-12 rounded-full bg-[#eef6f1] text-[#07472c] mx-auto flex items-center justify-center font-bold border border-[#c2decc]">
-                  PC
-                </div>
-                <h4 className="text-sm font-bold text-[#032014] font-serif-title">Pastoral Council</h4>
-                <p className="text-xs text-slate-500 font-mono">[PASTORAL TEAM PLACEHOLDER]</p>
-                <p className="text-[11px] text-slate-400">Spiritual oversight, prayer and discipleship</p>
+            {/* Church Council, Pastoral Council & Leadership Governance */}
+            <div className="space-y-4 pt-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-bold text-[#032014] font-serif-title flex items-center space-x-2">
+                  <Shield className="w-5 h-5 text-[#c99726]" />
+                  <span>Church Governance & Leadership Councils</span>
+                </h3>
               </div>
 
-              <div className="bg-white p-6 rounded-2xl border border-[#d6e5dc] text-center space-y-2">
-                <div className="w-12 h-12 rounded-full bg-[#eef6f1] text-[#07472c] mx-auto flex items-center justify-center font-bold border border-[#c2decc]">
-                  CB
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                {/* 1. Pastoral Council */}
+                <div className="bg-white p-6 rounded-2xl border border-[#d6e5dc] text-center space-y-2 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <div className="w-12 h-12 rounded-full bg-[#eef6f1] text-[#07472c] mx-auto flex items-center justify-center font-bold border border-[#c2decc]">
+                      PC
+                    </div>
+                    <h4 className="text-sm font-bold text-[#032014] font-serif-title">Pastoral Council</h4>
+                    <p className="text-xs text-[#07472c] font-semibold">Spiritual Oversight</p>
+                    <p className="text-[11px] text-slate-500 leading-relaxed">
+                      Doctrinal integrity, pastoral intercession, discipleship, and spiritual shepherd care across all congregations.
+                    </p>
+                  </div>
+                  <span className="text-[10px] font-mono text-slate-400 block pt-2 border-t border-slate-100">
+                    Spiritual Authority
+                  </span>
                 </div>
-                <h4 className="text-sm font-bold text-[#032014] font-serif-title">Church Board</h4>
-                <p className="text-xs text-slate-500 font-mono">[BOARD MEMBERS PLACEHOLDER]</p>
-                <p className="text-[11px] text-slate-400">Governance, administration and stewardship</p>
-              </div>
 
-              <div className="bg-white p-6 rounded-2xl border border-[#d6e5dc] text-center space-y-2">
-                <div className="w-12 h-12 rounded-full bg-[#eef6f1] text-[#07472c] mx-auto flex items-center justify-center font-bold border border-[#c2decc]">
-                  DM
+                {/* 2. Church Council (Formerly Church Board) with Official Photo */}
+                <div 
+                  onClick={() => setShowCouncilModal(true)}
+                  className="bg-white rounded-2xl border-2 border-[#c99726]/50 hover:border-[#c99726] overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col justify-between group cursor-pointer"
+                >
+                  <div className="relative aspect-[16/11] bg-[#02180e] overflow-hidden">
+                    <img
+                      src="/church_council.png"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (target.src !== '/church_council.jpg') {
+                          target.src = '/church_council.jpg';
+                        }
+                      }}
+                      alt="ICGC Wisdom Temple Church Council"
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-black/40 pointer-events-none" />
+                    <div className="absolute bottom-2.5 left-3 right-3 text-white">
+                      <span className="text-[9px] font-mono uppercase tracking-wider text-[#f5cf72] font-bold block">
+                        STEWARDSHIP & GOVERNANCE
+                      </span>
+                      <span className="text-xs font-bold text-white block">Wisdom Temple</span>
+                    </div>
+                  </div>
+
+                  <div className="p-4 text-center space-y-1 bg-white flex-1 flex flex-col justify-between">
+                    <div>
+                      <h4 className="text-sm font-bold text-[#032014] font-serif-title group-hover:text-[#c99726] transition-colors">
+                        Church Council
+                      </h4>
+                      <p className="text-xs text-[#07472c] font-semibold">Governance & Administration</p>
+                      <p className="text-[11px] text-slate-500 leading-snug mt-1">
+                        Institutional policies, capital developments, annual budgets, and fiduciary kingdom stewardship.
+                      </p>
+                    </div>
+                    <span className="text-[10px] font-mono text-[#c99726] font-bold block pt-2 border-t border-slate-100">
+                      Click to View Photo ↗
+                    </span>
+                  </div>
                 </div>
-                <h4 className="text-sm font-bold text-[#032014] font-serif-title">Ministry Deacons</h4>
-                <p className="text-xs text-slate-500 font-mono">[DEACONS PLACEHOLDER]</p>
-                <p className="text-[11px] text-slate-400">Hospitality, protocol, welfare and operations</p>
+
+                {/* 3. Ministry Deacons */}
+                <div className="bg-white p-6 rounded-2xl border border-[#d6e5dc] text-center space-y-2 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <div className="w-12 h-12 rounded-full bg-[#eef6f1] text-[#07472c] mx-auto flex items-center justify-center font-bold border border-[#c2decc]">
+                      DM
+                    </div>
+                    <h4 className="text-sm font-bold text-[#032014] font-serif-title">Ministry Deacons</h4>
+                    <p className="text-xs text-[#07472c] font-semibold">Sanctuary Operations</p>
+                    <p className="text-[11px] text-slate-500 leading-relaxed">
+                      Hospitality, protocol, member welfare, logistical execution, and order within the sanctuary.
+                    </p>
+                  </div>
+                  <span className="text-[10px] font-mono text-slate-400 block pt-2 border-t border-slate-100">
+                    Service & Operations
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -452,6 +512,62 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
           </div>
         )}
       </div>
+
+      {/* Church Council Photo Lightbox Modal */}
+      {showCouncilModal && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
+          onClick={() => setShowCouncilModal(false)}
+        >
+          <div 
+            className="relative max-w-4xl w-full bg-[#02180e] rounded-3xl border-2 border-[#c99726]/60 shadow-2xl overflow-hidden text-white"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-[#07472c] bg-[#032014]">
+              <div>
+                <span className="text-[10px] font-mono font-bold text-[#f5cf72] uppercase tracking-wider block">
+                  ICGC WISDOM TEMPLE
+                </span>
+                <h3 className="text-lg font-bold font-serif-title text-white">
+                  Church Council
+                </h3>
+              </div>
+              <button
+                onClick={() => setShowCouncilModal(false)}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Modal Photo */}
+            <div className="relative aspect-[3831/2275] max-h-[75vh] w-full bg-black/80 flex items-center justify-center p-2">
+              <img
+                src="/church_council.png"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (target.src !== '/church_council.jpg') {
+                    target.src = '/church_council.jpg';
+                  }
+                }}
+                alt="Wisdom Temple Church Council"
+                className="w-full h-full object-contain rounded-xl"
+              />
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 sm:p-5 bg-[#032014] border-t border-[#07472c] text-center space-y-1">
+              <p className="text-xs font-bold text-[#fce49e] uppercase tracking-wider">
+                Governance, Strategic Oversight & Fiduciary Kingdom Stewardship
+              </p>
+              <p className="text-[11px] text-emerald-200/80">
+                Wisdom Temple, Star Junction, Tabora • Accra, Ghana
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

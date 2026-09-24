@@ -207,7 +207,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
                 <div className="pt-2 flex flex-wrap gap-3">
                   <button
                     onClick={() => onPlayAudio(sermons[0])}
-                    className="px-4 py-2.5 bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] font-black text-xs rounded-xl transition-all flex items-center space-x-1.5 cursor-pointer shadow"
+                    className="px-4 py-2 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg transition-colors flex items-center space-x-1.5 cursor-pointer shadow-sm"
                   >
                     <Headphones className="w-4 h-4 fill-[#021a10]" />
                     <span>Listen Audio</span>
@@ -267,7 +267,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
                       alt={sermon.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#02180e]/90 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-black/40" />
                     
                     <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#02180e]/90 backdrop-blur-md text-[#f5cf72] text-[10px] font-bold uppercase rounded border border-[#c99726]/40">
                       {sermon.category}
@@ -283,7 +283,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
                       className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-[#02180e]/50 backdrop-blur-xs transition-opacity cursor-pointer"
                       aria-label={`Watch ${sermon.title}`}
                     >
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#c99726] to-[#e5b138] text-[#021a10] flex items-center justify-center shadow-xl transform scale-90 group-hover:scale-100 transition-transform">
+                      <div className="w-12 h-12 rounded-full bg-[#c99726] text-[#021a10] flex items-center justify-center shadow-lg transform scale-90 group-hover:scale-100 transition-transform">
                         <Play className="w-5 h-5 ml-0.5 fill-[#021a10]" />
                       </div>
                     </button>

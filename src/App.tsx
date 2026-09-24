@@ -13,6 +13,7 @@ import {
   VisitPlan, 
   ContactMessage,
   EventRegistration,
+  GivingRecord,
   ChurchPhoto
 } from './types';
 import { 
@@ -47,9 +48,85 @@ import { GiveView } from './views/GiveView';
 import { ContactView } from './views/ContactView';
 import { AdminView } from './views/AdminView';
 
+// Local storage helper
+const loadFromStorage = <T,>(key: string, defaultValue: T): T => {
+  try {
+    const saved = localStorage.getItem(key);
+    if (saved) return JSON.parse(saved);
+  } catch (e) {
+    console.error(`Error loading ${key} from storage:`, e);
+  }
+  return defaultValue;
+};
+
+const saveToStorage = <T,>(key: string, value: T) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) {
+    console.error(`Error saving ${key} to storage:`, e);
+  }
+};
+
+// Helper to detect initial page from URL
+const getInitialPage = (): PageId => {
+  if (typeof window !== 'undefined') {
+    const path = window.location.pathname.toLowerCase();
+    const hash = window.location.hash.toLowerCase();
+    const search = window.location.search.toLowerCase();
+    if (
+      path.includes('admin') || 
+      hash.includes('admin') || 
+      search.includes('admin') ||
+      search.includes('page=admin')
+    ) {
+      return 'admin';
+    }
+  }
+  return 'home';
+};
+
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<PageId>('home');
+  const [currentPage, setCurrentPage] = useState<PageId>(getInitialPage);
   const [currentSubTab, setCurrentSubTab] = useState<string | undefined>(undefined);
+
+  // Sync browser URL with popstate/hashchange
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const path = window.location.pathname.toLowerCase();
+      const hash = window.location.hash.toLowerCase();
+      const search = window.location.search.toLowerCase();
+      if (
+        path.includes('admin') || 
+        hash.includes('admin') || 
+        search.includes('admin') ||
+        search.includes('page=admin')
+      ) {
+        setCurrentPage('admin');
+      } else {
+        setCurrentPage(prev => (prev === 'admin' ? 'home' : prev));
+      }
+    };
+
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+    };
+  }, []);
+
+  // Leadership Admin shortcut (Ctrl+Shift+A or Alt+A)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) || 
+          (e.altKey && (e.key === 'A' || e.key === 'a'))) {
+        e.preventDefault();
+        handleNavigate('admin');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Media Player State
   const [activeAudioSermon, setActiveAudioSermon] = useState<Sermon | null>(null);
@@ -70,63 +147,167 @@ export default function App() {
   const [testimonies] = useState(INITIAL_TESTIMONIES);
   const [photos] = useState<ChurchPhoto[]>(INITIAL_CHURCH_PHOTOS);
 
-  // User Submissions
-  const [prayerRequests, setPrayerRequests] = useState<PrayerRequest[]>([
+  // Initial Giving Records
+  const initialGiving: GivingRecord[] = [
     {
-      id: 'pr-1',
-      fullName: 'Sister Abigail',
-      category: 'Healing & Health',
-      email: 'abigail@example.com',
-      phone: '+233 24 123 4567',
-      requestText: 'Praying for complete restoration of health and divine strength for my mother following surgery.',
-      isConfidential: true,
-      wantsFollowup: true,
-      dateSubmitted: 'Sep 18, 2026',
-      status: 'new',
+      id: 'give-1',
+      donorName: 'Elder Kofi Boateng',
+      fund: 'FirstFruit',
+      amount: 500,
+      currency: 'GHS',
+      paymentMethod: 'Mobile Money (MTN MoMo)',
+      referenceCode: 'WT-FIR-4821',
+      phoneOrTxnId: '024 456 7890',
+      notes: 'Firstfruit seed for divine preservation over family business.',
+      dateSubmitted: 'Sep 21, 2026',
+      status: 'confirmed',
     },
     {
-      id: 'pr-2',
-      fullName: 'Brother Kojo',
-      category: 'Financial Breakthrough & Employment',
-      email: 'kojo@example.com',
-      phone: '+233 20 987 6543',
-      requestText: 'Seeking divine favor and wisdom in an upcoming interview with a multinational engineering firm.',
-      isConfidential: false,
-      wantsFollowup: true,
-      dateSubmitted: 'Sep 17, 2026',
-      status: 'prayed',
+      id: 'give-2',
+      donorName: 'Anonymous Kingdom Giver',
+      fund: 'Wisdom-Summit',
+      amount: 1000,
+      currency: 'GHS',
+      paymentMethod: 'Mobile Money (MTN MoMo)',
+      referenceCode: 'WT-WIS-7734',
+      phoneOrTxnId: '055 557 7099',
+      notes: 'Wisdom Summit 2026 media and live broadcast partner seed.',
+      dateSubmitted: 'Sep 20, 2026',
+      status: 'confirmed',
     },
-  ]);
-
-  const [visitPlans, setVisitPlans] = useState<VisitPlan[]>([
     {
-      id: 'vp-1',
-      fullName: 'Kwame & Efua Asante',
-      email: 'kwame@example.com',
-      phone: '+233 24 555 1234',
-      serviceDate: 'This Sunday',
-      serviceTime: '8:00 AM',
-      adultsCount: 2,
-      childrenCount: 2,
-      needAssistance: false,
-      specialNeeds: 'First time visiting, eager to check children into Kingdom Kids.',
+      id: 'give-3',
+      donorName: 'Sister Grace Mensah',
+      fund: 'Offering',
+      amount: 200,
+      currency: 'GHS',
+      paymentMethod: 'Bank Transfer (CBG)',
+      referenceCode: 'WT-OFF-2190',
+      phoneOrTxnId: 'CBG-TX-99823',
+      notes: 'Midweek thanksgiving offering.',
       dateSubmitted: 'Sep 19, 2026',
-      status: 'planned',
+      status: 'pending-verification',
     }
-  ]);
+  ];
 
-  const [contactMessages, setContactMessages] = useState<ContactMessage[]>([
+  // Initial Event Registrations
+  const initialEventRegistrations: EventRegistration[] = [
     {
-      id: 'msg-1',
-      fullName: 'Nana Yeboah',
-      email: 'nana@example.com',
-      phone: '+233 20 111 2233',
-      subject: 'Wisdom Summit Inquiries',
-      message: 'Will there be syndicate sessions for tertiary students at the upcoming Wisdom Summit?',
-      dateSubmitted: 'Sep 18, 2026',
-      status: 'unread',
+      id: 'reg-1',
+      eventId: 'wisdom-summit-2026',
+      eventName: 'Wisdom Summit 2026',
+      fullName: 'David K. Ofori',
+      email: 'd.ofori@example.com',
+      phone: '+233 24 990 1122',
+      attendeesCount: 2,
+      registrationCode: 'WT-2026-8841',
+      dateRegistered: 'Sep 21, 2026',
+    },
+    {
+      id: 'reg-2',
+      eventId: 'night-of-encounters',
+      eventName: 'All-Night of Encounters',
+      fullName: 'Priscilla Darko',
+      email: 'pdarko@example.com',
+      phone: '+233 50 334 5566',
+      attendeesCount: 1,
+      registrationCode: 'WT-2026-5519',
+      dateRegistered: 'Sep 20, 2026',
     }
-  ]);
+  ];
+
+  // Persistent User Submissions
+  const [givingRecords, setGivingRecords] = useState<GivingRecord[]>(() =>
+    loadFromStorage('wt_giving_records', initialGiving)
+  );
+
+  const [eventRegistrations, setEventRegistrations] = useState<EventRegistration[]>(() =>
+    loadFromStorage('wt_event_registrations', initialEventRegistrations)
+  );
+
+  const [prayerRequests, setPrayerRequests] = useState<PrayerRequest[]>(() =>
+    loadFromStorage('wt_prayer_requests', [
+      {
+        id: 'pr-1',
+        fullName: 'Sister Abigail',
+        category: 'Healing & Health',
+        email: 'abigail@example.com',
+        phone: '+233 24 123 4567',
+        requestText: 'Praying for complete restoration of health and divine strength for my mother following surgery.',
+        isConfidential: true,
+        wantsFollowup: true,
+        dateSubmitted: 'Sep 18, 2026',
+        status: 'new',
+      },
+      {
+        id: 'pr-2',
+        fullName: 'Brother Kojo',
+        category: 'Financial Breakthrough & Employment',
+        email: 'kojo@example.com',
+        phone: '+233 20 987 6543',
+        requestText: 'Seeking divine favor and wisdom in an upcoming interview with a multinational engineering firm.',
+        isConfidential: false,
+        wantsFollowup: true,
+        dateSubmitted: 'Sep 17, 2026',
+        status: 'prayed',
+      },
+    ])
+  );
+
+  const [visitPlans, setVisitPlans] = useState<VisitPlan[]>(() =>
+    loadFromStorage('wt_visit_plans', [
+      {
+        id: 'vp-1',
+        fullName: 'Kwame & Efua Asante',
+        email: 'kwame@example.com',
+        phone: '+233 24 555 1234',
+        serviceDate: 'This Sunday',
+        serviceTime: '8:00 AM',
+        adultsCount: 2,
+        childrenCount: 2,
+        needAssistance: false,
+        specialNeeds: 'First time visiting, eager to check children into Kingdom Kids.',
+        dateSubmitted: 'Sep 19, 2026',
+        status: 'planned',
+      }
+    ])
+  );
+
+  const [contactMessages, setContactMessages] = useState<ContactMessage[]>(() =>
+    loadFromStorage('wt_contact_messages', [
+      {
+        id: 'msg-1',
+        fullName: 'Nana Yeboah',
+        email: 'nana@example.com',
+        phone: '+233 20 111 2233',
+        subject: 'Wisdom Summit Inquiries',
+        message: 'Will there be syndicate sessions for tertiary students at the upcoming Wisdom Summit?',
+        dateSubmitted: 'Sep 18, 2026',
+        status: 'unread',
+      }
+    ])
+  );
+
+  // Sync to storage on state change
+  useEffect(() => {
+    saveToStorage('wt_giving_records', givingRecords);
+  }, [givingRecords]);
+
+  useEffect(() => {
+    saveToStorage('wt_event_registrations', eventRegistrations);
+  }, [eventRegistrations]);
+
+  useEffect(() => {
+    saveToStorage('wt_prayer_requests', prayerRequests);
+  }, [prayerRequests]);
+
+  useEffect(() => {
+    saveToStorage('wt_visit_plans', visitPlans);
+  }, [visitPlans]);
+
+  useEffect(() => {
+    saveToStorage('wt_contact_messages', contactMessages);
+  }, [contactMessages]);
 
   // Toast Notification
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -138,11 +319,31 @@ export default function App() {
     }, 3500);
   };
 
-  // Scroll to top on page change
+  // Scroll to top on page change and synchronize URL route
   const handleNavigate = (page: PageId, subTab?: string) => {
     setCurrentPage(page);
     setCurrentSubTab(subTab);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (typeof window !== 'undefined') {
+      if (page === 'admin') {
+        if (!window.location.hash.includes('admin') && !window.location.search.includes('admin')) {
+          try {
+            window.history.pushState(null, '', '/#admin');
+          } catch {
+            window.location.hash = 'admin';
+          }
+        }
+      } else {
+        if (window.location.hash.includes('admin') || window.location.search.includes('admin') || window.location.pathname.includes('admin')) {
+          try {
+            window.history.pushState(null, '', '/');
+          } catch {
+            window.location.hash = '';
+          }
+        }
+      }
+    }
   };
 
   // Audio & Video Handlers
@@ -165,7 +366,23 @@ export default function App() {
 
   // Submissions Handlers
   const handleRegisterEventSubmit = (reg: EventRegistration) => {
-    showToast(`Registration confirmed for ${reg.fullName}! Pass code: ${reg.registrationCode}`);
+    setEventRegistrations(prev => [reg, ...prev]);
+    showToast(`Pass issued for ${reg.fullName}! Pass code: ${reg.registrationCode}`);
+  };
+
+  const handleGivingSubmit = (record: Omit<GivingRecord, 'id' | 'dateSubmitted' | 'status'>) => {
+    const newRecord: GivingRecord = {
+      ...record,
+      id: `give-${Date.now()}`,
+      dateSubmitted: new Date().toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric', 
+        year: 'numeric' 
+      }),
+      status: 'pending-verification',
+    };
+    setGivingRecords(prev => [newRecord, ...prev]);
+    showToast(`Giving logged with reference ${newRecord.referenceCode}`);
   };
 
   const handlePrayerSubmit = (req: Omit<PrayerRequest, 'id' | 'dateSubmitted' | 'status'>) => {
@@ -201,9 +418,58 @@ export default function App() {
     showToast('Your message was sent to the church office.');
   };
 
-  const handleJoinMinistry = (ministryName: string, name: string, email: string, phone: string) => {
+  const handleJoinMinistry = (ministryName: string, name: string) => {
     showToast(`Interest in ${ministryName} registered for ${name}!`);
   };
+
+  const unreadCount = 
+    prayerRequests.filter(p => p.status === 'new').length + 
+    visitPlans.filter(v => v.status === 'planned').length +
+    givingRecords.filter(g => g.status === 'pending-verification').length +
+    contactMessages.filter(m => m.status === 'unread').length;
+
+  // =========================================================================
+  // STANDALONE DEDICATED ADMIN PAGE (Completely isolated from public church site)
+  // =========================================================================
+  if (currentPage === 'admin') {
+    return (
+      <div className="min-h-screen bg-[#f8faf8] font-sans antialiased text-slate-900 selection:bg-[#c99726] selection:text-[#021a10]">
+        <AdminView
+          prayerRequests={prayerRequests}
+          visitPlans={visitPlans}
+          contactMessages={contactMessages}
+          givingRecords={givingRecords}
+          eventRegistrations={eventRegistrations}
+          events={events}
+          onUpdatePrayerStatus={(id, status) => {
+            setPrayerRequests(prev => prev.map(p => p.id === id ? { ...p, status } : p));
+            showToast('Prayer status updated');
+          }}
+          onUpdateVisitStatus={(id, status) => {
+            setVisitPlans(prev => prev.map(v => v.id === id ? { ...v, status } : v));
+            showToast('Visitor status updated');
+          }}
+          onUpdateMessageStatus={(id, status) => {
+            setContactMessages(prev => prev.map(m => m.id === id ? { ...m, status } : m));
+            showToast('Message status updated');
+          }}
+          onUpdateGivingStatus={(id, status) => {
+            setGivingRecords(prev => prev.map(g => g.id === id ? { ...g, status } : g));
+            showToast('Giving status updated');
+          }}
+          onNavigate={handleNavigate}
+        />
+
+        {/* Standalone Admin Toast Alert */}
+        {toastMessage && (
+          <div className="fixed bottom-6 right-6 z-50 bg-[#032416] text-white border border-[#c99726]/60 px-5 py-3 rounded-2xl shadow-2xl text-xs font-semibold flex items-center space-x-2 animate-in fade-in slide-in-from-bottom-2 duration-200">
+            <span className="w-2 h-2 rounded-full bg-[#f5cf72] animate-pulse" />
+            <span>{toastMessage}</span>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f8faf8] font-sans text-[#0f241a] flex flex-col selection:bg-[#c99726] selection:text-[#021a10]">
@@ -211,7 +477,7 @@ export default function App() {
       <Navbar 
         currentPage={currentPage} 
         onNavigate={handleNavigate} 
-        unreadAdminCount={prayerRequests.filter(p => p.status === 'new').length + visitPlans.filter(v => v.status === 'planned').length}
+        unreadAdminCount={unreadCount}
       />
 
       {/* Main Viewport Content */}
@@ -231,26 +497,18 @@ export default function App() {
                 events={events}
                 ministries={ministries}
                 testimonies={testimonies}
-                photos={photos}
                 onPlayAudio={handlePlayAudio}
                 onWatchVideo={handleWatchVideo}
-                onRegisterEvent={(e) => setRegisteringEvent(e)}
+                onRegisterEvent={(event) => setRegisteringEvent(event)}
                 onSubmitPrayer={handlePrayerSubmit}
                 onShare={handleOpenShare}
               />
             )}
 
-            {currentPage === 'gallery' && (
-              <GalleryView
-                photos={photos}
-                onNavigate={handleNavigate}
-              />
-            )}
-
             {currentPage === 'about' && (
-              <AboutView 
-                initialSubTab={currentSubTab} 
-                onNavigate={handleNavigate} 
+              <AboutView
+                onNavigate={handleNavigate}
+                initialSubTab={currentSubTab}
               />
             )}
 
@@ -265,15 +523,16 @@ export default function App() {
             )}
 
             {currentPage === 'grow' && (
-              <GrowView onNavigate={handleNavigate} />
+              <GrowView
+                onNavigate={handleNavigate}
+              />
             )}
 
             {currentPage === 'ministries' && (
               <MinistriesView
                 ministries={ministries}
-                initialMinistryId={currentSubTab}
-                onNavigate={handleNavigate}
                 onJoinMinistry={handleJoinMinistry}
+                onNavigate={handleNavigate}
               />
             )}
 
@@ -281,8 +540,15 @@ export default function App() {
               <EventsView
                 events={events}
                 initialSubTab={currentSubTab}
-                onRegisterEvent={(e) => setRegisteringEvent(e)}
+                onRegisterEvent={(event) => setRegisteringEvent(event)}
                 onShare={handleOpenShare}
+                onNavigate={handleNavigate}
+              />
+            )}
+
+            {currentPage === 'gallery' && (
+              <GalleryView
+                photos={photos}
                 onNavigate={handleNavigate}
               />
             )}
@@ -302,35 +568,16 @@ export default function App() {
             )}
 
             {currentPage === 'give' && (
-              <GiveView onNavigate={handleNavigate} />
+              <GiveView 
+                onNavigate={handleNavigate} 
+                onSubmitGiving={handleGivingSubmit} 
+              />
             )}
 
             {currentPage === 'contact' && (
               <ContactView
                 onNavigate={handleNavigate}
                 onSubmitContactMessage={handleContactSubmit}
-              />
-            )}
-
-            {currentPage === 'admin' && (
-              <AdminView
-                prayerRequests={prayerRequests}
-                visitPlans={visitPlans}
-                contactMessages={contactMessages}
-                events={events}
-                onUpdatePrayerStatus={(id, status) => {
-                  setPrayerRequests(prev => prev.map(p => p.id === id ? { ...p, status } : p));
-                  showToast('Prayer status updated');
-                }}
-                onUpdateVisitStatus={(id, status) => {
-                  setVisitPlans(prev => prev.map(v => v.id === id ? { ...v, status } : v));
-                  showToast('Visitor status updated');
-                }}
-                onUpdateMessageStatus={(id, status) => {
-                  setContactMessages(prev => prev.map(m => m.id === id ? { ...m, status } : m));
-                  showToast('Message status updated');
-                }}
-                onNavigate={handleNavigate}
               />
             )}
           </motion.div>
@@ -388,4 +635,3 @@ export default function App() {
     </div>
   );
 }
-

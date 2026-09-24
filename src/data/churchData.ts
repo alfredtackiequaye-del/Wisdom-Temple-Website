@@ -8,9 +8,9 @@ export const CHURCH_INFO = {
   location: 'Star Junction, Tabora - Accra, Ghana',
   landmark: 'Star Junction, Tabora',
   physicalAddress: 'Wisdom Temple, Star Junction, Tabora - Accra',
-  phone: '[CHURCH PHONE]',
-  email: '[CHURCH EMAIL]',
-  whatsapp: '[WHATSAPP NUMBER]',
+  phone: '0245009764',
+  email: 'icgcwisdomtemple@gmail.com',
+  whatsapp: '0245009764',
   shepherd: {
     title: 'Shepherd & Senior Minister',
     name: 'Rev. Gabriel Dela',

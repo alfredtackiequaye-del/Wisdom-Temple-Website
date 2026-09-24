@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { PageId } from '../types';
+import { PageId, GivingRecord } from '../types';
 import { GIVING_DETAILS } from '../data/churchData';
 import { 
   CreditCard, 
@@ -11,21 +11,30 @@ import {
   Copy,
   ZoomIn,
   X,
-  Download
+  Download,
+  Printer,
+  Sparkles,
+  ExternalLink,
+  ChevronRight,
+  ArrowRight
 } from 'lucide-react';
 
 interface GiveViewProps {
   onNavigate: (page: PageId) => void;
+  onSubmitGiving?: (record: Omit<GivingRecord, 'id' | 'dateSubmitted' | 'status'>) => void;
 }
 
-export const GiveView: React.FC<GiveViewProps> = () => {
+export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }) => {
   const [selectedFund, setSelectedFund] = useState<string>('FirstFruit');
   const [currency, setCurrency] = useState<'GHS' | 'USD'>('GHS');
   const [amount, setAmount] = useState<string>('100');
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [donorName, setDonorName] = useState('');
-  const [generatedReference, setGeneratedReference] = useState<string | null>(null);
+  const [donorPhone, setDonorPhone] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState<'Mobile Money (MTN MoMo)' | 'Bank Transfer (CBG)'>('Mobile Money (MTN MoMo)');
+  const [notes, setNotes] = useState('');
   const [flyerModalOpen, setFlyerModalOpen] = useState(false);
+  const [completedReceipt, setCompletedReceipt] = useState<GivingRecord | null>(null);
 
   const funds = [
     { 
@@ -50,54 +59,86 @@ export const GiveView: React.FC<GiveViewProps> = () => {
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
-  const handleGenerateReference = (e: React.FormEvent) => {
+  const handleRecordGiving = (e: React.FormEvent) => {
     e.preventDefault();
     const prefix = selectedFund.substring(0, 3).toUpperCase();
     const randomCode = Math.floor(1000 + Math.random() * 9000);
     const ref = `WT-${prefix}-${randomCode}`;
-    setGeneratedReference(ref);
+    const numAmount = parseFloat(amount) || 0;
+
+    const recordData: Omit<GivingRecord, 'id' | 'dateSubmitted' | 'status'> = {
+      donorName: donorName.trim() || 'Anonymous Kingdom Giver',
+      fund: selectedFund,
+      amount: numAmount,
+      currency,
+      paymentMethod,
+      referenceCode: ref,
+      phoneOrTxnId: donorPhone.trim() || 'Direct Transfer',
+      notes: notes.trim() || undefined,
+    };
+
+    if (onSubmitGiving) {
+      onSubmitGiving(recordData);
+    }
+
+    const receipt: GivingRecord = {
+      ...recordData,
+      id: `give-${Date.now()}`,
+      dateSubmitted: new Date().toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }),
+      status: 'pending-verification',
+    };
+
+    setCompletedReceipt(receipt);
+  };
+
+  const handlePrintReceipt = () => {
+    window.print();
   };
 
   return (
     <div className="bg-[#f8faf8] min-h-screen text-slate-900 pb-24">
       {/* Header Banner - ICGC Deep Forest & Gold */}
-      <section className="bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+      <section className="bg-[#02180e] text-white py-14 sm:py-20 border-b border-[#084c2e]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 sm:space-y-4">
           <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
             STEWARDSHIP & GENEROSITY
           </span>
-          <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
+          <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
             DIGITAL GIVING & STEWARDSHIP
           </h1>
-          <p className="text-base sm:text-lg text-emerald-200/90 max-w-2xl mx-auto leading-relaxed">
-            You can send your FIRSTFRUIT, OFFERING & PLEDGES to our MoMo or Bank Account.
+          <p className="text-sm sm:text-lg text-emerald-200/90 max-w-2xl mx-auto leading-relaxed">
+            Send your FIRSTFRUIT, OFFERING & PLEDGES conveniently via official Mobile Money or Bank Account.
           </p>
         </div>
       </section>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 space-y-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 space-y-8 sm:space-y-12">
         {/* Official Giving Flyer Banner Display */}
-        <div className="bg-gradient-to-r from-[#032014] via-[#053521] to-[#032014] rounded-3xl p-6 sm:p-8 border border-[#c99726]/40 shadow-xl overflow-hidden relative">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-[#c99726]/10 rounded-full blur-3xl pointer-events-none" />
-          
-          <div className="relative z-10 flex flex-col lg:flex-row items-center gap-8 justify-between">
-            <div className="space-y-4 text-center lg:text-left flex-1">
-              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#c99726]/20 border border-[#c99726]/50 text-[#f5cf72] text-xs font-mono font-bold uppercase">
+        <div className="bg-[#032014] rounded-2xl p-5 sm:p-8 border border-white/10 shadow-xl overflow-hidden relative">
+          <div className="relative z-10 flex flex-col lg:flex-row items-center gap-6 sm:gap-8 justify-between">
+            <div className="space-y-3 sm:space-y-4 text-center lg:text-left flex-1">
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-[#02180e] border border-white/10 text-[#dfb15b] text-[11px] sm:text-xs font-mono font-bold uppercase">
                 <span>OFFICIAL CHURCH GIVING FLYER</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-serif-title">
+              <h2 className="text-xl sm:text-3xl font-light text-white font-serif">
                 Direct Channels for Firstfruit, Offerings & Pledges
               </h2>
-              <p className="text-emerald-100/90 text-sm leading-relaxed max-w-xl">
+              <p className="text-emerald-100/90 text-xs sm:text-sm leading-relaxed max-w-xl">
                 Send your seed directly via official MTN Mobile Money or CBG Bank Account under 
-                <strong className="text-[#f5cf72]"> Wisdom Temple (Kokomlemle)</strong>.
+                <strong className="text-[#dfb15b]"> Wisdom Temple (Kokomlemle)</strong>.
               </p>
               
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 sm:gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setFlyerModalOpen(true)}
-                  className="px-5 py-2.5 bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] font-black text-xs rounded-xl shadow-lg transition-all flex items-center space-x-2 cursor-pointer"
+                  className="px-4 sm:px-5 py-2.5 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors flex items-center space-x-2 cursor-pointer"
                 >
                   <ZoomIn className="w-4 h-4" />
                   <span>VIEW FULL GIVING FLYER</span>
@@ -105,9 +146,9 @@ export const GiveView: React.FC<GiveViewProps> = () => {
                 <a
                   href="/giving_details_official.jpg"
                   download="Wisdom_Temple_Giving_Details.jpg"
-                  className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white font-bold text-xs rounded-xl border border-white/20 transition-all flex items-center space-x-2 cursor-pointer"
+                  className="px-3.5 sm:px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white font-bold text-xs rounded-lg border border-white/20 transition-colors flex items-center space-x-2 cursor-pointer"
                 >
-                  <Download className="w-4 h-4 text-[#f5cf72]" />
+                  <Download className="w-4 h-4 text-[#dfb15b]" />
                   <span>SAVE FLYER</span>
                 </a>
               </div>
@@ -116,7 +157,7 @@ export const GiveView: React.FC<GiveViewProps> = () => {
             {/* Clickable Flyer Preview Thumbnail */}
             <div 
               onClick={() => setFlyerModalOpen(true)}
-              className="group relative cursor-pointer rounded-2xl overflow-hidden border-2 border-[#c99726]/60 shadow-2xl hover:border-[#f5cf72] transition-all transform hover:scale-[1.02] shrink-0 max-w-sm w-full bg-black/40"
+              className="group relative cursor-pointer rounded-2xl overflow-hidden border-2 border-[#c99726]/60 shadow-2xl hover:border-[#f5cf72] transition-all transform hover:scale-[1.02] shrink-0 max-w-xs sm:max-w-sm w-full bg-black/40"
             >
               <img
                 src="/giving_details_official.jpg"
@@ -131,7 +172,7 @@ export const GiveView: React.FC<GiveViewProps> = () => {
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-all flex items-center justify-center">
-                <span className="px-3.5 py-1.5 rounded-lg bg-[#02180e]/90 text-[#f5cf72] text-xs font-bold border border-[#c99726]/60 shadow-lg flex items-center space-x-1.5 opacity-90 group-hover:opacity-100">
+                <span className="px-3 py-1.5 rounded-lg bg-[#02180e]/90 text-[#f5cf72] text-xs font-bold border border-[#c99726]/60 shadow-lg flex items-center space-x-1.5 opacity-90 group-hover:opacity-100">
                   <ZoomIn className="w-3.5 h-3.5" />
                   <span>Tap to Enlarge</span>
                 </span>
@@ -140,281 +181,437 @@ export const GiveView: React.FC<GiveViewProps> = () => {
           </div>
         </div>
 
-        {/* Interactive Giving Workflow & Reference Generator */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left Column: Fund & Amount Selection */}
-          <div className="lg:col-span-7 bg-white rounded-3xl p-8 border border-[#d6e5dc] shadow-sm space-y-6">
-            <div>
-              <span className="text-xs font-mono text-[#07472c] font-bold uppercase tracking-wider block mb-1">
-                STEP 1: SELECT PURPOSE
+        {/* Giving Form & Details */}
+        {completedReceipt ? (
+          /* Official Digital Giving Receipt Confirmation */
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-3xl p-6 sm:p-10 border-2 border-[#c99726]/60 shadow-xl space-y-6 max-w-2xl mx-auto"
+          >
+            <div className="text-center space-y-2">
+              <div className="w-14 h-14 rounded-full bg-[#eef6f1] text-[#07472c] border-2 border-[#c99726] flex items-center justify-center mx-auto shadow-md">
+                <CheckCircle2 className="w-8 h-8 text-[#07472c]" />
+              </div>
+              <span className="text-xs font-mono font-bold text-[#07472c] uppercase tracking-wider block">
+                OFFICIAL KINGDOM STEWARDSHIP RECEIPT
               </span>
-              <h2 className="text-2xl font-bold text-[#032014] font-serif-title">Where to Direct Your Seed</h2>
-            </div>
-
-            {/* Funds List */}
-            <div className="space-y-2.5">
-              {funds.map((f) => (
-                <div
-                  key={f.id}
-                  onClick={() => setSelectedFund(f.id)}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-                    selectedFund === f.id
-                      ? 'border-[#c99726] bg-[#fbf7ee] shadow-xs ring-1 ring-[#c99726]'
-                      : 'border-[#d6e5dc] hover:border-slate-300 bg-white'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-[#032014] text-sm">{f.label}</span>
-                    <input
-                      type="radio"
-                      name="giving-fund"
-                      checked={selectedFund === f.id}
-                      onChange={() => setSelectedFund(f.id)}
-                      className="text-[#c99726] focus:ring-[#c99726]"
-                    />
-                  </div>
-                  <p className="text-xs text-slate-500 mt-1">{f.desc}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Currency & Amount */}
-            <div className="pt-4 border-t border-slate-100 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-mono text-[#07472c] font-bold uppercase tracking-wider">
-                  STEP 2: AMOUNT & CURRENCY
-                </span>
-                <div className="flex items-center space-x-1 bg-[#eef6f1] p-1 rounded-lg text-xs font-bold border border-[#c2decc]">
-                  <button
-                    onClick={() => setCurrency('GHS')}
-                    className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
-                      currency === 'GHS' ? 'bg-[#032014] text-white shadow-xs' : 'text-slate-600'
-                    }`}
-                  >
-                    ₵ GHS
-                  </button>
-                  <button
-                    onClick={() => setCurrency('USD')}
-                    className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
-                      currency === 'USD' ? 'bg-[#032014] text-white shadow-xs' : 'text-slate-600'
-                    }`}
-                  >
-                    $ USD
-                  </button>
-                </div>
-              </div>
-
-              {/* Quick Pills */}
-              <div className="flex flex-wrap gap-2">
-                {quickAmounts.map((q) => (
-                  <button
-                    key={q}
-                    onClick={() => setAmount(q)}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
-                      amount === q
-                        ? 'bg-[#032014] text-[#f5cf72] border-[#032014] shadow'
-                        : 'bg-white text-slate-700 border-[#d6e5dc] hover:bg-[#eef6f1]'
-                    }`}
-                  >
-                    {currency === 'GHS' ? '₵' : '$'} {q}
-                  </button>
-                ))}
-              </div>
-
-              {/* Custom Input */}
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-500">
-                  {currency === 'GHS' ? '₵' : '$'}
-                </span>
-                <input
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  placeholder="Enter custom amount"
-                  className="w-full pl-10 pr-4 py-3 bg-[#f8faf8] border border-[#d6e5dc] rounded-xl text-[#032014] font-bold text-lg focus:outline-none focus:ring-2 focus:ring-[#c99726]"
-                />
-              </div>
-            </div>
-
-            {/* Reference Generator Form */}
-            <form onSubmit={handleGenerateReference} className="pt-4 border-t border-slate-100 space-y-3">
-              <span className="text-xs font-mono text-[#07472c] font-bold uppercase tracking-wider block">
-                STEP 3: GENERATE PAYMENT REFERENCE CODE
-              </span>
-              <p className="text-xs text-slate-500">
-                Use your generated code in the reference/memo field when sending via MoMo or Bank Transfer for instant recognition.
+              <h3 className="text-2xl font-black text-[#032014] font-serif-title">
+                Giving Successfully Logged
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto">
+                Thank you for honoring God with your substance. Your contribution reference has been registered with the Wisdom Temple Treasury.
               </p>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  required
-                  value={donorName}
-                  onChange={(e) => setDonorName(e.target.value)}
-                  placeholder="Your Full Name (e.g. John Mensah)"
-                  className="flex-1 px-4 py-2.5 bg-[#f8faf8] border border-[#d6e5dc] rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#c99726]"
-                />
+            </div>
+
+            {/* Receipt Details Card */}
+            <div className="bg-[#fbf7ee] rounded-2xl p-5 sm:p-6 border border-[#c99726]/50 space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e5cd96] pb-3">
+                <div>
+                  <span className="text-[10px] font-mono uppercase text-[#07472c] font-bold block">REFERENCE CODE</span>
+                  <span className="text-lg font-mono font-black text-[#032014] tracking-wide">
+                    {completedReceipt.referenceCode}
+                  </span>
+                </div>
                 <button
-                  type="submit"
-                  className="px-5 py-2.5 bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] font-black text-xs rounded-xl shadow transition-all cursor-pointer whitespace-nowrap"
+                  onClick={() => copyToClipboard(completedReceipt.referenceCode, 'receipt-ref')}
+                  className="px-3 py-1.5 bg-white hover:bg-slate-50 text-[#032014] rounded-lg border border-[#c99726] text-xs font-bold flex items-center space-x-1 cursor-pointer shadow-xs"
                 >
-                  Generate Reference
+                  {copiedKey === 'receipt-ref' ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-[#c99726]" />}
+                  <span>{copiedKey === 'receipt-ref' ? 'Copied' : 'Copy Code'}</span>
                 </button>
               </div>
 
-              {generatedReference && (
-                <div className="p-4 bg-[#fbf7ee] border border-[#c99726] rounded-xl flex items-center justify-between animate-in zoom-in-95 duration-150">
-                  <div>
-                    <span className="text-[10px] text-[#07472c] font-mono font-bold block">YOUR GIVING REFERENCE</span>
-                    <strong className="text-lg font-mono text-[#032014]">{generatedReference}</strong>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => copyToClipboard(generatedReference, 'ref')}
-                    className="p-2 bg-white rounded-lg text-[#032014] hover:bg-[#eef6f1] border border-[#d6e5dc] text-xs font-semibold flex items-center space-x-1 cursor-pointer"
-                  >
-                    {copiedKey === 'ref' ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-[#c99726]" />}
-                    <span>{copiedKey === 'ref' ? 'Copied' : 'Copy'}</span>
-                  </button>
+              <div className="grid grid-cols-2 gap-4 text-xs">
+                <div>
+                  <span className="text-slate-500 block">Giver Name</span>
+                  <strong className="text-slate-900 font-semibold">{completedReceipt.donorName}</strong>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Giving Purpose</span>
+                  <strong className="text-slate-900 font-semibold">{completedReceipt.fund}</strong>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Amount Seeded</span>
+                  <strong className="text-emerald-900 text-sm font-black font-mono">
+                    {completedReceipt.currency === 'GHS' ? 'GH₵' : '$'} {completedReceipt.amount.toFixed(2)}
+                  </strong>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Payment Channel</span>
+                  <strong className="text-slate-900 font-semibold">{completedReceipt.paymentMethod}</strong>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Contact / Txn ID</span>
+                  <span className="font-mono text-slate-700">{completedReceipt.phoneOrTxnId}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Status</span>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                    ● Recorded / Pending Audit
+                  </span>
+                </div>
+              </div>
+
+              {completedReceipt.notes && (
+                <div className="pt-2 border-t border-[#e5cd96] text-xs">
+                  <span className="text-slate-500 block">Prayer Petition / Notes:</span>
+                  <p className="text-slate-800 italic mt-0.5">"{completedReceipt.notes}"</p>
                 </div>
               )}
-            </form>
-          </div>
+            </div>
 
-          {/* Right Column: Giving Channels */}
-          <div className="lg:col-span-5 space-y-6">
-            {/* Mobile Money Card */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#d6e5dc] shadow-sm space-y-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-[#eef6f1] text-[#07472c] border border-[#c2decc] flex items-center justify-center">
-                  <Smartphone className="w-5 h-5" />
+            {/* Actions */}
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <button
+                type="button"
+                onClick={handlePrintReceipt}
+                className="flex-1 py-3 px-4 bg-[#032014] hover:bg-[#063821] text-white font-bold text-xs rounded-xl shadow transition-all flex items-center justify-center space-x-2 cursor-pointer"
+              >
+                <Printer className="w-4 h-4 text-[#f5cf72]" />
+                <span>PRINT / SAVE RECEIPT</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setCompletedReceipt(null)}
+                className="flex-1 py-3 px-4 bg-white hover:bg-slate-50 text-[#07472c] border border-[#c2decc] font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
+              >
+                Log Another Seed
+              </button>
+            </div>
+
+            <div className="p-3 bg-[#eef6f1] rounded-xl border border-[#c2decc] text-center text-[11px] text-slate-600">
+              <span>Admin & Treasury Notice: This record has been saved and can be reconciled in the </span>
+              <button 
+                onClick={() => onNavigate('admin')}
+                className="font-bold text-[#07472c] underline hover:text-[#032014] cursor-pointer"
+              >
+                Staff Portal
+              </button>.
+            </div>
+          </motion.div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
+            {/* Left Column: Fund Selection & Giving Form */}
+            <div className="lg:col-span-7 bg-white rounded-3xl p-5 sm:p-8 border border-[#d6e5dc] shadow-sm space-y-6">
+              <div>
+                <span className="text-[11px] sm:text-xs font-mono text-[#07472c] font-bold uppercase tracking-wider block mb-1">
+                  STEP 1: SELECT PURPOSE & AMOUNT
+                </span>
+                <h2 className="text-xl sm:text-2xl font-bold text-[#032014] font-serif-title">
+                  Where to Direct Your Seed
+                </h2>
+              </div>
+
+              {/* Funds List */}
+              <div className="space-y-2.5">
+                {funds.map((f) => (
+                  <div
+                    key={f.id}
+                    onClick={() => setSelectedFund(f.id)}
+                    className={`p-3.5 sm:p-4 rounded-2xl border transition-all cursor-pointer ${
+                      selectedFund === f.id
+                        ? 'border-[#c99726] bg-[#fbf7ee] shadow-xs ring-1 ring-[#c99726]'
+                        : 'border-[#d6e5dc] hover:border-slate-300 bg-white'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-[#032014] text-xs sm:text-sm">{f.label}</span>
+                      <input
+                        type="radio"
+                        name="giving-fund"
+                        checked={selectedFund === f.id}
+                        onChange={() => setSelectedFund(f.id)}
+                        className="text-[#c99726] focus:ring-[#c99726]"
+                      />
+                    </div>
+                    <p className="text-[11px] sm:text-xs text-slate-500 mt-1 leading-snug">{f.desc}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Currency & Amount */}
+              <div className="pt-4 border-t border-slate-100 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] sm:text-xs font-mono text-[#07472c] font-bold uppercase tracking-wider">
+                    AMOUNT & CURRENCY
+                  </span>
+                  <div className="flex items-center space-x-1 bg-[#eef6f1] p-1 rounded-lg text-xs font-bold border border-[#c2decc]">
+                    <button
+                      type="button"
+                      onClick={() => setCurrency('GHS')}
+                      className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+                        currency === 'GHS' ? 'bg-[#032014] text-white shadow-xs' : 'text-slate-600'
+                      }`}
+                    >
+                      ₵ GHS
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setCurrency('USD')}
+                      className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+                        currency === 'USD' ? 'bg-[#032014] text-white shadow-xs' : 'text-slate-600'
+                      }`}
+                    >
+                      $ USD
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-bold text-[#032014] text-base font-serif-title">Mobile Money (MoMo)</h3>
-                  <p className="text-[11px] text-slate-500">Firstfruit, Offering & Pledges</p>
+
+                {/* Quick Amount Chips */}
+                <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
+                  {quickAmounts.map((q) => (
+                    <button
+                      key={q}
+                      type="button"
+                      onClick={() => setAmount(q)}
+                      className={`py-2 px-1 text-center rounded-xl text-xs font-bold border transition-all cursor-pointer truncate ${
+                        amount === q
+                          ? 'bg-[#032014] text-[#f5cf72] border-[#032014] shadow'
+                          : 'bg-white text-slate-700 border-[#d6e5dc] hover:bg-[#eef6f1]'
+                      }`}
+                    >
+                      {currency === 'GHS' ? '₵' : '$'}{q}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Custom Input */}
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-500">
+                    {currency === 'GHS' ? '₵' : '$'}
+                  </span>
+                  <input
+                    type="number"
+                    min="1"
+                    step="any"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    placeholder="Enter custom amount"
+                    className="w-full pl-10 pr-4 py-3 bg-[#f8faf8] border border-[#d6e5dc] rounded-xl text-[#032014] font-bold text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                  />
                 </div>
               </div>
 
-              <div className="space-y-3 pt-2">
-                {/* Official MTN MoMo Number from Church Flyer */}
-                <div className="p-4 bg-[#fbf7ee] rounded-2xl border-2 border-[#c99726]/40 flex items-center justify-between">
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#07472c] font-bold block">
-                      OFFICIAL CHURCH MOMO NUMBER
-                    </span>
-                    <span className="text-lg font-mono text-[#032014] font-black tracking-wider">
+              {/* Step 2: Log / Record Your Payment Form */}
+              <form onSubmit={handleRecordGiving} className="pt-4 border-t border-slate-100 space-y-4">
+                <div>
+                  <span className="text-[11px] sm:text-xs font-mono text-[#07472c] font-bold uppercase tracking-wider block mb-0.5">
+                    STEP 2: GIVER DETAILS & LOG PAYMENT
+                  </span>
+                  <p className="text-xs text-slate-500">
+                    Fill in your details below so the church office can attribute your gift and issue your reference.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#032014] uppercase mb-1">
+                      Your Full Name
+                    </label>
+                    <input
+                      type="text"
+                      value={donorName}
+                      onChange={(e) => setDonorName(e.target.value)}
+                      placeholder="e.g. Samuel Annan"
+                      className="w-full px-3.5 py-2.5 bg-[#f8faf8] border border-[#d6e5dc] rounded-xl text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#032014] uppercase mb-1">
+                      Phone / MoMo Number *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={donorPhone}
+                      onChange={(e) => setDonorPhone(e.target.value)}
+                      placeholder="e.g. 024 123 4567 or Txn ID"
+                      className="w-full px-3.5 py-2.5 bg-[#f8faf8] border border-[#d6e5dc] rounded-xl text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#032014] uppercase mb-1">
+                      Payment Channel Used
+                    </label>
+                    <select
+                      value={paymentMethod}
+                      onChange={(e) => setPaymentMethod(e.target.value as any)}
+                      className="w-full px-3.5 py-2.5 bg-[#f8faf8] border border-[#d6e5dc] rounded-xl text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                    >
+                      <option value="Mobile Money (MTN MoMo)">Mobile Money (MTN MoMo)</option>
+                      <option value="Bank Transfer (CBG)">Bank Transfer (CBG)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#032014] uppercase mb-1">
+                      Prayer Petition or Notes (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      placeholder="e.g. Thanksgiving for promotion"
+                      className="w-full px-3.5 py-2.5 bg-[#f8faf8] border border-[#d6e5dc] rounded-xl text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3.5 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer flex items-center justify-center space-x-2"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>LOG PAYMENT & GET DIGITAL RECEIPT</span>
+                </button>
+              </form>
+            </div>
+
+            {/* Right Column: Church Payment Channels & Official Accounts */}
+            <div className="lg:col-span-5 space-y-5 sm:space-y-6">
+              {/* Mobile Money Card */}
+              <div className="bg-white rounded-3xl p-5 sm:p-8 border border-[#d6e5dc] shadow-sm space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#eef6f1] text-[#07472c] border border-[#c2decc] flex items-center justify-center">
+                    <Smartphone className="w-5 h-5 text-[#c99726]" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-[#032014] text-base font-serif-title">Mobile Money (MoMo)</h3>
+                    <p className="text-[11px] text-slate-500">Firstfruit, Offering & Pledges</p>
+                  </div>
+                </div>
+
+                <div className="space-y-3 pt-1">
+                  {/* Official MTN MoMo Number from Church Flyer */}
+                  <div className="p-4 bg-[#fbf7ee] rounded-2xl border-2 border-[#c99726]/40 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#07472c] font-bold block">
+                        OFFICIAL CHURCH MOMO NUMBER
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => copyToClipboard(GIVING_DETAILS.momo.mtn, 'mtn')}
+                        className="px-2.5 py-1 bg-white text-[#032014] hover:bg-[#032014] hover:text-white rounded-lg border border-[#c99726] text-[11px] font-bold transition-all flex items-center space-x-1 cursor-pointer shadow-xs"
+                        title="Copy MTN MoMo Number"
+                      >
+                        {copiedKey === 'mtn' ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-[#c99726]" />}
+                        <span>{copiedKey === 'mtn' ? 'Copied' : 'Copy'}</span>
+                      </button>
+                    </div>
+
+                    <div className="text-xl sm:text-2xl font-mono text-[#032014] font-black tracking-wider">
                       {GIVING_DETAILS.momo.mtn}
-                    </span>
-                    <span className="text-[11px] text-slate-600 block">
-                      Account: <strong>Wisdom Temple (Kokomlemle)</strong>
-                    </span>
+                    </div>
+
+                    <div className="text-xs text-slate-700 bg-white/80 p-2 rounded-lg border border-[#e5cd96]">
+                      Account Name: <strong className="text-[#032014]">Wisdom Temple (Kokomlemle)</strong>
+                    </div>
                   </div>
-                  <button
-                    onClick={() => copyToClipboard(GIVING_DETAILS.momo.mtn, 'mtn')}
-                    className="px-3 py-2 bg-white text-[#032014] hover:bg-[#032014] hover:text-white rounded-xl border border-[#c99726] text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-xs"
-                    title="Copy MTN MoMo Number"
-                  >
-                    {copiedKey === 'mtn' ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-[#c99726]" />}
-                    <span>{copiedKey === 'mtn' ? 'Copied' : 'Copy'}</span>
-                  </button>
                 </div>
+
+                <p className="text-[11px] text-slate-500 leading-relaxed">
+                  Send directly from your MTN, Telecel, or AT wallet to this number. Use your name or reference in the memo.
+                </p>
               </div>
 
-              <p className="text-[11px] text-slate-500 leading-relaxed">
-                Merchant / Subscriber Account: <strong className="text-[#032014]">Wisdom Temple (Kokomlemle)</strong>
-              </p>
-            </div>
-
-            {/* Bank Transfer Card */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#d6e5dc] shadow-sm space-y-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-[#eef6f1] text-[#07472c] border border-[#c2decc] flex items-center justify-center">
-                  <Building2 className="w-5 h-5" />
+              {/* Bank Transfer Card */}
+              <div className="bg-white rounded-3xl p-5 sm:p-8 border border-[#d6e5dc] shadow-sm space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#eef6f1] text-[#07472c] border border-[#c2decc] flex items-center justify-center">
+                    <Building2 className="w-5 h-5 text-[#c99726]" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-[#032014] text-base font-serif-title">Bank Account (CBG)</h3>
+                    <p className="text-[11px] text-slate-500">Consolidated Bank Ghana</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-bold text-[#032014] text-base font-serif-title">Bank Account (CBG)</h3>
-                  <p className="text-[11px] text-slate-500">Consolidated Bank Ghana</p>
-                </div>
-              </div>
 
-              <div className="p-4 bg-[#f8faf8] rounded-2xl border-2 border-[#d6e5dc] space-y-3">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-0.5">
+                <div className="p-4 bg-[#f8faf8] rounded-2xl border-2 border-[#d6e5dc] space-y-3">
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-0.5">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold block">
+                        BANK NAME
+                      </span>
+                      <strong className="text-sm text-[#032014] block">
+                        {GIVING_DETAILS.bank.bankName}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-200">
+                    <div className="space-y-0.5">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold block">
+                        ACCOUNT NUMBER
+                      </span>
+                      <span className="text-sm sm:text-base font-mono text-[#032014] font-black tracking-wide block">
+                        {GIVING_DETAILS.bank.accountNumber}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => copyToClipboard(GIVING_DETAILS.bank.accountNumber, 'cbg-acc')}
+                      className="px-2.5 py-1 bg-white text-[#032014] hover:bg-[#032014] hover:text-white rounded-lg border border-[#d6e5dc] text-[11px] font-bold transition-all flex items-center space-x-1 cursor-pointer"
+                      title="Copy Account Number"
+                    >
+                      {copiedKey === 'cbg-acc' ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-[#c99726]" />}
+                      <span>{copiedKey === 'cbg-acc' ? 'Copied' : 'Copy'}</span>
+                    </button>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-200">
                     <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold block">
-                      BANK NAME
+                      ACCOUNT NAME
                     </span>
-                    <strong className="text-sm text-[#032014] block">
-                      {GIVING_DETAILS.bank.bankName}
-                    </strong>
+                    <span className="text-xs font-semibold text-slate-800">
+                      {GIVING_DETAILS.bank.accountName}
+                    </span>
+                  </div>
+                </div>
+
+                <p className="text-[11px] text-slate-500">
+                  Pay via CBG Mobile App, online banking, USSD, or direct counter deposit at any CBG branch nationwide.
+                </p>
+              </div>
+
+              {/* Online Payment Card (Card / International) */}
+              <div className="bg-white rounded-3xl p-5 sm:p-8 border border-[#d6e5dc] shadow-sm space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#eef6f1] text-[#07472c] border border-[#c2decc] flex items-center justify-center">
+                    <CreditCard className="w-5 h-5 text-[#c99726]" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-[#032014] text-base font-serif-title">International & Cards</h3>
+                    <p className="text-[11px] text-slate-500">Visa, Mastercard, & Diaspora Giving</p>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-2 border-t border-slate-200">
-                  <div className="space-y-0.5">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold block">
-                      ACCOUNT NUMBER
-                    </span>
-                    <span className="text-base font-mono text-[#032014] font-black tracking-wide block">
-                      {GIVING_DETAILS.bank.accountNumber}
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => copyToClipboard(GIVING_DETAILS.bank.accountNumber, 'cbg-acc')}
-                    className="px-3 py-1.5 bg-white text-[#032014] hover:bg-[#032014] hover:text-white rounded-lg border border-[#d6e5dc] text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
-                    title="Copy Account Number"
-                  >
-                    {copiedKey === 'cbg-acc' ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-[#c99726]" />}
-                    <span>{copiedKey === 'cbg-acc' ? 'Copied' : 'Copy'}</span>
-                  </button>
+                <div className="p-3 bg-[#f8faf8] rounded-xl border border-[#d6e5dc] text-xs text-slate-600 font-mono truncate">
+                  {GIVING_DETAILS.online.paymentUrl}
                 </div>
 
-                <div className="pt-2 border-t border-slate-200">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold block">
-                    ACCOUNT NAME
-                  </span>
-                  <span className="text-xs font-semibold text-slate-800">
-                    {GIVING_DETAILS.bank.accountName}
-                  </span>
+                <div className="flex items-center space-x-2 text-[11px] text-[#07472c] bg-[#eef6f1] p-2.5 rounded-xl border border-[#c2decc]">
+                  <ShieldCheck className="w-4 h-4 shrink-0 text-[#c99726]" />
+                  <span>SSL Encrypted & Certified Church Gateway</span>
                 </div>
-              </div>
-
-              <p className="text-[11px] text-slate-500">
-                You can pay via CBG Mobile App, USSD, or direct deposit at any CBG branch nationwide.
-              </p>
-            </div>
-
-            {/* Online Payment Card (Card / International) */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#d6e5dc] shadow-sm space-y-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-[#eef6f1] text-[#07472c] border border-[#c2decc] flex items-center justify-center">
-                  <CreditCard className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-[#032014] text-base font-serif-title">Online Payment & Cards</h3>
-                  <p className="text-[11px] text-slate-500">Visa, Mastercard, & Diaspora Giving</p>
-                </div>
-              </div>
-
-              <div className="p-3 bg-[#f8faf8] rounded-xl border border-[#d6e5dc] text-xs text-slate-600 font-mono">
-                {GIVING_DETAILS.online.paymentUrl}
-              </div>
-
-              <div className="flex items-center space-x-2 text-[11px] text-[#07472c] bg-[#eef6f1] p-2.5 rounded-xl border border-[#c2decc]">
-                <ShieldCheck className="w-4 h-4 shrink-0 text-[#c99726]" />
-                <span>SSL Encrypted & Certified Church Gateway</span>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Accountability & Integrity Pledge */}
-        <div className="bg-[#032014] text-white rounded-3xl p-8 sm:p-12 border border-[#084c2e] space-y-4 shadow-xl">
+        <div className="bg-[#032014] text-white rounded-3xl p-6 sm:p-12 border border-[#084c2e] space-y-4 shadow-xl">
           <div className="flex items-center space-x-2 text-[#f5cf72] text-xs font-mono font-bold uppercase">
             <ShieldCheck className="w-4 h-4" />
             <span>FINANCIAL INTEGRITY & GOVERNANCE</span>
           </div>
-          <h3 className="text-2xl font-bold font-serif-title text-white">Our Stewardship Commitment</h3>
-          <p className="text-emerald-100/90 text-sm leading-relaxed max-w-3xl">
-            At Wisdom Temple, we manage all kingdom funds with the highest standard of ethical governance, financial auditing, and biblical stewardship. Every cedi given fuels ministry operations, gospel outreach, pastoral care, and community benevolence. Audited accounts are reported annually to the Church Board.
+          <h3 className="text-xl sm:text-2xl font-bold font-serif-title text-white">Our Stewardship Commitment</h3>
+          <p className="text-emerald-100/90 text-xs sm:text-sm leading-relaxed max-w-3xl">
+            At Wisdom Temple, we manage all kingdom funds with the highest standard of ethical governance, financial auditing, and biblical stewardship. Every cedi given fuels ministry operations, gospel outreach, pastoral care, and community benevolence. Audited accounts are reported annually to the Church Council.
           </p>
         </div>
       </div>
@@ -427,7 +624,7 @@ export const GiveView: React.FC<GiveViewProps> = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md"
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md"
             onClick={() => setFlyerModalOpen(false)}
           >
             <motion.div
@@ -440,7 +637,7 @@ export const GiveView: React.FC<GiveViewProps> = () => {
             >
               <div className="flex items-center justify-between border-b border-[#084c2e] pb-3">
                 <div>
-                  <h3 className="font-bold text-white text-lg font-serif-title">Official Giving Details Flyer</h3>
+                  <h3 className="font-bold text-white text-base sm:text-lg font-serif-title">Official Giving Details Flyer</h3>
                   <p className="text-xs text-emerald-300/80">Wisdom Temple (Kokomlemle)</p>
                 </div>
                 <button
@@ -472,16 +669,14 @@ export const GiveView: React.FC<GiveViewProps> = () => {
                   <span>•</span>
                   <span>CBG: <strong className="text-white font-mono">0523529100002</strong></span>
                 </div>
-                <motion.a
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
+                <a
                   href="/giving_details_official.jpg"
                   download="Wisdom_Temple_Giving.jpg"
-                  className="px-4 py-2 bg-gradient-to-r from-[#c99726] to-[#e5b138] text-[#021a10] font-black rounded-xl text-xs flex items-center space-x-1.5 cursor-pointer shadow-md"
+                  className="px-4 py-2 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold rounded-lg text-xs uppercase tracking-wider flex items-center space-x-1.5 cursor-pointer shadow-sm transition-colors"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Download High-Res Flyer</span>
-                </motion.a>
+                </a>
               </div>
             </motion.div>
           </motion.div>

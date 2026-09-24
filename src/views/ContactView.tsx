@@ -7,7 +7,8 @@ import {
   Mail, 
   Clock, 
   Send, 
-  CheckCircle2
+  CheckCircle2,
+  ExternalLink
 } from 'lucide-react';
 
 interface ContactViewProps {
@@ -44,22 +45,22 @@ export const ContactView: React.FC<ContactViewProps> = ({
   return (
     <div className="bg-[#f8faf8] min-h-screen text-slate-900 pb-24">
       {/* Header Banner - ICGC Forest & Gold */}
-      <section className="bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+      <section className="bg-[#02180e] text-white py-14 sm:py-18 border-b border-[#084c2e]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
           <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
-            GET IN TOUCH • WE ARE HERE FOR YOU
+            GET IN TOUCH
           </span>
-          <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            CONTACT WISDOM TEMPLE
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight font-serif-title">
+            Contact Us
           </h1>
-          <p className="text-base sm:text-lg text-emerald-200/80 max-w-2xl mx-auto leading-relaxed">
-            Have questions about services, pastoral care, baby dedications, weddings, or ministry membership? Reach out to our administrative team today.
+          <p className="text-sm sm:text-base text-emerald-200/80 max-w-xl mx-auto leading-relaxed">
+            Have questions, counseling requests, or administrative inquiries? We would love to hear from you.
           </p>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 space-y-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-12 space-y-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Contact Details & Church Info */}
           <div className="lg:col-span-5 space-y-6">
             {/* Quick Contact Card */}
@@ -73,8 +74,16 @@ export const ContactView: React.FC<ContactViewProps> = ({
                   </div>
                   <div>
                     <strong className="block text-[#032014] font-semibold mb-0.5">Sanctuary Address</strong>
-                    <p className="font-mono text-xs text-slate-600">{CHURCH_INFO.location}</p>
-                    <p className="text-[11px] text-slate-400 mt-0.5">Landmark: {CHURCH_INFO.landmark}</p>
+                    <p className="font-mono text-xs text-slate-700">{CHURCH_INFO.location}</p>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=Wisdom+Temple+Star+Junction+Tabora+Accra"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center space-x-1 text-[11px] text-[#07472c] hover:text-[#c99726] font-semibold mt-1 transition-colors"
+                    >
+                      <span>Open in Google Maps</span>
+                      <ExternalLink className="w-3 h-3 ml-0.5" />
+                    </a>
                   </div>
                 </div>
 
@@ -83,9 +92,16 @@ export const ContactView: React.FC<ContactViewProps> = ({
                     <Phone className="w-5 h-5 text-[#c99726]" />
                   </div>
                   <div>
-                    <strong className="block text-[#032014] font-semibold mb-0.5">Telephone / Prayer Line</strong>
-                    <p className="font-mono text-xs text-[#07472c] font-bold">{CHURCH_INFO.phone}</p>
-                    <p className="text-[11px] text-slate-400 mt-0.5">Available Mon - Sat for pastoral inquiries</p>
+                    <strong className="block text-[#032014] font-semibold mb-0.5">WhatsApp / Phone</strong>
+                    <a 
+                      href="https://wa.me/233245009764" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="font-mono text-sm text-[#07472c] font-bold hover:text-[#c99726] transition-colors block"
+                    >
+                      0245009764
+                    </a>
+                    <span className="text-[11px] text-slate-400 block mt-0.5">WhatsApp & Direct Call Line</span>
                   </div>
                 </div>
 
@@ -95,7 +111,12 @@ export const ContactView: React.FC<ContactViewProps> = ({
                   </div>
                   <div>
                     <strong className="block text-[#032014] font-semibold mb-0.5">Official Email</strong>
-                    <p className="font-mono text-xs text-slate-600">{CHURCH_INFO.email}</p>
+                    <a 
+                      href="mailto:icgcwisdomtemple@gmail.com" 
+                      className="font-mono text-xs text-[#07472c] font-bold hover:text-[#c99726] transition-colors block"
+                    >
+                      icgcwisdomtemple@gmail.com
+                    </a>
                   </div>
                 </div>
 
@@ -106,63 +127,19 @@ export const ContactView: React.FC<ContactViewProps> = ({
                   <div>
                     <strong className="block text-[#032014] font-semibold mb-0.5">Office Hours</strong>
                     <p className="text-xs text-slate-600">Tuesday – Friday: 8:30 AM – 4:30 PM</p>
-                    <p className="text-[11px] text-slate-400 mt-0.5">Saturdays by appointment with departments</p>
                   </div>
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="pt-4 border-t border-slate-100 flex flex-col gap-2">
-                <button
-                  onClick={() => onNavigate('new-here')}
-                  className="w-full py-3 bg-[#032014] hover:bg-[#063821] text-white font-bold text-xs rounded-xl transition-all cursor-pointer text-center border border-[#c99726]/30"
-                >
-                  PLAN YOUR SUNDAY VISIT
-                </button>
+              {/* Pastoral Care Action */}
+              <div className="pt-4 border-t border-slate-100">
                 <button
                   onClick={() => onNavigate('prayer-request')}
-                  className="w-full py-3 bg-[#fbf7ee] hover:bg-[#f5ecda] text-[#855e10] border border-[#e5b138]/60 font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
+                  className="w-full py-3 bg-[#032014] hover:bg-[#063821] text-white font-bold text-xs rounded-xl transition-all cursor-pointer text-center border border-[#c99726]/30 shadow-sm"
                 >
                   REQUEST PASTORAL PRAYER
                 </button>
               </div>
-            </div>
-
-            {/* Interactive Map Visual */}
-            <div className="bg-white rounded-3xl p-6 border border-[#d6e5dc] shadow-sm space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-mono font-bold uppercase text-[#07472c]">
-                  DIRECTIONS & LOCATION
-                </span>
-                <span className="text-[11px] text-slate-400 font-mono">GPS Mapping</span>
-              </div>
-
-              <div className="aspect-[16/9] rounded-2xl bg-[#02180e] relative overflow-hidden flex items-center justify-center text-center p-4">
-                <img
-                  src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&q=80"
-                  alt="Church Map Satellite"
-                  className="absolute inset-0 w-full h-full object-cover opacity-35"
-                />
-                <div className="relative z-10 space-y-2">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#c99726] to-[#e5b138] text-[#021a10] flex items-center justify-center mx-auto shadow-lg animate-bounce">
-                    <MapPin className="w-5 h-5 fill-[#021a10]" />
-                  </div>
-                  <strong className="block text-white text-xs font-serif-title">Wisdom Temple</strong>
-                  <p className="text-[11px] text-emerald-200 font-mono">{CHURCH_INFO.location}</p>
-                </div>
-              </div>
-              <p className="text-[11px] text-slate-500 text-center">
-                Located near {CHURCH_INFO.landmark}. Accessible via public transport and rideshare services (Uber, Bolt, Yango).
-              </p>
-              <a
-                href="https://www.google.com/maps/search/?api=1&query=Wisdom+Temple+Star+Junction+Tabora+Accra"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-2.5 px-4 bg-[#eef6f1] hover:bg-[#e0eee4] text-[#07472c] font-bold text-xs rounded-xl flex items-center justify-center space-x-1.5 transition-all border border-[#c2decc]"
-              >
-                <MapPin className="w-3.5 h-3.5 text-[#c99726]" />
-                <span>Open in Google Maps</span>
-              </a>
             </div>
           </div>
 
@@ -181,21 +158,32 @@ export const ContactView: React.FC<ContactViewProps> = ({
             </div>
 
             {submitted ? (
-              <div className="py-12 text-center space-y-4 animate-in zoom-in-95 duration-200">
-                <div className="w-16 h-16 rounded-full bg-[#c99726]/20 border border-[#c99726]/40 text-[#f5cf72] flex items-center justify-center mx-auto">
-                  <CheckCircle2 className="w-10 h-10 text-[#07472c]" />
+              <div className="py-8 sm:py-12 text-center space-y-4 animate-in zoom-in-95 duration-200">
+                <div className="w-14 sm:w-16 h-14 sm:h-16 rounded-full bg-[#c99726]/20 border border-[#c99726]/40 text-[#f5cf72] flex items-center justify-center mx-auto">
+                  <CheckCircle2 className="w-8 sm:w-10 h-8 sm:h-10 text-[#07472c]" />
                 </div>
-                <h3 className="text-2xl font-bold text-[#032014] font-serif-title">Message Received!</h3>
-                <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+                <h3 className="text-xl sm:text-2xl font-bold text-[#032014] font-serif-title">Message Received!</h3>
+                <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
                   Thank you, <strong>{fullName}</strong>. Your message has been forwarded to the church administration. We will reach out via email or phone shortly.
                 </p>
-                <div className="pt-4">
+
+                <div className="p-4 bg-[#fbf7ee] rounded-2xl border border-[#c99726]/50 max-w-sm mx-auto text-left">
+                  <span className="text-[10px] font-mono uppercase text-[#07472c] font-bold block">
+                    INQUIRY TICKET CODE
+                  </span>
+                  <span className="text-base sm:text-lg font-mono font-black text-[#032014] block">
+                    WT-MSG-{Math.floor(1000 + Math.random() * 9000)}
+                  </span>
+                  <span className="text-[11px] text-slate-500">Subject: {subject}</span>
+                </div>
+
+                <div className="pt-3">
                   <button
                     onClick={() => {
                       setSubmitted(false);
                       setMessage('');
                     }}
-                    className="px-6 py-2.5 bg-[#032014] hover:bg-[#063821] text-white font-bold text-xs rounded-xl cursor-pointer border border-[#c99726]/30"
+                    className="px-6 py-2.5 bg-[#032014] hover:bg-[#063821] text-white font-bold text-xs rounded-xl cursor-pointer border border-[#c99726]/30 shadow"
                   >
                     Send Another Message
                   </button>
@@ -269,7 +257,7 @@ export const ContactView: React.FC<ContactViewProps> = ({
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full py-4 bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] font-black text-sm rounded-xl shadow-lg transition-all cursor-pointer flex items-center justify-center space-x-2"
+                    className="w-full py-3.5 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer flex items-center justify-center space-x-2"
                   >
                     <Send className="w-4 h-4" />
                     <span>SEND MESSAGE TO OFFICE</span>

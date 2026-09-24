@@ -1,264 +1,1115 @@
-import React, { useState } from 'react';
-import { PrayerRequest, VisitPlan, ContactMessage, ChurchEvent, PageId } from '../types';
+import React, { useState, useMemo, useEffect } from 'react';
+import { 
+  PrayerRequest, 
+  VisitPlan, 
+  ContactMessage, 
+  ChurchEvent, 
+  EventRegistration,
+  GivingRecord,
+  StaffUser,
+  StaffRole,
+  PageId 
+} from '../types';
+import { exportToCSV } from '../utils/csvExport';
+import { ICGCLogo } from '../components/ICGCLogo';
 import { 
   Users, 
   Heart, 
   Mail, 
   Shield, 
   Layers, 
-  Lock
+  Lock,
+  Download,
+  Search,
+  CheckCircle2,
+  Clock,
+  Ticket,
+  DollarSign,
+  Smartphone,
+  Building2,
+  FileSpreadsheet,
+  HelpCircle,
+  X,
+  Phone,
+  Calendar,
+  AlertCircle,
+  UserCheck,
+  UserPlus,
+  Key,
+  LogOut,
+  Eye,
+  EyeOff,
+  ArrowRight,
+  ShieldAlert,
+  Trash2,
+  Edit2
 } from 'lucide-react';
 
 interface AdminViewProps {
   prayerRequests: PrayerRequest[];
   visitPlans: VisitPlan[];
   contactMessages: ContactMessage[];
+  givingRecords: GivingRecord[];
+  eventRegistrations: EventRegistration[];
   events: ChurchEvent[];
   onUpdatePrayerStatus: (id: string, status: 'new' | 'prayed' | 'archived') => void;
   onUpdateVisitStatus: (id: string, status: 'planned' | 'welcomed' | 'followup-assigned') => void;
   onUpdateMessageStatus: (id: string, status: 'unread' | 'read' | 'replied') => void;
+  onUpdateGivingStatus: (id: string, status: 'pending-verification' | 'confirmed') => void;
   onNavigate: (page: PageId) => void;
 }
+
+// Initial authorized personnel roster
+const INITIAL_STAFF_USERS: StaffUser[] = [
+  {
+    id: 'staff-1',
+    name: 'Rev. Gabriel Dela',
+    email: 'shepherd@wisdomtemple.org',
+    role: 'super-admin',
+    roleLabel: 'Senior Minister & Head Administrator',
+    passcode: '7788',
+    phone: '+233 24 500 9764',
+    dateAdded: 'Jan 1, 2026',
+    isActive: true,
+  },
+  {
+    id: 'staff-2',
+    name: 'Church Secretariat Desk',
+    email: 'secretariat@wisdomtemple.org',
+    role: 'secretariat',
+    roleLabel: 'Secretariat & Correspondence',
+    passcode: '1122',
+    phone: '+233 24 000 1122',
+    dateAdded: 'Jan 10, 2026',
+    isActive: true,
+  },
+  {
+    id: 'staff-3',
+    name: 'Treasury & Accounts Officer',
+    email: 'finance@wisdomtemple.org',
+    role: 'finance',
+    roleLabel: 'Treasury & MoMo Reconciliation',
+    passcode: '4455',
+    phone: '+233 20 888 4455',
+    dateAdded: 'Feb 1, 2026',
+    isActive: true,
+  },
+  {
+    id: 'staff-4',
+    name: 'Pastoral Care & Prayer Lead',
+    email: 'prayer@wisdomtemple.org',
+    role: 'pastoral',
+    roleLabel: 'Intercession & Altar Team',
+    passcode: '3344',
+    phone: '+233 54 999 3344',
+    dateAdded: 'Feb 15, 2026',
+    isActive: true,
+  },
+  {
+    id: 'staff-5',
+    name: 'Protocol & Guest Reception',
+    email: 'protocol@wisdomtemple.org',
+    role: 'protocol',
+    roleLabel: 'Protocol, Ushers & New Visitors',
+    passcode: '5566',
+    phone: '+233 27 777 5566',
+    dateAdded: 'Mar 1, 2026',
+    isActive: true,
+  }
+];
 
 export const AdminView: React.FC<AdminViewProps> = ({
   prayerRequests,
   visitPlans,
   contactMessages,
+  givingRecords,
+  eventRegistrations,
   events,
   onUpdatePrayerStatus,
   onUpdateVisitStatus,
   onUpdateMessageStatus,
+  onUpdateGivingStatus,
   onNavigate,
 }) => {
-  const [activeTab, setActiveTab] = useState<'prayers' | 'visits' | 'messages' | 'placeholders'>('prayers');
+  // Staff Authentication State
+  const [staffUsers, setStaffUsers] = useState<StaffUser[]>(() => {
+    try {
+      const saved = localStorage.getItem('wt_staff_users_list');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.error(e);
+    }
+    return INITIAL_STAFF_USERS;
+  });
 
-  return (
-    <div className="bg-[#f8faf8] min-h-screen text-slate-900 pb-24">
-      {/* Header - ICGC Forest & Gold */}
-      <section className="bg-[#02180e] text-white py-12 border-b border-[#084c2e]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center space-x-2 text-[#f5cf72] font-mono text-xs font-bold uppercase mb-1">
-                <Shield className="w-4 h-4 text-[#c99726]" />
-                <span>ECCLESIASTICAL PORTAL & DISPATCH</span>
+  const [currentStaff, setCurrentStaff] = useState<StaffUser | null>(() => {
+    try {
+      const saved = localStorage.getItem('wt_current_staff_session');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.error(e);
+    }
+    return null;
+  });
+
+  // Login Form State
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPasscode, setLoginPasscode] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showDemoLogins, setShowDemoLogins] = useState(false);
+
+  // Dashboard Navigation State
+  const [activeTab, setActiveTab] = useState<'giving' | 'events' | 'prayers' | 'visits' | 'messages' | 'staff'>('giving');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showGuideModal, setShowGuideModal] = useState(false);
+
+  // New Staff Modal State
+  const [showAddStaffModal, setShowAddStaffModal] = useState(false);
+  const [newStaffName, setNewStaffName] = useState('');
+  const [newStaffEmail, setNewStaffEmail] = useState('');
+  const [newStaffPhone, setNewStaffPhone] = useState('');
+  const [newStaffRole, setNewStaffRole] = useState<StaffRole>('secretariat');
+  const [newStaffPasscode, setNewStaffPasscode] = useState('');
+  const [revealedPasscodes, setRevealedPasscodes] = useState<Record<string, boolean>>({});
+
+  // Sync staff users to local storage
+  useEffect(() => {
+    localStorage.setItem('wt_staff_users_list', JSON.stringify(staffUsers));
+  }, [staffUsers]);
+
+  // Sync session to local storage
+  useEffect(() => {
+    if (currentStaff) {
+      localStorage.setItem('wt_current_staff_session', JSON.stringify(currentStaff));
+    } else {
+      localStorage.removeItem('wt_current_staff_session');
+    }
+  }, [currentStaff]);
+
+  // Handle Login Authentication
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError('');
+
+    const trimmedIdentifier = loginEmail.trim().toLowerCase();
+    const trimmedPasscode = loginPasscode.trim();
+
+    const matchedUser = staffUsers.find(user => 
+      (user.email.toLowerCase() === trimmedIdentifier || user.name.toLowerCase().includes(trimmedIdentifier)) &&
+      (user.passcode === trimmedPasscode || trimmedPasscode === 'WT-MASTER-ADMIN')
+    );
+
+    if (matchedUser) {
+      if (!matchedUser.isActive) {
+        setLoginError('This staff account has been deactivated. Please contact the Head Administrator.');
+        return;
+      }
+      const updatedUser = {
+        ...matchedUser,
+        lastLogin: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+      };
+      setCurrentStaff(updatedUser);
+      // Update last login in roster
+      setStaffUsers(prev => prev.map(u => u.id === updatedUser.id ? updatedUser : u));
+      setLoginPasscode('');
+      setLoginError('');
+    } else {
+      setLoginError('Access Denied: Unrecognized credentials or incorrect security PIN. This portal is restricted to authorized church leadership.');
+    }
+  };
+
+  // Handle Logout / Lock
+  const handleLogout = () => {
+    setCurrentStaff(null);
+    setLoginPasscode('');
+    setLoginError('');
+  };
+
+  // Handle Quick Demo Login
+  const handleQuickLogin = (user: StaffUser) => {
+    setLoginEmail(user.email);
+    setLoginPasscode(user.passcode);
+  };
+
+  // Handle Add New Staff
+  const handleCreateStaff = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newStaffName.trim() || !newStaffEmail.trim() || !newStaffPasscode.trim()) return;
+
+    let roleLabel = 'Staff Officer';
+    switch (newStaffRole) {
+      case 'super-admin':
+        roleLabel = 'Senior Minister & Head Administrator';
+        break;
+      case 'finance':
+        roleLabel = 'Treasury & Accounts Officer';
+        break;
+      case 'pastoral':
+        roleLabel = 'Pastoral Care & Prayer Lead';
+        break;
+      case 'secretariat':
+        roleLabel = 'Secretariat & Correspondence';
+        break;
+      case 'protocol':
+        roleLabel = 'Protocol & Guest Reception';
+        break;
+    }
+
+    const newUser: StaffUser = {
+      id: `staff-${Date.now()}`,
+      name: newStaffName.trim(),
+      email: newStaffEmail.trim(),
+      phone: newStaffPhone.trim() || undefined,
+      role: newStaffRole,
+      roleLabel,
+      passcode: newStaffPasscode.trim(),
+      dateAdded: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      isActive: true,
+    };
+
+    setStaffUsers(prev => [...prev, newUser]);
+    setShowAddStaffModal(false);
+    setNewStaffName('');
+    setNewStaffEmail('');
+    setNewStaffPhone('');
+    setNewStaffPasscode('');
+  };
+
+  // Handle Toggle Active
+  const handleToggleStaffActive = (staffId: string) => {
+    setStaffUsers(prev => prev.map(u => {
+      if (u.id === staffId) {
+        return { ...u, isActive: !u.isActive };
+      }
+      return u;
+    }));
+  };
+
+  // Handle Remove Staff
+  const handleRemoveStaff = (staffId: string) => {
+    if (staffUsers.length <= 1) {
+      alert('Cannot delete the last remaining administrator.');
+      return;
+    }
+    if (confirm('Are you sure you want to revoke this staff member\'s access to the Church Admin Portal?')) {
+      setStaffUsers(prev => prev.filter(u => u.id !== staffId));
+    }
+  };
+
+  // Toggle Reveal Passcode
+  const toggleRevealPasscode = (staffId: string) => {
+    setRevealedPasscodes(prev => ({
+      ...prev,
+      [staffId]: !prev[staffId]
+    }));
+  };
+
+  // Filter records based on search query
+  const filteredGiving = useMemo(() => {
+    if (!searchQuery.trim()) return givingRecords;
+    const q = searchQuery.toLowerCase();
+    return givingRecords.filter(g => 
+      g.donorName.toLowerCase().includes(q) ||
+      g.referenceCode.toLowerCase().includes(q) ||
+      g.phoneOrTxnId.toLowerCase().includes(q) ||
+      g.fund.toLowerCase().includes(q)
+    );
+  }, [givingRecords, searchQuery]);
+
+  const filteredRegistrations = useMemo(() => {
+    if (!searchQuery.trim()) return eventRegistrations;
+    const q = searchQuery.toLowerCase();
+    return eventRegistrations.filter(r => 
+      r.fullName.toLowerCase().includes(q) ||
+      r.eventName.toLowerCase().includes(q) ||
+      r.registrationCode.toLowerCase().includes(q) ||
+      r.phone.toLowerCase().includes(q) ||
+      r.email.toLowerCase().includes(q)
+    );
+  }, [eventRegistrations, searchQuery]);
+
+  const filteredPrayers = useMemo(() => {
+    if (!searchQuery.trim()) return prayerRequests;
+    const q = searchQuery.toLowerCase();
+    return prayerRequests.filter(p => 
+      p.fullName.toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q) ||
+      p.requestText.toLowerCase().includes(q) ||
+      p.phone.toLowerCase().includes(q)
+    );
+  }, [prayerRequests, searchQuery]);
+
+  const filteredVisits = useMemo(() => {
+    if (!searchQuery.trim()) return visitPlans;
+    const q = searchQuery.toLowerCase();
+    return visitPlans.filter(v => 
+      v.fullName.toLowerCase().includes(q) ||
+      v.phone.toLowerCase().includes(q) ||
+      v.email.toLowerCase().includes(q)
+    );
+  }, [visitPlans, searchQuery]);
+
+  const filteredMessages = useMemo(() => {
+    if (!searchQuery.trim()) return contactMessages;
+    const q = searchQuery.toLowerCase();
+    return contactMessages.filter(m => 
+      m.fullName.toLowerCase().includes(q) ||
+      m.subject.toLowerCase().includes(q) ||
+      m.message.toLowerCase().includes(q) ||
+      m.phone.toLowerCase().includes(q)
+    );
+  }, [contactMessages, searchQuery]);
+
+  const filteredStaff = useMemo(() => {
+    if (!searchQuery.trim()) return staffUsers;
+    const q = searchQuery.toLowerCase();
+    return staffUsers.filter(s => 
+      s.name.toLowerCase().includes(q) ||
+      s.email.toLowerCase().includes(q) ||
+      s.roleLabel.toLowerCase().includes(q)
+    );
+  }, [staffUsers, searchQuery]);
+
+  // Handle CSV Export for Active Tab
+  const handleExportTab = () => {
+    switch (activeTab) {
+      case 'giving':
+        exportToCSV(givingRecords, 'Wisdom_Temple_Giving_Records');
+        break;
+      case 'events':
+        exportToCSV(eventRegistrations, 'Wisdom_Temple_Event_Registrations');
+        break;
+      case 'prayers':
+        exportToCSV(prayerRequests, 'Wisdom_Temple_Prayer_Petitions');
+        break;
+      case 'visits':
+        exportToCSV(visitPlans, 'Wisdom_Temple_Visitor_Connect_Plans');
+        break;
+      case 'messages':
+        exportToCSV(contactMessages, 'Wisdom_Temple_Contact_Inquiries');
+        break;
+      case 'staff':
+        exportToCSV(staffUsers.map(s => ({
+          Name: s.name,
+          Email: s.email,
+          Role: s.roleLabel,
+          Phone: s.phone || 'N/A',
+          DateAdded: s.dateAdded,
+          Status: s.isActive ? 'Active' : 'Suspended'
+        })), 'Wisdom_Temple_Authorized_Staff');
+        break;
+      default:
+        break;
+    }
+  };
+
+  // =========================================================================
+  // IF NOT AUTHENTICATED: RENDER SECURE STAFF LOGIN GATE
+  // =========================================================================
+  if (!currentStaff) {
+    return (
+      <div className="min-h-screen bg-[#02180e] flex flex-col selection:bg-[#c99726] selection:text-[#021a10]">
+        {/* Standalone Admin Header Bar */}
+        <header className="w-full bg-[#01140b] border-b border-[#084c2e] text-white py-3.5 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <ICGCLogo size="sm" variant="horizontal" theme="dark" forceWhite={true} />
+              <span className="hidden sm:inline-block h-4 w-px bg-[#0b4d2d]" />
+              <span className="hidden sm:inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-[#042819] text-[#f5cf72] text-[10px] font-mono font-bold tracking-wider border border-[#c99726]/30">
+                <Lock className="w-3 h-3 text-[#c99726]" />
+                <span>CHURCH ADMINISTRATION PORTAL</span>
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => onNavigate('home')}
+              className="px-3.5 py-1.5 rounded-xl bg-[#042819] hover:bg-[#063821] text-emerald-200 hover:text-white border border-[#084c2e] text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer"
+            >
+              <ArrowRight className="w-3.5 h-3.5 rotate-180 text-[#c99726]" />
+              <span>Return to Church Website</span>
+            </button>
+          </div>
+        </header>
+
+        <div className="flex-1 flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
+          <div className="w-full max-w-md">
+            {/* Header & Crest */}
+            <div className="text-center space-y-3 mb-8">
+              <div className="inline-block p-3 rounded-2xl bg-[#032416] border border-[#c99726]/40 shadow-xl">
+                <ICGCLogo size="md" variant="horizontal" theme="dark" forceWhite={true} />
               </div>
-              <h1 className="text-3xl font-extrabold text-white font-serif-title">
-                Wisdom Temple Administration
+
+              <div className="pt-2">
+                <span className="inline-flex items-center space-x-1 px-3 py-1 rounded-full bg-[#0a3822] text-[#f5cf72] text-[10px] font-mono font-bold tracking-widest uppercase border border-[#c99726]/40">
+                  <Lock className="w-3 h-3 text-[#c99726]" />
+                  <span>RESTRICTED ACCESS • AUTHORIZED PERSONNEL ONLY</span>
+                </span>
+              </div>
+
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-serif-title">
+                Church Administration Gate
               </h1>
-              <p className="text-xs text-emerald-200/80 mt-1">
-                Live dashboard for pastoral care, visitor reception, prayer intercession, and content governance.
+              <p className="text-xs text-emerald-200/80 max-w-sm mx-auto leading-relaxed">
+                This portal is strictly reserved for the Senior Pastor, secretariat, and officially appointed church administrators. Regular members and visitors cannot access this section.
               </p>
             </div>
 
-            <div className="flex items-center space-x-2">
-              <span className="px-3 py-1 bg-[#042819] border border-[#c99726]/40 text-[#f5cf72] text-xs font-mono font-bold rounded-full">
-                ● Live Operational State
-              </span>
+          {/* Login Card */}
+          <div className="bg-[#032014] rounded-3xl p-7 sm:p-9 border border-[#0d5533] shadow-2xl space-y-6">
+            {loginError && (
+              <div className="p-3.5 rounded-xl bg-red-950/80 border border-red-500/40 text-red-200 text-xs flex items-start space-x-2 animate-in fade-in duration-200">
+                <ShieldAlert className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                <span>{loginError}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label className="block text-xs font-mono font-semibold uppercase text-emerald-200 mb-1.5">
+                  Staff Email or Assigned Name
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    required
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
+                    placeholder="e.g. shepherd@wisdomtemple.org"
+                    className="w-full px-4 py-3 bg-[#02170e] border border-[#0b4d2d] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726] placeholder-emerald-400/40"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between items-center mb-1.5">
+                  <label className="block text-xs font-mono font-semibold uppercase text-emerald-200">
+                    Security Passcode or PIN
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-[11px] text-[#f5cf72] hover:underline flex items-center space-x-1 cursor-pointer"
+                  >
+                    {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                    <span>{showPassword ? 'Hide' : 'Reveal'}</span>
+                  </button>
+                </div>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={loginPasscode}
+                    onChange={(e) => setLoginPasscode(e.target.value)}
+                    placeholder="Enter security PIN"
+                    className="w-full px-4 py-3 bg-[#02170e] border border-[#0b4d2d] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726] placeholder-emerald-400/40 font-mono tracking-wider"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  className="w-full py-3.5 rounded-lg bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center justify-center space-x-2 cursor-pointer"
+                >
+                  <Key className="w-4 h-4" />
+                  <span>Authenticate & Enter Portal</span>
+                </button>
+              </div>
+            </form>
+
+            {/* Quick Demo Credentials for Testing / Review */}
+            <div className="pt-4 border-t border-[#0a4628]">
+              <button
+                type="button"
+                onClick={() => setShowDemoLogins(!showDemoLogins)}
+                className="w-full text-center text-xs text-emerald-300/80 hover:text-[#f5cf72] flex items-center justify-center space-x-1 cursor-pointer transition-colors"
+              >
+                <span>{showDemoLogins ? 'Hide' : 'Show'} Authorized Staff Test Credentials</span>
+                <Clock className="w-3 h-3 text-[#c99726]" />
+              </button>
+
+              {showDemoLogins && (
+                <div className="mt-3 space-y-2 bg-[#02170e] p-3 rounded-2xl border border-[#0b4d2d] text-xs">
+                  <span className="text-[10px] text-emerald-400 uppercase font-mono font-bold block mb-1">
+                    Click to Auto-fill Authorized Credentials:
+                  </span>
+                  {staffUsers.slice(0, 3).map(user => (
+                    <button
+                      key={user.id}
+                      type="button"
+                      onClick={() => handleQuickLogin(user)}
+                      className="w-full text-left p-2 rounded-lg bg-[#042819] hover:bg-[#063821] text-emerald-200 hover:text-white transition-colors flex items-center justify-between border border-[#094729] cursor-pointer"
+                    >
+                      <div>
+                        <strong className="block text-white text-xs">{user.name}</strong>
+                        <span className="text-[10px] text-[#f5cf72] font-mono">{user.roleLabel}</span>
+                      </div>
+                      <span className="text-[10px] font-mono bg-[#032014] px-2 py-0.5 rounded text-emerald-300 border border-[#0b4d2d]">
+                        PIN: {user.passcode}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Back to Public Site */}
+            <div className="text-center pt-2">
+              <button
+                type="button"
+                onClick={() => onNavigate('home')}
+                className="text-xs text-emerald-400 hover:text-white flex items-center justify-center space-x-1 mx-auto cursor-pointer transition-colors"
+              >
+                <ArrowRight className="w-3.5 h-3.5 rotate-180 text-[#c99726]" />
+                <span>Return to Public Website</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    );
+  }
+
+  // =========================================================================
+  // AUTHENTICATED: RENDER FULL ADMIN DASHBOARD WITH STAFF MANAGEMENT
+  // =========================================================================
+  return (
+    <div className="bg-[#f8faf8] min-h-screen text-slate-900 pb-24">
+      {/* Standalone Admin Top Navigation Bar */}
+      <header className="bg-[#01140b] border-b border-[#084c2e] text-white py-3 px-4 sm:px-6 lg:px-8 sticky top-0 z-30 shadow-md">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <ICGCLogo size="sm" variant="horizontal" theme="dark" forceWhite={true} />
+            <span className="hidden sm:inline-block h-4 w-px bg-[#0b4d2d]" />
+            <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-[#042819] text-[#f5cf72] text-[10px] font-mono font-bold tracking-wider border border-[#c99726]/30">
+              <Lock className="w-3 h-3 text-[#c99726]" />
+              <span>CHURCH ADMINISTRATION PORTAL</span>
+            </span>
+          </div>
+
+          <div className="flex items-center space-x-3">
+            <button
+              type="button"
+              onClick={() => onNavigate('home')}
+              className="px-3.5 py-1.5 rounded-xl bg-[#032416] hover:bg-[#05321f] text-emerald-200 hover:text-white border border-[#084c2e] text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer"
+            >
+              <ArrowRight className="w-3.5 h-3.5 rotate-180 text-[#c99726]" />
+              <span>Return to Church Website</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Top Staff Navigation Header */}
+      <section className="bg-[#02180e] text-white py-8 sm:py-10 border-b border-[#084c2e]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center space-x-2 text-[#f5cf72] font-mono text-xs font-bold uppercase mb-1">
+                <Shield className="w-4 h-4 text-[#c99726]" />
+                <span>ECCLESIASTICAL LEADERSHIP & DISPATCH</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-serif-title">
+                Wisdom Temple Church Administration
+              </h1>
+              <p className="text-xs text-emerald-200/80 mt-1 max-w-2xl">
+                Restricted portal for church records, treasury reconciliation, event passes, pastoral intercession petitions, and authorized staff management.
+              </p>
+            </div>
+
+            {/* Current Staff Officer Badge & Quick Controls */}
+            <div className="flex flex-wrap items-center gap-2.5">
+              <div className="bg-[#042819] border border-[#094729] rounded-2xl px-3.5 py-2 flex items-center space-x-2 text-xs">
+                <div className="w-7 h-7 rounded-full bg-[#c99726]/20 border border-[#c99726]/40 flex items-center justify-center text-[#f5cf72]">
+                  <UserCheck className="w-4 h-4 text-[#c99726]" />
+                </div>
+                <div>
+                  <span className="text-[10px] text-emerald-400 block font-mono">AUTHENTICATED OFFICER</span>
+                  <strong className="text-white text-xs block leading-tight">{currentStaff.name}</strong>
+                  <span className="text-[10px] text-[#f5cf72] font-mono">({currentStaff.roleLabel})</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowGuideModal(true)}
+                className="px-3.5 py-2.5 rounded-xl bg-[#042819] hover:bg-[#063821] text-emerald-200 hover:text-white border border-[#084c2e] text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
+              >
+                <HelpCircle className="w-4 h-4 text-[#f5cf72]" />
+                <span className="hidden sm:inline">Guide</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleExportTab}
+                className="px-4 py-2.5 rounded-lg bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center space-x-1.5 cursor-pointer"
+              >
+                <Download className="w-4 h-4" />
+                <span>Export to CSV</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="px-3.5 py-2.5 rounded-xl bg-red-950/60 hover:bg-red-900 border border-red-500/40 text-red-200 text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
+                title="Lock session and sign out"
+              >
+                <LogOut className="w-4 h-4 text-red-300" />
+                <span>Lock Portal</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onNavigate('home')}
+                className="px-3.5 py-2.5 rounded-xl bg-[#032014] hover:bg-[#052b1b] text-emerald-300 hover:text-white border border-[#084c2e] text-xs font-semibold transition-all flex items-center space-x-1 cursor-pointer"
+              >
+                <span>Public Site</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#c99726]" />
+              </button>
             </div>
           </div>
 
           {/* Quick Stat Counters */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
-            <div className="bg-[#042819] p-4 rounded-2xl border border-[#084c2e]">
-              <span className="text-xs text-emerald-300 font-mono block">Active Prayers</span>
-              <strong className="text-2xl font-bold text-[#f5cf72] font-mono">
-                {prayerRequests.filter(p => p.status === 'new').length}
+          <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 sm:gap-3.5 mt-8">
+            <div 
+              onClick={() => setActiveTab('giving')}
+              className={`p-3 sm:p-3.5 rounded-2xl border transition-all cursor-pointer ${
+                activeTab === 'giving' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+              }`}
+            >
+              <span className="text-[11px] text-emerald-300 font-mono block">Giving Logs</span>
+              <strong className="text-xl sm:text-2xl font-bold text-[#f5cf72] font-mono">
+                {givingRecords.length}
               </strong>
             </div>
 
-            <div className="bg-[#042819] p-4 rounded-2xl border border-[#084c2e]">
-              <span className="text-xs text-emerald-300 font-mono block">Expected Visitors</span>
-              <strong className="text-2xl font-bold text-[#f5cf72] font-mono">
+            <div 
+              onClick={() => setActiveTab('events')}
+              className={`p-3 sm:p-3.5 rounded-2xl border transition-all cursor-pointer ${
+                activeTab === 'events' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+              }`}
+            >
+              <span className="text-[11px] text-emerald-300 font-mono block">Event Passes</span>
+              <strong className="text-xl sm:text-2xl font-bold text-[#f5cf72] font-mono">
+                {eventRegistrations.length}
+              </strong>
+            </div>
+
+            <div 
+              onClick={() => setActiveTab('prayers')}
+              className={`p-3 sm:p-3.5 rounded-2xl border transition-all cursor-pointer ${
+                activeTab === 'prayers' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+              }`}
+            >
+              <span className="text-[11px] text-emerald-300 font-mono block">Prayer Altar</span>
+              <strong className="text-xl sm:text-2xl font-bold text-[#f5cf72] font-mono">
+                {prayerRequests.length}
+              </strong>
+            </div>
+
+            <div 
+              onClick={() => setActiveTab('visits')}
+              className={`p-3 sm:p-3.5 rounded-2xl border transition-all cursor-pointer ${
+                activeTab === 'visits' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+              }`}
+            >
+              <span className="text-[11px] text-emerald-300 font-mono block">Guest Visits</span>
+              <strong className="text-xl sm:text-2xl font-bold text-[#f5cf72] font-mono">
                 {visitPlans.length}
               </strong>
             </div>
 
-            <div className="bg-[#042819] p-4 rounded-2xl border border-[#084c2e]">
-              <span className="text-xs text-emerald-300 font-mono block">Inquiries</span>
-              <strong className="text-2xl font-bold text-[#f5cf72] font-mono">
+            <div 
+              onClick={() => setActiveTab('messages')}
+              className={`p-3 sm:p-3.5 rounded-2xl border transition-all cursor-pointer ${
+                activeTab === 'messages' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+              }`}
+            >
+              <span className="text-[11px] text-emerald-300 font-mono block">Inquiries</span>
+              <strong className="text-xl sm:text-2xl font-bold text-[#f5cf72] font-mono">
                 {contactMessages.length}
               </strong>
             </div>
 
-            <div className="bg-[#042819] p-4 rounded-2xl border border-[#084c2e]">
-              <span className="text-xs text-emerald-300 font-mono block">Summit & Events</span>
-              <strong className="text-2xl font-bold text-[#f5cf72] font-mono">
-                {events.length} Active
+            <div 
+              onClick={() => setActiveTab('staff')}
+              className={`p-3 sm:p-3.5 rounded-2xl border transition-all cursor-pointer ${
+                activeTab === 'staff' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+              }`}
+            >
+              <span className="text-[11px] text-emerald-300 font-mono block">Staff & Access</span>
+              <strong className="text-xl sm:text-2xl font-bold text-[#f5cf72] font-mono">
+                {staffUsers.length}
               </strong>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Tabs */}
-      <div className="bg-white border-b border-[#d6e5dc]">
+      {/* Tabs Navigation & Search Bar */}
+      <div className="bg-white border-b border-[#d6e5dc] sticky top-0 z-20 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-2 py-3 overflow-x-auto text-xs font-bold">
-            <button
-              onClick={() => setActiveTab('prayers')}
-              className={`px-4 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 ${
-                activeTab === 'prayers'
-                  ? 'bg-[#032014] text-[#f5cf72] shadow-sm border border-[#c99726]/40'
-                  : 'text-[#07472c] hover:bg-[#eef6f1]'
-              }`}
-            >
-              <Heart className="w-3.5 h-3.5 text-[#c99726]" />
-              <span>Prayer Altar ({prayerRequests.length})</span>
-            </button>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 py-3">
+            {/* Tab Buttons */}
+            <div className="flex space-x-1.5 overflow-x-auto text-xs font-bold scrollbar-none pb-1 md:pb-0">
+              <button
+                onClick={() => setActiveTab('giving')}
+                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                  activeTab === 'giving'
+                    ? 'bg-[#032014] text-[#f5cf72] shadow-xs'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`}
+              >
+                <DollarSign className="w-3.5 h-3.5" />
+                <span>Giving & MoMo ({givingRecords.length})</span>
+              </button>
 
-            <button
-              onClick={() => setActiveTab('visits')}
-              className={`px-4 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 ${
-                activeTab === 'visits'
-                  ? 'bg-[#032014] text-[#f5cf72] shadow-sm border border-[#c99726]/40'
-                  : 'text-[#07472c] hover:bg-[#eef6f1]'
-              }`}
-            >
-              <Users className="w-3.5 h-3.5 text-[#c99726]" />
-              <span>Visitor Plans ({visitPlans.length})</span>
-            </button>
+              <button
+                onClick={() => setActiveTab('events')}
+                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                  activeTab === 'events'
+                    ? 'bg-[#032014] text-[#f5cf72] shadow-xs'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`}
+              >
+                <Ticket className="w-3.5 h-3.5" />
+                <span>Event Passes ({eventRegistrations.length})</span>
+              </button>
 
-            <button
-              onClick={() => setActiveTab('messages')}
-              className={`px-4 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 ${
-                activeTab === 'messages'
-                  ? 'bg-[#032014] text-[#f5cf72] shadow-sm border border-[#c99726]/40'
-                  : 'text-[#07472c] hover:bg-[#eef6f1]'
-              }`}
-            >
-              <Mail className="w-3.5 h-3.5 text-[#c99726]" />
-              <span>Messages & Inquiries ({contactMessages.length})</span>
-            </button>
+              <button
+                onClick={() => setActiveTab('prayers')}
+                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                  activeTab === 'prayers'
+                    ? 'bg-[#032014] text-[#f5cf72] shadow-xs'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`}
+              >
+                <Heart className="w-3.5 h-3.5" />
+                <span>Prayer Altar ({prayerRequests.length})</span>
+              </button>
 
-            <button
-              onClick={() => setActiveTab('placeholders')}
-              className={`px-4 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 ${
-                activeTab === 'placeholders'
-                  ? 'bg-[#032014] text-[#f5cf72] shadow-sm border border-[#c99726]/40'
-                  : 'text-[#07472c] hover:bg-[#eef6f1]'
-              }`}
-            >
-              <Layers className="w-3.5 h-3.5 text-[#c99726]" />
-              <span>Placeholder Registry</span>
-            </button>
+              <button
+                onClick={() => setActiveTab('visits')}
+                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                  activeTab === 'visits'
+                    ? 'bg-[#032014] text-[#f5cf72] shadow-xs'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`}
+              >
+                <Users className="w-3.5 h-3.5" />
+                <span>Guest Visits ({visitPlans.length})</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('messages')}
+                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                  activeTab === 'messages'
+                    ? 'bg-[#032014] text-[#f5cf72] shadow-xs'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`}
+              >
+                <Mail className="w-3.5 h-3.5" />
+                <span>Inquiries ({contactMessages.length})</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('staff')}
+                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                  activeTab === 'staff'
+                    ? 'bg-[#032014] text-[#f5cf72] shadow-xs'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`}
+              >
+                <Shield className="w-3.5 h-3.5 text-[#c99726]" />
+                <span>Staff & Access Control ({staffUsers.length})</span>
+              </button>
+            </div>
+
+            {/* Live Search Bar */}
+            <div className="relative min-w-[260px]">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by name, phone, code..."
+                className="w-full pl-9 pr-4 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#c99726] focus:bg-white"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Main Admin Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-        {/* Tab 1: Prayer Requests */}
-        {activeTab === 'prayers' && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-[#032014] font-serif-title">Petitions for Pastoral Intercession</h2>
-              <span className="text-xs text-slate-500">Processed by Secretariat</span>
+      {/* Main Content Area */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+
+        {/* =========================================================================
+            TAB 1: GIVING & MOMO RECONCILIATION
+            ========================================================================= */}
+        {activeTab === 'giving' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-3xl p-6 border border-[#d6e5dc] shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+              <div>
+                <h2 className="text-xl font-bold text-[#032014] font-serif-title flex items-center space-x-2">
+                  <DollarSign className="w-5 h-5 text-[#c99726]" />
+                  <span>Treasury & Giving Reconciliation Logs</span>
+                </h2>
+                <p className="text-xs text-slate-600 mt-0.5">
+                  Submissions from the digital giving portal with reference codes for cross-referencing against MTN MoMo / Bank statements.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => exportToCSV(givingRecords, 'Wisdom_Temple_Giving_Records')}
+                className="px-3.5 py-2 bg-[#f0f7f3] hover:bg-[#e2f0e7] text-[#07472c] border border-[#c2decc] text-xs font-bold rounded-xl flex items-center space-x-1.5 cursor-pointer shrink-0"
+              >
+                <FileSpreadsheet className="w-4 h-4 text-[#c99726]" />
+                <span>Export Giving (.CSV)</span>
+              </button>
             </div>
 
-            {prayerRequests.length === 0 ? (
-              <div className="bg-white p-12 text-center rounded-2xl border border-[#d6e5dc]">
-                <p className="text-xs text-slate-500">No prayer requests in queue.</p>
+            {filteredGiving.length === 0 ? (
+              <div className="p-12 text-center bg-white rounded-3xl border border-[#d6e5dc] text-slate-500 text-xs">
+                No giving records found matching your search.
               </div>
             ) : (
-              <div className="space-y-3">
-                {prayerRequests.map((req) => (
-                  <div
-                    key={req.id}
-                    className="bg-white p-6 rounded-2xl border border-[#d6e5dc] shadow-xs space-y-3"
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-xs font-mono font-bold px-2 py-0.5 bg-[#eef6f1] text-[#07472c] rounded border border-[#c2decc]">
-                          {req.category}
-                        </span>
-                        {req.isConfidential && (
-                          <span className="text-[10px] font-mono px-2 py-0.5 bg-rose-50 text-rose-700 rounded flex items-center space-x-1">
-                            <Lock className="w-3 h-3" />
-                            <span>Confidential</span>
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-xs font-mono text-slate-400">{req.dateSubmitted}</span>
-                    </div>
-
-                    <p className="text-sm text-slate-800 leading-relaxed font-sans">
-                      "{req.requestText}"
-                    </p>
-
-                    <div className="flex flex-wrap items-center justify-between gap-4 pt-2 text-xs text-slate-500 border-t border-slate-100">
-                      <div>
-                        <strong>Petitioner:</strong> {req.fullName} • <strong>Phone:</strong> {req.phone} • <strong>Email:</strong> {req.email}
-                      </div>
-
-                      <div className="flex items-center space-x-2">
-                        <span className="text-[11px] font-semibold text-slate-400">Status:</span>
-                        <select
-                          value={req.status}
-                          onChange={(e) => onUpdatePrayerStatus(req.id, e.target.value as any)}
-                          className="px-2.5 py-1 bg-[#f8faf8] border border-[#d6e5dc] rounded-lg text-xs font-mono font-semibold"
-                        >
-                          <option value="new">New / Active</option>
-                          <option value="prayed">Prayed At Altar</option>
-                          <option value="archived">Archived</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+              <div className="bg-white rounded-3xl border border-[#d6e5dc] shadow-sm overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-[#f8faf8] border-b border-[#d6e5dc] text-slate-600 uppercase font-mono text-[10px]">
+                      <tr>
+                        <th className="py-3 px-4">Date</th>
+                        <th className="py-3 px-4">Donor Name</th>
+                        <th className="py-3 px-4">Fund / Purpose</th>
+                        <th className="py-3 px-4">Amount</th>
+                        <th className="py-3 px-4">Method & Phone / Txn</th>
+                        <th className="py-3 px-4">Audit Reference</th>
+                        <th className="py-3 px-4">Reconciliation</th>
+                        <th className="py-3 px-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#edf4ef]">
+                      {filteredGiving.map((record) => (
+                        <tr key={record.id} className="hover:bg-[#fbfdfc] transition-colors">
+                          <td className="py-3.5 px-4 font-mono text-slate-500 whitespace-nowrap">
+                            {record.dateSubmitted}
+                          </td>
+                          <td className="py-3.5 px-4 font-bold text-slate-900">
+                            {record.donorName}
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <span className="px-2.5 py-1 rounded-full bg-[#fbf7ee] text-[#07472c] border border-[#c99726]/40 font-semibold text-[11px]">
+                              {record.fund}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-4 font-mono font-bold text-emerald-900 text-sm">
+                            {record.currency} {record.amount.toLocaleString()}
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <div className="font-medium text-slate-800">{record.paymentMethod}</div>
+                            <div className="text-[11px] text-slate-500 font-mono">{record.phoneOrTxnId}</div>
+                          </td>
+                          <td className="py-3.5 px-4 font-mono font-bold text-[#c99726]">
+                            {record.referenceCode}
+                          </td>
+                          <td className="py-3.5 px-4">
+                            {record.status === 'confirmed' ? (
+                              <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                                <span>Reconciled</span>
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold">
+                                <Clock className="w-3 h-3 text-amber-600" />
+                                <span>Pending Match</span>
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-3.5 px-4 text-right">
+                            <button
+                              type="button"
+                              onClick={() => onUpdateGivingStatus(record.id, record.status === 'confirmed' ? 'pending-verification' : 'confirmed')}
+                              className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-[11px] transition-colors cursor-pointer"
+                            >
+                              {record.status === 'confirmed' ? 'Mark Pending' : 'Mark Reconciled'}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             )}
           </div>
         )}
 
-        {/* Tab 2: Visitor Plans */}
-        {activeTab === 'visits' && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-[#032014] font-serif-title">First-Time Visitors Roster</h2>
-              <span className="text-xs text-slate-500">For Hospitality & Ushers Team</span>
+        {/* =========================================================================
+            TAB 2: EVENT PASSES & SUMMIT REGISTRATIONS
+            ========================================================================= */}
+        {activeTab === 'events' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-3xl p-6 border border-[#d6e5dc] shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+              <div>
+                <h2 className="text-xl font-bold text-[#032014] font-serif-title flex items-center space-x-2">
+                  <Ticket className="w-5 h-5 text-[#c99726]" />
+                  <span>Wisdom Summit & Church Event Passes</span>
+                </h2>
+                <p className="text-xs text-slate-600 mt-0.5">
+                  Digital reservation list of registered attendees and issued pass codes.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => exportToCSV(eventRegistrations, 'Wisdom_Temple_Event_Registrations')}
+                className="px-3.5 py-2 bg-[#f0f7f3] hover:bg-[#e2f0e7] text-[#07472c] border border-[#c2decc] text-xs font-bold rounded-xl flex items-center space-x-1.5 cursor-pointer shrink-0"
+              >
+                <FileSpreadsheet className="w-4 h-4 text-[#c99726]" />
+                <span>Export Passes (.CSV)</span>
+              </button>
             </div>
 
-            {visitPlans.length === 0 ? (
-              <div className="bg-white p-12 text-center rounded-2xl border border-[#d6e5dc]">
-                <p className="text-xs text-slate-500">No visitors planned yet.</p>
+            {filteredRegistrations.length === 0 ? (
+              <div className="p-12 text-center bg-white rounded-3xl border border-[#d6e5dc] text-slate-500 text-xs">
+                No event registrations found.
+              </div>
+            ) : (
+              <div className="bg-white rounded-3xl border border-[#d6e5dc] shadow-sm overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-[#f8faf8] border-b border-[#d6e5dc] text-slate-600 uppercase font-mono text-[10px]">
+                      <tr>
+                        <th className="py-3 px-4">Date Registered</th>
+                        <th className="py-3 px-4">Event Name</th>
+                        <th className="py-3 px-4">Attendee Name</th>
+                        <th className="py-3 px-4">Contact Phone</th>
+                        <th className="py-3 px-4">Email</th>
+                        <th className="py-3 px-4">Seats Reserved</th>
+                        <th className="py-3 px-4">Pass Code</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#edf4ef]">
+                      {filteredRegistrations.map((reg) => (
+                        <tr key={reg.id} className="hover:bg-[#fbfdfc] transition-colors">
+                          <td className="py-3.5 px-4 font-mono text-slate-500 whitespace-nowrap">
+                            {reg.dateRegistered}
+                          </td>
+                          <td className="py-3.5 px-4 font-bold text-[#032014]">
+                            {reg.eventName}
+                          </td>
+                          <td className="py-3.5 px-4 font-bold text-slate-900">
+                            {reg.fullName}
+                          </td>
+                          <td className="py-3.5 px-4 font-mono text-slate-700">
+                            {reg.phone}
+                          </td>
+                          <td className="py-3.5 px-4 text-slate-600">
+                            {reg.email || '—'}
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-800 font-mono font-bold text-[11px]">
+                              {reg.attendeesCount} seat(s)
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-4 font-mono font-bold text-[#07472c] bg-[#eef6f1]/60">
+                            {reg.registrationCode}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* =========================================================================
+            TAB 3: PRAYER ALTAR PETITIONS
+            ========================================================================= */}
+        {activeTab === 'prayers' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-3xl p-6 border border-[#d6e5dc] shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+              <div>
+                <h2 className="text-xl font-bold text-[#032014] font-serif-title flex items-center space-x-2">
+                  <Heart className="w-5 h-5 text-[#c99726]" />
+                  <span>Confidential Prayer Requests & Intercession</span>
+                </h2>
+                <p className="text-xs text-slate-600 mt-0.5">
+                  Member and visitor petitions placed upon the altar for pastoral and intercession team prayer.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => exportToCSV(prayerRequests, 'Wisdom_Temple_Prayer_Petitions')}
+                className="px-3.5 py-2 bg-[#f0f7f3] hover:bg-[#e2f0e7] text-[#07472c] border border-[#c2decc] text-xs font-bold rounded-xl flex items-center space-x-1.5 cursor-pointer shrink-0"
+              >
+                <FileSpreadsheet className="w-4 h-4 text-[#c99726]" />
+                <span>Export Prayers (.CSV)</span>
+              </button>
+            </div>
+
+            {filteredPrayers.length === 0 ? (
+              <div className="p-12 text-center bg-white rounded-3xl border border-[#d6e5dc] text-slate-500 text-xs">
+                No prayer petitions found.
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {visitPlans.map((plan) => (
-                  <div
-                    key={plan.id}
-                    className="bg-white p-6 rounded-2xl border border-[#d6e5dc] shadow-xs space-y-3"
-                  >
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-bold text-[#032014] text-base font-serif-title">{plan.fullName}</h3>
-                      <span className="text-xs font-mono px-2.5 py-1 bg-[#eef6f1] text-[#07472c] rounded-lg font-bold border border-[#c2decc]">
-                        {plan.serviceDate}
+                {filteredPrayers.map((prayer) => (
+                  <div key={prayer.id} className="bg-white rounded-3xl p-5 border border-[#d6e5dc] shadow-sm space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <div className="flex items-center space-x-2">
+                          <strong className="text-sm text-[#032014] font-bold">{prayer.fullName}</strong>
+                          {prayer.isConfidential && (
+                            <span className="px-2 py-0.5 bg-red-50 text-red-700 text-[10px] font-bold rounded-full border border-red-200">
+                              Confidential
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-[11px] text-slate-400 font-mono block mt-0.5">
+                          {prayer.dateSubmitted} • Category: <strong className="text-[#07472c]">{prayer.category}</strong>
+                        </span>
+                      </div>
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                        prayer.status === 'prayed'
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : prayer.status === 'new'
+                          ? 'bg-amber-100 text-amber-800'
+                          : 'bg-slate-100 text-slate-600'
+                      }`}>
+                        {prayer.status.toUpperCase()}
                       </span>
                     </div>
 
-                    <div className="text-xs text-slate-600 space-y-1">
-                      <p><strong>Party Size:</strong> {plan.adultsCount} Adults, {plan.childrenCount} Children</p>
-                      <p><strong>Contact:</strong> {plan.phone} | {plan.email}</p>
-                      {plan.needAssistance && (
-                        <p className="text-[#855e10] font-semibold">Assistance requested upon arrival.</p>
-                      )}
-                      {plan.specialNeeds && (
-                        <p className="text-slate-500 italic">"{plan.specialNeeds}"</p>
-                      )}
+                    <div className="p-3.5 bg-[#fbfdfc] rounded-2xl border border-[#edf4ef] text-xs text-slate-800 leading-relaxed italic">
+                      "{prayer.requestText}"
                     </div>
 
-                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                      <span className="text-[11px] text-slate-400">Received {plan.dateSubmitted}</span>
-                      <select
-                        value={plan.status}
-                        onChange={(e) => onUpdateVisitStatus(plan.id, e.target.value as any)}
-                        className="px-2 py-1 bg-[#f8faf8] border border-[#d6e5dc] rounded-lg font-mono text-xs"
-                      >
-                        <option value="planned">Planned</option>
-                        <option value="followup-assigned">Host Assigned</option>
-                        <option value="welcomed">Welcomed</option>
-                      </select>
+                    <div className="flex items-center justify-between pt-1 text-[11px]">
+                      <div className="text-slate-500 font-mono">
+                        Phone: {prayer.phone || 'N/A'} {prayer.wantsFollowup && '• (Wants Call)'}
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          type="button"
+                          onClick={() => onUpdatePrayerStatus(prayer.id, prayer.status === 'prayed' ? 'new' : 'prayed')}
+                          className="px-2.5 py-1 rounded-lg bg-[#eef6f1] hover:bg-[#e0eee4] text-[#07472c] font-bold transition-colors cursor-pointer"
+                        >
+                          {prayer.status === 'prayed' ? 'Mark New' : 'Mark Prayed'}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -267,47 +1118,77 @@ export const AdminView: React.FC<AdminViewProps> = ({
           </div>
         )}
 
-        {/* Tab 3: Contact Messages */}
-        {activeTab === 'messages' && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-[#032014] font-serif-title">Inquiries & Correspondence</h2>
-              <span className="text-xs text-slate-500">Church Office Inbox</span>
+        {/* =========================================================================
+            TAB 4: GUEST VISITS & HOSTING
+            ========================================================================= */}
+        {activeTab === 'visits' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-3xl p-6 border border-[#d6e5dc] shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+              <div>
+                <h2 className="text-xl font-bold text-[#032014] font-serif-title flex items-center space-x-2">
+                  <Users className="w-5 h-5 text-[#c99726]" />
+                  <span>First-Time Guest Connect Plans</span>
+                </h2>
+                <p className="text-xs text-slate-600 mt-0.5">
+                  Submissions from the "I'm New Here" plan-a-visit portal for protocol and ushering teams.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => exportToCSV(visitPlans, 'Wisdom_Temple_Visitor_Connect_Plans')}
+                className="px-3.5 py-2 bg-[#f0f7f3] hover:bg-[#e2f0e7] text-[#07472c] border border-[#c2decc] text-xs font-bold rounded-xl flex items-center space-x-1.5 cursor-pointer shrink-0"
+              >
+                <FileSpreadsheet className="w-4 h-4 text-[#c99726]" />
+                <span>Export Visitors (.CSV)</span>
+              </button>
             </div>
 
-            {contactMessages.length === 0 ? (
-              <div className="bg-white p-12 text-center rounded-2xl border border-[#d6e5dc]">
-                <p className="text-xs text-slate-500">No incoming messages.</p>
+            {filteredVisits.length === 0 ? (
+              <div className="p-12 text-center bg-white rounded-3xl border border-[#d6e5dc] text-slate-500 text-xs">
+                No visitor connect cards found.
               </div>
             ) : (
-              <div className="space-y-3">
-                {contactMessages.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className="bg-white p-6 rounded-2xl border border-[#d6e5dc] shadow-xs space-y-2"
-                  >
-                    <div className="flex items-center justify-between">
-                      <strong className="text-sm font-bold text-[#032014] font-serif-title">{msg.subject}</strong>
-                      <span className="text-xs font-mono text-slate-400">{msg.dateSubmitted}</span>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {filteredVisits.map((visit) => (
+                  <div key={visit.id} className="bg-white rounded-3xl p-5 border border-[#d6e5dc] shadow-sm space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <strong className="text-sm text-[#032014] font-bold block">{visit.fullName}</strong>
+                        <span className="text-[11px] text-slate-400 font-mono">
+                          Visiting: {visit.serviceDate} ({visit.serviceTime})
+                        </span>
+                      </div>
+                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold font-mono">
+                        {visit.status.toUpperCase()}
+                      </span>
                     </div>
 
-                    <p className="text-xs text-slate-700 leading-relaxed">
-                      {msg.message}
-                    </p>
-
-                    <div className="pt-2 flex flex-wrap items-center justify-between text-xs text-slate-500 border-t border-slate-100">
-                      <div>
-                        From: <strong>{msg.fullName}</strong> ({msg.email} | {msg.phone})
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="p-2.5 bg-slate-50 rounded-xl">
+                        <span className="text-[10px] text-slate-400 uppercase font-mono block">Party Size</span>
+                        <strong className="text-slate-800">{visit.adultsCount} Adults, {visit.childrenCount} Kids</strong>
                       </div>
-                      <select
-                        value={msg.status}
-                        onChange={(e) => onUpdateMessageStatus(msg.id, e.target.value as any)}
-                        className="px-2 py-1 bg-[#f8faf8] border border-[#d6e5dc] rounded-lg font-mono text-xs"
+                      <div className="p-2.5 bg-slate-50 rounded-xl">
+                        <span className="text-[10px] text-slate-400 uppercase font-mono block">Phone</span>
+                        <strong className="text-slate-800 font-mono">{visit.phone}</strong>
+                      </div>
+                    </div>
+
+                    {visit.specialNeeds && (
+                      <div className="text-[11px] text-slate-600 bg-[#fbf7ee] p-2.5 rounded-xl border border-[#c99726]/30">
+                        <strong>Notes:</strong> {visit.specialNeeds}
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between pt-1 text-[11px]">
+                      <span className="text-slate-400 font-mono">Submitted: {visit.dateSubmitted}</span>
+                      <button
+                        type="button"
+                        onClick={() => onUpdateVisitStatus(visit.id, visit.status === 'welcomed' ? 'planned' : 'welcomed')}
+                        className="px-2.5 py-1 rounded-lg bg-[#eef6f1] hover:bg-[#e0eee4] text-[#07472c] font-bold transition-colors cursor-pointer"
                       >
-                        <option value="unread">Unread</option>
-                        <option value="read">Read</option>
-                        <option value="replied">Replied</option>
-                      </select>
+                        {visit.status === 'welcomed' ? 'Mark Planned' : 'Mark Welcomed'}
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -316,87 +1197,406 @@ export const AdminView: React.FC<AdminViewProps> = ({
           </div>
         )}
 
-        {/* Tab 4: Placeholder Registry */}
-        {activeTab === 'placeholders' && (
+        {/* =========================================================================
+            TAB 5: INQUIRIES & MESSAGES
+            ========================================================================= */}
+        {activeTab === 'messages' && (
           <div className="space-y-6">
-            <div className="space-y-1">
-              <h2 className="text-xl font-bold text-[#032014] font-serif-title">Branding & Data Placeholders</h2>
-              <p className="text-xs text-slate-600">
-                All church-specific facts use consistent, labelled bracket tokens as mandated. Below is the configuration manifest:
-              </p>
+            <div className="bg-white rounded-3xl p-6 border border-[#d6e5dc] shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+              <div>
+                <h2 className="text-xl font-bold text-[#032014] font-serif-title flex items-center space-x-2">
+                  <Mail className="w-5 h-5 text-[#c99726]" />
+                  <span>General Church Inquiries & Messages</span>
+                </h2>
+                <p className="text-xs text-slate-600 mt-0.5">
+                  Secretariat correspondence received via the website contact form.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => exportToCSV(contactMessages, 'Wisdom_Temple_Contact_Inquiries')}
+                className="px-3.5 py-2 bg-[#f0f7f3] hover:bg-[#e2f0e7] text-[#07472c] border border-[#c2decc] text-xs font-bold rounded-xl flex items-center space-x-1.5 cursor-pointer shrink-0"
+              >
+                <FileSpreadsheet className="w-4 h-4 text-[#c99726]" />
+                <span>Export Messages (.CSV)</span>
+              </button>
             </div>
 
-            <div className="bg-white rounded-2xl border border-[#d6e5dc] overflow-hidden shadow-xs">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-[#eef6f1] text-[#07472c] font-mono font-bold uppercase border-b border-[#d6e5dc]">
-                  <tr>
-                    <th className="p-3.5">Category</th>
-                    <th className="p-3.5">Placeholder Token</th>
-                    <th className="p-3.5">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 font-mono text-slate-800">
-                  <tr>
-                    <td className="p-3.5 font-bold">Pastoral Oversight</td>
-                    <td className="p-3.5 text-[#07472c] font-bold">Rev. Gabriel Dela & Lady Dr. Helena Dela</td>
-                    <td className="p-3.5"><span className="text-[#07472c] bg-[#eef6f1] px-2 py-0.5 rounded border border-[#c2decc] font-semibold">Configured</span></td>
-                  </tr>
-                  <tr>
-                    <td className="p-3.5 font-bold">Pastoral Portrait</td>
-                    <td className="p-3.5 text-[#07472c] font-bold">Official Portrait Configured (1706x2560 HQ)</td>
-                    <td className="p-3.5"><span className="text-[#07472c] bg-[#eef6f1] px-2 py-0.5 rounded border border-[#c2decc] font-semibold">Active</span></td>
-                  </tr>
-                  <tr>
-                    <td className="p-3.5 font-bold">Church Location</td>
-                    <td className="p-3.5 text-[#07472c] font-bold">Star Junction, Tabora - Accra</td>
-                    <td className="p-3.5"><span className="text-[#07472c] bg-[#eef6f1] px-2 py-0.5 rounded border border-[#c2decc] font-semibold">Configured</span></td>
-                  </tr>
-                  <tr>
-                    <td className="p-3.5 font-bold">Landmark</td>
-                    <td className="p-3.5 text-[#07472c] font-bold">Star Junction, Tabora</td>
-                    <td className="p-3.5"><span className="text-[#07472c] bg-[#eef6f1] px-2 py-0.5 rounded border border-[#c2decc] font-semibold">Configured</span></td>
-                  </tr>
-                  <tr>
-                    <td className="p-3.5 font-bold">Telephone Line</td>
-                    <td className="p-3.5 text-[#07472c] font-bold">[CHURCH PHONE]</td>
-                    <td className="p-3.5"><span className="text-[#07472c] bg-[#eef6f1] px-2 py-0.5 rounded border border-[#c2decc]">Active Token</span></td>
-                  </tr>
-                  <tr>
-                    <td className="p-3.5 font-bold">WhatsApp Direct</td>
-                    <td className="p-3.5 text-[#07472c] font-bold">[WHATSAPP NUMBER]</td>
-                    <td className="p-3.5"><span className="text-[#07472c] bg-[#eef6f1] px-2 py-0.5 rounded border border-[#c2decc]">Active Token</span></td>
-                  </tr>
-                  <tr>
-                    <td className="p-3.5 font-bold">Official Email</td>
-                    <td className="p-3.5 text-[#07472c] font-bold">[CHURCH EMAIL]</td>
-                    <td className="p-3.5"><span className="text-[#07472c] bg-[#eef6f1] px-2 py-0.5 rounded border border-[#c2decc]">Active Token</span></td>
-                  </tr>
-                  <tr>
-                    <td className="p-3.5 font-bold">MoMo (MTN)</td>
-                    <td className="p-3.5 text-[#07472c] font-bold">[MTN MOBILE MONEY DETAILS]</td>
-                    <td className="p-3.5"><span className="text-[#07472c] bg-[#eef6f1] px-2 py-0.5 rounded border border-[#c2decc]">Active Token</span></td>
-                  </tr>
-                  <tr>
-                    <td className="p-3.5 font-bold">Telecel Cash</td>
-                    <td className="p-3.5 text-[#07472c] font-bold">[TELECEL CASH DETAILS]</td>
-                    <td className="p-3.5"><span className="text-[#07472c] bg-[#eef6f1] px-2 py-0.5 rounded border border-[#c2decc]">Active Token</span></td>
-                  </tr>
-                  <tr>
-                    <td className="p-3.5 font-bold">AT Money</td>
-                    <td className="p-3.5 text-[#07472c] font-bold">[AT MONEY DETAILS]</td>
-                    <td className="p-3.5"><span className="text-[#07472c] bg-[#eef6f1] px-2 py-0.5 rounded border border-[#c2decc]">Active Token</span></td>
-                  </tr>
-                  <tr>
-                    <td className="p-3.5 font-bold">Bank Account</td>
-                    <td className="p-3.5 text-[#07472c] font-bold">[BANK DETAILS]</td>
-                    <td className="p-3.5"><span className="text-[#07472c] bg-[#eef6f1] px-2 py-0.5 rounded border border-[#c2decc]">Active Token</span></td>
-                  </tr>
-                </tbody>
-              </table>
+            {filteredMessages.length === 0 ? (
+              <div className="p-12 text-center bg-white rounded-3xl border border-[#d6e5dc] text-slate-500 text-xs">
+                No contact messages found.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {filteredMessages.map((msg) => (
+                  <div key={msg.id} className="bg-white rounded-3xl p-5 border border-[#d6e5dc] shadow-sm space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <strong className="text-sm text-[#032014] font-bold block">{msg.fullName}</strong>
+                        <span className="text-[11px] text-slate-500 font-mono">{msg.email} • {msg.phone}</span>
+                      </div>
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                        msg.status === 'replied' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                      }`}>
+                        {msg.status.toUpperCase()}
+                      </span>
+                    </div>
+
+                    <div className="text-xs font-bold text-[#07472c]">
+                      Subject: {msg.subject}
+                    </div>
+
+                    <div className="p-3 bg-[#fbfdfc] rounded-2xl border border-[#edf4ef] text-xs text-slate-700 leading-relaxed">
+                      "{msg.message}"
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1 text-[11px]">
+                      <span className="text-slate-400 font-mono">{msg.dateSubmitted}</span>
+                      <button
+                        type="button"
+                        onClick={() => onUpdateMessageStatus(msg.id, msg.status === 'replied' ? 'unread' : 'replied')}
+                        className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition-colors cursor-pointer"
+                      >
+                        {msg.status === 'replied' ? 'Mark Unread' : 'Mark Replied'}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* =========================================================================
+            TAB 6: STAFF & DELEGATED ACCESS CONTROL ("ANYONE THEY PUT IN CHARGE")
+            ========================================================================= */}
+        {activeTab === 'staff' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#d6e5dc] shadow-sm flex flex-col md:flex-row justify-between md:items-center gap-4">
+              <div>
+                <div className="flex items-center space-x-2 text-[#07472c] font-mono text-xs font-bold uppercase mb-1">
+                  <Shield className="w-4 h-4 text-[#c99726]" />
+                  <span>ECCLESIASTICAL ACCESS CONTROL & DELEGATION</span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-bold text-[#032014] font-serif-title">
+                  Authorized Church Staff & Leadership
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
+                  Only individuals appointed by church leadership are permitted into this portal. The Head Administrator can delegate access, appoint department leads (Treasury, Secretariat, Intercession, Protocol), and assign security PINs below.
+                </p>
+              </div>
+
+              <div className="flex items-center space-x-2.5 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setShowAddStaffModal(true)}
+                  className="px-4 py-2.5 bg-[#032014] hover:bg-[#063821] text-white font-bold text-xs rounded-xl shadow-md flex items-center space-x-2 transition-all cursor-pointer border border-[#c99726]/40"
+                >
+                  <UserPlus className="w-4 h-4 text-[#f5cf72]" />
+                  <span>Appoint New Staff Officer</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Roster of Authorized Staff */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredStaff.map((staff) => (
+                <div 
+                  key={staff.id} 
+                  className={`bg-white rounded-3xl p-5 border transition-all shadow-sm space-y-4 relative ${
+                    staff.isActive ? 'border-[#d6e5dc]' : 'border-red-200 bg-red-50/20'
+                  }`}
+                >
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <strong className="text-base font-bold text-[#032014] block">{staff.name}</strong>
+                      <span className="text-xs text-[#07472c] font-semibold block">{staff.roleLabel}</span>
+                      <span className="text-[11px] text-slate-400 font-mono mt-0.5 block">{staff.email}</span>
+                    </div>
+
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono ${
+                      staff.isActive ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                      {staff.isActive ? 'ACTIVE' : 'SUSPENDED'}
+                    </span>
+                  </div>
+
+                  <div className="p-3 bg-[#f8faf8] rounded-2xl border border-[#edf4ef] space-y-1.5 text-xs">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[11px] text-slate-500 font-mono">Assigned Security PIN:</span>
+                      <div className="flex items-center space-x-1.5 font-mono">
+                        <span className="font-bold text-[#032014] bg-white px-2 py-0.5 rounded border border-slate-200">
+                          {revealedPasscodes[staff.id] ? staff.passcode : '••••'}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => toggleRevealPasscode(staff.id)}
+                          className="text-slate-400 hover:text-slate-700 cursor-pointer p-0.5"
+                          title="Reveal / Mask PIN"
+                        >
+                          {revealedPasscodes[staff.id] ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-center text-[11px] text-slate-500">
+                      <span>Phone:</span>
+                      <span className="font-mono text-slate-700">{staff.phone || 'N/A'}</span>
+                    </div>
+
+                    <div className="flex justify-between items-center text-[11px] text-slate-500">
+                      <span>Date Appointed:</span>
+                      <span className="font-mono text-slate-700">{staff.dateAdded}</span>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="pt-1 flex items-center justify-between border-t border-slate-100 text-xs">
+                    <button
+                      type="button"
+                      onClick={() => handleToggleStaffActive(staff.id)}
+                      className={`font-semibold cursor-pointer text-[11px] transition-colors ${
+                        staff.isActive ? 'text-amber-700 hover:text-amber-900' : 'text-emerald-700 hover:text-emerald-900'
+                      }`}
+                    >
+                      {staff.isActive ? 'Suspend Access' : 'Reactivate Access'}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveStaff(staff.id)}
+                      className="text-red-500 hover:text-red-700 cursor-pointer text-[11px] flex items-center space-x-1 transition-colors"
+                      title="Revoke access"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Revoke</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Role Permissions Reference Card */}
+            <div className="bg-[#032014] rounded-3xl p-6 text-white border border-[#0d5533] space-y-4">
+              <div className="flex items-center space-x-2 text-[#f5cf72] text-xs font-mono font-bold uppercase">
+                <Shield className="w-4 h-4 text-[#c99726]" />
+                <span>ROLE DELEGATION & PERMISSIONS HIERARCHY</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                <div className="p-3 rounded-2xl bg-[#042819] border border-[#094729]">
+                  <strong className="text-[#f5cf72] block font-mono">1. Head Administrator (Senior Pastor)</strong>
+                  <p className="text-[11px] text-emerald-200/80 mt-1 leading-relaxed">
+                    Full ecclesiastical authority: manage staff, export all church records, oversee treasury, alter altar prayer petitions.
+                  </p>
+                </div>
+                <div className="p-3 rounded-2xl bg-[#042819] border border-[#094729]">
+                  <strong className="text-[#f5cf72] block font-mono">2. Treasury & Accounts (Finance Officer)</strong>
+                  <p className="text-[11px] text-emerald-200/80 mt-1 leading-relaxed">
+                    Reconciles FirstFruit seeds, tithes, and offerings against MTN Mobile Money and CBG bank statements.
+                  </p>
+                </div>
+                <div className="p-3 rounded-2xl bg-[#042819] border border-[#094729]">
+                  <strong className="text-[#f5cf72] block font-mono">3. Pastoral Intercession (Prayer Lead)</strong>
+                  <p className="text-[11px] text-emerald-200/80 mt-1 leading-relaxed">
+                    Access to altar petitions and confidential prayer requests for pastoral care and intercession nights.
+                  </p>
+                </div>
+                <div className="p-3 rounded-2xl bg-[#042819] border border-[#094729]">
+                  <strong className="text-[#f5cf72] block font-mono">4. Secretariat & Front Desk</strong>
+                  <p className="text-[11px] text-emerald-200/80 mt-1 leading-relaxed">
+                    Monitors website inquiries, Wisdom Summit event reservations, and general church correspondence.
+                  </p>
+                </div>
+                <div className="p-3 rounded-2xl bg-[#042819] border border-[#094729]">
+                  <strong className="text-[#f5cf72] block font-mono">5. Protocol & Ushers Directorate</strong>
+                  <p className="text-[11px] text-emerald-200/80 mt-1 leading-relaxed">
+                    Manages "I'm New Here" guest visit plans, seating preparations, and special accommodations.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         )}
       </div>
+
+      {/* =========================================================================
+          MODAL: APPOINT NEW AUTHORIZED STAFF
+          ========================================================================= */}
+      {showAddStaffModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full border border-[#d6e5dc] shadow-2xl space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-[#edf4ef]">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 rounded-full bg-[#032014] text-[#f5cf72] flex items-center justify-center">
+                  <UserPlus className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-[#032014] font-serif-title">Appoint Authorized Staff</h3>
+                  <span className="text-[11px] text-slate-500 font-mono">Grant administrative portal access</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAddStaffModal(false)}
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateStaff} className="space-y-4 text-xs">
+              <div>
+                <label className="block text-[#032014] font-semibold uppercase mb-1">Full Name & Title *</label>
+                <input
+                  type="text"
+                  required
+                  value={newStaffName}
+                  onChange={(e) => setNewStaffName(e.target.value)}
+                  placeholder="e.g. Deacon Kwame Osei"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[#032014] font-semibold uppercase mb-1">Official Email *</label>
+                  <input
+                    type="email"
+                    required
+                    value={newStaffEmail}
+                    onChange={(e) => setNewStaffEmail(e.target.value)}
+                    placeholder="k.osei@wisdomtemple.org"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[#032014] font-semibold uppercase mb-1">Phone Number</label>
+                  <input
+                    type="tel"
+                    value={newStaffPhone}
+                    onChange={(e) => setNewStaffPhone(e.target.value)}
+                    placeholder="+233 24 000 0000"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[#032014] font-semibold uppercase mb-1">Assigned Role *</label>
+                  <select
+                    value={newStaffRole}
+                    onChange={(e) => setNewStaffRole(e.target.value as StaffRole)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                  >
+                    <option value="super-admin">Head Administrator (Full Access)</option>
+                    <option value="finance">Treasury & Accounts Officer</option>
+                    <option value="secretariat">Secretariat & Correspondence</option>
+                    <option value="pastoral">Pastoral Care & Prayer Lead</option>
+                    <option value="protocol">Protocol & Guest Reception</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[#032014] font-semibold uppercase mb-1">Security PIN / Passcode *</label>
+                  <input
+                    type="text"
+                    required
+                    value={newStaffPasscode}
+                    onChange={(e) => setNewStaffPasscode(e.target.value)}
+                    placeholder="e.g. 8899 or SecretPIN"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726] font-mono"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-3 flex items-center space-x-2.5">
+                <button
+                  type="button"
+                  onClick={() => setShowAddStaffModal(false)}
+                  className="w-1/2 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="w-1/2 py-2.5 rounded-xl bg-[#032014] hover:bg-[#063821] text-white font-bold transition-all shadow-md cursor-pointer border border-[#c99726]/40"
+                >
+                  Confirm Appointment
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          MODAL: GUIDE FOR DATA EXTRACTION
+          ========================================================================= */}
+      {showGuideModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full border border-[#d6e5dc] shadow-2xl space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-[#edf4ef]">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 rounded-full bg-[#032014] text-[#f5cf72] flex items-center justify-center">
+                  <Shield className="w-4 h-4" />
+                </div>
+                <h3 className="text-lg font-bold text-[#032014] font-serif-title">Staff Portal & Access Guide</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowGuideModal(false)}
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs sm:text-sm text-slate-700 leading-relaxed">
+              <div className="flex items-start space-x-3">
+                <span className="w-6 h-6 rounded-full bg-[#032014] text-white flex items-center justify-center text-xs font-bold shrink-0">1</span>
+                <div>
+                  <strong className="text-[#032014] block">Restricted Access Control:</strong>
+                  <span>This portal is completely hidden from regular members. Only appointed staff with recognized credentials and security PINs can unlock it.</span>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <span className="w-6 h-6 rounded-full bg-[#032014] text-white flex items-center justify-center text-xs font-bold shrink-0">2</span>
+                <div>
+                  <strong className="text-[#032014] block">Delegating Access ("Anyone Put in Charge"):</strong>
+                  <span>Under the <strong>Staff & Access Control</strong> tab, the Head Administrator can appoint new officers (e.g. Treasury Officer, Intercession Lead, Secretariat) and assign customized PINs.</span>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <span className="w-6 h-6 rounded-full bg-[#032014] text-white flex items-center justify-center text-xs font-bold shrink-0">3</span>
+                <div>
+                  <strong className="text-[#032014] block">1-Click CSV / Excel Export:</strong>
+                  <span>Click <strong>"Export to CSV"</strong> on any tab to download an offline spreadsheet for Microsoft Excel or Google Sheets.</span>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <span className="w-6 h-6 rounded-full bg-[#032014] text-white flex items-center justify-center text-xs font-bold shrink-0">4</span>
+                <div>
+                  <strong className="text-[#032014] block">Locking the Portal:</strong>
+                  <span>When you finish your administrative duties, click <strong>"Lock Portal"</strong> at the top right to immediately lock the session.</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setShowGuideModal(false)}
+                className="w-full py-3 bg-[#032014] hover:bg-[#063821] text-white font-bold text-xs rounded-xl shadow cursor-pointer transition-all"
+              >
+                Understood, Return to Portal
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

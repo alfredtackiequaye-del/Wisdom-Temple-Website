@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChurchEvent, EventRegistration } from '../types';
-import { X, Calendar, MapPin, CheckCircle2, Ticket } from 'lucide-react';
+import { X, Calendar, MapPin, CheckCircle2, Ticket, Copy, Check } from 'lucide-react';
 
 interface EventRegistrationModalProps {
   event: ChurchEvent | null;
@@ -14,6 +14,7 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
   const [phone, setPhone] = useState('');
   const [attendeesCount, setAttendeesCount] = useState(1);
   const [confirmedRegistration, setConfirmedRegistration] = useState<EventRegistration | null>(null);
+  const [copiedCode, setCopiedCode] = useState(false);
 
   if (!event) return null;
 
@@ -38,82 +39,94 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
     setConfirmedRegistration(newReg);
   };
 
+  const handleCopyCode = (code: string) => {
+    navigator.clipboard.writeText(code);
+    setCopiedCode(true);
+    setTimeout(() => setCopiedCode(false), 2000);
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#02180e]/85 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg bg-[#02180e] border border-[#084c2e] rounded-2xl overflow-hidden shadow-2xl text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#02180e]/85 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto bg-[#02180e] border border-[#084c2e] rounded-2xl shadow-2xl text-white">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#084c2e] bg-[#01120a]">
+        <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-[#084c2e] bg-[#01120a] sticky top-0 z-10">
           <div className="flex items-center space-x-2 text-[#f5cf72]">
             <Ticket className="w-5 h-5 text-[#c99726]" />
-            <h3 className="font-bold text-white text-base font-serif-title">Event Registration</h3>
+            <h3 className="font-bold text-white text-sm sm:text-base font-serif-title">Event Registration</h3>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-emerald-300 hover:text-white hover:bg-[#042819] transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-emerald-300 hover:text-white hover:bg-[#042819] transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6">
+        <div className="p-5 sm:p-6">
           {confirmedRegistration ? (
             /* Confirmation Pass */
-            <div className="space-y-6 text-center animate-in zoom-in-95 duration-200">
-              <div className="w-14 h-14 bg-[#c99726]/20 border border-[#c99726]/40 rounded-full flex items-center justify-center mx-auto text-[#f5cf72]">
-                <CheckCircle2 className="w-8 h-8 text-[#07472c]" />
+            <div className="space-y-5 text-center animate-in zoom-in-95 duration-200">
+              <div className="w-12 sm:w-14 h-12 sm:h-14 bg-[#c99726]/20 border border-[#c99726]/40 rounded-full flex items-center justify-center mx-auto text-[#f5cf72]">
+                <CheckCircle2 className="w-7 sm:w-8 h-7 sm:h-8 text-[#07472c]" />
               </div>
 
               <div>
-                <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3 py-1 rounded-full border border-[#c99726]/40">
+                <span className="text-[10px] sm:text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3 py-1 rounded-full border border-[#c99726]/40 inline-block">
                   REGISTRATION CONFIRMED
                 </span>
-                <h4 className="text-xl font-bold text-white mt-3 font-serif-title">{event.name}</h4>
+                <h4 className="text-lg sm:text-xl font-bold text-white mt-2 font-serif-title">{event.name}</h4>
                 <p className="text-xs text-emerald-200/80 mt-1">We look forward to hosting you in God's presence.</p>
               </div>
 
               {/* Digital Pass Ticket Card */}
-              <div className="bg-[#042819] border border-[#c99726]/40 rounded-xl p-4 text-left relative overflow-hidden shadow-lg">
-                <div className="absolute top-0 right-0 px-3 py-1 bg-gradient-to-r from-[#c99726] to-[#e5b138] text-[#021a10] font-black text-[10px] uppercase tracking-wider rounded-bl-lg">
-                  ENTRY PASS
-                </div>
-                <div className="space-y-2 text-xs">
+              <div className="bg-[#042819] border border-[#c99726]/40 rounded-xl p-4 text-left relative overflow-hidden shadow-lg space-y-2">
+                <div className="flex items-center justify-between pb-2 border-b border-[#084c2e]">
                   <div>
                     <span className="text-[10px] text-emerald-300 uppercase tracking-wider block">Attendee</span>
                     <span className="font-bold text-white text-sm">{confirmedRegistration.fullName}</span>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#084c2e]">
-                    <div>
-                      <span className="text-[10px] text-emerald-300 uppercase">Pass Code</span>
-                      <span className="font-mono text-[#f5cf72] font-bold text-sm block">
-                        {confirmedRegistration.registrationCode}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-[10px] text-emerald-300 uppercase">Seats Reserved</span>
-                      <span className="font-bold text-white text-sm block">{confirmedRegistration.attendeesCount} Person(s)</span>
-                    </div>
+                  <button
+                    onClick={() => handleCopyCode(confirmedRegistration.registrationCode)}
+                    className="px-2.5 py-1 bg-[#02180e] hover:bg-[#063821] text-[#f5cf72] text-[11px] rounded border border-[#c99726]/50 flex items-center space-x-1 cursor-pointer"
+                  >
+                    {copiedCode ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3 text-[#c99726]" />}
+                    <span>{copiedCode ? 'Copied' : 'Copy Code'}</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <div>
+                    <span className="text-[10px] text-emerald-300 uppercase">Pass Code</span>
+                    <span className="font-mono text-[#f5cf72] font-bold text-base block">
+                      {confirmedRegistration.registrationCode}
+                    </span>
                   </div>
-                  <div className="pt-2 border-t border-[#084c2e] text-[11px] text-emerald-200/80 space-y-0.5 font-mono">
-                    <p className="flex items-center space-x-1">
-                      <Calendar className="w-3 h-3 text-[#c99726]" />
-                      <span>{event.date} • {event.time}</span>
-                    </p>
-                    <p className="flex items-center space-x-1">
-                      <MapPin className="w-3 h-3 text-[#c99726]" />
-                      <span>{event.venue}</span>
-                    </p>
+                  <div>
+                    <span className="text-[10px] text-emerald-300 uppercase">Seats Reserved</span>
+                    <span className="font-bold text-white text-sm block">{confirmedRegistration.attendeesCount} Person(s)</span>
                   </div>
+                </div>
+
+                <div className="pt-2 border-t border-[#084c2e] text-[11px] text-emerald-200/80 space-y-0.5 font-mono">
+                  <p className="flex items-center space-x-1">
+                    <Calendar className="w-3 h-3 text-[#c99726]" />
+                    <span>{event.date} • {event.time}</span>
+                  </p>
+                  <p className="flex items-center space-x-1">
+                    <MapPin className="w-3 h-3 text-[#c99726]" />
+                    <span className="truncate">{event.venue}</span>
+                  </p>
                 </div>
               </div>
 
-              <p className="text-xs text-emerald-200/80">
-                A confirmation note has been recorded. Present this pass code or your name at the registration desk upon arrival.
+              <p className="text-xs text-emerald-200/80 leading-relaxed">
+                Your pass has been securely delivered to the church portal. Present this code at the registration desk upon arrival.
               </p>
 
               <button
                 onClick={onClose}
-                className="w-full py-3 bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] font-black text-sm rounded-xl transition-all cursor-pointer shadow"
+                className="w-full py-3 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
               >
                 Done
               </button>
@@ -197,7 +210,7 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full py-3 bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] font-black text-sm rounded-xl shadow-lg transition-all cursor-pointer"
+                  className="w-full py-3.5 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
                 >
                   CONFIRM FREE REGISTRATION
                 </button>

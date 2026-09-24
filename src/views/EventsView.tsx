@@ -53,9 +53,9 @@ export const EventsView: React.FC<EventsViewProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 space-y-16">
         {/* Featured Wisdom Summit Card */}
         {featuredSummit && (
-          <div className="bg-gradient-to-br from-[#02180e] via-[#032014] to-[#084c2e] rounded-3xl border border-[#c99726]/50 p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden">
+          <div className="bg-[#032014] rounded-2xl border border-white/15 p-8 sm:p-12 text-white shadow-xl relative">
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-              <span className="px-3.5 py-1 bg-gradient-to-r from-[#c99726] to-[#e5b138] text-[#021a10] font-black text-xs uppercase tracking-widest rounded-full shadow">
+              <span className="px-3.5 py-1 bg-[#c99726] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-md">
                 ANNUAL FLAGSHIP CONFERENCE
               </span>
               <button
@@ -69,7 +69,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-7 xl:col-span-8 flex justify-center">
-                <div className="group relative rounded-2xl overflow-hidden border border-[#c99726]/40 shadow-2xl bg-black w-full">
+                <div className="group relative rounded-xl overflow-hidden border border-white/20 shadow-xl bg-black w-full">
                   <img 
                     src="/wisdom_summit_banner.jpg" 
                     alt="Wisdom Summit 2026" 
@@ -79,18 +79,18 @@ export const EventsView: React.FC<EventsViewProps> = ({
                 </div>
               </div>
 
-              <div className="lg:col-span-5 xl:col-span-4 bg-[#02180e]/95 rounded-2xl border border-[#c99726]/40 p-6 sm:p-8 text-center space-y-6 shadow-xl">
-                <div className="w-14 h-14 rounded-full bg-[#c99726]/20 border border-[#c99726]/40 text-[#f5cf72] flex items-center justify-center mx-auto shadow-inner">
+              <div className="lg:col-span-5 xl:col-span-4 bg-[#02180e] rounded-xl border border-white/15 p-6 sm:p-8 text-center space-y-6">
+                <div className="w-14 h-14 rounded-full bg-[#c99726]/20 border border-[#c99726]/40 text-[#dfb15b] flex items-center justify-center mx-auto">
                   <Ticket className="w-7 h-7 text-[#c99726]" />
                 </div>
                 <div>
-                  <h4 className="font-black text-white text-xl tracking-tight">WISDOM SUMMIT 2026</h4>
+                  <h4 className="font-serif font-light text-white text-xl tracking-tight">WISDOM SUMMIT 2026</h4>
                   <p className="text-xs text-emerald-300 font-mono mt-1">October 7 - 9 & 11, 2026</p>
                   <p className="text-xs text-emerald-200/80 mt-2">Admission is free. Register to reserve your seat and receive event notifications.</p>
                 </div>
                 <button
                   onClick={() => onRegisterEvent(featuredSummit)}
-                  className="w-full py-4 bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] font-black text-sm rounded-xl shadow-xl transition-all cursor-pointer border border-[#f5cf72]/40 transform hover:-translate-y-0.5"
+                  className="w-full py-3.5 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
                 >
                   REGISTER FOR WISDOM SUMMIT
                 </button>

@@ -77,16 +77,11 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, unreadA
           <span className="text-emerald-900">•</span>
           <button 
             onClick={() => handleNavClick('admin')}
-            className="inline-flex items-center space-x-1 text-emerald-300 hover:text-[#f5cf72] transition-colors cursor-pointer"
-            title="Church Administration Portal"
+            className="text-emerald-300 hover:text-[#f5cf72] font-semibold transition-colors cursor-pointer flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-[#042819] hover:bg-[#073c25] border border-[#c99726]/40"
+            title="Church Leadership & Staff Administration"
           >
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Church Admin</span>
-            {unreadAdminCount > 0 && (
-              <span className="ml-1 px-1.5 py-0.2 bg-[#c99726] text-[#021a10] text-[10px] font-extrabold rounded-full">
-                {unreadAdminCount}
-              </span>
-            )}
+            <ShieldCheck className="w-3.5 h-3.5 text-[#c99726]" />
+            <span>Admin Portal</span>
           </button>
         </div>
       </div>
@@ -357,37 +352,27 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, unreadA
             </div>
           </nav>
 
-          {/* Right Action: Plan A Visit & Give Buttons */}
+          {/* Right Action: Give Button */}
           <div className="hidden sm:flex items-center space-x-2.5">
             <button
-              onClick={() => handleNavClick('new-here')}
-              className="px-4 py-2 rounded-full bg-[#042819] hover:bg-[#07472c] text-emerald-100 hover:text-[#fce49e] border border-[#c99726]/40 text-xs font-bold transition-all cursor-pointer shadow-sm tracking-wide"
-            >
-              PLAN A VISIT
-            </button>
-            <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.96 }}
               onClick={() => handleNavClick('give')}
-              className="inline-flex items-center space-x-2 px-5 py-2 rounded-full bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] font-black text-sm tracking-wide shadow-lg hover:shadow-[#c99726]/30 transition-all cursor-pointer border border-[#f5cf72]/40"
+              className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-lg bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-sm"
               id="nav-give-btn"
             >
-              <Heart className="w-4 h-4 fill-[#021a10] text-[#021a10]" />
+              <Heart className="w-3.5 h-3.5 fill-[#021a10] text-[#021a10]" />
               <span>GIVE</span>
-            </motion.button>
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="flex xl:hidden items-center space-x-2">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <button
               onClick={() => handleNavClick('give')}
-              className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#c99726] to-[#e5b138] text-[#021a10] font-extrabold text-xs flex items-center space-x-1 shadow"
+              className="px-3.5 py-1.5 rounded-md bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider flex items-center space-x-1"
             >
               <Heart className="w-3 h-3 fill-[#021a10]" />
               <span>GIVE</span>
-            </motion.button>
+            </button>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -495,13 +480,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, unreadA
               >
                 CONTACT US
               </button>
-              <button
-                onClick={() => handleNavClick('admin')}
-                className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-300 hover:bg-[#07472c] hover:text-[#f5cf72] flex items-center space-x-2 transition-colors"
-              >
-                <ShieldCheck className="w-4 h-4 text-[#e5b138]" />
-                <span>CHURCH ADMIN PORTAL</span>
-              </button>
             </div>
 
             <div className="pt-4 border-t border-[#063c24]">
@@ -509,11 +487,19 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, unreadA
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleNavClick('give')}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#c99726] to-[#e5b138] text-[#021a10] font-black text-center flex items-center justify-center space-x-2 shadow-lg"
+                className="w-full py-3 rounded-lg bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center space-x-2 transition-colors cursor-pointer shadow-sm"
               >
                 <Heart className="w-4 h-4 fill-[#021a10]" />
                 <span>GIVE / FIRST FRUIT & OFFERINGS</span>
               </motion.button>
+
+              <button
+                onClick={() => handleNavClick('admin')}
+                className="w-full mt-3 py-2.5 rounded-xl bg-[#042819] hover:bg-[#063821] text-center text-xs font-mono font-bold text-emerald-300 hover:text-[#f5cf72] border border-[#0d5533] flex items-center justify-center space-x-2 transition-colors cursor-pointer"
+              >
+                <ShieldCheck className="w-4 h-4 text-[#c99726]" />
+                <span>CHURCH ADMINISTRATION PORTAL</span>
+              </button>
             </div>
           </motion.div>
         )}

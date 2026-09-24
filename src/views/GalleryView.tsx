@@ -11,7 +11,7 @@ interface GalleryViewProps {
 
 export const GalleryView: React.FC<GalleryViewProps> = ({ photos, onNavigate }) => {
   return (
-    <div className="min-h-screen bg-[#fafcfb] pb-24">
+    <div className="min-h-screen bg-[#02180e] text-white pb-24">
       {/* Hero Header */}
       <section className="relative py-20 lg:py-24 bg-[#032014] text-white overflow-hidden border-b border-[#c99726]/30">
         {/* Background Ambient Glow */}

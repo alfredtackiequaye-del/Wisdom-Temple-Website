@@ -121,6 +121,20 @@ export interface EventRegistration {
   dateRegistered: string;
 }
 
+export interface GivingRecord {
+  id: string;
+  donorName: string;
+  fund: string;
+  amount: number;
+  currency: 'GHS' | 'USD';
+  paymentMethod: 'Mobile Money (MTN MoMo)' | 'Bank Transfer (CBG)';
+  referenceCode: string;
+  phoneOrTxnId: string;
+  notes?: string;
+  dateSubmitted: string;
+  status: 'pending-verification' | 'confirmed';
+}
+
 export interface ChurchPhoto {
   id: string;
   title: string;
@@ -133,4 +147,20 @@ export interface ChurchPhoto {
   featured?: boolean;
 }
 
+export type StaffRole = 'super-admin' | 'pastoral' | 'finance' | 'secretariat' | 'protocol';
+
+export interface StaffUser {
+  id: string;
+  name: string;
+  email: string;
+  role: StaffRole;
+  roleLabel: string;
+  passcode: string;
+  phone?: string;
+  dateAdded: string;
+  lastLogin?: string;
+  isActive: boolean;
+}
+
 export type FontTheme = 'cinzel' | 'playfair' | 'modern' | 'cormorant';
+

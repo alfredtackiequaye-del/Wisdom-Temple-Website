@@ -27,35 +27,31 @@ export const ICGCLogo: React.FC<ICGCLogoProps> = ({
 
   const [imageError, setImageError] = useState(false);
 
-  // Exact 131:112 aspect ratio (524x448) dimensions to prevent ANY distortion
+  // Exact 580:470 (1.234) aspect ratio dimensions so emblem and full arc fit containers cleanly
   const getDimensions = () => {
     switch (size) {
       case 'sm':
         return {
-          wrapper: 'h-8 w-[37.4px]',
-          img: 'h-8 w-[37.4px]',
+          wrapper: 'h-8 w-10 aspect-[580/470]',
           title: 'text-sm font-bold',
           tagline: 'text-[8.5px]',
         };
       case 'lg':
         return {
-          wrapper: 'h-12 w-[56.1px]',
-          img: 'h-12 w-[56.1px]',
+          wrapper: 'h-12 w-[60px] aspect-[580/470]',
           title: 'text-xl font-bold',
           tagline: 'text-[11px]',
         };
       case 'xl':
         return {
-          wrapper: 'h-16 w-[74.8px]',
-          img: 'h-16 w-[74.8px]',
+          wrapper: 'h-16 w-[80px] aspect-[580/470]',
           title: 'text-2xl font-bold',
           tagline: 'text-[13px]',
         };
       case 'md':
       default:
         return {
-          wrapper: 'h-10 w-[46.8px]',
-          img: 'h-10 w-[46.8px]',
+          wrapper: 'h-10 w-[50px] aspect-[580/470]',
           title: 'text-base sm:text-lg font-bold',
           tagline: 'text-[9.5px]',
         };
@@ -75,52 +71,48 @@ export const ICGCLogo: React.FC<ICGCLogoProps> = ({
         <img
           src={logoSrc}
           alt="Wisdom Temple Emblem"
-          width={524}
-          height={448}
-          className={`${dims.img} aspect-[131/112] object-contain drop-shadow-sm transition-transform duration-200 group-hover:scale-105`}
+          width={580}
+          height={470}
+          className="w-full h-full object-contain drop-shadow-sm transition-transform duration-200 group-hover:scale-105"
           onError={() => setImageError(true)}
           referrerPolicy="no-referrer"
         />
       ) : (
         <svg 
-          viewBox="0 0 120 100" 
+          viewBox="0 0 580 470" 
           className="w-full h-full drop-shadow-sm transition-transform duration-200 group-hover:scale-105" 
           aria-hidden="true"
           fill="none"
         >
           <defs>
             <mask id="icgc-pillar-mask">
-              <rect x="0" y="0" width="120" height="100" fill="#ffffff" />
-              <circle cx="60" cy="52" r="18.2" fill="#000000" />
+              <rect x="0" y="0" width="580" height="470" fill="#ffffff" />
+              <circle cx="290" cy="290" r="136" fill="#000000" />
             </mask>
           </defs>
 
-          {/* Back arc of the orbital ring (passes behind pillars) */}
+          {/* Complete Orbital Ring (Back & Front seamless 3D perspective ellipse) */}
           <path 
-            d="M 20,73 A 40 11.5 0 0 1 100,73 A 31 6 0 0 0 29,73 Z" 
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M 20,360 A 270 92 0 1 0 560,360 A 270 92 0 1 0 20,360 Z M 58,360 A 232 70 0 1 1 522,360 A 232 70 0 1 1 58,360 Z" 
             fill={svgFill}
           />
 
           {/* The Four Foundational Apostolic Pillars (Acts 2:42) */}
           <g mask="url(#icgc-pillar-mask)" fill={svgFill}>
             {/* Pillar 1: Doctrine (Far Left) */}
-            <rect x="41.5" y="38" width="7.6" height="33" rx="0.5" />
+            <rect x="137" y="198" width="54" height="178" rx="3" />
             {/* Pillar 2: Fellowship (Center Left) */}
-            <rect x="51.3" y="31" width="7.6" height="44.5" rx="0.5" />
+            <rect x="221" y="92" width="54" height="313" rx="3" />
             {/* Pillar 3: Breaking of Bread (Center Right - Highest Peak) */}
-            <rect x="61.1" y="22" width="7.6" height="49.5" rx="0.5" />
+            <rect x="305" y="20" width="54" height="385" rx="3" />
             {/* Pillar 4: Prayers (Far Right) */}
-            <rect x="70.9" y="33.5" width="7.6" height="41.5" rx="0.5" />
+            <rect x="389" y="160" width="54" height="216" rx="3" />
           </g>
 
-          {/* Front arc of the orbital ring (passes in front of pillars) */}
-          <path 
-            d="M 20,73 A 40 11.5 0 0 0 100,73 A 31 6 0 0 1 29,73 Z" 
-            fill={svgFill}
-          />
-
           {/* Central Globe Sphere */}
-          <circle cx="60" cy="52" r="14.5" fill={svgFill} />
+          <circle cx="290" cy="290" r="114" fill={svgFill} />
         </svg>
       )}
     </div>
@@ -136,9 +128,6 @@ export const ICGCLogo: React.FC<ICGCLogoProps> = ({
       <div className="flex flex-col justify-center">
         <span className={`${dims.title} tracking-tight font-serif-title ${isLight ? 'text-[#063c24]' : 'text-white'}`}>
           WISDOM TEMPLE
-        </span>
-        <span className={`${dims.tagline} tracking-wider uppercase font-semibold ${isLight ? 'text-[#0a5c37]' : 'text-white'}`}>
-          Raising Leaders • Shaping Visions
         </span>
       </div>
     </div>

@@ -52,8 +52,8 @@ export const VideoModal: React.FC<VideoModalProps> = ({ sermon, onClose, onShare
                 alt={sermon.title}
                 className="w-full h-full object-cover opacity-75" 
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#02180e] via-[#02180e]/50 to-transparent flex flex-col items-center justify-center p-6 text-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-[#c99726] to-[#e5b138] text-[#021a10] flex items-center justify-center shadow-xl mb-4">
+              <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center p-6 text-center">
+                <div className="w-16 h-16 rounded-full bg-[#c99726] text-[#021a10] flex items-center justify-center shadow-lg mb-4">
                   <svg className="w-8 h-8 ml-1 fill-[#021a10]" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z" />
                   </svg>
@@ -118,7 +118,7 @@ export const VideoModal: React.FC<VideoModalProps> = ({ sermon, onClose, onShare
                   a.download = `${sermon.title.toLowerCase().replace(/\s+/g, '-')}-outline.txt`;
                   a.click();
                 }}
-                className="inline-flex items-center space-x-1.5 px-3 py-2 bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] text-xs font-bold rounded-lg transition-colors cursor-pointer shadow"
+                className="inline-flex items-center space-x-1.5 px-3 py-2 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] text-xs font-bold uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Study Notes</span>

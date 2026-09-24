@@ -80,11 +80,11 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
             className="bg-white rounded-3xl overflow-hidden border-2 border-amber-200/90 shadow-md hover:border-[#c99726] transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="p-6 bg-gradient-to-br from-amber-500/15 via-amber-50 to-white border-b border-amber-100 flex items-center justify-between">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#c99726] to-[#e5b138] text-[#021a10] border border-[#f5cf72] flex items-center justify-center font-black text-xl shadow-md shadow-[#c99726]/20">
+              <div className="p-6 bg-amber-50/60 border-b border-amber-100 flex items-center justify-between">
+                <div className="w-12 h-12 rounded-xl bg-[#c99726] text-[#021a10] border border-[#dfb15b] flex items-center justify-center font-bold text-xl">
                   1
                 </div>
-                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-amber-900 bg-amber-100 px-3 py-1 rounded-full border border-amber-300">
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-amber-900 bg-amber-100 px-3 py-1 rounded-md border border-amber-300">
                   BEFORE YOU COME
                 </span>
               </div>
@@ -133,11 +133,11 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
             className="bg-white rounded-3xl overflow-hidden border-2 border-emerald-200/90 shadow-md hover:border-emerald-600 transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="p-6 bg-gradient-to-br from-emerald-600/15 via-emerald-50 to-white border-b border-emerald-100 flex items-center justify-between">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#07472c] to-[#042819] text-[#f5cf72] border border-[#c99726]/40 flex items-center justify-center font-black text-xl shadow-md shadow-[#07472c]/20">
+              <div className="p-6 bg-emerald-50/60 border-b border-emerald-100 flex items-center justify-between">
+                <div className="w-12 h-12 rounded-xl bg-[#07472c] text-[#dfb15b] border border-[#084c2e] flex items-center justify-center font-bold text-xl">
                   2
                 </div>
-                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-900 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-900 bg-emerald-100 px-3 py-1 rounded-md border border-emerald-300">
                   WHEN YOU ARRIVE
                 </span>
               </div>
@@ -182,11 +182,11 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
             className="bg-white rounded-3xl overflow-hidden border-2 border-teal-200/90 shadow-md hover:border-teal-600 transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="p-6 bg-gradient-to-br from-teal-600/15 via-teal-50 to-white border-b border-teal-100 flex items-center justify-between">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#0a5c37] to-[#c99726] text-white border border-white/60 flex items-center justify-center font-black text-xl shadow-md shadow-[#0a5c37]/20">
+              <div className="p-6 bg-teal-50/60 border-b border-teal-100 flex items-center justify-between">
+                <div className="w-12 h-12 rounded-xl bg-[#032014] text-[#dfb15b] border border-[#084c2e] flex items-center justify-center font-bold text-xl">
                   3
                 </div>
-                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-teal-900 bg-teal-100 px-3 py-1 rounded-full border border-teal-300">
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-teal-900 bg-teal-100 px-3 py-1 rounded-md border border-teal-300">
                   AFTER SERVICE
                 </span>
               </div>
@@ -233,18 +233,37 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
           </div>
 
           {planSubmitted ? (
-            <div className="py-12 text-center space-y-4 animate-in zoom-in-95 duration-200">
-              <div className="w-16 h-16 rounded-full bg-[#c99726]/20 border border-[#c99726]/40 text-[#f5cf72] flex items-center justify-center mx-auto">
-                <CheckCircle2 className="w-10 h-10 text-[#07472c]" />
+            <div className="py-8 sm:py-12 text-center space-y-4 animate-in zoom-in-95 duration-200">
+              <div className="w-14 sm:w-16 h-14 sm:h-16 rounded-full bg-[#c99726]/20 border border-[#c99726]/40 text-[#f5cf72] flex items-center justify-center mx-auto">
+                <CheckCircle2 className="w-8 sm:w-10 h-8 sm:h-10 text-[#07472c]" />
               </div>
-              <h3 className="text-2xl font-bold text-[#032014] font-serif-title">We Can't Wait to Meet You!</h3>
-              <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
-                Thank you, <strong>{fullName}</strong>. Our hospitality team has recorded your visit for {serviceDate} at 8:00 AM. We will send a brief confirmation message.
+              <h3 className="text-xl sm:text-2xl font-bold text-[#032014] font-serif-title">We Can't Wait to Meet You!</h3>
+              <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+                Thank you, <strong>{fullName}</strong>. Our hospitality team has recorded your visit for {serviceDate} at 8:00 AM. A guest reception pass has been reserved in your name.
               </p>
-              <div className="pt-4">
+
+              <div className="p-4 bg-[#fbf7ee] rounded-2xl border border-[#c99726]/50 max-w-md mx-auto text-left space-y-1">
+                <span className="text-[10px] font-mono uppercase text-[#07472c] font-bold block">
+                  VISITOR RESERVATION CODE
+                </span>
+                <span className="text-base sm:text-lg font-mono font-black text-[#032014] block">
+                  WT-GUEST-{Math.floor(1000 + Math.random() * 9000)}
+                </span>
+                <span className="text-xs text-slate-600 block">
+                  Party: {adultsCount} Adult(s) {childrenCount > 0 ? `• ${childrenCount} Child(ren)` : ''}
+                </span>
+              </div>
+
+              <div className="pt-3 flex flex-wrap justify-center gap-3">
+                <button
+                  onClick={() => setPlanSubmitted(false)}
+                  className="px-5 py-2.5 bg-white border border-[#c2decc] hover:bg-slate-50 text-[#07472c] font-bold text-xs rounded-xl cursor-pointer"
+                >
+                  Plan Another Visit
+                </button>
                 <button
                   onClick={() => onNavigate('home')}
-                  className="px-6 py-2.5 bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] font-black text-xs rounded-xl cursor-pointer shadow"
+                  className="px-6 py-2.5 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg cursor-pointer transition-colors"
                 >
                   Return to Home
                 </button>
@@ -355,7 +374,7 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full py-4 bg-gradient-to-r from-[#c99726] to-[#e5b138] hover:from-[#d8a531] hover:to-[#f0be47] text-[#021a10] font-black text-sm rounded-xl shadow-lg transition-all cursor-pointer"
+                  className="w-full py-3.5 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
                 >
                   CONFIRM MY VISIT
                 </button>

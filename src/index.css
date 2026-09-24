@@ -85,22 +85,20 @@ body {
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.95), 0 2px 6px rgba(0, 0, 0, 0.9);
 }
 
-/* ICGC Theme Background & Gradient Presets */
+/* Clean architectural solid presets */
 .bg-icgc-hero {
-  background: radial-gradient(circle at 50% 20%, #07472b 0%, #042818 50%, #02170e 100%);
+  background-color: #031e13;
 }
 
 .bg-icgc-card {
-  background: linear-gradient(145deg, #074328 0%, #042918 100%);
+  background-color: #052618;
 }
 
 .border-icgc-gold-subtle {
-  border-color: rgba(201, 151, 38, 0.3);
+  border-color: rgba(201, 151, 38, 0.25);
 }
 
-.text-icgc-gold-gradient {
-  background: linear-gradient(135deg, #fce49e 0%, #e5b138 50%, #c99726 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.text-icgc-gold-accent {
+  color: #dfb15b;
 }
 
