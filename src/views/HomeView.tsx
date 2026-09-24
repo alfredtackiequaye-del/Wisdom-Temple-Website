@@ -331,11 +331,11 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     WEDNESDAYS @ 7:00 PM
                   </span>
                   <h3 className="text-2xl font-bold text-[#032014] font-serif-title">
-                    The Secret Place
+                    The Secret Place Prayer Service
                   </h3>
                 </div>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Our midweek altar of passionate intercession, prophetic ministry, and personal renewal in God's presence.
+                  Our midweek prayer service of passionate intercession, prophetic ministry, and personal renewal in God's presence.
                 </p>
               </div>
               <div className="pt-6 mt-4 border-t border-slate-200/70">
@@ -460,7 +460,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     </div>
                     <div className="flex items-center space-x-2.5">
                       <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 font-bold text-[10px]">✓</div>
-                      <span className="font-medium text-slate-800">The Secret Place midweek prophetic prayer altar</span>
+                      <span className="font-medium text-slate-800">The Secret Place midweek prayer service</span>
                     </div>
                   </div>
                 </div>

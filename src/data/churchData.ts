@@ -30,11 +30,11 @@ export const CHURCH_INFO = {
       description: 'A vibrant encounter with uplifting praise, charismatic worship, and foundational biblical teaching.',
     },
     midweek: {
-      name: 'The Secret Place',
+      name: 'The Secret Place Prayer Service',
       subtitle: 'A Time of Prayer, Worship and Encounter',
       time: '7:00 PM',
       day: 'Every Wednesday',
-      description: 'Our midweek altar of fervent prayer, prophetic ministry, and personal spiritual renewal.',
+      description: 'Our midweek prayer service of fervent prayer, prophetic ministry, and personal spiritual renewal.',
     },
   },
   social: {
@@ -412,12 +412,12 @@ export const INITIAL_CHURCH_PHOTOS: ChurchPhoto[] = [
   },
   {
     id: 'photo-2',
-    title: 'Midweek Altar: The Secret Place',
+    title: 'The Secret Place Prayer Service',
     event: 'The Secret Place',
     category: 'Worship & Prayer',
     date: 'September 2026',
     imageUrl: '/secret_place_banner.jpg',
-    caption: 'Our sacred Wednesday night altar of travailing prayer, prophetic ministry, and personal spiritual renewal.',
+    caption: 'Our sacred Wednesday night prayer service of fervent prayer, prophetic ministry, and personal spiritual renewal.',
     location: 'Main Auditorium Altar',
     featured: true,
   },

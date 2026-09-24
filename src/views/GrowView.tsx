@@ -113,7 +113,7 @@ export const GrowView: React.FC<GrowViewProps> = ({ onNavigate }) => {
               <div className="w-12 h-12 rounded-xl bg-[#eef6f1] text-[#07472c] border border-[#c2decc] flex items-center justify-center">
                 <Flame className="w-6 h-6 text-[#c99726]" />
               </div>
-              <h3 className="text-lg font-bold text-[#032014] font-serif-title">The Secret Place Altar</h3>
+              <h3 className="text-lg font-bold text-[#032014] font-serif-title">The Secret Place Prayer Service</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
                 Building stamina in tongues, midnight vigils, fasting, and biblical intercession for your family and nation.
               </p>
