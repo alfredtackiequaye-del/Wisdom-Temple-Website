@@ -147,10 +147,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
   return (
     <div className="space-y-0 text-slate-900">
       {/* ========================================================================= */}
-      {/* 1. HERO SECTION - ICGC Official Deep Forest & Gold */}
+      {/* 1. HERO SECTION - Minimal, Airy, Image-Forward (connection-rincon style) */}
       {/* ========================================================================= */}
-      <section className="relative min-h-[92vh] lg:min-h-[90vh] bg-[#02180e] flex items-center justify-center overflow-hidden" id="hero-section">
-        {/* Official Church Banner Image - Elevated visibility with smooth cinematic Ken Burns animation */}
+      <section className="relative min-h-[85vh] lg:min-h-[90vh] bg-[#02180e] flex flex-col justify-between overflow-hidden pt-28 sm:pt-36 pb-12 sm:pb-16" id="hero-section">
+        {/* Official Church Banner Image - High Clarity & Subtle Motion */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <motion.img
             src="/hero_icgc_banner.jpg"
@@ -161,119 +161,191 @@ export const HomeView: React.FC<HomeViewProps> = ({
               }
             }}
             alt="Wisdom Temple Official Banner"
-            initial={{ scale: 1.04, opacity: 0.9 }}
+            initial={{ scale: 1.02, opacity: 0.95 }}
             animate={{
-              scale: [1.04, 1.12, 1.04],
-              y: [0, -10, 0],
+              scale: [1.02, 1.08, 1.02],
+              y: [0, -8, 0],
             }}
             transition={{
-              scale: { duration: 18, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' },
-              y: { duration: 22, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' },
+              scale: { duration: 20, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' },
+              y: { duration: 24, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' },
             }}
-            className="w-full h-full object-cover object-center filter brightness-95 contrast-105"
+            className="w-full h-full object-cover object-center filter brightness-100 contrast-100"
             referrerPolicy="no-referrer"
           />
 
-          {/* Balanced cinematic scrim: crisp and professional contrast for text clarity */}
-          <div className="absolute inset-0 bg-black/60 pointer-events-none" />
+          {/* Top and bottom subtle gradients, leaving the entire middle open and visible */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#02140c]/85 via-[#02140c]/30 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#02140c]/90 via-[#02140c]/30 to-transparent pointer-events-none" />
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 text-center flex flex-col items-center">
-          {/* Top Kicker: Assembly Identity & Service Time */}
-          <div className="text-xs uppercase tracking-[0.25em] font-semibold text-[#dfb15b] mb-4">
-            ICGC Wisdom Temple · Sundays at 8:00 AM
-          </div>
-
-          {/* Headline - Editorial High-Impact Contemporary Typography */}
-          <motion.h1
-            initial={{ opacity: 0, y: 22 }}
+        {/* Top Block: Service Times, Mission Statement & Welcoming Subtitle */}
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+          {/* Eyebrow - Service Times */}
+          <motion.div 
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light text-white tracking-tight leading-[0.98] max-w-5xl font-serif drop-shadow-md uppercase"
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-[#032014]/90 border border-[#c99726]/60 text-[#f5cf72] text-xs sm:text-sm font-semibold tracking-wider uppercase mb-4 backdrop-blur-md shadow-lg"
           >
-            WELCOME <span className="font-normal text-[#dfb15b]">HOME</span>
-          </motion.h1>
+            <span>Sundays @ 8:00 AM</span>
+            <span className="text-[#c99726]/60">•</span>
+            <span>Wednesdays @ 7:00 PM</span>
+          </motion.div>
 
-          {/* Guiding Motto & Vision */}
-          <motion.p
+          {/* Headline - Unified Mission Statement (Refined Size, Slightly Thicker Weight, Single White Color) */}
+          <motion.h1
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
-            className="mt-4 text-base sm:text-lg md:text-xl text-[#dfb15b] font-semibold max-w-3xl leading-snug tracking-wider uppercase"
+            transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-semibold text-white tracking-tight leading-snug font-serif max-w-3xl drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]"
           >
-            EXPERIENCE GOD'S LOVE • TRUST HIS WORD • FOLLOW HIS LEAD
-          </motion.p>
+            Raising Leaders, Shaping Visions, Influencing Society Through Christ.
+          </motion.h1>
 
+          {/* Welcoming Subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.42, ease: 'easeOut' }}
-            className="mt-3 text-sm sm:text-base text-emerald-100/90 font-normal max-w-2xl leading-relaxed"
+            transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
+            className="mt-3 text-xs sm:text-sm md:text-base text-emerald-100/90 font-medium max-w-xl mx-auto leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)]"
           >
-            Raising leaders, shaping visions, and influencing society through Christ. Join us in person at Star Junction, Tabora, or experience our service live online.
+            Welcome to ICGC Wisdom Temple — a Bible-believing charismatic family at Star Junction, Tabora.
           </motion.p>
+        </div>
 
-          {/* Primary & Secondary CTAs - Plan A Visit & Watch Message */}
-          <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+        {/* Center Space: Wide open viewing area for the church banner */}
+        <div className="flex-1 min-h-[14vh] sm:min-h-[18vh]" />
+
+        {/* Bottom Block: Plan Your Visit & Upcoming Events Buttons */}
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
+          <motion.div 
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.45, ease: 'easeOut' }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto"
+          >
             <button
               onClick={() => onNavigate('new-here')}
-              className="w-full sm:w-auto px-8 py-4 rounded-lg bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider shadow-sm transition-colors flex items-center justify-center space-x-2.5 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-black text-xs uppercase tracking-wider shadow-xl transition-all transform hover:scale-[1.02] flex items-center justify-center space-x-2 cursor-pointer"
             >
               <span>PLAN YOUR VISIT</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
             <button
-              onClick={() => latestSermon && onWatchVideo(latestSermon)}
-              className="w-full sm:w-auto px-7 py-4 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-wider border border-white/20 transition-colors flex items-center justify-center space-x-2.5 cursor-pointer"
+              onClick={() => onNavigate('events')}
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-black/50 hover:bg-black/70 text-white font-bold text-xs uppercase tracking-wider border border-white/30 backdrop-blur-md transition-all flex items-center justify-center space-x-2 cursor-pointer shadow-lg"
             >
-              <Play className="w-4 h-4 text-[#dfb15b] fill-[#dfb15b]" />
-              <span>WATCH ONLINE</span>
+              <Calendar className="w-4 h-4 text-[#f5cf72]" />
+              <span>UPCOMING EVENTS</span>
             </button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 2. MODULAR EXPERIENCE ROW - Inspired by connection-rincon.com */}
+      {/* ========================================================================= */}
+      <section className="py-16 sm:py-20 bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-xs font-mono text-[#07472c] font-bold uppercase tracking-widest bg-[#eef6f1] px-3.5 py-1.5 rounded-full border border-[#c2decc] inline-block mb-3">
+              EXPERIENCE WISDOM TEMPLE
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#032014] font-serif-title tracking-tight">
+              Get Connected & Grow in Faith
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 mt-2">
+              Whether joining in person or online, here are clear steps for you and your family.
+            </p>
           </div>
 
-          {/* Service Information Panels */}
-          <div className="mt-14 sm:mt-16 lg:mt-20 w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-4 text-left mx-auto">
-            {/* Sunday Service */}
-            <div className="p-5 rounded-xl bg-[#031d13] border border-white/10 hover:border-[#c99726]/50 flex items-start space-x-4 transition-colors h-full">
-              <div className="p-3 rounded-lg bg-[#c99726] text-[#021a10] shrink-0">
-                <Clock className="w-5 h-5 stroke-[2.5]" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-[#dfb15b] font-semibold block">Weekend Gathering</span>
-                <h4 className="text-base font-semibold text-white">Sunday Celebration</h4>
-                <p className="text-sm font-bold text-[#dfb15b] mt-0.5">Sundays • 8:00 AM</p>
-                <span className="text-xs text-emerald-200/80 block mt-0.5">Sanctuary & Live Stream</span>
-              </div>
-            </div>
-
-            {/* The Secret Place */}
-            <div className="p-5 rounded-xl bg-[#031d13] border border-white/10 hover:border-[#dfb15b]/50 flex items-start space-x-4 transition-colors h-full">
-              <div className="p-3 rounded-lg bg-[#073822] text-[#dfb15b] border border-emerald-800/40 shrink-0">
-                <Flame className="w-5 h-5 text-[#dfb15b]" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-[#dfb15b] font-semibold block">Midweek Service</span>
-                <h4 className="text-base font-semibold text-white">The Secret Place</h4>
-                <p className="text-sm font-bold text-[#dfb15b] mt-0.5">Wednesdays • 7:00 PM</p>
-                <span className="text-xs text-emerald-200/80 block mt-0.5">Prayer, Worship & Prophetic</span>
-              </div>
-            </div>
-
-            {/* Location Badge */}
-            <div className="p-5 rounded-xl bg-[#031d13] border border-white/10 hover:border-emerald-400/50 flex items-start space-x-4 transition-colors h-full">
-              <div className="p-3 rounded-lg bg-[#07472c] text-emerald-200 border border-[#09603a] shrink-0">
-                <MapPin className="w-5 h-5 text-[#dfb15b]" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-emerald-300 font-semibold block">Sanctuary Location</span>
-                <h4 className="text-base font-semibold text-white">Wisdom Temple</h4>
-                <p className="text-sm font-bold text-[#dfb15b] mt-0.5">
-                  Star Junction, Tabora
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            {/* Module 1: Visit In-Person */}
+            <div className="bg-[#f8faf8] rounded-2xl p-7 border border-[#d6e5dc] hover:border-[#c99726] shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-12 h-12 rounded-xl bg-[#032014] text-[#f5cf72] flex items-center justify-center shadow-xs">
+                  <MapPin className="w-6 h-6 text-[#c99726]" />
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#07472c]">
+                    SUNDAYS @ 8:00 AM
+                  </span>
+                  <h3 className="text-2xl font-bold text-[#032014] font-serif-title">
+                    Visit In-Person
+                  </h3>
+                </div>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  Join us at Star Junction, Tabora for charismatic praise, spirit-filled worship, and foundational biblical teaching.
                 </p>
-                <span className="text-xs text-emerald-200/80 block mt-0.5">
-                  Accra, Ghana • Secure Parking
-                </span>
+              </div>
+              <div className="pt-6 mt-4 border-t border-slate-200/70">
+                <button
+                  onClick={() => onNavigate('new-here')}
+                  className="inline-flex items-center space-x-2 text-xs font-bold text-[#07472c] group-hover:text-[#c99726] transition-colors cursor-pointer"
+                >
+                  <span>Plan Your Sunday Visit</span>
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </button>
+              </div>
+            </div>
+
+            {/* Module 2: Watch on Demand */}
+            <div className="bg-[#f8faf8] rounded-2xl p-7 border border-[#d6e5dc] hover:border-[#c99726] shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-12 h-12 rounded-xl bg-[#032014] text-[#f5cf72] flex items-center justify-center shadow-xs">
+                  <Play className="w-6 h-6 text-[#c99726] fill-[#c99726]" />
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#07472c]">
+                    MESSAGES & PODCASTS
+                  </span>
+                  <h3 className="text-2xl font-bold text-[#032014] font-serif-title">
+                    Watch on Demand
+                  </h3>
+                </div>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  Catch up on previous Sunday sermons, Wisdom Summit series, and midweek teachings anywhere on video or audio.
+                </p>
+              </div>
+              <div className="pt-6 mt-4 border-t border-slate-200/70">
+                <button
+                  onClick={() => onNavigate('watch-listen')}
+                  className="inline-flex items-center space-x-2 text-xs font-bold text-[#07472c] group-hover:text-[#c99726] transition-colors cursor-pointer"
+                >
+                  <span>Browse Sermon Archive</span>
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </button>
+              </div>
+            </div>
+
+            {/* Module 3: The Secret Place */}
+            <div className="bg-[#f8faf8] rounded-2xl p-7 border border-[#d6e5dc] hover:border-[#c99726] shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-12 h-12 rounded-xl bg-[#032014] text-[#f5cf72] flex items-center justify-center shadow-xs">
+                  <Flame className="w-6 h-6 text-[#c99726]" />
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#07472c]">
+                    WEDNESDAYS @ 7:00 PM
+                  </span>
+                  <h3 className="text-2xl font-bold text-[#032014] font-serif-title">
+                    The Secret Place
+                  </h3>
+                </div>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  Our midweek altar of passionate intercession, prophetic ministry, and personal renewal in God's presence.
+                </p>
+              </div>
+              <div className="pt-6 mt-4 border-t border-slate-200/70">
+                <button
+                  onClick={() => onNavigate('prayer')}
+                  className="inline-flex items-center space-x-2 text-xs font-bold text-[#07472c] group-hover:text-[#c99726] transition-colors cursor-pointer"
+                >
+                  <span>Submit Prayer / Join</span>
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </button>
               </div>
             </div>
           </div>
