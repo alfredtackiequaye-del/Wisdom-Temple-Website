@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { PageId, GivingRecord } from '../types';
 import { GIVING_DETAILS } from '../data/churchData';
+import { useBanners } from '../utils/bannerManager';
+import { useSiteContent } from '../utils/contentManager';
 import { 
   CreditCard, 
   Smartphone, 
@@ -25,6 +27,8 @@ interface GiveViewProps {
 }
 
 export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }) => {
+  const { getBanner } = useBanners();
+  const { content } = useSiteContent();
   const [selectedFund, setSelectedFund] = useState<string>('FirstFruit');
   const [currency, setCurrency] = useState<'GHS' | 'USD'>('GHS');
   const [amount, setAmount] = useState<string>('100');
@@ -104,16 +108,23 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
   return (
     <div className="bg-[#f8faf8] min-h-screen text-slate-900 pb-24">
       {/* Header Banner - ICGC Deep Forest & Gold */}
-      <section className="bg-[#02180e] text-white py-14 sm:py-20 border-b border-[#084c2e]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 sm:space-y-4">
+      <section className="relative bg-[#02180e] text-white py-14 sm:py-20 border-b border-[#084c2e] overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-15">
+          <img
+            src={getBanner('page_give_hero', 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=1920&q=80')}
+            alt="Give Header"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 sm:space-y-4 relative z-10">
           <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
             STEWARDSHIP & GENEROSITY
           </span>
           <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            DIGITAL GIVING & STEWARDSHIP
+            {content.givingHeadline.toUpperCase()}
           </h1>
           <p className="text-sm sm:text-lg text-emerald-200/90 max-w-2xl mx-auto leading-relaxed">
-            Send your FIRSTFRUIT, OFFERING & PLEDGES conveniently via official Mobile Money or Bank Account.
+            {content.givingInstructions}
           </p>
         </div>
       </section>
@@ -160,7 +171,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
               className="group relative cursor-pointer rounded-2xl overflow-hidden border-2 border-[#c99726]/60 shadow-2xl hover:border-[#f5cf72] transition-all transform hover:scale-[1.02] shrink-0 max-w-xs sm:max-w-sm w-full bg-black/40"
             >
               <img
-                src="/giving_details_official.jpg"
+                src={getBanner('giving_flyer', '/giving_details_official.jpg')}
                 onError={(e) => {
                   const target = e.currentTarget;
                   if (target.src !== 'https://i.imgur.com/DCRspmB.png') {
@@ -495,7 +506,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                       </span>
                       <button
                         type="button"
-                        onClick={() => copyToClipboard(GIVING_DETAILS.momo.mtn, 'mtn')}
+                        onClick={() => copyToClipboard(content.givingMomoMtn, 'mtn')}
                         className="px-2.5 py-1 bg-white text-[#032014] hover:bg-[#032014] hover:text-white rounded-lg border border-[#c99726] text-[11px] font-bold transition-all flex items-center space-x-1 cursor-pointer shadow-xs"
                         title="Copy MTN MoMo Number"
                       >
@@ -505,11 +516,11 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                     </div>
 
                     <div className="text-xl sm:text-2xl font-mono text-[#032014] font-black tracking-wider">
-                      {GIVING_DETAILS.momo.mtn}
+                      {content.givingMomoMtn}
                     </div>
 
                     <div className="text-xs text-slate-700 bg-white/80 p-2 rounded-lg border border-[#e5cd96]">
-                      Account Name: <strong className="text-[#032014]">Wisdom Temple (Kokomlemle)</strong>
+                      Account Name: <strong className="text-[#032014]">{content.givingMomoAccountName}</strong>
                     </div>
                   </div>
                 </div>
@@ -526,8 +537,8 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                     <Building2 className="w-5 h-5 text-[#c99726]" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#032014] text-base font-serif-title">Bank Account (CBG)</h3>
-                    <p className="text-[11px] text-slate-500">Consolidated Bank Ghana</p>
+                    <h3 className="font-bold text-[#032014] text-base font-serif-title">Bank Account</h3>
+                    <p className="text-[11px] text-slate-500">{content.givingBankName}</p>
                   </div>
                 </div>
 
@@ -538,7 +549,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                         BANK NAME
                       </span>
                       <strong className="text-sm text-[#032014] block">
-                        {GIVING_DETAILS.bank.bankName}
+                        {content.givingBankName}
                       </strong>
                     </div>
                   </div>
@@ -549,12 +560,12 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                         ACCOUNT NUMBER
                       </span>
                       <span className="text-sm sm:text-base font-mono text-[#032014] font-black tracking-wide block">
-                        {GIVING_DETAILS.bank.accountNumber}
+                        {content.givingBankAccountNumber}
                       </span>
                     </div>
                     <button
                       type="button"
-                      onClick={() => copyToClipboard(GIVING_DETAILS.bank.accountNumber, 'cbg-acc')}
+                      onClick={() => copyToClipboard(content.givingBankAccountNumber, 'cbg-acc')}
                       className="px-2.5 py-1 bg-white text-[#032014] hover:bg-[#032014] hover:text-white rounded-lg border border-[#d6e5dc] text-[11px] font-bold transition-all flex items-center space-x-1 cursor-pointer"
                       title="Copy Account Number"
                     >
@@ -568,7 +579,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                       ACCOUNT NAME
                     </span>
                     <span className="text-xs font-semibold text-slate-800">
-                      {GIVING_DETAILS.bank.accountName}
+                      {content.givingBankAccountName}
                     </span>
                   </div>
                 </div>
@@ -650,7 +661,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
 
               <div className="max-h-[75vh] overflow-auto rounded-2xl flex items-center justify-center bg-black/50">
                 <img
-                  src="/giving_details_official.jpg"
+                  src={getBanner('giving_flyer', '/giving_details_official.jpg')}
                   onError={(e) => {
                     const target = e.currentTarget;
                     if (target.src !== 'https://i.imgur.com/DCRspmB.png') {

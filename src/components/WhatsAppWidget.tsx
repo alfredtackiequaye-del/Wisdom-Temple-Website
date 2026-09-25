@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { MessageCircle, X, Send } from 'lucide-react';
-import { CHURCH_INFO } from '../data/churchData';
+import { useSiteContent } from '../utils/contentManager';
 
 export const WhatsAppWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { content } = useSiteContent();
 
   return (
     <div className="fixed bottom-6 right-6 z-40">
@@ -17,7 +18,7 @@ export const WhatsAppWidget: React.FC = () => {
                 <MessageCircle className="w-4 h-4 text-[#f5cf72]" />
               </div>
               <div>
-                <h4 className="text-sm font-bold leading-tight font-serif-title text-white">Wisdom Temple</h4>
+                <h4 className="text-sm font-bold leading-tight font-serif-title text-white">{content.churchName}</h4>
                 <span className="text-[10px] text-[#f5cf72] font-medium">Official Church WhatsApp Helpdesk</span>
               </div>
             </div>
@@ -34,18 +35,18 @@ export const WhatsAppWidget: React.FC = () => {
             <div className="p-3 bg-[#042819] rounded-xl border border-[#084c2e] text-emerald-100/90 space-y-1.5">
               <p className="font-semibold text-white">Peace and Grace to you! 🙏</p>
               <p className="text-emerald-200/80">
-                Welcome to Wisdom Temple. How can our pastoral care and welcoming team assist you today?
+                Welcome to {content.churchName}. How can our pastoral care and welcoming team assist you today?
               </p>
             </div>
 
             <div className="space-y-1.5 text-emerald-200">
               <div className="p-2 bg-[#042819]/80 rounded-lg border border-[#084c2e] text-[11px]">
-                <span className="text-[#f5cf72] font-semibold block">Sunday Celebration Service</span>
-                <span>Sundays at 8:00 AM • {CHURCH_INFO.location}</span>
+                <span className="text-[#f5cf72] font-semibold block">{content.sundayServiceName}</span>
+                <span>Sundays at {content.sundayServiceTime} • {content.churchAddress}</span>
               </div>
               <div className="p-2 bg-[#042819]/80 rounded-lg border border-[#084c2e] text-[11px]">
-                <span className="text-[#f5cf72] font-semibold block">The Secret Place (Midweek)</span>
-                <span>Wednesdays at 7:00 PM • Fasting & Prayer</span>
+                <span className="text-[#f5cf72] font-semibold block">{content.midweekServiceName}</span>
+                <span>Wednesdays at {content.midweekServiceTime} • Fasting & Prayer</span>
               </div>
             </div>
 
@@ -54,13 +55,13 @@ export const WhatsAppWidget: React.FC = () => {
                 Direct WhatsApp Line
               </span>
               <div className="p-2.5 bg-[#042819] rounded-lg border border-[#c99726]/40 flex items-center justify-between font-mono text-[#f5cf72] font-bold text-xs">
-                <span>{CHURCH_INFO.whatsapp}</span>
+                <span>{content.churchWhatsApp}</span>
                 <span className="text-[10px] px-2 py-0.5 bg-[#02180e] border border-[#084c2e] rounded text-emerald-300">Ghana</span>
               </div>
             </div>
 
             <a
-              href={`https://wa.me/?text=Hello%20Wisdom%20Temple,%20I%20would%20like%20to%20connect%20with%20the%20church.`}
+              href={`https://wa.me/233${content.churchWhatsApp.replace(/^0/, '')}?text=Hello%20Wisdom%20Temple%2C%20I%20would%20like%20to%20connect%20with%20the%20church.`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full py-2.5 bg-[#25D366] hover:bg-[#20ba59] text-white font-bold rounded-xl flex items-center justify-center space-x-2 shadow-lg transition-all"

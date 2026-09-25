@@ -6,6 +6,8 @@ import { PASTORAL_COUPLE_IMAGE } from '../assets/pastoralImage';
 import { PhotoGallery } from '../components/PhotoGallery';
 import { QuickActionsMenu } from '../components/QuickActionsMenu';
 import { PastorsCorner } from '../components/PastorsCorner';
+import { useBanners } from '../utils/bannerManager';
+import { useSiteContent } from '../utils/contentManager';
 import { 
   Play, 
   Headphones, 
@@ -60,6 +62,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
   onShare,
   photos = INITIAL_CHURCH_PHOTOS,
 }) => {
+  const { getBanner } = useBanners();
+  const { content } = useSiteContent();
+
   // Latest message
   const latestSermon = sermons[0];
   const featuredSummit = events.find(e => e.isFeaturedSummit) || events[0];
@@ -153,7 +158,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
         {/* Official Church Banner Image - High Clarity & Subtle Motion */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <motion.img
-            src="/hero_icgc_banner.jpg"
+            src={getBanner('hero_banner', '/hero_icgc_banner.jpg')}
             onError={(e) => {
               const target = e.currentTarget;
               if (target.src !== 'https://i.imgur.com/0ULg34j.png') {
@@ -188,19 +193,17 @@ export const HomeView: React.FC<HomeViewProps> = ({
             transition={{ duration: 0.6 }}
             className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-[#032014]/90 border border-[#c99726]/60 text-[#f5cf72] text-xs sm:text-sm font-semibold tracking-wider uppercase mb-4 backdrop-blur-md shadow-lg"
           >
-            <span>Sundays @ 8:00 AM</span>
-            <span className="text-[#c99726]/60">•</span>
-            <span>Wednesdays @ 7:00 PM</span>
+            <span>{content.heroEyebrow}</span>
           </motion.div>
 
-          {/* Headline - Unified Mission Statement (Refined Size, Slightly Thicker Weight, Single White Color) */}
+          {/* Headline - Unified Mission Statement */}
           <motion.h1
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
             className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-semibold text-white tracking-tight leading-snug font-serif max-w-3xl drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]"
           >
-            Raising Leaders, Shaping Visions, Influencing Society Through Christ.
+            {content.heroHeadline}
           </motion.h1>
 
           {/* Welcoming Subtitle */}
@@ -210,7 +213,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
             className="mt-3 text-xs sm:text-sm md:text-base text-emerald-100/90 font-medium max-w-xl mx-auto leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)]"
           >
-            Welcome to ICGC Wisdom Temple — a Bible-believing charismatic family at Star Junction, Tabora.
+            {content.heroSubtitle}
           </motion.p>
         </div>
 
@@ -229,7 +232,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               onClick={() => onNavigate('new-here')}
               className="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-black text-xs uppercase tracking-wider shadow-xl transition-all transform hover:scale-[1.02] flex items-center justify-center space-x-2 cursor-pointer"
             >
-              <span>PLAN YOUR VISIT</span>
+              <span>{content.heroButtonPrimary}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
@@ -238,7 +241,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               className="w-full sm:w-auto px-8 py-4 rounded-xl bg-black/50 hover:bg-black/70 text-white font-bold text-xs uppercase tracking-wider border border-white/30 backdrop-blur-md transition-all flex items-center justify-center space-x-2 cursor-pointer shadow-lg"
             >
               <Calendar className="w-4 h-4 text-[#f5cf72]" />
-              <span>UPCOMING EVENTS</span>
+              <span>{content.heroButtonSecondary}</span>
             </button>
           </motion.div>
         </div>
@@ -251,13 +254,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-xs font-mono text-[#07472c] font-bold uppercase tracking-widest bg-[#eef6f1] px-3.5 py-1.5 rounded-full border border-[#c2decc] inline-block mb-3">
-              EXPERIENCE WISDOM TEMPLE
+              {content.experienceSectionBadge}
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-[#032014] font-serif-title tracking-tight">
-              Get Connected & Grow in Faith
+              {content.experienceSectionTitle}
             </h2>
             <p className="text-sm sm:text-base text-slate-600 mt-2">
-              Whether joining in person or online, here are clear steps for you and your family.
+              {content.experienceSectionSubtitle}
             </p>
           </div>
 
@@ -270,14 +273,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 </div>
                 <div className="space-y-1">
                   <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#07472c]">
-                    SUNDAYS @ 8:00 AM
+                    SUNDAYS @ {content.sundayServiceTime}
                   </span>
                   <h3 className="text-2xl font-bold text-[#032014] font-serif-title">
-                    Visit In-Person
+                    {content.experienceMod1Title}
                   </h3>
                 </div>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Join us at Star Junction, Tabora for charismatic praise, spirit-filled worship, and foundational biblical teaching.
+                  {content.experienceMod1Desc}
                 </p>
               </div>
               <div className="pt-6 mt-4 border-t border-slate-200/70">
@@ -302,11 +305,11 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     MESSAGES & PODCASTS
                   </span>
                   <h3 className="text-2xl font-bold text-[#032014] font-serif-title">
-                    Watch on Demand
+                    {content.experienceMod2Title}
                   </h3>
                 </div>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Catch up on previous Sunday sermons, Wisdom Summit series, and midweek teachings anywhere on video or audio.
+                  {content.experienceMod2Desc}
                 </p>
               </div>
               <div className="pt-6 mt-4 border-t border-slate-200/70">
@@ -328,14 +331,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 </div>
                 <div className="space-y-1">
                   <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#07472c]">
-                    WEDNESDAYS @ 7:00 PM
+                    WEDNESDAYS @ {content.midweekServiceTime}
                   </span>
                   <h3 className="text-2xl font-bold text-[#032014] font-serif-title">
-                    The Secret Place Prayer Service
+                    {content.experienceMod3Title}
                   </h3>
                 </div>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Our midweek prayer service of passionate intercession, prophetic ministry, and personal renewal in God's presence.
+                  {content.experienceMod3Desc}
                 </p>
               </div>
               <div className="pt-6 mt-4 border-t border-slate-200/70">
@@ -359,13 +362,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="text-xs uppercase tracking-[0.25em] font-semibold text-[#b8861d] mb-2">
-              Visiting for the First Time?
+              {content.firstTimeVisitorEyebrow}
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-[#032014] font-serif tracking-tight">
-              You're Welcome <span className="font-normal text-[#b8861d]">Here</span>
+              {content.firstTimeVisitorTitle}
             </h2>
             <p className="text-slate-600 text-base sm:text-lg mt-3 leading-relaxed">
-              Stepping into a new church should feel warm, uplifting, and inspiring. At Wisdom Temple, you are received as honored family from the moment you arrive.
+              {content.firstTimeVisitorDesc}
             </p>
           </div>
 
@@ -742,7 +745,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 title="Click to enlarge Secret Place banner"
               >
                 <img 
-                  src="/secret_place_banner.jpg" 
+                  src={getBanner('secret_place_banner', '/secret_place_banner.jpg')} 
                   alt="The Secret Place - Midweek Encounter" 
                   className="w-full h-auto object-contain block mx-auto"
                   referrerPolicy="no-referrer"
@@ -799,7 +802,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     title="Click to enlarge banner"
                   >
                     <img 
-                      src="/wisdom_summit_banner.jpg" 
+                      src={getBanner('wisdom_summit_banner', '/wisdom_summit_banner.png')} 
                       alt="Wisdom Summit 2026" 
                       className="w-full h-auto object-cover block"
                       referrerPolicy="no-referrer"
@@ -907,7 +910,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <div>
                   <div className="relative aspect-[16/9] overflow-hidden bg-[#032014]">
                     <img
-                      src={event.image}
+                      src={getBanner('event_' + event.id, event.image)}
                       alt={event.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90"
                     />
@@ -1026,7 +1029,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   className="rounded-2xl overflow-hidden aspect-[4/5] bg-[#02180e] relative border-2 border-[#c99726]/40 shadow-xl cursor-pointer group"
                 >
                   <img
-                    src={PASTORAL_COUPLE_IMAGE}
+                    src={getBanner('pastoral_couple', PASTORAL_COUPLE_IMAGE)}
                     onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/rev_gabriel_and_helena_dela.jpg'; }}
                     alt="Rev. Gabriel Dela and Lady Dr. Helena Dela - Shepherd and First Lady of Wisdom Temple"
                     className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
@@ -1079,7 +1082,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <div>
                   <div className="aspect-[16/10] bg-[#032014] overflow-hidden">
                     <img
-                      src={ministry.image}
+                      src={getBanner('ministry_' + ministry.id, ministry.image)}
                       alt={ministry.name}
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     />

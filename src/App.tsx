@@ -435,6 +435,7 @@ export default function App() {
     return (
       <div className="min-h-screen bg-[#f8faf8] font-sans antialiased text-slate-900 selection:bg-[#c99726] selection:text-[#021a10]">
         <AdminView
+          initialTab={currentSubTab}
           prayerRequests={prayerRequests}
           visitPlans={visitPlans}
           contactMessages={contactMessages}

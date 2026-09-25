@@ -218,7 +218,7 @@ export const MINISTRIES: Ministry[] = [
   },
   {
     id: 'youth',
-    name: 'Youth Ministry (Gen-Impact)',
+    name: 'Youth Ministry (Gen-Impact / New Breed Youth)',
     category: 'Generational',
     shortDescription: 'A dynamic, high-energy environment shaping junior high and high school youth into fervent disciples of Jesus Christ.',
     audience: 'Teens aged 13 to 19',
@@ -228,7 +228,7 @@ export const MINISTRIES: Ministry[] = [
   },
   {
     id: 'young-adults',
-    name: 'Young Adults & Professionals',
+    name: 'Young Adults & Professionals (New Breed)',
     category: 'Professionals & Campus',
     shortDescription: 'Connecting tertiary students, fresh graduates, and career professionals for networking, mentoring, and spiritual stamina.',
     audience: 'Young Adults aged 20 to 35',

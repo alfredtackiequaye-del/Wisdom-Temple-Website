@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { PageId, ContactMessage } from '../types';
 import { CHURCH_INFO } from '../data/churchData';
+import { useBanners } from '../utils/bannerManager';
+import { useSiteContent } from '../utils/contentManager';
 import { 
   MapPin, 
   Phone, 
@@ -20,6 +22,8 @@ export const ContactView: React.FC<ContactViewProps> = ({
   onNavigate,
   onSubmitContactMessage,
 }) => {
+  const { getBanner } = useBanners();
+  const { content } = useSiteContent();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -45,8 +49,15 @@ export const ContactView: React.FC<ContactViewProps> = ({
   return (
     <div className="bg-[#f8faf8] min-h-screen text-slate-900 pb-24">
       {/* Header Banner - ICGC Forest & Gold */}
-      <section className="bg-[#02180e] text-white py-14 sm:py-18 border-b border-[#084c2e]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
+      <section className="relative bg-[#02180e] text-white py-14 sm:py-18 border-b border-[#084c2e] overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-15">
+          <img
+            src={getBanner('page_contact_hero', 'https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=1920&q=80')}
+            alt="Contact Us Header"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 relative z-10">
           <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
             GET IN TOUCH
           </span>
@@ -74,7 +85,7 @@ export const ContactView: React.FC<ContactViewProps> = ({
                   </div>
                   <div>
                     <strong className="block text-[#032014] font-semibold mb-0.5">Sanctuary Address</strong>
-                    <p className="font-mono text-xs text-slate-700">{CHURCH_INFO.location}</p>
+                    <p className="font-mono text-xs text-slate-700">{content.churchAddress}</p>
                     <a
                       href="https://www.google.com/maps/search/?api=1&query=Wisdom+Temple+Star+Junction+Tabora+Accra"
                       target="_blank"
@@ -94,12 +105,12 @@ export const ContactView: React.FC<ContactViewProps> = ({
                   <div>
                     <strong className="block text-[#032014] font-semibold mb-0.5">WhatsApp / Phone</strong>
                     <a 
-                      href="https://wa.me/233245009764" 
+                      href={`https://wa.me/233${content.churchWhatsApp.replace(/^0/, '')}`} 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="font-mono text-sm text-[#07472c] font-bold hover:text-[#c99726] transition-colors block"
                     >
-                      0245009764
+                      {content.churchPhone}
                     </a>
                     <span className="text-[11px] text-slate-400 block mt-0.5">WhatsApp & Direct Call Line</span>
                   </div>
@@ -112,10 +123,10 @@ export const ContactView: React.FC<ContactViewProps> = ({
                   <div>
                     <strong className="block text-[#032014] font-semibold mb-0.5">Official Email</strong>
                     <a 
-                      href="mailto:icgcwisdomtemple@gmail.com" 
+                      href={`mailto:${content.churchEmail}`} 
                       className="font-mono text-xs text-[#07472c] font-bold hover:text-[#c99726] transition-colors block"
                     >
-                      icgcwisdomtemple@gmail.com
+                      {content.churchEmail}
                     </a>
                   </div>
                 </div>
@@ -126,7 +137,7 @@ export const ContactView: React.FC<ContactViewProps> = ({
                   </div>
                   <div>
                     <strong className="block text-[#032014] font-semibold mb-0.5">Office Hours</strong>
-                    <p className="text-xs text-slate-600">Tuesday – Friday: 8:30 AM – 4:30 PM</p>
+                    <p className="text-xs text-slate-600">{content.officeHours}</p>
                   </div>
                 </div>
               </div>

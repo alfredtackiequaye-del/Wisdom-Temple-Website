@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { PageId } from '../types';
 import { PASTORAL_COUPLE_IMAGE } from '../assets/pastoralImage';
+import { useBanners } from '../utils/bannerManager';
+import { useSiteContent } from '../utils/contentManager';
 import { 
   Quote, 
   Sparkles, 
@@ -31,22 +33,29 @@ interface PastorsCornerProps {
 
 export const PastorsCorner: React.FC<PastorsCornerProps> = ({
   onNavigate,
-  pastorName = "Rev. Gabriel Dela",
-  pastorTitle = "Senior Minister & Resident Pastor",
+  pastorName: propPastorName,
+  pastorTitle: propPastorTitle,
   pastorImage = PASTORAL_COUPLE_IMAGE,
-  weeklyTheme = "Walking in Kingdom Wisdom & Divine Direction",
-  weeklyScripture = "“Trust in the LORD with all your heart, and lean not on your own understanding; in all your ways acknowledge Him, and He shall direct your paths.” — Proverbs 3:5-6",
-  greetingSummary = "Beloved family and honored guests, I warmly welcome you into a week loaded with supernatural breakthrough and divine clarity. At Wisdom Temple, we believe that when God's Word illuminates your path, confusion gives way to conviction, and stagnation turns into momentum. Whatever mountains or decisions confront you this week, know that the God who called you is already ahead of you.",
-  fullMessage = [
-    "Beloved family and honored guests, I warmly welcome you into a week loaded with supernatural breakthrough and divine clarity. At Wisdom Temple, we believe that when God's Word illuminates your path, confusion gives way to conviction, and stagnation turns into momentum.",
-    "The world often tells us to rely strictly on human intellect, connections, and hustle. While excellence and diligence are biblical virtues, kingdom wisdom teaches us that true elevation begins on your knees in communion with the Holy Spirit. When you invite Jesus into your career, your family, your business, and your quiet thoughts, He grants you divine insight that surpasses human strategy.",
-    "This week, make time for the secret place of prayer. Speak life over your household, guard your peace fiercely against negativity, and stand firm on God's covenant promises. Lady Dr. Helena Dela and I are lifting you daily in our pastoral prayers.",
-    "May the peace of God which transcends all human understanding guard your heart and mind through Christ Jesus. You are blessed, highly favored, and destined for greatness!"
-  ],
-  dateLabel = "Weekly Charge • Updated This Sunday"
+  weeklyTheme: propWeeklyTheme,
+  weeklyScripture: propWeeklyScripture,
+  greetingSummary: propGreetingSummary,
+  fullMessage: propFullMessage,
+  dateLabel: propDateLabel,
 }) => {
+  const { getBanner } = useBanners();
+  const { content } = useSiteContent();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const pastorName = propPastorName || content.pastorName;
+  const pastorTitle = propPastorTitle || content.pastorTitle;
+  const weeklyTheme = propWeeklyTheme || content.pastoralTheme;
+  const weeklyScripture = propWeeklyScripture || content.pastoralScripture;
+  const greetingSummary = propGreetingSummary || content.pastoralGreetingSummary;
+  const fullMessage = propFullMessage || content.pastoralFullMessage;
+  const dateLabel = propDateLabel || content.pastoralDateLabel;
+
+  const activePastorImage = getBanner('pastoral_couple', pastorImage);
 
   const handleShare = () => {
     const textToShare = `Pastor's Corner: "${weeklyTheme}" by ${pastorName}\n${weeklyScripture}\n\nRead more at Wisdom Temple: ${window.location.origin}`;
@@ -87,7 +96,7 @@ export const PastorsCorner: React.FC<PastorsCornerProps> = ({
           <div className="lg:col-span-5 flex flex-col items-center">
             <div className="relative w-full max-w-md aspect-[4/5] rounded-xl overflow-hidden bg-[#02180e] border border-slate-200 group">
               <img
-                src={pastorImage}
+                src={activePastorImage}
                 onError={(e) => {
                   const target = e.currentTarget;
                   if (target.src !== '/rev_gabriel_and_helena_dela.jpg') {

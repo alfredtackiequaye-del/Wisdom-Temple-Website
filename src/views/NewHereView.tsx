@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { PageId, VisitPlan } from '../types';
 import { CHURCH_INFO } from '../data/churchData';
+import { useBanners } from '../utils/bannerManager';
 import { 
   Clock, 
   MapPin, 
@@ -21,6 +22,7 @@ interface NewHereViewProps {
 }
 
 export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVisitPlan }) => {
+  const { getBanner } = useBanners();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -53,8 +55,15 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
   return (
     <div className="bg-[#f8faf8] min-h-screen text-slate-900 pb-24">
       {/* Header Banner - ICGC Forest & Gold */}
-      <section className="bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+      <section className="relative bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e] overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-15">
+          <img
+            src={getBanner('page_newhere_hero', 'https://images.unsplash.com/photo-1510525009512-ad7fc13eefab?auto=format&fit=crop&w=1920&q=80')}
+            alt="New Here Header"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
           <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
             YOU ARE OUR HONORED GUEST
           </span>

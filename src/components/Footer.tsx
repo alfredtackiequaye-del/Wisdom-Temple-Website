@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PageId } from '../types';
+import { useSiteContent } from '../utils/contentManager';
 import { 
   Clock, 
   MapPin, 
@@ -7,11 +8,11 @@ import {
   Mail, 
   Heart, 
   CheckCircle2, 
-  ArrowRight,
-  Sparkles,
-  Youtube,
-  Send,
-  Lock
+  ArrowRight, 
+  Sparkles, 
+  Youtube, 
+  Send, 
+  Lock 
 } from 'lucide-react';
 
 interface FooterProps {
@@ -19,6 +20,7 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+  const { content } = useSiteContent();
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
 
@@ -43,13 +45,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             <div className="lg:col-span-7">
               <div className="text-xs font-semibold text-[#dfb15b] uppercase tracking-[0.2em] mb-2">
-                Weekly Bulletin & Devotionals
+                {content.bulletinEyebrow}
               </div>
               <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                Stay connected with our church family.
+                {content.bulletinTitle}
               </h3>
               <p className="text-xs sm:text-sm text-emerald-200/70 mt-1 max-w-xl">
-                Receive weekly sermon highlights, prayer focuses, and church announcements straight to your inbox.
+                {content.bulletinDescription}
               </p>
             </div>
 
@@ -91,24 +93,24 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               Connect With Us
             </h4>
             <p className="text-xs text-emerald-200/70 leading-relaxed">
-              Stay inspired and connected through our official media broadcasts, weekly live streams, and ministry updates.
+              {content.footerConnectDescription}
             </p>
 
             {/* Official Social Links */}
             <div className="pt-1">
               <div className="flex items-center space-x-2.5">
                 <a
-                  href="https://www.youtube.com/@icgcwisdomtemple"
+                  href={content.socialYoutube}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 rounded-full bg-[#032416] border border-[#084c2e] hover:border-[#c99726] text-emerald-300 hover:text-[#f5cf72] flex items-center justify-center transition-all hover:scale-105 shadow-sm"
                   aria-label="YouTube"
-                  title="YouTube @icgcwisdomtemple"
+                  title="YouTube"
                 >
                   <Youtube className="w-4 h-4" />
                 </a>
                 <a
-                  href="https://facebook.com"
+                  href={content.socialFacebook}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 rounded-full bg-[#032416] border border-[#084c2e] hover:border-[#c99726] text-emerald-300 hover:text-[#f5cf72] flex items-center justify-center transition-all hover:scale-105 shadow-sm font-bold text-xs"
@@ -118,7 +120,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   f
                 </a>
                 <a
-                  href="https://instagram.com"
+                  href={content.socialInstagram}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 rounded-full bg-[#032416] border border-[#084c2e] hover:border-[#c99726] text-emerald-300 hover:text-[#f5cf72] flex items-center justify-center transition-all hover:scale-105 shadow-sm font-bold text-xs"
@@ -128,7 +130,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   ig
                 </a>
                 <a
-                  href="https://tiktok.com"
+                  href={content.socialTiktok}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 rounded-full bg-[#032416] border border-[#084c2e] hover:border-[#c99726] text-emerald-300 hover:text-[#f5cf72] flex items-center justify-center transition-all hover:scale-105 shadow-sm font-bold text-xs"
@@ -207,7 +209,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <div>
                   <span className="text-white font-medium block text-xs">Sanctuary</span>
                   <span className="text-emerald-300/80 text-[11px] leading-relaxed block">
-                    Star Junction, Tabora — Accra, Ghana
+                    {content.churchAddress}
                   </span>
                 </div>
               </div>
@@ -217,12 +219,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <div>
                   <span className="text-white font-medium block text-xs">WhatsApp / Phone</span>
                   <a 
-                    href="https://wa.me/233245009764" 
+                    href={`https://wa.me/233${content.churchWhatsApp.replace(/^0/, '')}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="text-emerald-300 hover:text-[#f5cf72] transition-colors font-mono text-xs"
                   >
-                    0245009764
+                    {content.churchPhone}
                   </a>
                 </div>
               </div>
@@ -232,10 +234,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <div>
                   <span className="text-white font-medium block text-xs">Official Email</span>
                   <a 
-                    href="mailto:icgcwisdomtemple@gmail.com" 
+                    href={`mailto:${content.churchEmail}`} 
                     className="text-emerald-300 hover:text-[#f5cf72] transition-colors text-xs"
                   >
-                    icgcwisdomtemple@gmail.com
+                    {content.churchEmail}
                   </a>
                 </div>
               </div>
@@ -245,7 +247,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <div>
                   <span className="text-white font-medium block text-xs">Office Hours</span>
                   <span className="text-emerald-300/80 text-[11px] block">
-                    Tuesday – Friday: 8:30 AM – 4:30 PM
+                    {content.officeHours}
                   </span>
                 </div>
               </div>
@@ -264,7 +266,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
         {/* Bottom Bar: Copyright & Clean Links */}
         <div className="mt-10 pt-6 border-t border-[#084c2e]/60 flex flex-col sm:flex-row justify-between items-center text-xs text-emerald-400/70 gap-3">
-          <p>© 2026 ICGC. All rights reserved.</p>
+          <p>{content.footerCopyrightNotice}</p>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px]">
             <button onClick={() => handleNav('about', 'beliefs')} className="hover:text-white transition-colors cursor-pointer">
               Statement of Faith

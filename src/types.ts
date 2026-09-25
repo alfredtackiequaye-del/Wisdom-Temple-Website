@@ -164,3 +164,138 @@ export interface StaffUser {
 
 export type FontTheme = 'cinzel' | 'playfair' | 'modern' | 'cormorant';
 
+export type BannerCategory = 
+  | 'all'
+  | 'hero' 
+  | 'ministries' 
+  | 'events' 
+  | 'pages' 
+  | 'pastoral' 
+  | 'giving';
+
+export interface BannerConfig {
+  id: string;
+  name: string;
+  category: 'hero' | 'ministries' | 'events' | 'pages' | 'pastoral' | 'giving';
+  categoryLabel: string;
+  location: string;
+  currentUrl: string;
+  defaultUrl: string;
+  recommendedSize: string;
+  aspectRatio: string;
+  width: number;
+  height: number;
+  description: string;
+  designNotes?: string;
+  updatedAt?: string;
+}
+
+export type ContentSectionId = 
+  | 'hero' 
+  | 'pastoral' 
+  | 'about' 
+  | 'church_info' 
+  | 'services' 
+  | 'giving' 
+  | 'footer';
+
+export interface SiteContentConfig {
+  // --- Homepage & Hero ---
+  heroEyebrow: string;
+  heroHeadline: string;
+  heroSubtitle: string;
+  heroButtonPrimary: string;
+  heroButtonSecondary: string;
+  experienceSectionBadge: string;
+  experienceSectionTitle: string;
+  experienceSectionSubtitle: string;
+  experienceMod1Title: string;
+  experienceMod1Desc: string;
+  experienceMod2Title: string;
+  experienceMod2Desc: string;
+  experienceMod3Title: string;
+  experienceMod3Desc: string;
+  firstTimeVisitorEyebrow: string;
+  firstTimeVisitorTitle: string;
+  firstTimeVisitorDesc: string;
+
+  // --- Church Identity & Contact ---
+  churchName: string;
+  churchTagline: string;
+  churchDescription: string;
+  churchAddress: string;
+  churchLandmark: string;
+  churchPhone: string;
+  churchWhatsApp: string;
+  churchEmail: string;
+  officeHours: string;
+  socialYoutube: string;
+  socialFacebook: string;
+  socialInstagram: string;
+  socialTiktok: string;
+
+  // --- Pastoral Leadership & Pastor's Desk ---
+  pastorName: string;
+  pastorTitle: string;
+  firstLadyName: string;
+  firstLadyTitle: string;
+  combinedPastoralTitle: string;
+  pastoralTheme: string;
+  pastoralScripture: string;
+  pastoralDateLabel: string;
+  pastoralGreetingSummary: string;
+  pastoralFullMessage: string[];
+  pastoralBio: string;
+
+  // --- About Us & Mandate ---
+  aboutHeadline: string;
+  aboutWhoWeAre1: string;
+  aboutWhoWeAre2: string;
+  aboutVisionTitle: string;
+  aboutVisionText: string;
+  aboutMissionTitle: string;
+  aboutMissionText: string;
+  pillar1Title: string;
+  pillar1Desc: string;
+  pillar2Title: string;
+  pillar2Desc: string;
+  pillar3Title: string;
+  pillar3Desc: string;
+  heritageStoryHeadline: string;
+  heritageStoryText1: string;
+  heritageStoryText2: string;
+  churchCouncilHeadline: string;
+  churchCouncilDesc: string;
+
+  // --- Services & Schedules ---
+  sundayServiceName: string;
+  sundayServiceTime: string;
+  sundayServiceDay: string;
+  sundayServiceDesc: string;
+  midweekServiceName: string;
+  midweekServiceSubtitle: string;
+  midweekServiceTime: string;
+  midweekServiceDay: string;
+  midweekServiceDesc: string;
+
+  // --- Giving & Finances ---
+  givingHeadline: string;
+  givingScriptureText: string;
+  givingInstructions: string;
+  givingMomoMtn: string;
+  givingMomoTelecel: string;
+  givingMomoAt: string;
+  givingMomoAccountName: string;
+  givingBankName: string;
+  givingBankAccountNumber: string;
+  givingBankAccountName: string;
+  givingBankBranch: string;
+
+  // --- Footer & Bulletin ---
+  bulletinEyebrow: string;
+  bulletinTitle: string;
+  bulletinDescription: string;
+  footerConnectDescription: string;
+  footerCopyrightNotice: string;
+}
+

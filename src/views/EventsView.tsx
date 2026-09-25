@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ChurchEvent, PageId } from '../types';
+import { useBanners } from '../utils/bannerManager';
 import { 
   Calendar, 
   Clock, 
@@ -23,6 +24,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
   onShare,
   onNavigate,
 }) => {
+  const { getBanner } = useBanners();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
   const categories = ['All', 'Conference', 'Prayer', 'Youth', 'Special Service'];
@@ -36,8 +38,15 @@ export const EventsView: React.FC<EventsViewProps> = ({
   return (
     <div className="bg-[#f8faf8] min-h-screen text-slate-900 pb-24">
       {/* Header Banner - ICGC Forest & Gold */}
-      <section className="bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+      <section className="relative bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e] overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-15">
+          <img
+            src={getBanner('page_events_hero', 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1920&q=80')}
+            alt="Events Header"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
           <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
             CALENDAR & SACRED GATHERINGS
           </span>
@@ -71,7 +80,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
               <div className="lg:col-span-7 xl:col-span-8 flex justify-center">
                 <div className="group relative rounded-xl overflow-hidden border border-white/20 shadow-xl bg-black w-full">
                   <img 
-                    src="/wisdom_summit_banner.jpg" 
+                    src={getBanner('wisdom_summit_banner', '/wisdom_summit_banner.png')} 
                     alt="Wisdom Summit 2026" 
                     className="w-full h-auto object-cover block mx-auto transition-transform duration-300 group-hover:scale-[1.008]"
                     referrerPolicy="no-referrer"
@@ -133,7 +142,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
               <div>
                 <div className="relative aspect-[16/9] bg-[#02180e] overflow-hidden">
                   <img
-                    src={event.image}
+                    src={getBanner('event_' + event.id, event.image)}
                     alt={event.name}
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   />

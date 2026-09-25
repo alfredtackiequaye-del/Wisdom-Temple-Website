@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { PageId } from '../types';
 import { CHURCH_INFO, BELIEFS } from '../data/churchData';
 import { PASTORAL_COUPLE_IMAGE } from '../assets/pastoralImage';
+import { useBanners } from '../utils/bannerManager';
+import { useSiteContent } from '../utils/contentManager';
 import { 
   Target, 
   Compass, 
@@ -19,6 +21,8 @@ interface AboutViewProps {
 }
 
 export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
+  const { getBanner } = useBanners();
+  const { content } = useSiteContent();
   const [activeTab, setActiveTab] = useState<string>('who-we-are');
   const [showCouncilModal, setShowCouncilModal] = useState<boolean>(false);
 
@@ -31,16 +35,23 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
   return (
     <div className="bg-[#f8faf8] min-h-screen text-slate-900 pb-24">
       {/* Page Header Banner - ICGC Forest & Gold */}
-      <section className="bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e] relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+      <section className="relative bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e] overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-15">
+          <img
+            src={getBanner('page_about_hero', 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=1920&q=80')}
+            alt="About Us Header"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
           <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
-            STAR JUNCTION, TABORA • ACCRA, GHANA
+            {content.churchAddress.toUpperCase()}
           </span>
           <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            ABOUT WISDOM TEMPLE
+            {content.aboutHeadline}
           </h1>
           <p className="text-base sm:text-lg text-emerald-200/80 max-w-2xl mx-auto leading-relaxed">
-            {CHURCH_INFO.description}
+            {content.churchDescription}
           </p>
         </div>
       </section>
@@ -90,10 +101,10 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                 A Christ-Centered Assembly in Ghana
               </h2>
               <p className="text-base text-slate-700 leading-relaxed">
-                Wisdom Temple is a Bible-believing, charismatic church committed to raising leaders, shaping visions, and influencing society through Jesus Christ, located in Star Junction, Tabora - Accra, Ghana.
+                {content.aboutWhoWeAre1}
               </p>
               <p className="text-base text-slate-700 leading-relaxed">
-                At Wisdom Temple, we believe every human being possesses God-given potential waiting to be activated through the Word of God, charismatic prayer, and practical discipleship. Whether you are a student, an artisan, a corporate executive, or a parent, you will find a home where your faith is grounded, your gifts are sharpened, and your purpose is unleased.
+                {content.aboutWhoWeAre2}
               </p>
             </div>
 
@@ -135,14 +146,14 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
               <h3 className="text-2xl font-bold font-serif-title text-[#f5cf72]">Join Us for Worship</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                 <div className="p-4 bg-[#02180e] rounded-xl border border-[#084c2e]">
-                  <span className="text-xs text-[#f5cf72] font-mono font-bold block">SUNDAY CELEBRATION</span>
-                  <p className="text-lg font-bold text-white mt-1">Every Sunday at 8:00 AM</p>
-                  <p className="text-xs text-emerald-300/70 mt-1">Main Sanctuary & Online Broadcast</p>
+                  <span className="text-xs text-[#f5cf72] font-mono font-bold block">{content.sundayServiceName.toUpperCase()}</span>
+                  <p className="text-lg font-bold text-white mt-1">Every Sunday at {content.sundayServiceTime}</p>
+                  <p className="text-xs text-emerald-300/70 mt-1">{content.sundayServiceDesc}</p>
                 </div>
                 <div className="p-4 bg-[#02180e] rounded-xl border border-[#084c2e]">
-                  <span className="text-xs text-[#f5cf72] font-mono font-bold block">THE SECRET PLACE</span>
-                  <p className="text-lg font-bold text-white mt-1">Every Wednesday at 7:00 PM</p>
-                  <p className="text-xs text-emerald-300/70 mt-1">Midweek Prayer, Worship and Encounter</p>
+                  <span className="text-xs text-[#f5cf72] font-mono font-bold block">{content.midweekServiceName.toUpperCase()}</span>
+                  <p className="text-lg font-bold text-white mt-1">Every Wednesday at {content.midweekServiceTime}</p>
+                  <p className="text-xs text-emerald-300/70 mt-1">{content.midweekServiceDesc}</p>
                 </div>
               </div>
             </div>
@@ -154,9 +165,9 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                 className="w-full md:w-56 shrink-0 aspect-[3/4] rounded-2xl overflow-hidden bg-[#032014] border-2 border-[#c99726]/40 shadow-md relative group cursor-pointer"
               >
                 <img
-                  src={PASTORAL_COUPLE_IMAGE}
+                  src={getBanner('pastoral_couple', PASTORAL_COUPLE_IMAGE)}
                   onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/rev_gabriel_and_helena_dela.jpg'; }}
-                  alt="Rev. Gabriel Dela and Lady Dr. Helena Dela - Shepherd and First Lady of Wisdom Temple"
+                  alt={`${content.combinedPastoralTitle} - Shepherd and First Lady`}
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-black/40 pointer-events-none" />
@@ -165,7 +176,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                     PASTORAL LEADERSHIP
                   </span>
                   <p className="text-xs font-bold font-serif-title leading-tight text-white mt-0.5">
-                    Rev. Gabriel Dela & Lady Dr. Helena Dela
+                    {content.combinedPastoralTitle}
                   </p>
                 </div>
               </div>
@@ -175,10 +186,10 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                   SHEPHERD OF WISDOM TEMPLE
                 </span>
                 <h3 className="text-xl sm:text-2xl font-extrabold text-[#032014] font-serif-title">
-                  Rev. Gabriel Dela & Lady Dr. Helena Dela
+                  {content.combinedPastoralTitle}
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Serving as the Shepherd and Senior Minister of ICGC Wisdom Temple alongside his wife, Lady Dr. Helena Dela, shepherding the family with passionate biblical exposition, pastoral compassion, and prophetic intercession.
+                  {content.pastoralBio}
                 </p>
                 <button
                   onClick={() => setActiveTab('leadership')}
@@ -205,10 +216,10 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                   OUR VISION
                 </span>
                 <h3 className="text-2xl font-bold text-[#032014] font-serif-title">
-                  To Establish the House of God Through the Development of the Human Personality
+                  {content.aboutVisionTitle}
                 </h3>
                 <p className="text-sm text-slate-600 leading-relaxed">
-                  We envision a congregation of believers who have discovered their god-given identity, walking in divine dignity, moral uprightness, and spiritual authority across Ghana, Africa, and the global diaspora.
+                  {content.aboutVisionText}
                 </p>
               </div>
 
@@ -221,10 +232,10 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                   OUR MISSION
                 </span>
                 <h3 className="text-2xl font-bold text-[#032014] font-serif-title">
-                  Raising Leaders, Shaping Visions, and Influencing Society Through Christ
+                  {content.aboutMissionTitle}
                 </h3>
                 <p className="text-sm text-slate-600 leading-relaxed">
-                  We accomplish this mission through regular exposition of the Holy Scriptures, fervent charismatic prayer at The Secret Place, leadership mentoring, and purposeful generational ministries.
+                  {content.aboutMissionText}
                 </p>
               </div>
             </div>
@@ -238,22 +249,22 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                 <div className="flex items-start space-x-3">
                   <CheckCircle2 className="w-5 h-5 text-[#07472c] shrink-0 mt-0.5" />
                   <div>
-                    <strong className="text-[#032014] block font-semibold">1. Raising Leaders</strong>
-                    Instilling godly discipline, ethical accountability, and servant leadership in every believer, from youth to seasoned executives.
+                    <strong className="text-[#032014] block font-semibold">1. {content.pillar1Title}</strong>
+                    {content.pillar1Desc}
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle2 className="w-5 h-5 text-[#07472c] shrink-0 mt-0.5" />
                   <div>
-                    <strong className="text-[#032014] block font-semibold">2. Shaping Visions</strong>
-                    Assisting men and women to discover divine purpose, formulate clear personal and family blueprints, and execute enterprise with biblical excellence.
+                    <strong className="text-[#032014] block font-semibold">2. {content.pillar2Title}</strong>
+                    {content.pillar2Desc}
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle2 className="w-5 h-5 text-[#07472c] shrink-0 mt-0.5" />
                   <div>
-                    <strong className="text-[#032014] block font-semibold">3. Influencing Society Through Christ</strong>
-                    Deploying believers into politics, healthcare, education, law, industry, and the arts as salt and light to reform systems with the mind of Christ.
+                    <strong className="text-[#032014] block font-semibold">3. {content.pillar3Title}</strong>
+                    {content.pillar3Desc}
                   </div>
                 </div>
               </div>
@@ -310,7 +321,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
             <div className="bg-white rounded-3xl p-6 sm:p-10 border border-[#d6e5dc] shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-5 rounded-2xl bg-[#032014] overflow-hidden relative border-2 border-[#c99726]/40 shadow-xl group aspect-[3/4] flex items-center justify-center">
                 <img
-                  src={PASTORAL_COUPLE_IMAGE}
+                  src={getBanner('pastoral_couple', PASTORAL_COUPLE_IMAGE)}
                   onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/rev_gabriel_and_helena_dela.jpg'; }}
                   alt="Rev. Gabriel Dela and Lady Dr. Helena Dela - Shepherd and First Lady of Wisdom Temple"
                   className="w-full h-full object-cover object-top group-hover:scale-102 transition-transform duration-500"
@@ -485,10 +496,10 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                 OUR JOURNEY OF FAITH
               </span>
               <h2 className="text-3xl font-extrabold text-[#032014] font-serif-title mt-2">
-                The Heritage & Journey of Wisdom Temple
+                {content.heritageStoryHeadline}
               </h2>
               <p className="text-base text-slate-700 leading-relaxed">
-                Wisdom Temple was established in Accra, Ghana, with an uncompromising mandate to raise leaders, shape visions, and influence society through the transforming gospel of Jesus Christ.
+                {content.churchDescription}
               </p>
             </div>
 
@@ -497,7 +508,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                 <span className="text-xs font-mono text-[#07472c] font-bold">FOUNDATIONAL PHILOSOPHY</span>
                 <h3 className="text-xl font-bold text-[#032014] font-serif-title">Dignity, Excellence & Empowerment</h3>
                 <p className="text-sm text-slate-600 leading-relaxed">
-                  Wisdom Temple champions a powerful charismatic wave focused on human dignity, self-reliance, leadership development, and societal influence. Wisdom Temple carries this mantle with fervor in Star Junction, Tabora - Accra.
+                  {content.heritageStoryText1}
                 </p>
               </div>
 
@@ -505,7 +516,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                 <span className="text-xs font-mono text-[#07472c] font-bold">LOOKING TO THE FUTURE</span>
                 <h3 className="text-xl font-bold text-[#032014] font-serif-title">Building for Generations</h3>
                 <p className="text-sm text-slate-600 leading-relaxed">
-                  Today, Wisdom Temple continues to expand its community reach, raising children in kingdom righteousness, equipping youth for modern challenges, and hosting conferences like the annual Wisdom Summit.
+                  {content.heritageStoryText2}
                 </p>
               </div>
             </div>

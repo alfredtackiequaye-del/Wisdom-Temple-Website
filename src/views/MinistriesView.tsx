@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Ministry, PageId } from '../types';
+import { useBanners } from '../utils/bannerManager';
 import { 
   Users, 
   Clock, 
@@ -22,6 +23,7 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
   onNavigate,
   onJoinMinistry,
 }) => {
+  const { getBanner } = useBanners();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [activeJoinMinistry, setActiveJoinMinistry] = useState<Ministry | null>(null);
 
@@ -55,8 +57,15 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
   return (
     <div className="bg-[#f8faf8] min-h-screen text-slate-900 pb-24">
       {/* Header Banner - ICGC Forest & Gold */}
-      <section className="bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+      <section className="relative bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e] overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-15">
+          <img
+            src={getBanner('page_ministries_hero', 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1920&q=80')}
+            alt="Ministries Header"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
           <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
             BODY OF CHRIST • WISDOM TEMPLE
           </span>
@@ -103,7 +112,7 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
               <div>
                 <div className="relative aspect-[16/10] bg-[#02180e] overflow-hidden">
                   <img
-                    src={ministry.image}
+                    src={getBanner('ministry_' + ministry.id, ministry.image)}
                     alt={ministry.name}
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   />

@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Sermon } from '../types';
 import { CHURCH_INFO } from '../data/churchData';
+import { useBanners } from '../utils/bannerManager';
 import { 
   Search, 
   Play, 
@@ -27,6 +28,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
   onWatchVideo,
   onShare,
 }) => {
+  const { getBanner } = useBanners();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>(
     initialCategory && initialCategory !== 'all' ? initialCategory : 'All'
@@ -60,8 +62,15 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
   return (
     <div className="bg-[#f8faf8] min-h-screen text-slate-900 pb-24">
       {/* Header Banner - ICGC Forest & Gold */}
-      <section className="bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+      <section className="relative bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e] overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-15">
+          <img
+            src={getBanner('page_watch_hero', 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1920&q=80')}
+            alt="Watch Listen Header"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
           <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
             DIGITAL SANCTUARY & TEACHINGS
           </span>

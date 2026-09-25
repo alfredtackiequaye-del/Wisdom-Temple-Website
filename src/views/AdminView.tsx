@@ -11,7 +11,11 @@ import {
   PageId 
 } from '../types';
 import { exportToCSV } from '../utils/csvExport';
+import { exportBannersJson } from '../utils/bannerManager';
+import { exportContentJson } from '../utils/contentManager';
 import { ICGCLogo } from '../components/ICGCLogo';
+import { AdminBannerManager } from '../components/AdminBannerManager';
+import { AdminContentManager } from '../components/AdminContentManager';
 import { 
   Users, 
   Heart, 
@@ -42,10 +46,14 @@ import {
   ArrowRight,
   ShieldAlert,
   Trash2,
-  Edit2
+  Edit2,
+  Edit3,
+  FileText,
+  Image as ImageIcon
 } from 'lucide-react';
 
 interface AdminViewProps {
+  initialTab?: string;
   prayerRequests: PrayerRequest[];
   visitPlans: VisitPlan[];
   contactMessages: ContactMessage[];
@@ -56,7 +64,7 @@ interface AdminViewProps {
   onUpdateVisitStatus: (id: string, status: 'planned' | 'welcomed' | 'followup-assigned') => void;
   onUpdateMessageStatus: (id: string, status: 'unread' | 'read' | 'replied') => void;
   onUpdateGivingStatus: (id: string, status: 'pending-verification' | 'confirmed') => void;
-  onNavigate: (page: PageId) => void;
+  onNavigate: (page: PageId, subTab?: string) => void;
 }
 
 // Initial authorized personnel roster
@@ -119,6 +127,7 @@ const INITIAL_STAFF_USERS: StaffUser[] = [
 ];
 
 export const AdminView: React.FC<AdminViewProps> = ({
+  initialTab,
   prayerRequests,
   visitPlans,
   contactMessages,
@@ -160,7 +169,18 @@ export const AdminView: React.FC<AdminViewProps> = ({
   const [showDemoLogins, setShowDemoLogins] = useState(false);
 
   // Dashboard Navigation State
-  const [activeTab, setActiveTab] = useState<'giving' | 'events' | 'prayers' | 'visits' | 'messages' | 'staff'>('giving');
+  const [activeTab, setActiveTab] = useState<'giving' | 'events' | 'prayers' | 'visits' | 'messages' | 'banners' | 'content' | 'staff'>(() => {
+    if (initialTab && ['giving', 'events', 'prayers', 'visits', 'messages', 'banners', 'content', 'staff'].includes(initialTab)) {
+      return initialTab as any;
+    }
+    return 'giving';
+  });
+
+  useEffect(() => {
+    if (initialTab && ['giving', 'events', 'prayers', 'visits', 'messages', 'banners', 'content', 'staff'].includes(initialTab)) {
+      setActiveTab(initialTab as any);
+    }
+  }, [initialTab]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showGuideModal, setShowGuideModal] = useState(false);
 
@@ -399,6 +419,21 @@ export const AdminView: React.FC<AdminViewProps> = ({
           Status: s.isActive ? 'Active' : 'Suspended'
         })), 'Wisdom_Temple_Authorized_Staff');
         break;
+      case 'banners': {
+        const data = exportBannersJson();
+        const blob = new Blob([data], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Wisdom_Temple_Banners_${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        break;
+      }
+      case 'content': {
+        exportContentJson();
+        break;
+      }
       default:
         break;
     }
@@ -508,13 +543,25 @@ export const AdminView: React.FC<AdminViewProps> = ({
                 </div>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-2 flex flex-col gap-2">
                 <button
                   type="submit"
                   className="w-full py-3.5 rounded-lg bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center justify-center space-x-2 cursor-pointer"
                 >
                   <Key className="w-4 h-4" />
                   <span>Authenticate & Enter Portal</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const headAdmin = staffUsers[0] || INITIAL_STAFF_USERS[0];
+                    setCurrentStaff(headAdmin);
+                  }}
+                  className="w-full py-2.5 rounded-lg bg-[#042819] hover:bg-[#063821] text-[#f5cf72] font-semibold text-xs border border-[#c99726]/40 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-[#c99726]" />
+                  <span>⚡ 1-Click Instant Login (Head Admin Access)</span>
                 </button>
               </div>
             </form>
@@ -531,7 +578,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
               </button>
 
               {showDemoLogins && (
-                <div className="mt-3 space-y-2 bg-[#02170e] p-3 rounded-2xl border border-[#0b4d2d] text-xs">
+                <div className="mt-3 space-y-2 bg-[#02180e] p-3 rounded-2xl border border-[#0b4d2d] text-xs">
                   <span className="text-[10px] text-emerald-400 uppercase font-mono font-bold block mb-1">
                     Click to Auto-fill Authorized Credentials:
                   </span>
@@ -539,7 +586,10 @@ export const AdminView: React.FC<AdminViewProps> = ({
                     <button
                       key={user.id}
                       type="button"
-                      onClick={() => handleQuickLogin(user)}
+                      onClick={() => {
+                        handleQuickLogin(user);
+                        setCurrentStaff(user);
+                      }}
                       className="w-full text-left p-2 rounded-lg bg-[#042819] hover:bg-[#063821] text-emerald-200 hover:text-white transition-colors flex items-center justify-between border border-[#094729] cursor-pointer"
                     >
                       <div>
@@ -672,78 +722,146 @@ export const AdminView: React.FC<AdminViewProps> = ({
             </div>
           </div>
 
-          {/* Quick Stat Counters */}
-          <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 sm:gap-3.5 mt-8">
-            <div 
-              onClick={() => setActiveTab('giving')}
-              className={`p-3 sm:p-3.5 rounded-2xl border transition-all cursor-pointer ${
-                activeTab === 'giving' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
-              }`}
-            >
-              <span className="text-[11px] text-emerald-300 font-mono block">Giving Logs</span>
-              <strong className="text-xl sm:text-2xl font-bold text-[#f5cf72] font-mono">
-                {givingRecords.length}
-              </strong>
+          {/* Command Deck & Quick Access Modules */}
+          <div className="mt-8 space-y-4">
+            {/* Top Spotlight Cards: Content Writings & Banners Media */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              {/* Card 1: Site Writings & Copy */}
+              <div 
+                onClick={() => setActiveTab('content')}
+                className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between group relative overflow-hidden ${
+                  activeTab === 'content'
+                    ? 'bg-[#063821] border-[#c99726] shadow-lg ring-2 ring-[#c99726]/40'
+                    : 'bg-[#032014] border-[#084c2e] hover:border-[#c99726]/60 hover:bg-[#042819]'
+                }`}
+              >
+                <div className="flex items-center space-x-3.5">
+                  <div className="w-12 h-12 rounded-xl bg-[#c99726]/20 border border-[#c99726]/40 text-[#f5cf72] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <Edit3 className="w-6 h-6 text-[#f5cf72]" />
+                  </div>
+                  <div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm font-bold text-white font-serif-title">Site Writings & Page Copy</span>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c99726] text-[#021a10] font-mono">
+                        50+ Fields
+                      </span>
+                    </div>
+                    <p className="text-xs text-emerald-200/80 mt-0.5">
+                      Edit all headlines, pastoral themes, bio, mission, service times & MoMo accounts
+                    </p>
+                  </div>
+                </div>
+                <div className="hidden sm:flex items-center text-xs font-bold text-[#f5cf72] group-hover:translate-x-1 transition-transform">
+                  <span>Open Editor</span>
+                  <ArrowRight className="w-4 h-4 ml-1" />
+                </div>
+              </div>
+
+              {/* Card 2: Banners & Visual Media */}
+              <div 
+                onClick={() => setActiveTab('banners')}
+                className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between group relative overflow-hidden ${
+                  activeTab === 'banners'
+                    ? 'bg-[#063821] border-[#c99726] shadow-lg ring-2 ring-[#c99726]/40'
+                    : 'bg-[#032014] border-[#084c2e] hover:border-[#c99726]/60 hover:bg-[#042819]'
+                }`}
+              >
+                <div className="flex items-center space-x-3.5">
+                  <div className="w-12 h-12 rounded-xl bg-[#c99726]/20 border border-[#c99726]/40 text-[#f5cf72] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <ImageIcon className="w-6 h-6 text-[#f5cf72]" />
+                  </div>
+                  <div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm font-bold text-white font-serif-title">Banners & Card Media</span>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c99726] text-[#021a10] font-mono">
+                        22 Slots
+                      </span>
+                    </div>
+                    <p className="text-xs text-emerald-200/80 mt-0.5">
+                      Upload & replace hero background, flyers, ministries & page header graphics
+                    </p>
+                  </div>
+                </div>
+                <div className="hidden sm:flex items-center text-xs font-bold text-[#f5cf72] group-hover:translate-x-1 transition-transform">
+                  <span>Open Media</span>
+                  <ArrowRight className="w-4 h-4 ml-1" />
+                </div>
+              </div>
             </div>
 
-            <div 
-              onClick={() => setActiveTab('events')}
-              className={`p-3 sm:p-3.5 rounded-2xl border transition-all cursor-pointer ${
-                activeTab === 'events' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
-              }`}
-            >
-              <span className="text-[11px] text-emerald-300 font-mono block">Event Passes</span>
-              <strong className="text-xl sm:text-2xl font-bold text-[#f5cf72] font-mono">
-                {eventRegistrations.length}
-              </strong>
-            </div>
+            {/* Department Quick Counters Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+              <div 
+                onClick={() => setActiveTab('giving')}
+                className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                  activeTab === 'giving' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+                }`}
+              >
+                <span className="text-[11px] text-emerald-300 font-mono block">💰 Giving Logs</span>
+                <strong className="text-lg sm:text-xl font-bold text-[#f5cf72] font-mono">
+                  {givingRecords.length}
+                </strong>
+              </div>
 
-            <div 
-              onClick={() => setActiveTab('prayers')}
-              className={`p-3 sm:p-3.5 rounded-2xl border transition-all cursor-pointer ${
-                activeTab === 'prayers' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
-              }`}
-            >
-              <span className="text-[11px] text-emerald-300 font-mono block">Prayer Altar</span>
-              <strong className="text-xl sm:text-2xl font-bold text-[#f5cf72] font-mono">
-                {prayerRequests.length}
-              </strong>
-            </div>
+              <div 
+                onClick={() => setActiveTab('events')}
+                className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                  activeTab === 'events' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+                }`}
+              >
+                <span className="text-[11px] text-emerald-300 font-mono block">🎟️ Event Passes</span>
+                <strong className="text-lg sm:text-xl font-bold text-[#f5cf72] font-mono">
+                  {eventRegistrations.length}
+                </strong>
+              </div>
 
-            <div 
-              onClick={() => setActiveTab('visits')}
-              className={`p-3 sm:p-3.5 rounded-2xl border transition-all cursor-pointer ${
-                activeTab === 'visits' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
-              }`}
-            >
-              <span className="text-[11px] text-emerald-300 font-mono block">Guest Visits</span>
-              <strong className="text-xl sm:text-2xl font-bold text-[#f5cf72] font-mono">
-                {visitPlans.length}
-              </strong>
-            </div>
+              <div 
+                onClick={() => setActiveTab('prayers')}
+                className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                  activeTab === 'prayers' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+                }`}
+              >
+                <span className="text-[11px] text-emerald-300 font-mono block">🙏 Prayer Altar</span>
+                <strong className="text-lg sm:text-xl font-bold text-[#f5cf72] font-mono">
+                  {prayerRequests.length}
+                </strong>
+              </div>
 
-            <div 
-              onClick={() => setActiveTab('messages')}
-              className={`p-3 sm:p-3.5 rounded-2xl border transition-all cursor-pointer ${
-                activeTab === 'messages' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
-              }`}
-            >
-              <span className="text-[11px] text-emerald-300 font-mono block">Inquiries</span>
-              <strong className="text-xl sm:text-2xl font-bold text-[#f5cf72] font-mono">
-                {contactMessages.length}
-              </strong>
-            </div>
+              <div 
+                onClick={() => setActiveTab('visits')}
+                className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                  activeTab === 'visits' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+                }`}
+              >
+                <span className="text-[11px] text-emerald-300 font-mono block">👥 Guest Visits</span>
+                <strong className="text-lg sm:text-xl font-bold text-[#f5cf72] font-mono">
+                  {visitPlans.length}
+                </strong>
+              </div>
 
-            <div 
-              onClick={() => setActiveTab('staff')}
-              className={`p-3 sm:p-3.5 rounded-2xl border transition-all cursor-pointer ${
-                activeTab === 'staff' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
-              }`}
-            >
-              <span className="text-[11px] text-emerald-300 font-mono block">Staff & Access</span>
-              <strong className="text-xl sm:text-2xl font-bold text-[#f5cf72] font-mono">
-                {staffUsers.length}
-              </strong>
+              <div 
+                onClick={() => setActiveTab('messages')}
+                className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                  activeTab === 'messages' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+                }`}
+              >
+                <span className="text-[11px] text-emerald-300 font-mono block">✉️ Inquiries</span>
+                <strong className="text-lg sm:text-xl font-bold text-[#f5cf72] font-mono">
+                  {contactMessages.length}
+                </strong>
+              </div>
+
+              <div 
+                onClick={() => setActiveTab('staff')}
+                className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                  activeTab === 'staff' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+                }`}
+              >
+                <span className="text-[11px] text-emerald-300 font-mono block">🛡️ Staff Access</span>
+                <strong className="text-lg sm:text-xl font-bold text-[#f5cf72] font-mono">
+                  {staffUsers.length}
+                </strong>
+              </div>
             </div>
           </div>
         </div>
@@ -752,14 +870,62 @@ export const AdminView: React.FC<AdminViewProps> = ({
       {/* Tabs Navigation & Search Bar */}
       <div className="bg-white border-b border-[#d6e5dc] sticky top-0 z-20 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 py-3">
-            {/* Tab Buttons */}
-            <div className="flex space-x-1.5 overflow-x-auto text-xs font-bold scrollbar-none pb-1 md:pb-0">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 py-3">
+            
+            {/* Mobile / Compact Dropdown Selector */}
+            <div className="lg:hidden flex items-center space-x-2">
+              <span className="text-xs font-bold text-slate-500 uppercase font-mono">Tab:</span>
+              <select
+                value={activeTab}
+                onChange={(e) => setActiveTab(e.target.value as any)}
+                className="w-full px-3.5 py-2 rounded-xl bg-slate-100 border border-slate-300 text-xs font-bold text-[#032014] focus:ring-2 focus:ring-[#c99726]"
+              >
+                <option value="content">📝 Site Writings & Page Copy (50+ Fields)</option>
+                <option value="banners">🖼️ Banners & Card Media (22 Slots)</option>
+                <option value="giving">💰 Giving & MoMo Reconciliation ({givingRecords.length})</option>
+                <option value="events">🎟️ Event Passes & RSVPs ({eventRegistrations.length})</option>
+                <option value="prayers">🙏 Prayer Altar Petitions ({prayerRequests.length})</option>
+                <option value="visits">👥 Guest Visits & Welcomes ({visitPlans.length})</option>
+                <option value="messages">✉️ Contact Inquiries ({contactMessages.length})</option>
+                <option value="staff">🛡️ Staff & Security PINs ({staffUsers.length})</option>
+              </select>
+            </div>
+
+            {/* Desktop Full Tab Bar */}
+            <div className="hidden lg:flex flex-wrap items-center gap-1.5 text-xs font-bold">
+              <button
+                onClick={() => setActiveTab('content')}
+                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                  activeTab === 'content'
+                    ? 'bg-[#032014] text-[#f5cf72] shadow-sm ring-1 ring-[#c99726]'
+                    : 'text-slate-700 hover:bg-[#eef6f1] hover:text-[#032014]'
+                }`}
+              >
+                <Edit3 className="w-3.5 h-3.5 text-[#c99726]" />
+                <span>Writings & Copy</span>
+                <span className="ml-1 px-1.5 py-0.2 rounded-full bg-[#c99726] text-[#021a10] text-[10px]">50+</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('banners')}
+                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                  activeTab === 'banners'
+                    ? 'bg-[#032014] text-[#f5cf72] shadow-sm ring-1 ring-[#c99726]'
+                    : 'text-slate-700 hover:bg-[#eef6f1] hover:text-[#032014]'
+                }`}
+              >
+                <ImageIcon className="w-3.5 h-3.5 text-[#c99726]" />
+                <span>Banners & Media</span>
+                <span className="ml-1 px-1.5 py-0.2 rounded-full bg-[#c99726] text-[#021a10] text-[10px]">22</span>
+              </button>
+
+              <span className="h-4 w-px bg-slate-200 mx-1" />
+
               <button
                 onClick={() => setActiveTab('giving')}
-                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
                   activeTab === 'giving'
-                    ? 'bg-[#032014] text-[#f5cf72] shadow-xs'
+                    ? 'bg-[#032014] text-[#f5cf72] shadow-sm'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
@@ -769,21 +935,21 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
               <button
                 onClick={() => setActiveTab('events')}
-                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
                   activeTab === 'events'
-                    ? 'bg-[#032014] text-[#f5cf72] shadow-xs'
+                    ? 'bg-[#032014] text-[#f5cf72] shadow-sm'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
                 <Ticket className="w-3.5 h-3.5" />
-                <span>Event Passes ({eventRegistrations.length})</span>
+                <span>Events ({eventRegistrations.length})</span>
               </button>
 
               <button
                 onClick={() => setActiveTab('prayers')}
-                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
                   activeTab === 'prayers'
-                    ? 'bg-[#032014] text-[#f5cf72] shadow-xs'
+                    ? 'bg-[#032014] text-[#f5cf72] shadow-sm'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
@@ -793,21 +959,21 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
               <button
                 onClick={() => setActiveTab('visits')}
-                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
                   activeTab === 'visits'
-                    ? 'bg-[#032014] text-[#f5cf72] shadow-xs'
+                    ? 'bg-[#032014] text-[#f5cf72] shadow-sm'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
                 <Users className="w-3.5 h-3.5" />
-                <span>Guest Visits ({visitPlans.length})</span>
+                <span>Visits ({visitPlans.length})</span>
               </button>
 
               <button
                 onClick={() => setActiveTab('messages')}
-                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
                   activeTab === 'messages'
-                    ? 'bg-[#032014] text-[#f5cf72] shadow-xs'
+                    ? 'bg-[#032014] text-[#f5cf72] shadow-sm'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
@@ -817,19 +983,19 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
               <button
                 onClick={() => setActiveTab('staff')}
-                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
                   activeTab === 'staff'
-                    ? 'bg-[#032014] text-[#f5cf72] shadow-xs'
+                    ? 'bg-[#032014] text-[#f5cf72] shadow-sm'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
-                <Shield className="w-3.5 h-3.5 text-[#c99726]" />
-                <span>Staff & Access Control ({staffUsers.length})</span>
+                <Shield className="w-3.5 h-3.5" />
+                <span>Staff ({staffUsers.length})</span>
               </button>
             </div>
 
             {/* Live Search Bar */}
-            <div className="relative min-w-[260px]">
+            <div className="relative min-w-[240px]">
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
@@ -1416,6 +1582,20 @@ export const AdminView: React.FC<AdminViewProps> = ({
               </div>
             </div>
           </div>
+        )}
+
+        {/* =========================================================================
+            TAB 7: BANNERS & CARD MEDIA MANAGER
+            ========================================================================= */}
+        {activeTab === 'banners' && (
+          <AdminBannerManager onNavigate={onNavigate} />
+        )}
+
+        {/* =========================================================================
+            TAB 8: SITE WRITINGS & COPY MANAGER
+            ========================================================================= */}
+        {activeTab === 'content' && (
+          <AdminContentManager onNavigate={onNavigate} />
         )}
       </div>
 

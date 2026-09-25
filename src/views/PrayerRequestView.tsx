@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PrayerRequest, PageId } from '../types';
 import { CHURCH_INFO } from '../data/churchData';
+import { useBanners } from '../utils/bannerManager';
 import { 
   Send, 
   CheckCircle2, 
@@ -20,6 +21,7 @@ export const PrayerRequestView: React.FC<PrayerRequestViewProps> = ({
   onNavigate,
   onSubmitPrayerRequest,
 }) => {
+  const { getBanner } = useBanners();
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -72,8 +74,15 @@ export const PrayerRequestView: React.FC<PrayerRequestViewProps> = ({
   return (
     <div className="bg-[#f8faf8] min-h-screen text-slate-900 pb-24">
       {/* Header Banner - ICGC Forest & Gold */}
-      <section className="bg-[#02180e] text-white py-14 sm:py-20 border-b border-[#084c2e]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 sm:space-y-4">
+      <section className="relative bg-[#02180e] text-white py-14 sm:py-20 border-b border-[#084c2e] overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-15">
+          <img
+            src={getBanner('page_prayer_hero', 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=1920&q=80')}
+            alt="Prayer Request Header"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 sm:space-y-4 relative z-10">
           <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
             THE ALTAR OF INTERCESSION
           </span>

@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { PhotoGallery } from '../components/PhotoGallery';
 import { ChurchPhoto, PageId } from '../types';
+import { useBanners } from '../utils/bannerManager';
 import { Camera, Sparkles, MapPin, Calendar, Users, ArrowLeft } from 'lucide-react';
 
 interface GalleryViewProps {
@@ -10,11 +11,19 @@ interface GalleryViewProps {
 }
 
 export const GalleryView: React.FC<GalleryViewProps> = ({ photos, onNavigate }) => {
+  const { getBanner } = useBanners();
   return (
     <div className="min-h-screen bg-[#02180e] text-white pb-24">
       {/* Hero Header */}
       <section className="relative py-20 lg:py-24 bg-[#032014] text-white overflow-hidden border-b border-[#c99726]/30">
-        {/* Background Ambient Glow */}
+        {/* Background Ambient Header Image & Glow */}
+        <div className="absolute inset-0 opacity-15 pointer-events-none">
+          <img
+            src={getBanner('page_gallery_hero', 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1920&q=80')}
+            alt="Gallery Header"
+            className="w-full h-full object-cover"
+          />
+        </div>
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#c99726] rounded-full filter blur-[120px]" />
           <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-[#07472c] rounded-full filter blur-[120px]" />
