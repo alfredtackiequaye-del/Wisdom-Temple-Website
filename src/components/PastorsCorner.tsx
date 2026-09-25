@@ -77,7 +77,7 @@ export const PastorsCorner: React.FC<PastorsCornerProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-2 mb-14">
-          <div className="text-xs uppercase tracking-[0.25em] font-semibold text-[#b8861d]">
+          <div className="text-xs uppercase tracking-[0.25em] font-semibold text-[#76550f]">
             The Shepherd's Desk · Pastor's Corner
           </div>
 
@@ -112,9 +112,9 @@ export const PastorsCorner: React.FC<PastorsCornerProps> = ({
                 <span className="text-[11px] font-mono text-[#dfb15b] uppercase tracking-wider block font-bold">
                   RESIDENT PASTOR
                 </span>
-                <h4 className="text-xl sm:text-2xl font-serif text-white mt-0.5">
+                <h3 className="text-xl sm:text-2xl font-serif text-white mt-0.5">
                   {pastorName}
-                </h4>
+                </h3>
                 <p className="text-xs text-emerald-200/90 mt-1 flex items-center space-x-1.5">
                   <span>With Lady Dr. Helena Dela</span>
                   <span>•</span>

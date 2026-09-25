@@ -703,6 +703,12 @@ export const saveBannerUrl = (bannerId: string, newUrl: string): BannerConfig[] 
     window.dispatchEvent(new CustomEvent(EVENT_KEY, { detail: { bannerId, newUrl: cleanUrl } }));
   }
 
+  void fetch(`/api/admin/site-banners/${encodeURIComponent(bannerId)}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url: cleanUrl }),
+  });
+
   return loadAllBanners();
 };
 
@@ -732,6 +738,8 @@ export const resetSingleBanner = (bannerId: string): BannerConfig[] => {
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new CustomEvent(EVENT_KEY, { detail: { bannerId, reset: true } }));
   }
+
+  void fetch(`/api/admin/site-banners/${encodeURIComponent(bannerId)}`, { method: 'DELETE' });
 
   return loadAllBanners();
 };
@@ -806,6 +814,16 @@ export const useBanners = (): {
 
     window.addEventListener(EVENT_KEY, handleUpdate);
     window.addEventListener('storage', handleUpdate);
+    fetch('/api/site-banners')
+      .then((response) => response.ok ? response.json() : {})
+      .then((remoteBanners) => {
+        Object.entries(remoteBanners || {}).forEach(([id, value]) => {
+          const banner = value as { currentUrl?: string; updatedAt?: string };
+          if (banner.currentUrl) IN_MEMORY_CACHE[id] = banner as { currentUrl: string; updatedAt?: string };
+        });
+        setBanners(loadAllBanners());
+      })
+      .catch(() => undefined);
     return () => {
       window.removeEventListener(EVENT_KEY, handleUpdate);
       window.removeEventListener('storage', handleUpdate);

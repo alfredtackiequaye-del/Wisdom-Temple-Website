@@ -1,27 +1,27 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { 
-  PrayerRequest, 
-  VisitPlan, 
-  ContactMessage, 
-  ChurchEvent, 
+import React, { useState, useMemo, useEffect } from "react";
+import {
+  PrayerRequest,
+  VisitPlan,
+  ContactMessage,
+  ChurchEvent,
   EventRegistration,
   GivingRecord,
   StaffUser,
   StaffRole,
-  PageId 
-} from '../types';
-import { exportToCSV } from '../utils/csvExport';
-import { exportBannersJson } from '../utils/bannerManager';
-import { exportContentJson } from '../utils/contentManager';
-import { ICGCLogo } from '../components/ICGCLogo';
-import { AdminBannerManager } from '../components/AdminBannerManager';
-import { AdminContentManager } from '../components/AdminContentManager';
-import { 
-  Users, 
-  Heart, 
-  Mail, 
-  Shield, 
-  Layers, 
+  PageId,
+} from "../types";
+import { exportToCSV } from "../utils/csvExport";
+import { exportBannersJson } from "../utils/bannerManager";
+import { exportContentJson } from "../utils/contentManager";
+import { ICGCLogo } from "../components/ICGCLogo";
+import { AdminBannerManager } from "../components/AdminBannerManager";
+import { AdminContentManager } from "../components/AdminContentManager";
+import {
+  Users,
+  Heart,
+  Mail,
+  Shield,
+  Layers,
   Lock,
   Download,
   Search,
@@ -49,8 +49,9 @@ import {
   Edit2,
   Edit3,
   FileText,
-  Image as ImageIcon
-} from 'lucide-react';
+  Image as ImageIcon,
+  Sparkles,
+} from "lucide-react";
 
 interface AdminViewProps {
   initialTab?: string;
@@ -60,268 +61,479 @@ interface AdminViewProps {
   givingRecords: GivingRecord[];
   eventRegistrations: EventRegistration[];
   events: ChurchEvent[];
-  onUpdatePrayerStatus: (id: string, status: 'new' | 'prayed' | 'archived') => void;
-  onUpdateVisitStatus: (id: string, status: 'planned' | 'welcomed' | 'followup-assigned') => void;
-  onUpdateMessageStatus: (id: string, status: 'unread' | 'read' | 'replied') => void;
-  onUpdateGivingStatus: (id: string, status: 'pending-verification' | 'confirmed') => void;
+  onUpdatePrayerStatus: (
+    id: string,
+    status: "new" | "prayed" | "archived",
+  ) => void;
+  onUpdateVisitStatus: (
+    id: string,
+    status: "planned" | "welcomed" | "followup-assigned",
+  ) => void;
+  onUpdateMessageStatus: (
+    id: string,
+    status: "unread" | "read" | "replied",
+  ) => void;
+  onUpdateGivingStatus: (
+    id: string,
+    status: "pending-verification" | "confirmed",
+  ) => void;
   onNavigate: (page: PageId, subTab?: string) => void;
 }
+
+type AdminTab =
+  | "giving"
+  | "events"
+  | "prayers"
+  | "visits"
+  | "messages"
+  | "banners"
+  | "content"
+  | "staff";
+
+const TAB_ACCESS: Record<AdminTab, StaffRole[]> = {
+  giving: ["super-admin", "finance"],
+  events: ["super-admin", "secretariat", "protocol"],
+  prayers: ["super-admin", "pastoral"],
+  visits: ["super-admin", "protocol", "secretariat"],
+  messages: ["super-admin", "secretariat"],
+  banners: ["super-admin"],
+  content: ["super-admin"],
+  staff: ["super-admin"],
+};
+
+const SESSION_DURATION_MS = 8 * 60 * 60 * 1000;
 
 // Initial authorized personnel roster
 const INITIAL_STAFF_USERS: StaffUser[] = [
   {
-    id: 'staff-1',
-    name: 'Rev. Gabriel Dela',
-    email: 'shepherd@wisdomtemple.org',
-    role: 'super-admin',
-    roleLabel: 'Senior Minister & Head Administrator',
-    passcode: '7788',
-    phone: '+233 24 500 9764',
-    dateAdded: 'Jan 1, 2026',
+    id: "staff-1",
+    name: "Rev. Gabriel Dela",
+    email: "shepherd@wisdomtemple.org",
+    role: "super-admin",
+    roleLabel: "Senior Minister & Head Administrator",
+    passcode: "7788",
+    phone: "+233 24 500 9764",
+    dateAdded: "Jan 1, 2026",
     isActive: true,
   },
   {
-    id: 'staff-2',
-    name: 'Church Secretariat Desk',
-    email: 'secretariat@wisdomtemple.org',
-    role: 'secretariat',
-    roleLabel: 'Secretariat & Correspondence',
-    passcode: '1122',
-    phone: '+233 24 000 1122',
-    dateAdded: 'Jan 10, 2026',
+    id: "staff-2",
+    name: "Church Secretariat Desk",
+    email: "secretariat@wisdomtemple.org",
+    role: "secretariat",
+    roleLabel: "Secretariat & Correspondence",
+    passcode: "1122",
+    phone: "+233 24 000 1122",
+    dateAdded: "Jan 10, 2026",
     isActive: true,
   },
   {
-    id: 'staff-3',
-    name: 'Treasury & Accounts Officer',
-    email: 'finance@wisdomtemple.org',
-    role: 'finance',
-    roleLabel: 'Treasury & MoMo Reconciliation',
-    passcode: '4455',
-    phone: '+233 20 888 4455',
-    dateAdded: 'Feb 1, 2026',
+    id: "staff-3",
+    name: "Treasury & Accounts Officer",
+    email: "finance@wisdomtemple.org",
+    role: "finance",
+    roleLabel: "Treasury & MoMo Reconciliation",
+    passcode: "4455",
+    phone: "+233 20 888 4455",
+    dateAdded: "Feb 1, 2026",
     isActive: true,
   },
   {
-    id: 'staff-4',
-    name: 'Pastoral Care & Prayer Lead',
-    email: 'prayer@wisdomtemple.org',
-    role: 'pastoral',
-    roleLabel: 'Intercession & Altar Team',
-    passcode: '3344',
-    phone: '+233 54 999 3344',
-    dateAdded: 'Feb 15, 2026',
+    id: "staff-4",
+    name: "Pastoral Care & Prayer Lead",
+    email: "prayer@wisdomtemple.org",
+    role: "pastoral",
+    roleLabel: "Intercession & Altar Team",
+    passcode: "3344",
+    phone: "+233 54 999 3344",
+    dateAdded: "Feb 15, 2026",
     isActive: true,
   },
   {
-    id: 'staff-5',
-    name: 'Protocol & Guest Reception',
-    email: 'protocol@wisdomtemple.org',
-    role: 'protocol',
-    roleLabel: 'Protocol, Ushers & New Visitors',
-    passcode: '5566',
-    phone: '+233 27 777 5566',
-    dateAdded: 'Mar 1, 2026',
+    id: "staff-5",
+    name: "Protocol & Guest Reception",
+    email: "protocol@wisdomtemple.org",
+    role: "protocol",
+    roleLabel: "Protocol, Ushers & New Visitors",
+    passcode: "5566",
+    phone: "+233 27 777 5566",
+    dateAdded: "Mar 1, 2026",
     isActive: true,
-  }
+  },
 ];
 
 export const AdminView: React.FC<AdminViewProps> = ({
   initialTab,
-  prayerRequests,
-  visitPlans,
-  contactMessages,
-  givingRecords,
-  eventRegistrations,
+  prayerRequests: initialPrayerRequests,
+  visitPlans: initialVisitPlans,
+  contactMessages: initialContactMessages,
+  givingRecords: initialGivingRecords,
+  eventRegistrations: initialEventRegistrations,
   events,
-  onUpdatePrayerStatus,
-  onUpdateVisitStatus,
-  onUpdateMessageStatus,
-  onUpdateGivingStatus,
+  onUpdatePrayerStatus: parentUpdatePrayerStatus,
+  onUpdateVisitStatus: parentUpdateVisitStatus,
+  onUpdateMessageStatus: parentUpdateMessageStatus,
+  onUpdateGivingStatus: parentUpdateGivingStatus,
   onNavigate,
 }) => {
   // Staff Authentication State
-  const [staffUsers, setStaffUsers] = useState<StaffUser[]>(() => {
-    try {
-      const saved = localStorage.getItem('wt_staff_users_list');
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error(e);
-    }
-    return INITIAL_STAFF_USERS;
-  });
+  const [staffUsers, setStaffUsers] = useState<StaffUser[]>([]);
 
-  const [currentStaff, setCurrentStaff] = useState<StaffUser | null>(() => {
-    try {
-      const saved = localStorage.getItem('wt_current_staff_session');
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error(e);
-    }
-    return null;
-  });
+  const [currentStaff, setCurrentStaff] = useState<StaffUser | null>(null);
+  const [checkingSession, setCheckingSession] = useState(true);
+  const [prayerRequests, setPrayerRequests] = useState(initialPrayerRequests);
+  const [visitPlans, setVisitPlans] = useState(initialVisitPlans);
+  const [contactMessages, setContactMessages] = useState(
+    initialContactMessages,
+  );
+  const [givingRecords, setGivingRecords] = useState(initialGivingRecords);
+  const [eventRegistrations, setEventRegistrations] = useState(
+    initialEventRegistrations,
+  );
 
   // Login Form State
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPasscode, setLoginPasscode] = useState('');
-  const [loginError, setLoginError] = useState('');
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPasscode, setLoginPasscode] = useState("");
+  const [loginError, setLoginError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showDemoLogins, setShowDemoLogins] = useState(false);
 
   // Dashboard Navigation State
-  const [activeTab, setActiveTab] = useState<'giving' | 'events' | 'prayers' | 'visits' | 'messages' | 'banners' | 'content' | 'staff'>(() => {
-    if (initialTab && ['giving', 'events', 'prayers', 'visits', 'messages', 'banners', 'content', 'staff'].includes(initialTab)) {
+  const [activeTab, setActiveTabState] = useState<AdminTab>(() => {
+    if (
+      initialTab &&
+      [
+        "giving",
+        "events",
+        "prayers",
+        "visits",
+        "messages",
+        "banners",
+        "content",
+        "staff",
+      ].includes(initialTab)
+    ) {
       return initialTab as any;
     }
-    return 'giving';
+    return "giving";
   });
 
   useEffect(() => {
-    if (initialTab && ['giving', 'events', 'prayers', 'visits', 'messages', 'banners', 'content', 'staff'].includes(initialTab)) {
-      setActiveTab(initialTab as any);
+    if (
+      initialTab &&
+      [
+        "giving",
+        "events",
+        "prayers",
+        "visits",
+        "messages",
+        "banners",
+        "content",
+        "staff",
+      ].includes(initialTab)
+    ) {
+      setActiveTabState(initialTab as AdminTab);
     }
   }, [initialTab]);
-  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    if (currentStaff && !canAccessTab(activeTab)) {
+      const firstAllowedTab =
+        (Object.keys(TAB_ACCESS) as AdminTab[]).find(canAccessTab) || "giving";
+      setActiveTabState(firstAllowedTab);
+    }
+  }, [currentStaff, activeTab]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [showGuideModal, setShowGuideModal] = useState(false);
 
   // New Staff Modal State
   const [showAddStaffModal, setShowAddStaffModal] = useState(false);
-  const [newStaffName, setNewStaffName] = useState('');
-  const [newStaffEmail, setNewStaffEmail] = useState('');
-  const [newStaffPhone, setNewStaffPhone] = useState('');
-  const [newStaffRole, setNewStaffRole] = useState<StaffRole>('secretariat');
-  const [newStaffPasscode, setNewStaffPasscode] = useState('');
-  const [revealedPasscodes, setRevealedPasscodes] = useState<Record<string, boolean>>({});
+  const [newStaffName, setNewStaffName] = useState("");
+  const [newStaffEmail, setNewStaffEmail] = useState("");
+  const [newStaffPhone, setNewStaffPhone] = useState("");
+  const [newStaffRole, setNewStaffRole] = useState<StaffRole>("secretariat");
+  const [newStaffPasscode, setNewStaffPasscode] = useState("");
+  const [revealedPasscodes, setRevealedPasscodes] = useState<
+    Record<string, boolean>
+  >({});
 
-  // Sync staff users to local storage
-  useEffect(() => {
-    localStorage.setItem('wt_staff_users_list', JSON.stringify(staffUsers));
-  }, [staffUsers]);
+  const canAccessTab = (tab: AdminTab) =>
+    Boolean(currentStaff && TAB_ACCESS[tab].includes(currentStaff.role));
+  const setActiveTab = (tab: AdminTab) => {
+    if (canAccessTab(tab)) setActiveTabState(tab);
+  };
 
-  // Sync session to local storage
+  // Validate the HttpOnly server session on every portal load.
   useEffect(() => {
-    if (currentStaff) {
-      localStorage.setItem('wt_current_staff_session', JSON.stringify(currentStaff));
-    } else {
-      localStorage.removeItem('wt_current_staff_session');
-    }
+    fetch("/api/admin/session")
+      .then(async (response) => {
+        if (!response.ok) return null;
+        const payload = await response.json();
+        return payload.user as Omit<StaffUser, "passcode" | "dateAdded"> & {
+          createdAt?: string;
+        };
+      })
+      .then((user) => {
+        if (user) {
+          setCurrentStaff({
+            ...user,
+            passcode: "",
+            dateAdded: user.createdAt || new Date().toLocaleDateString(),
+          });
+        }
+      })
+      .catch(() => undefined)
+      .finally(() => setCheckingSession(false));
+  }, []);
+
+  useEffect(() => {
+    if (!currentStaff) return;
+
+    fetch("/api/admin/records")
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Could not load protected records.");
+        return response.json();
+      })
+      .then((records) => {
+        setGivingRecords(records.givingRecords || []);
+        setEventRegistrations(records.eventRegistrations || []);
+        setPrayerRequests(records.prayerRequests || []);
+        setVisitPlans(records.visitPlans || []);
+        setContactMessages(records.contactMessages || []);
+      })
+      .catch(() => undefined);
+  }, [currentStaff]);
+
+  useEffect(() => {
+    if (!currentStaff || currentStaff.role !== "super-admin") return;
+
+    fetch("/api/admin/staff")
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Could not load staff directory.");
+        return response.json();
+      })
+      .then((payload) => {
+        setStaffUsers(
+          (payload.users || []).map(
+            (
+              user: Omit<StaffUser, "passcode" | "dateAdded"> & {
+                createdAt: string;
+              },
+            ) => ({
+              ...user,
+              passcode: "",
+              dateAdded: new Date(user.createdAt).toLocaleDateString(),
+            }),
+          ),
+        );
+      })
+      .catch(() => undefined);
   }, [currentStaff]);
 
   // Handle Login Authentication
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoginError('');
+    setLoginError("");
 
     const trimmedIdentifier = loginEmail.trim().toLowerCase();
     const trimmedPasscode = loginPasscode.trim();
 
-    const matchedUser = staffUsers.find(user => 
-      (user.email.toLowerCase() === trimmedIdentifier || user.name.toLowerCase().includes(trimmedIdentifier)) &&
-      (user.passcode === trimmedPasscode || trimmedPasscode === 'WT-MASTER-ADMIN')
-    );
-
-    if (matchedUser) {
-      if (!matchedUser.isActive) {
-        setLoginError('This staff account has been deactivated. Please contact the Head Administrator.');
+    try {
+      const response = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: trimmedIdentifier,
+          password: trimmedPasscode,
+        }),
+      });
+      const payload = await response.json();
+      if (!response.ok) {
+        setLoginError(payload.error || "Access denied.");
         return;
       }
-      const updatedUser = {
-        ...matchedUser,
-        lastLogin: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+
+      const user = payload.user as Omit<StaffUser, "passcode" | "dateAdded"> & {
+        createdAt?: string;
       };
-      setCurrentStaff(updatedUser);
-      // Update last login in roster
-      setStaffUsers(prev => prev.map(u => u.id === updatedUser.id ? updatedUser : u));
-      setLoginPasscode('');
-      setLoginError('');
-    } else {
-      setLoginError('Access Denied: Unrecognized credentials or incorrect security PIN. This portal is restricted to authorized church leadership.');
+      setCurrentStaff({
+        ...user,
+        passcode: "",
+        dateAdded: user.createdAt || new Date().toLocaleDateString(),
+      });
+      setLoginPasscode("");
+      setLoginError("");
+    } catch {
+      setLoginError(
+        "The secure admin service is unavailable. Please try again.",
+      );
     }
   };
 
   // Handle Logout / Lock
   const handleLogout = () => {
+    void fetch("/api/admin/logout", { method: "POST" });
     setCurrentStaff(null);
-    setLoginPasscode('');
-    setLoginError('');
+    setLoginPasscode("");
+    setLoginError("");
   };
 
-  // Handle Quick Demo Login
-  const handleQuickLogin = (user: StaffUser) => {
-    setLoginEmail(user.email);
-    setLoginPasscode(user.passcode);
+  const updateRecordStatus = async (
+    collection: string,
+    id: string,
+    status: string,
+  ) => {
+    const response = await fetch(
+      `/api/admin/records/${collection}/${encodeURIComponent(id)}/status`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      },
+    );
+    if (!response.ok) throw new Error("Could not update record status.");
   };
+
+  const onUpdatePrayerStatus = async (
+    id: string,
+    status: "new" | "prayed" | "archived",
+  ) => {
+    await updateRecordStatus("prayerRequests", id, status);
+    setPrayerRequests((records) =>
+      records.map((record) =>
+        record.id === id ? { ...record, status } : record,
+      ),
+    );
+    parentUpdatePrayerStatus(id, status);
+  };
+
+  const onUpdateVisitStatus = async (
+    id: string,
+    status: "planned" | "welcomed" | "followup-assigned",
+  ) => {
+    await updateRecordStatus("visitPlans", id, status);
+    setVisitPlans((records) =>
+      records.map((record) =>
+        record.id === id ? { ...record, status } : record,
+      ),
+    );
+    parentUpdateVisitStatus(id, status);
+  };
+
+  const onUpdateMessageStatus = async (
+    id: string,
+    status: "unread" | "read" | "replied",
+  ) => {
+    await updateRecordStatus("contactMessages", id, status);
+    setContactMessages((records) =>
+      records.map((record) =>
+        record.id === id ? { ...record, status } : record,
+      ),
+    );
+    parentUpdateMessageStatus(id, status);
+  };
+
+  const onUpdateGivingStatus = async (
+    id: string,
+    status: "pending-verification" | "confirmed",
+  ) => {
+    await updateRecordStatus("givingRecords", id, status);
+    setGivingRecords((records) =>
+      records.map((record) =>
+        record.id === id ? { ...record, status } : record,
+      ),
+    );
+    parentUpdateGivingStatus(id, status);
+  };
+
+  useEffect(() => {
+    if (!currentStaff) return;
+    const timeoutId = window.setTimeout(handleLogout, SESSION_DURATION_MS);
+    return () => window.clearTimeout(timeoutId);
+  }, [currentStaff]);
 
   // Handle Add New Staff
-  const handleCreateStaff = (e: React.FormEvent) => {
+  const handleCreateStaff = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newStaffName.trim() || !newStaffEmail.trim() || !newStaffPasscode.trim()) return;
+    if (
+      !newStaffName.trim() ||
+      !newStaffEmail.trim() ||
+      !newStaffPasscode.trim()
+    )
+      return;
 
-    let roleLabel = 'Staff Officer';
-    switch (newStaffRole) {
-      case 'super-admin':
-        roleLabel = 'Senior Minister & Head Administrator';
-        break;
-      case 'finance':
-        roleLabel = 'Treasury & Accounts Officer';
-        break;
-      case 'pastoral':
-        roleLabel = 'Pastoral Care & Prayer Lead';
-        break;
-      case 'secretariat':
-        roleLabel = 'Secretariat & Correspondence';
-        break;
-      case 'protocol':
-        roleLabel = 'Protocol & Guest Reception';
-        break;
-    }
-
-    const newUser: StaffUser = {
-      id: `staff-${Date.now()}`,
-      name: newStaffName.trim(),
-      email: newStaffEmail.trim(),
-      phone: newStaffPhone.trim() || undefined,
-      role: newStaffRole,
-      roleLabel,
-      passcode: newStaffPasscode.trim(),
-      dateAdded: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      isActive: true,
-    };
-
-    setStaffUsers(prev => [...prev, newUser]);
+    const response = await fetch("/api/admin/staff", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: newStaffName,
+        email: newStaffEmail,
+        phone: newStaffPhone,
+        role: newStaffRole,
+        password: newStaffPasscode,
+      }),
+    });
+    if (!response.ok) return;
+    const { user } = await response.json();
+    setStaffUsers((prev) => [
+      ...prev,
+      {
+        ...user,
+        passcode: "",
+        dateAdded: new Date(user.createdAt).toLocaleDateString(),
+      },
+    ]);
     setShowAddStaffModal(false);
-    setNewStaffName('');
-    setNewStaffEmail('');
-    setNewStaffPhone('');
-    setNewStaffPasscode('');
+    setNewStaffName("");
+    setNewStaffEmail("");
+    setNewStaffPhone("");
+    setNewStaffPasscode("");
   };
 
   // Handle Toggle Active
-  const handleToggleStaffActive = (staffId: string) => {
-    setStaffUsers(prev => prev.map(u => {
-      if (u.id === staffId) {
-        return { ...u, isActive: !u.isActive };
-      }
-      return u;
-    }));
+  const handleToggleStaffActive = async (staffId: string) => {
+    const staff = staffUsers.find((user) => user.id === staffId);
+    if (!staff) return;
+    const response = await fetch(
+      `/api/admin/staff/${encodeURIComponent(staffId)}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isActive: !staff.isActive }),
+      },
+    );
+    if (response.ok)
+      setStaffUsers((prev) =>
+        prev.map((user) =>
+          user.id === staffId ? { ...user, isActive: !user.isActive } : user,
+        ),
+      );
   };
 
   // Handle Remove Staff
-  const handleRemoveStaff = (staffId: string) => {
+  const handleRemoveStaff = async (staffId: string) => {
     if (staffUsers.length <= 1) {
-      alert('Cannot delete the last remaining administrator.');
+      alert("Cannot delete the last remaining administrator.");
       return;
     }
-    if (confirm('Are you sure you want to revoke this staff member\'s access to the Church Admin Portal?')) {
-      setStaffUsers(prev => prev.filter(u => u.id !== staffId));
+    if (
+      confirm(
+        "Are you sure you want to revoke this staff member's access to the Church Admin Portal?",
+      )
+    ) {
+      const response = await fetch(
+        `/api/admin/staff/${encodeURIComponent(staffId)}`,
+        { method: "DELETE" },
+      );
+      if (response.ok)
+        setStaffUsers((prev) => prev.filter((u) => u.id !== staffId));
     }
   };
 
   // Toggle Reveal Passcode
   const toggleRevealPasscode = (staffId: string) => {
-    setRevealedPasscodes(prev => ({
+    setRevealedPasscodes((prev) => ({
       ...prev,
-      [staffId]: !prev[staffId]
+      [staffId]: !prev[staffId],
     }));
   };
 
@@ -329,108 +541,117 @@ export const AdminView: React.FC<AdminViewProps> = ({
   const filteredGiving = useMemo(() => {
     if (!searchQuery.trim()) return givingRecords;
     const q = searchQuery.toLowerCase();
-    return givingRecords.filter(g => 
-      g.donorName.toLowerCase().includes(q) ||
-      g.referenceCode.toLowerCase().includes(q) ||
-      g.phoneOrTxnId.toLowerCase().includes(q) ||
-      g.fund.toLowerCase().includes(q)
+    return givingRecords.filter(
+      (g) =>
+        g.donorName.toLowerCase().includes(q) ||
+        g.referenceCode.toLowerCase().includes(q) ||
+        g.phoneOrTxnId.toLowerCase().includes(q) ||
+        g.fund.toLowerCase().includes(q),
     );
   }, [givingRecords, searchQuery]);
 
   const filteredRegistrations = useMemo(() => {
     if (!searchQuery.trim()) return eventRegistrations;
     const q = searchQuery.toLowerCase();
-    return eventRegistrations.filter(r => 
-      r.fullName.toLowerCase().includes(q) ||
-      r.eventName.toLowerCase().includes(q) ||
-      r.registrationCode.toLowerCase().includes(q) ||
-      r.phone.toLowerCase().includes(q) ||
-      r.email.toLowerCase().includes(q)
+    return eventRegistrations.filter(
+      (r) =>
+        r.fullName.toLowerCase().includes(q) ||
+        r.eventName.toLowerCase().includes(q) ||
+        r.registrationCode.toLowerCase().includes(q) ||
+        r.phone.toLowerCase().includes(q) ||
+        r.email.toLowerCase().includes(q),
     );
   }, [eventRegistrations, searchQuery]);
 
   const filteredPrayers = useMemo(() => {
     if (!searchQuery.trim()) return prayerRequests;
     const q = searchQuery.toLowerCase();
-    return prayerRequests.filter(p => 
-      p.fullName.toLowerCase().includes(q) ||
-      p.category.toLowerCase().includes(q) ||
-      p.requestText.toLowerCase().includes(q) ||
-      p.phone.toLowerCase().includes(q)
+    return prayerRequests.filter(
+      (p) =>
+        p.fullName.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q) ||
+        p.requestText.toLowerCase().includes(q) ||
+        p.phone.toLowerCase().includes(q),
     );
   }, [prayerRequests, searchQuery]);
 
   const filteredVisits = useMemo(() => {
     if (!searchQuery.trim()) return visitPlans;
     const q = searchQuery.toLowerCase();
-    return visitPlans.filter(v => 
-      v.fullName.toLowerCase().includes(q) ||
-      v.phone.toLowerCase().includes(q) ||
-      v.email.toLowerCase().includes(q)
+    return visitPlans.filter(
+      (v) =>
+        v.fullName.toLowerCase().includes(q) ||
+        v.phone.toLowerCase().includes(q) ||
+        v.email.toLowerCase().includes(q),
     );
   }, [visitPlans, searchQuery]);
 
   const filteredMessages = useMemo(() => {
     if (!searchQuery.trim()) return contactMessages;
     const q = searchQuery.toLowerCase();
-    return contactMessages.filter(m => 
-      m.fullName.toLowerCase().includes(q) ||
-      m.subject.toLowerCase().includes(q) ||
-      m.message.toLowerCase().includes(q) ||
-      m.phone.toLowerCase().includes(q)
+    return contactMessages.filter(
+      (m) =>
+        m.fullName.toLowerCase().includes(q) ||
+        m.subject.toLowerCase().includes(q) ||
+        m.message.toLowerCase().includes(q) ||
+        m.phone.toLowerCase().includes(q),
     );
   }, [contactMessages, searchQuery]);
 
   const filteredStaff = useMemo(() => {
     if (!searchQuery.trim()) return staffUsers;
     const q = searchQuery.toLowerCase();
-    return staffUsers.filter(s => 
-      s.name.toLowerCase().includes(q) ||
-      s.email.toLowerCase().includes(q) ||
-      s.roleLabel.toLowerCase().includes(q)
+    return staffUsers.filter(
+      (s) =>
+        s.name.toLowerCase().includes(q) ||
+        s.email.toLowerCase().includes(q) ||
+        s.roleLabel.toLowerCase().includes(q),
     );
   }, [staffUsers, searchQuery]);
 
   // Handle CSV Export for Active Tab
   const handleExportTab = () => {
     switch (activeTab) {
-      case 'giving':
-        exportToCSV(givingRecords, 'Wisdom_Temple_Giving_Records');
+      case "giving":
+        exportToCSV(givingRecords, "Wisdom_Temple_Giving_Records");
         break;
-      case 'events':
-        exportToCSV(eventRegistrations, 'Wisdom_Temple_Event_Registrations');
+      case "events":
+        exportToCSV(eventRegistrations, "Wisdom_Temple_Event_Registrations");
         break;
-      case 'prayers':
-        exportToCSV(prayerRequests, 'Wisdom_Temple_Prayer_Petitions');
+      case "prayers":
+        exportToCSV(prayerRequests, "Wisdom_Temple_Prayer_Petitions");
         break;
-      case 'visits':
-        exportToCSV(visitPlans, 'Wisdom_Temple_Visitor_Connect_Plans');
+      case "visits":
+        exportToCSV(visitPlans, "Wisdom_Temple_Visitor_Connect_Plans");
         break;
-      case 'messages':
-        exportToCSV(contactMessages, 'Wisdom_Temple_Contact_Inquiries');
+      case "messages":
+        exportToCSV(contactMessages, "Wisdom_Temple_Contact_Inquiries");
         break;
-      case 'staff':
-        exportToCSV(staffUsers.map(s => ({
-          Name: s.name,
-          Email: s.email,
-          Role: s.roleLabel,
-          Phone: s.phone || 'N/A',
-          DateAdded: s.dateAdded,
-          Status: s.isActive ? 'Active' : 'Suspended'
-        })), 'Wisdom_Temple_Authorized_Staff');
+      case "staff":
+        exportToCSV(
+          staffUsers.map((s) => ({
+            Name: s.name,
+            Email: s.email,
+            Role: s.roleLabel,
+            Phone: s.phone || "N/A",
+            DateAdded: s.dateAdded,
+            Status: s.isActive ? "Active" : "Suspended",
+          })),
+          "Wisdom_Temple_Authorized_Staff",
+        );
         break;
-      case 'banners': {
+      case "banners": {
         const data = exportBannersJson();
-        const blob = new Blob([data], { type: 'application/json' });
+        const blob = new Blob([data], { type: "application/json" });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = url;
         a.download = `Wisdom_Temple_Banners_${new Date().toISOString().slice(0, 10)}.json`;
         a.click();
         URL.revokeObjectURL(url);
         break;
       }
-      case 'content': {
+      case "content": {
         exportContentJson();
         break;
       }
@@ -442,6 +663,14 @@ export const AdminView: React.FC<AdminViewProps> = ({
   // =========================================================================
   // IF NOT AUTHENTICATED: RENDER SECURE STAFF LOGIN GATE
   // =========================================================================
+  if (checkingSession) {
+    return (
+      <div className="min-h-screen bg-[#02180e] flex items-center justify-center text-[#f5cf72] text-xs font-mono uppercase tracking-[0.18em]">
+        Verifying secure session...
+      </div>
+    );
+  }
+
   if (!currentStaff) {
     return (
       <div className="min-h-screen bg-[#02180e] flex flex-col selection:bg-[#c99726] selection:text-[#021a10]">
@@ -449,7 +678,12 @@ export const AdminView: React.FC<AdminViewProps> = ({
         <header className="w-full bg-[#01140b] border-b border-[#084c2e] text-white py-3.5 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <ICGCLogo size="sm" variant="horizontal" theme="dark" forceWhite={true} />
+              <ICGCLogo
+                size="sm"
+                variant="horizontal"
+                theme="dark"
+                forceWhite={true}
+              />
               <span className="hidden sm:inline-block h-4 w-px bg-[#0b4d2d]" />
               <span className="hidden sm:inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-[#042819] text-[#f5cf72] text-[10px] font-mono font-bold tracking-wider border border-[#c99726]/30">
                 <Lock className="w-3 h-3 text-[#c99726]" />
@@ -459,7 +693,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
             <button
               type="button"
-              onClick={() => onNavigate('home')}
+              onClick={() => onNavigate("home")}
               className="px-3.5 py-1.5 rounded-xl bg-[#042819] hover:bg-[#063821] text-emerald-200 hover:text-white border border-[#084c2e] text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer"
             >
               <ArrowRight className="w-3.5 h-3.5 rotate-180 text-[#c99726]" />
@@ -473,7 +707,12 @@ export const AdminView: React.FC<AdminViewProps> = ({
             {/* Header & Crest */}
             <div className="text-center space-y-3 mb-8">
               <div className="inline-block p-3 rounded-2xl bg-[#032416] border border-[#c99726]/40 shadow-xl">
-                <ICGCLogo size="md" variant="horizontal" theme="dark" forceWhite={true} />
+                <ICGCLogo
+                  size="md"
+                  variant="horizontal"
+                  theme="dark"
+                  forceWhite={true}
+                />
               </div>
 
               <div className="pt-2">
@@ -487,139 +726,94 @@ export const AdminView: React.FC<AdminViewProps> = ({
                 Church Administration Gate
               </h1>
               <p className="text-xs text-emerald-200/80 max-w-sm mx-auto leading-relaxed">
-                This portal is strictly reserved for the Senior Pastor, secretariat, and officially appointed church administrators. Regular members and visitors cannot access this section.
+                This portal is strictly reserved for the Senior Pastor,
+                secretariat, and officially appointed church administrators.
+                Regular members and visitors cannot access this section.
               </p>
             </div>
 
-          {/* Login Card */}
-          <div className="bg-[#032014] rounded-3xl p-7 sm:p-9 border border-[#0d5533] shadow-2xl space-y-6">
-            {loginError && (
-              <div className="p-3.5 rounded-xl bg-red-950/80 border border-red-500/40 text-red-200 text-xs flex items-start space-x-2 animate-in fade-in duration-200">
-                <ShieldAlert className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                <span>{loginError}</span>
-              </div>
-            )}
-
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <label className="block text-xs font-mono font-semibold uppercase text-emerald-200 mb-1.5">
-                  Staff Email or Assigned Name
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    required
-                    value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
-                    placeholder="e.g. shepherd@wisdomtemple.org"
-                    className="w-full px-4 py-3 bg-[#02170e] border border-[#0b4d2d] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726] placeholder-emerald-400/40"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between items-center mb-1.5">
-                  <label className="block text-xs font-mono font-semibold uppercase text-emerald-200">
-                    Security Passcode or PIN
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="text-[11px] text-[#f5cf72] hover:underline flex items-center space-x-1 cursor-pointer"
-                  >
-                    {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                    <span>{showPassword ? 'Hide' : 'Reveal'}</span>
-                  </button>
-                </div>
-                <div className="relative">
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    required
-                    value={loginPasscode}
-                    onChange={(e) => setLoginPasscode(e.target.value)}
-                    placeholder="Enter security PIN"
-                    className="w-full px-4 py-3 bg-[#02170e] border border-[#0b4d2d] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726] placeholder-emerald-400/40 font-mono tracking-wider"
-                  />
-                </div>
-              </div>
-
-              <div className="pt-2 flex flex-col gap-2">
-                <button
-                  type="submit"
-                  className="w-full py-3.5 rounded-lg bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center justify-center space-x-2 cursor-pointer"
-                >
-                  <Key className="w-4 h-4" />
-                  <span>Authenticate & Enter Portal</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    const headAdmin = staffUsers[0] || INITIAL_STAFF_USERS[0];
-                    setCurrentStaff(headAdmin);
-                  }}
-                  className="w-full py-2.5 rounded-lg bg-[#042819] hover:bg-[#063821] text-[#f5cf72] font-semibold text-xs border border-[#c99726]/40 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-[#c99726]" />
-                  <span>⚡ 1-Click Instant Login (Head Admin Access)</span>
-                </button>
-              </div>
-            </form>
-
-            {/* Quick Demo Credentials for Testing / Review */}
-            <div className="pt-4 border-t border-[#0a4628]">
-              <button
-                type="button"
-                onClick={() => setShowDemoLogins(!showDemoLogins)}
-                className="w-full text-center text-xs text-emerald-300/80 hover:text-[#f5cf72] flex items-center justify-center space-x-1 cursor-pointer transition-colors"
-              >
-                <span>{showDemoLogins ? 'Hide' : 'Show'} Authorized Staff Test Credentials</span>
-                <Clock className="w-3 h-3 text-[#c99726]" />
-              </button>
-
-              {showDemoLogins && (
-                <div className="mt-3 space-y-2 bg-[#02180e] p-3 rounded-2xl border border-[#0b4d2d] text-xs">
-                  <span className="text-[10px] text-emerald-400 uppercase font-mono font-bold block mb-1">
-                    Click to Auto-fill Authorized Credentials:
-                  </span>
-                  {staffUsers.slice(0, 3).map(user => (
-                    <button
-                      key={user.id}
-                      type="button"
-                      onClick={() => {
-                        handleQuickLogin(user);
-                        setCurrentStaff(user);
-                      }}
-                      className="w-full text-left p-2 rounded-lg bg-[#042819] hover:bg-[#063821] text-emerald-200 hover:text-white transition-colors flex items-center justify-between border border-[#094729] cursor-pointer"
-                    >
-                      <div>
-                        <strong className="block text-white text-xs">{user.name}</strong>
-                        <span className="text-[10px] text-[#f5cf72] font-mono">{user.roleLabel}</span>
-                      </div>
-                      <span className="text-[10px] font-mono bg-[#032014] px-2 py-0.5 rounded text-emerald-300 border border-[#0b4d2d]">
-                        PIN: {user.passcode}
-                      </span>
-                    </button>
-                  ))}
+            {/* Login Card */}
+            <div className="bg-[#032014] rounded-3xl p-7 sm:p-9 border border-[#0d5533] shadow-2xl space-y-6">
+              {loginError && (
+                <div className="p-3.5 rounded-xl bg-red-950/80 border border-red-500/40 text-red-200 text-xs flex items-start space-x-2 animate-in fade-in duration-200">
+                  <ShieldAlert className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                  <span>{loginError}</span>
                 </div>
               )}
-            </div>
 
-            {/* Back to Public Site */}
-            <div className="text-center pt-2">
-              <button
-                type="button"
-                onClick={() => onNavigate('home')}
-                className="text-xs text-emerald-400 hover:text-white flex items-center justify-center space-x-1 mx-auto cursor-pointer transition-colors"
-              >
-                <ArrowRight className="w-3.5 h-3.5 rotate-180 text-[#c99726]" />
-                <span>Return to Public Website</span>
-              </button>
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-mono font-semibold uppercase text-emerald-200 mb-1.5">
+                    Staff Email or Assigned Name
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      required
+                      value={loginEmail}
+                      onChange={(e) => setLoginEmail(e.target.value)}
+                      placeholder="e.g. shepherd@wisdomtemple.org"
+                      className="w-full px-4 py-3 bg-[#02170e] border border-[#0b4d2d] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726] placeholder-emerald-400/40"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between items-center mb-1.5">
+                    <label className="block text-xs font-mono font-semibold uppercase text-emerald-200">
+                      Security Passcode or PIN
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="text-[11px] text-[#f5cf72] hover:underline flex items-center space-x-1 cursor-pointer"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-3.5 h-3.5" />
+                      ) : (
+                        <Eye className="w-3.5 h-3.5" />
+                      )}
+                      <span>{showPassword ? "Hide" : "Reveal"}</span>
+                    </button>
+                  </div>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      required
+                      value={loginPasscode}
+                      onChange={(e) => setLoginPasscode(e.target.value)}
+                      placeholder="Enter security PIN"
+                      className="w-full px-4 py-3 bg-[#02170e] border border-[#0b4d2d] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726] placeholder-emerald-400/40 font-mono tracking-wider"
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-2 flex flex-col gap-2">
+                  <button
+                    type="submit"
+                    className="w-full py-3.5 rounded-lg bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center justify-center space-x-2 cursor-pointer"
+                  >
+                    <Key className="w-4 h-4" />
+                    <span>Authenticate & Enter Portal</span>
+                  </button>
+                </div>
+              </form>
+
+              {/* Back to Public Site */}
+              <div className="text-center pt-2">
+                <button
+                  type="button"
+                  onClick={() => onNavigate("home")}
+                  className="text-xs text-emerald-400 hover:text-white flex items-center justify-center space-x-1 mx-auto cursor-pointer transition-colors"
+                >
+                  <ArrowRight className="w-3.5 h-3.5 rotate-180 text-[#c99726]" />
+                  <span>Return to Public Website</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     );
   }
 
@@ -632,7 +826,12 @@ export const AdminView: React.FC<AdminViewProps> = ({
       <header className="bg-[#01140b] border-b border-[#084c2e] text-white py-3 px-4 sm:px-6 lg:px-8 sticky top-0 z-30 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <ICGCLogo size="sm" variant="horizontal" theme="dark" forceWhite={true} />
+            <ICGCLogo
+              size="sm"
+              variant="horizontal"
+              theme="dark"
+              forceWhite={true}
+            />
             <span className="hidden sm:inline-block h-4 w-px bg-[#0b4d2d]" />
             <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-[#042819] text-[#f5cf72] text-[10px] font-mono font-bold tracking-wider border border-[#c99726]/30">
               <Lock className="w-3 h-3 text-[#c99726]" />
@@ -643,7 +842,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
           <div className="flex items-center space-x-3">
             <button
               type="button"
-              onClick={() => onNavigate('home')}
+              onClick={() => onNavigate("home")}
               className="px-3.5 py-1.5 rounded-xl bg-[#032416] hover:bg-[#05321f] text-emerald-200 hover:text-white border border-[#084c2e] text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer"
             >
               <ArrowRight className="w-3.5 h-3.5 rotate-180 text-[#c99726]" />
@@ -666,7 +865,9 @@ export const AdminView: React.FC<AdminViewProps> = ({
                 Wisdom Temple Church Administration
               </h1>
               <p className="text-xs text-emerald-200/80 mt-1 max-w-2xl">
-                Restricted portal for church records, treasury reconciliation, event passes, pastoral intercession petitions, and authorized staff management.
+                Restricted portal for church records, treasury reconciliation,
+                event passes, pastoral intercession petitions, and authorized
+                staff management.
               </p>
             </div>
 
@@ -677,9 +878,15 @@ export const AdminView: React.FC<AdminViewProps> = ({
                   <UserCheck className="w-4 h-4 text-[#c99726]" />
                 </div>
                 <div>
-                  <span className="text-[10px] text-emerald-400 block font-mono">AUTHENTICATED OFFICER</span>
-                  <strong className="text-white text-xs block leading-tight">{currentStaff.name}</strong>
-                  <span className="text-[10px] text-[#f5cf72] font-mono">({currentStaff.roleLabel})</span>
+                  <span className="text-[10px] text-emerald-400 block font-mono">
+                    AUTHENTICATED OFFICER
+                  </span>
+                  <strong className="text-white text-xs block leading-tight">
+                    {currentStaff.name}
+                  </strong>
+                  <span className="text-[10px] text-[#f5cf72] font-mono">
+                    ({currentStaff.roleLabel})
+                  </span>
                 </div>
               </div>
 
@@ -713,7 +920,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
               <button
                 type="button"
-                onClick={() => onNavigate('home')}
+                onClick={() => onNavigate("home")}
                 className="px-3.5 py-2.5 rounded-xl bg-[#032014] hover:bg-[#052b1b] text-emerald-300 hover:text-white border border-[#084c2e] text-xs font-semibold transition-all flex items-center space-x-1 cursor-pointer"
               >
                 <span>Public Site</span>
@@ -727,12 +934,12 @@ export const AdminView: React.FC<AdminViewProps> = ({
             {/* Top Spotlight Cards: Content Writings & Banners Media */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
               {/* Card 1: Site Writings & Copy */}
-              <div 
-                onClick={() => setActiveTab('content')}
+              <div
+                onClick={() => setActiveTab("content")}
                 className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between group relative overflow-hidden ${
-                  activeTab === 'content'
-                    ? 'bg-[#063821] border-[#c99726] shadow-lg ring-2 ring-[#c99726]/40'
-                    : 'bg-[#032014] border-[#084c2e] hover:border-[#c99726]/60 hover:bg-[#042819]'
+                  activeTab === "content"
+                    ? "bg-[#063821] border-[#c99726] shadow-lg ring-2 ring-[#c99726]/40"
+                    : "bg-[#032014] border-[#084c2e] hover:border-[#c99726]/60 hover:bg-[#042819]"
                 }`}
               >
                 <div className="flex items-center space-x-3.5">
@@ -741,13 +948,16 @@ export const AdminView: React.FC<AdminViewProps> = ({
                   </div>
                   <div>
                     <div className="flex items-center space-x-2">
-                      <span className="text-sm font-bold text-white font-serif-title">Site Writings & Page Copy</span>
+                      <span className="text-sm font-bold text-white font-serif-title">
+                        Site Writings & Page Copy
+                      </span>
                       <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c99726] text-[#021a10] font-mono">
                         50+ Fields
                       </span>
                     </div>
                     <p className="text-xs text-emerald-200/80 mt-0.5">
-                      Edit all headlines, pastoral themes, bio, mission, service times & MoMo accounts
+                      Edit all headlines, pastoral themes, bio, mission, service
+                      times & MoMo accounts
                     </p>
                   </div>
                 </div>
@@ -758,12 +968,12 @@ export const AdminView: React.FC<AdminViewProps> = ({
               </div>
 
               {/* Card 2: Banners & Visual Media */}
-              <div 
-                onClick={() => setActiveTab('banners')}
+              <div
+                onClick={() => setActiveTab("banners")}
                 className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between group relative overflow-hidden ${
-                  activeTab === 'banners'
-                    ? 'bg-[#063821] border-[#c99726] shadow-lg ring-2 ring-[#c99726]/40'
-                    : 'bg-[#032014] border-[#084c2e] hover:border-[#c99726]/60 hover:bg-[#042819]'
+                  activeTab === "banners"
+                    ? "bg-[#063821] border-[#c99726] shadow-lg ring-2 ring-[#c99726]/40"
+                    : "bg-[#032014] border-[#084c2e] hover:border-[#c99726]/60 hover:bg-[#042819]"
                 }`}
               >
                 <div className="flex items-center space-x-3.5">
@@ -772,13 +982,16 @@ export const AdminView: React.FC<AdminViewProps> = ({
                   </div>
                   <div>
                     <div className="flex items-center space-x-2">
-                      <span className="text-sm font-bold text-white font-serif-title">Banners & Card Media</span>
+                      <span className="text-sm font-bold text-white font-serif-title">
+                        Banners & Card Media
+                      </span>
                       <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c99726] text-[#021a10] font-mono">
                         22 Slots
                       </span>
                     </div>
                     <p className="text-xs text-emerald-200/80 mt-0.5">
-                      Upload & replace hero background, flyers, ministries & page header graphics
+                      Upload & replace hero background, flyers, ministries &
+                      page header graphics
                     </p>
                   </div>
                 </div>
@@ -791,73 +1004,97 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
             {/* Department Quick Counters Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-              <div 
-                onClick={() => setActiveTab('giving')}
+              <div
+                onClick={() => setActiveTab("giving")}
                 className={`p-3 rounded-xl border transition-all cursor-pointer ${
-                  activeTab === 'giving' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+                  activeTab === "giving"
+                    ? "bg-[#063821] border-[#c99726]"
+                    : "bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40"
                 }`}
               >
-                <span className="text-[11px] text-emerald-300 font-mono block">💰 Giving Logs</span>
+                <span className="text-[11px] text-emerald-300 font-mono block">
+                  💰 Giving Logs
+                </span>
                 <strong className="text-lg sm:text-xl font-bold text-[#f5cf72] font-mono">
                   {givingRecords.length}
                 </strong>
               </div>
 
-              <div 
-                onClick={() => setActiveTab('events')}
+              <div
+                onClick={() => setActiveTab("events")}
                 className={`p-3 rounded-xl border transition-all cursor-pointer ${
-                  activeTab === 'events' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+                  activeTab === "events"
+                    ? "bg-[#063821] border-[#c99726]"
+                    : "bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40"
                 }`}
               >
-                <span className="text-[11px] text-emerald-300 font-mono block">🎟️ Event Passes</span>
+                <span className="text-[11px] text-emerald-300 font-mono block">
+                  🎟️ Event Passes
+                </span>
                 <strong className="text-lg sm:text-xl font-bold text-[#f5cf72] font-mono">
                   {eventRegistrations.length}
                 </strong>
               </div>
 
-              <div 
-                onClick={() => setActiveTab('prayers')}
+              <div
+                onClick={() => setActiveTab("prayers")}
                 className={`p-3 rounded-xl border transition-all cursor-pointer ${
-                  activeTab === 'prayers' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+                  activeTab === "prayers"
+                    ? "bg-[#063821] border-[#c99726]"
+                    : "bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40"
                 }`}
               >
-                <span className="text-[11px] text-emerald-300 font-mono block">🙏 Prayer Altar</span>
+                <span className="text-[11px] text-emerald-300 font-mono block">
+                  🙏 Prayer Altar
+                </span>
                 <strong className="text-lg sm:text-xl font-bold text-[#f5cf72] font-mono">
                   {prayerRequests.length}
                 </strong>
               </div>
 
-              <div 
-                onClick={() => setActiveTab('visits')}
+              <div
+                onClick={() => setActiveTab("visits")}
                 className={`p-3 rounded-xl border transition-all cursor-pointer ${
-                  activeTab === 'visits' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+                  activeTab === "visits"
+                    ? "bg-[#063821] border-[#c99726]"
+                    : "bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40"
                 }`}
               >
-                <span className="text-[11px] text-emerald-300 font-mono block">👥 Guest Visits</span>
+                <span className="text-[11px] text-emerald-300 font-mono block">
+                  👥 Guest Visits
+                </span>
                 <strong className="text-lg sm:text-xl font-bold text-[#f5cf72] font-mono">
                   {visitPlans.length}
                 </strong>
               </div>
 
-              <div 
-                onClick={() => setActiveTab('messages')}
+              <div
+                onClick={() => setActiveTab("messages")}
                 className={`p-3 rounded-xl border transition-all cursor-pointer ${
-                  activeTab === 'messages' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+                  activeTab === "messages"
+                    ? "bg-[#063821] border-[#c99726]"
+                    : "bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40"
                 }`}
               >
-                <span className="text-[11px] text-emerald-300 font-mono block">✉️ Inquiries</span>
+                <span className="text-[11px] text-emerald-300 font-mono block">
+                  ✉️ Inquiries
+                </span>
                 <strong className="text-lg sm:text-xl font-bold text-[#f5cf72] font-mono">
                   {contactMessages.length}
                 </strong>
               </div>
 
-              <div 
-                onClick={() => setActiveTab('staff')}
+              <div
+                onClick={() => setActiveTab("staff")}
                 className={`p-3 rounded-xl border transition-all cursor-pointer ${
-                  activeTab === 'staff' ? 'bg-[#063821] border-[#c99726]' : 'bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40'
+                  activeTab === "staff"
+                    ? "bg-[#063821] border-[#c99726]"
+                    : "bg-[#042819] border-[#084c2e] hover:border-[#c99726]/40"
                 }`}
               >
-                <span className="text-[11px] text-emerald-300 font-mono block">🛡️ Staff Access</span>
+                <span className="text-[11px] text-emerald-300 font-mono block">
+                  🛡️ Staff Access
+                </span>
                 <strong className="text-lg sm:text-xl font-bold text-[#f5cf72] font-mono">
                   {staffUsers.length}
                 </strong>
@@ -871,62 +1108,83 @@ export const AdminView: React.FC<AdminViewProps> = ({
       <div className="bg-white border-b border-[#d6e5dc] sticky top-0 z-20 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 py-3">
-            
             {/* Mobile / Compact Dropdown Selector */}
             <div className="lg:hidden flex items-center space-x-2">
-              <span className="text-xs font-bold text-slate-500 uppercase font-mono">Tab:</span>
+              <span className="text-xs font-bold text-slate-500 uppercase font-mono">
+                Tab:
+              </span>
               <select
                 value={activeTab}
                 onChange={(e) => setActiveTab(e.target.value as any)}
                 className="w-full px-3.5 py-2 rounded-xl bg-slate-100 border border-slate-300 text-xs font-bold text-[#032014] focus:ring-2 focus:ring-[#c99726]"
               >
-                <option value="content">📝 Site Writings & Page Copy (50+ Fields)</option>
-                <option value="banners">🖼️ Banners & Card Media (22 Slots)</option>
-                <option value="giving">💰 Giving & MoMo Reconciliation ({givingRecords.length})</option>
-                <option value="events">🎟️ Event Passes & RSVPs ({eventRegistrations.length})</option>
-                <option value="prayers">🙏 Prayer Altar Petitions ({prayerRequests.length})</option>
-                <option value="visits">👥 Guest Visits & Welcomes ({visitPlans.length})</option>
-                <option value="messages">✉️ Contact Inquiries ({contactMessages.length})</option>
-                <option value="staff">🛡️ Staff & Security PINs ({staffUsers.length})</option>
+                <option value="content">
+                  📝 Site Writings & Page Copy (50+ Fields)
+                </option>
+                <option value="banners">
+                  🖼️ Banners & Card Media (22 Slots)
+                </option>
+                <option value="giving">
+                  💰 Giving & MoMo Reconciliation ({givingRecords.length})
+                </option>
+                <option value="events">
+                  🎟️ Event Passes & RSVPs ({eventRegistrations.length})
+                </option>
+                <option value="prayers">
+                  🙏 Prayer Altar Petitions ({prayerRequests.length})
+                </option>
+                <option value="visits">
+                  👥 Guest Visits & Welcomes ({visitPlans.length})
+                </option>
+                <option value="messages">
+                  ✉️ Contact Inquiries ({contactMessages.length})
+                </option>
+                <option value="staff">
+                  🛡️ Staff & Security PINs ({staffUsers.length})
+                </option>
               </select>
             </div>
 
             {/* Desktop Full Tab Bar */}
             <div className="hidden lg:flex flex-wrap items-center gap-1.5 text-xs font-bold">
               <button
-                onClick={() => setActiveTab('content')}
+                onClick={() => setActiveTab("content")}
                 className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
-                  activeTab === 'content'
-                    ? 'bg-[#032014] text-[#f5cf72] shadow-sm ring-1 ring-[#c99726]'
-                    : 'text-slate-700 hover:bg-[#eef6f1] hover:text-[#032014]'
+                  activeTab === "content"
+                    ? "bg-[#032014] text-[#f5cf72] shadow-sm ring-1 ring-[#c99726]"
+                    : "text-slate-700 hover:bg-[#eef6f1] hover:text-[#032014]"
                 }`}
               >
                 <Edit3 className="w-3.5 h-3.5 text-[#c99726]" />
                 <span>Writings & Copy</span>
-                <span className="ml-1 px-1.5 py-0.2 rounded-full bg-[#c99726] text-[#021a10] text-[10px]">50+</span>
+                <span className="ml-1 px-1.5 py-0.2 rounded-full bg-[#c99726] text-[#021a10] text-[10px]">
+                  50+
+                </span>
               </button>
 
               <button
-                onClick={() => setActiveTab('banners')}
+                onClick={() => setActiveTab("banners")}
                 className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
-                  activeTab === 'banners'
-                    ? 'bg-[#032014] text-[#f5cf72] shadow-sm ring-1 ring-[#c99726]'
-                    : 'text-slate-700 hover:bg-[#eef6f1] hover:text-[#032014]'
+                  activeTab === "banners"
+                    ? "bg-[#032014] text-[#f5cf72] shadow-sm ring-1 ring-[#c99726]"
+                    : "text-slate-700 hover:bg-[#eef6f1] hover:text-[#032014]"
                 }`}
               >
                 <ImageIcon className="w-3.5 h-3.5 text-[#c99726]" />
                 <span>Banners & Media</span>
-                <span className="ml-1 px-1.5 py-0.2 rounded-full bg-[#c99726] text-[#021a10] text-[10px]">22</span>
+                <span className="ml-1 px-1.5 py-0.2 rounded-full bg-[#c99726] text-[#021a10] text-[10px]">
+                  22
+                </span>
               </button>
 
               <span className="h-4 w-px bg-slate-200 mx-1" />
 
               <button
-                onClick={() => setActiveTab('giving')}
+                onClick={() => setActiveTab("giving")}
                 className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
-                  activeTab === 'giving'
-                    ? 'bg-[#032014] text-[#f5cf72] shadow-sm'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  activeTab === "giving"
+                    ? "bg-[#032014] text-[#f5cf72] shadow-sm"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                 }`}
               >
                 <DollarSign className="w-3.5 h-3.5" />
@@ -934,11 +1192,11 @@ export const AdminView: React.FC<AdminViewProps> = ({
               </button>
 
               <button
-                onClick={() => setActiveTab('events')}
+                onClick={() => setActiveTab("events")}
                 className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
-                  activeTab === 'events'
-                    ? 'bg-[#032014] text-[#f5cf72] shadow-sm'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  activeTab === "events"
+                    ? "bg-[#032014] text-[#f5cf72] shadow-sm"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                 }`}
               >
                 <Ticket className="w-3.5 h-3.5" />
@@ -946,11 +1204,11 @@ export const AdminView: React.FC<AdminViewProps> = ({
               </button>
 
               <button
-                onClick={() => setActiveTab('prayers')}
+                onClick={() => setActiveTab("prayers")}
                 className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
-                  activeTab === 'prayers'
-                    ? 'bg-[#032014] text-[#f5cf72] shadow-sm'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  activeTab === "prayers"
+                    ? "bg-[#032014] text-[#f5cf72] shadow-sm"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                 }`}
               >
                 <Heart className="w-3.5 h-3.5" />
@@ -958,11 +1216,11 @@ export const AdminView: React.FC<AdminViewProps> = ({
               </button>
 
               <button
-                onClick={() => setActiveTab('visits')}
+                onClick={() => setActiveTab("visits")}
                 className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
-                  activeTab === 'visits'
-                    ? 'bg-[#032014] text-[#f5cf72] shadow-sm'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  activeTab === "visits"
+                    ? "bg-[#032014] text-[#f5cf72] shadow-sm"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                 }`}
               >
                 <Users className="w-3.5 h-3.5" />
@@ -970,11 +1228,11 @@ export const AdminView: React.FC<AdminViewProps> = ({
               </button>
 
               <button
-                onClick={() => setActiveTab('messages')}
+                onClick={() => setActiveTab("messages")}
                 className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
-                  activeTab === 'messages'
-                    ? 'bg-[#032014] text-[#f5cf72] shadow-sm'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  activeTab === "messages"
+                    ? "bg-[#032014] text-[#f5cf72] shadow-sm"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                 }`}
               >
                 <Mail className="w-3.5 h-3.5" />
@@ -982,11 +1240,11 @@ export const AdminView: React.FC<AdminViewProps> = ({
               </button>
 
               <button
-                onClick={() => setActiveTab('staff')}
+                onClick={() => setActiveTab("staff")}
                 className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
-                  activeTab === 'staff'
-                    ? 'bg-[#032014] text-[#f5cf72] shadow-sm'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  activeTab === "staff"
+                    ? "bg-[#032014] text-[#f5cf72] shadow-sm"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                 }`}
               >
                 <Shield className="w-3.5 h-3.5" />
@@ -1006,7 +1264,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
               />
               {searchQuery && (
                 <button
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => setSearchQuery("")}
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -1019,11 +1277,10 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
       {/* Main Content Area */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-
         {/* =========================================================================
             TAB 1: GIVING & MOMO RECONCILIATION
             ========================================================================= */}
-        {activeTab === 'giving' && (
+        {activeTab === "giving" && (
           <div className="space-y-6">
             <div className="bg-white rounded-3xl p-6 border border-[#d6e5dc] shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-4">
               <div>
@@ -1032,12 +1289,16 @@ export const AdminView: React.FC<AdminViewProps> = ({
                   <span>Treasury & Giving Reconciliation Logs</span>
                 </h2>
                 <p className="text-xs text-slate-600 mt-0.5">
-                  Submissions from the digital giving portal with reference codes for cross-referencing against MTN MoMo / Bank statements.
+                  Submissions from the digital giving portal with reference
+                  codes for cross-referencing against MTN MoMo / Bank
+                  statements.
                 </p>
               </div>
               <button
                 type="button"
-                onClick={() => exportToCSV(givingRecords, 'Wisdom_Temple_Giving_Records')}
+                onClick={() =>
+                  exportToCSV(givingRecords, "Wisdom_Temple_Giving_Records")
+                }
                 className="px-3.5 py-2 bg-[#f0f7f3] hover:bg-[#e2f0e7] text-[#07472c] border border-[#c2decc] text-xs font-bold rounded-xl flex items-center space-x-1.5 cursor-pointer shrink-0"
               >
                 <FileSpreadsheet className="w-4 h-4 text-[#c99726]" />
@@ -1067,7 +1328,10 @@ export const AdminView: React.FC<AdminViewProps> = ({
                     </thead>
                     <tbody className="divide-y divide-[#edf4ef]">
                       {filteredGiving.map((record) => (
-                        <tr key={record.id} className="hover:bg-[#fbfdfc] transition-colors">
+                        <tr
+                          key={record.id}
+                          className="hover:bg-[#fbfdfc] transition-colors"
+                        >
                           <td className="py-3.5 px-4 font-mono text-slate-500 whitespace-nowrap">
                             {record.dateSubmitted}
                           </td>
@@ -1083,14 +1347,18 @@ export const AdminView: React.FC<AdminViewProps> = ({
                             {record.currency} {record.amount.toLocaleString()}
                           </td>
                           <td className="py-3.5 px-4">
-                            <div className="font-medium text-slate-800">{record.paymentMethod}</div>
-                            <div className="text-[11px] text-slate-500 font-mono">{record.phoneOrTxnId}</div>
+                            <div className="font-medium text-slate-800">
+                              {record.paymentMethod}
+                            </div>
+                            <div className="text-[11px] text-slate-500 font-mono">
+                              {record.phoneOrTxnId}
+                            </div>
                           </td>
                           <td className="py-3.5 px-4 font-mono font-bold text-[#c99726]">
                             {record.referenceCode}
                           </td>
                           <td className="py-3.5 px-4">
-                            {record.status === 'confirmed' ? (
+                            {record.status === "confirmed" ? (
                               <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
                                 <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                                 <span>Reconciled</span>
@@ -1105,10 +1373,19 @@ export const AdminView: React.FC<AdminViewProps> = ({
                           <td className="py-3.5 px-4 text-right">
                             <button
                               type="button"
-                              onClick={() => onUpdateGivingStatus(record.id, record.status === 'confirmed' ? 'pending-verification' : 'confirmed')}
+                              onClick={() =>
+                                onUpdateGivingStatus(
+                                  record.id,
+                                  record.status === "confirmed"
+                                    ? "pending-verification"
+                                    : "confirmed",
+                                )
+                              }
                               className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-[11px] transition-colors cursor-pointer"
                             >
-                              {record.status === 'confirmed' ? 'Mark Pending' : 'Mark Reconciled'}
+                              {record.status === "confirmed"
+                                ? "Mark Pending"
+                                : "Mark Reconciled"}
                             </button>
                           </td>
                         </tr>
@@ -1124,7 +1401,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
         {/* =========================================================================
             TAB 2: EVENT PASSES & SUMMIT REGISTRATIONS
             ========================================================================= */}
-        {activeTab === 'events' && (
+        {activeTab === "events" && (
           <div className="space-y-6">
             <div className="bg-white rounded-3xl p-6 border border-[#d6e5dc] shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-4">
               <div>
@@ -1133,12 +1410,18 @@ export const AdminView: React.FC<AdminViewProps> = ({
                   <span>Wisdom Summit & Church Event Passes</span>
                 </h2>
                 <p className="text-xs text-slate-600 mt-0.5">
-                  Digital reservation list of registered attendees and issued pass codes.
+                  Digital reservation list of registered attendees and issued
+                  pass codes.
                 </p>
               </div>
               <button
                 type="button"
-                onClick={() => exportToCSV(eventRegistrations, 'Wisdom_Temple_Event_Registrations')}
+                onClick={() =>
+                  exportToCSV(
+                    eventRegistrations,
+                    "Wisdom_Temple_Event_Registrations",
+                  )
+                }
                 className="px-3.5 py-2 bg-[#f0f7f3] hover:bg-[#e2f0e7] text-[#07472c] border border-[#c2decc] text-xs font-bold rounded-xl flex items-center space-x-1.5 cursor-pointer shrink-0"
               >
                 <FileSpreadsheet className="w-4 h-4 text-[#c99726]" />
@@ -1167,7 +1450,10 @@ export const AdminView: React.FC<AdminViewProps> = ({
                     </thead>
                     <tbody className="divide-y divide-[#edf4ef]">
                       {filteredRegistrations.map((reg) => (
-                        <tr key={reg.id} className="hover:bg-[#fbfdfc] transition-colors">
+                        <tr
+                          key={reg.id}
+                          className="hover:bg-[#fbfdfc] transition-colors"
+                        >
                           <td className="py-3.5 px-4 font-mono text-slate-500 whitespace-nowrap">
                             {reg.dateRegistered}
                           </td>
@@ -1181,7 +1467,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                             {reg.phone}
                           </td>
                           <td className="py-3.5 px-4 text-slate-600">
-                            {reg.email || '—'}
+                            {reg.email || "—"}
                           </td>
                           <td className="py-3.5 px-4">
                             <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-800 font-mono font-bold text-[11px]">
@@ -1204,7 +1490,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
         {/* =========================================================================
             TAB 3: PRAYER ALTAR PETITIONS
             ========================================================================= */}
-        {activeTab === 'prayers' && (
+        {activeTab === "prayers" && (
           <div className="space-y-6">
             <div className="bg-white rounded-3xl p-6 border border-[#d6e5dc] shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-4">
               <div>
@@ -1213,12 +1499,15 @@ export const AdminView: React.FC<AdminViewProps> = ({
                   <span>Confidential Prayer Requests & Intercession</span>
                 </h2>
                 <p className="text-xs text-slate-600 mt-0.5">
-                  Member and visitor petitions placed upon the altar for pastoral and intercession team prayer.
+                  Member and visitor petitions placed upon the altar for
+                  pastoral and intercession team prayer.
                 </p>
               </div>
               <button
                 type="button"
-                onClick={() => exportToCSV(prayerRequests, 'Wisdom_Temple_Prayer_Petitions')}
+                onClick={() =>
+                  exportToCSV(prayerRequests, "Wisdom_Temple_Prayer_Petitions")
+                }
                 className="px-3.5 py-2 bg-[#f0f7f3] hover:bg-[#e2f0e7] text-[#07472c] border border-[#c2decc] text-xs font-bold rounded-xl flex items-center space-x-1.5 cursor-pointer shrink-0"
               >
                 <FileSpreadsheet className="w-4 h-4 text-[#c99726]" />
@@ -1233,11 +1522,16 @@ export const AdminView: React.FC<AdminViewProps> = ({
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {filteredPrayers.map((prayer) => (
-                  <div key={prayer.id} className="bg-white rounded-3xl p-5 border border-[#d6e5dc] shadow-sm space-y-3">
+                  <div
+                    key={prayer.id}
+                    className="bg-white rounded-3xl p-5 border border-[#d6e5dc] shadow-sm space-y-3"
+                  >
                     <div className="flex items-start justify-between">
                       <div>
                         <div className="flex items-center space-x-2">
-                          <strong className="text-sm text-[#032014] font-bold">{prayer.fullName}</strong>
+                          <strong className="text-sm text-[#032014] font-bold">
+                            {prayer.fullName}
+                          </strong>
                           {prayer.isConfidential && (
                             <span className="px-2 py-0.5 bg-red-50 text-red-700 text-[10px] font-bold rounded-full border border-red-200">
                               Confidential
@@ -1245,16 +1539,21 @@ export const AdminView: React.FC<AdminViewProps> = ({
                           )}
                         </div>
                         <span className="text-[11px] text-slate-400 font-mono block mt-0.5">
-                          {prayer.dateSubmitted} • Category: <strong className="text-[#07472c]">{prayer.category}</strong>
+                          {prayer.dateSubmitted} • Category:{" "}
+                          <strong className="text-[#07472c]">
+                            {prayer.category}
+                          </strong>
                         </span>
                       </div>
-                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                        prayer.status === 'prayed'
-                          ? 'bg-emerald-100 text-emerald-800'
-                          : prayer.status === 'new'
-                          ? 'bg-amber-100 text-amber-800'
-                          : 'bg-slate-100 text-slate-600'
-                      }`}>
+                      <span
+                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                          prayer.status === "prayed"
+                            ? "bg-emerald-100 text-emerald-800"
+                            : prayer.status === "new"
+                              ? "bg-amber-100 text-amber-800"
+                              : "bg-slate-100 text-slate-600"
+                        }`}
+                      >
                         {prayer.status.toUpperCase()}
                       </span>
                     </div>
@@ -1265,15 +1564,23 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
                     <div className="flex items-center justify-between pt-1 text-[11px]">
                       <div className="text-slate-500 font-mono">
-                        Phone: {prayer.phone || 'N/A'} {prayer.wantsFollowup && '• (Wants Call)'}
+                        Phone: {prayer.phone || "N/A"}{" "}
+                        {prayer.wantsFollowup && "• (Wants Call)"}
                       </div>
                       <div className="flex items-center space-x-2">
                         <button
                           type="button"
-                          onClick={() => onUpdatePrayerStatus(prayer.id, prayer.status === 'prayed' ? 'new' : 'prayed')}
+                          onClick={() =>
+                            onUpdatePrayerStatus(
+                              prayer.id,
+                              prayer.status === "prayed" ? "new" : "prayed",
+                            )
+                          }
                           className="px-2.5 py-1 rounded-lg bg-[#eef6f1] hover:bg-[#e0eee4] text-[#07472c] font-bold transition-colors cursor-pointer"
                         >
-                          {prayer.status === 'prayed' ? 'Mark New' : 'Mark Prayed'}
+                          {prayer.status === "prayed"
+                            ? "Mark New"
+                            : "Mark Prayed"}
                         </button>
                       </div>
                     </div>
@@ -1287,7 +1594,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
         {/* =========================================================================
             TAB 4: GUEST VISITS & HOSTING
             ========================================================================= */}
-        {activeTab === 'visits' && (
+        {activeTab === "visits" && (
           <div className="space-y-6">
             <div className="bg-white rounded-3xl p-6 border border-[#d6e5dc] shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-4">
               <div>
@@ -1296,12 +1603,15 @@ export const AdminView: React.FC<AdminViewProps> = ({
                   <span>First-Time Guest Connect Plans</span>
                 </h2>
                 <p className="text-xs text-slate-600 mt-0.5">
-                  Submissions from the "I'm New Here" plan-a-visit portal for protocol and ushering teams.
+                  Submissions from the "I'm New Here" plan-a-visit portal for
+                  protocol and ushering teams.
                 </p>
               </div>
               <button
                 type="button"
-                onClick={() => exportToCSV(visitPlans, 'Wisdom_Temple_Visitor_Connect_Plans')}
+                onClick={() =>
+                  exportToCSV(visitPlans, "Wisdom_Temple_Visitor_Connect_Plans")
+                }
                 className="px-3.5 py-2 bg-[#f0f7f3] hover:bg-[#e2f0e7] text-[#07472c] border border-[#c2decc] text-xs font-bold rounded-xl flex items-center space-x-1.5 cursor-pointer shrink-0"
               >
                 <FileSpreadsheet className="w-4 h-4 text-[#c99726]" />
@@ -1316,10 +1626,15 @@ export const AdminView: React.FC<AdminViewProps> = ({
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {filteredVisits.map((visit) => (
-                  <div key={visit.id} className="bg-white rounded-3xl p-5 border border-[#d6e5dc] shadow-sm space-y-3">
+                  <div
+                    key={visit.id}
+                    className="bg-white rounded-3xl p-5 border border-[#d6e5dc] shadow-sm space-y-3"
+                  >
                     <div className="flex items-start justify-between">
                       <div>
-                        <strong className="text-sm text-[#032014] font-bold block">{visit.fullName}</strong>
+                        <strong className="text-sm text-[#032014] font-bold block">
+                          {visit.fullName}
+                        </strong>
                         <span className="text-[11px] text-slate-400 font-mono">
                           Visiting: {visit.serviceDate} ({visit.serviceTime})
                         </span>
@@ -1331,12 +1646,20 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       <div className="p-2.5 bg-slate-50 rounded-xl">
-                        <span className="text-[10px] text-slate-400 uppercase font-mono block">Party Size</span>
-                        <strong className="text-slate-800">{visit.adultsCount} Adults, {visit.childrenCount} Kids</strong>
+                        <span className="text-[10px] text-slate-400 uppercase font-mono block">
+                          Party Size
+                        </span>
+                        <strong className="text-slate-800">
+                          {visit.adultsCount} Adults, {visit.childrenCount} Kids
+                        </strong>
                       </div>
                       <div className="p-2.5 bg-slate-50 rounded-xl">
-                        <span className="text-[10px] text-slate-400 uppercase font-mono block">Phone</span>
-                        <strong className="text-slate-800 font-mono">{visit.phone}</strong>
+                        <span className="text-[10px] text-slate-400 uppercase font-mono block">
+                          Phone
+                        </span>
+                        <strong className="text-slate-800 font-mono">
+                          {visit.phone}
+                        </strong>
                       </div>
                     </div>
 
@@ -1347,13 +1670,24 @@ export const AdminView: React.FC<AdminViewProps> = ({
                     )}
 
                     <div className="flex items-center justify-between pt-1 text-[11px]">
-                      <span className="text-slate-400 font-mono">Submitted: {visit.dateSubmitted}</span>
+                      <span className="text-slate-400 font-mono">
+                        Submitted: {visit.dateSubmitted}
+                      </span>
                       <button
                         type="button"
-                        onClick={() => onUpdateVisitStatus(visit.id, visit.status === 'welcomed' ? 'planned' : 'welcomed')}
+                        onClick={() =>
+                          onUpdateVisitStatus(
+                            visit.id,
+                            visit.status === "welcomed"
+                              ? "planned"
+                              : "welcomed",
+                          )
+                        }
                         className="px-2.5 py-1 rounded-lg bg-[#eef6f1] hover:bg-[#e0eee4] text-[#07472c] font-bold transition-colors cursor-pointer"
                       >
-                        {visit.status === 'welcomed' ? 'Mark Planned' : 'Mark Welcomed'}
+                        {visit.status === "welcomed"
+                          ? "Mark Planned"
+                          : "Mark Welcomed"}
                       </button>
                     </div>
                   </div>
@@ -1366,7 +1700,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
         {/* =========================================================================
             TAB 5: INQUIRIES & MESSAGES
             ========================================================================= */}
-        {activeTab === 'messages' && (
+        {activeTab === "messages" && (
           <div className="space-y-6">
             <div className="bg-white rounded-3xl p-6 border border-[#d6e5dc] shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-4">
               <div>
@@ -1375,12 +1709,18 @@ export const AdminView: React.FC<AdminViewProps> = ({
                   <span>General Church Inquiries & Messages</span>
                 </h2>
                 <p className="text-xs text-slate-600 mt-0.5">
-                  Secretariat correspondence received via the website contact form.
+                  Secretariat correspondence received via the website contact
+                  form.
                 </p>
               </div>
               <button
                 type="button"
-                onClick={() => exportToCSV(contactMessages, 'Wisdom_Temple_Contact_Inquiries')}
+                onClick={() =>
+                  exportToCSV(
+                    contactMessages,
+                    "Wisdom_Temple_Contact_Inquiries",
+                  )
+                }
                 className="px-3.5 py-2 bg-[#f0f7f3] hover:bg-[#e2f0e7] text-[#07472c] border border-[#c2decc] text-xs font-bold rounded-xl flex items-center space-x-1.5 cursor-pointer shrink-0"
               >
                 <FileSpreadsheet className="w-4 h-4 text-[#c99726]" />
@@ -1395,15 +1735,26 @@ export const AdminView: React.FC<AdminViewProps> = ({
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {filteredMessages.map((msg) => (
-                  <div key={msg.id} className="bg-white rounded-3xl p-5 border border-[#d6e5dc] shadow-sm space-y-3">
+                  <div
+                    key={msg.id}
+                    className="bg-white rounded-3xl p-5 border border-[#d6e5dc] shadow-sm space-y-3"
+                  >
                     <div className="flex items-start justify-between">
                       <div>
-                        <strong className="text-sm text-[#032014] font-bold block">{msg.fullName}</strong>
-                        <span className="text-[11px] text-slate-500 font-mono">{msg.email} • {msg.phone}</span>
+                        <strong className="text-sm text-[#032014] font-bold block">
+                          {msg.fullName}
+                        </strong>
+                        <span className="text-[11px] text-slate-500 font-mono">
+                          {msg.email} • {msg.phone}
+                        </span>
                       </div>
-                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                        msg.status === 'replied' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
-                      }`}>
+                      <span
+                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                          msg.status === "replied"
+                            ? "bg-emerald-100 text-emerald-800"
+                            : "bg-amber-100 text-amber-800"
+                        }`}
+                      >
                         {msg.status.toUpperCase()}
                       </span>
                     </div>
@@ -1417,13 +1768,22 @@ export const AdminView: React.FC<AdminViewProps> = ({
                     </div>
 
                     <div className="flex items-center justify-between pt-1 text-[11px]">
-                      <span className="text-slate-400 font-mono">{msg.dateSubmitted}</span>
+                      <span className="text-slate-400 font-mono">
+                        {msg.dateSubmitted}
+                      </span>
                       <button
                         type="button"
-                        onClick={() => onUpdateMessageStatus(msg.id, msg.status === 'replied' ? 'unread' : 'replied')}
+                        onClick={() =>
+                          onUpdateMessageStatus(
+                            msg.id,
+                            msg.status === "replied" ? "unread" : "replied",
+                          )
+                        }
                         className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition-colors cursor-pointer"
                       >
-                        {msg.status === 'replied' ? 'Mark Unread' : 'Mark Replied'}
+                        {msg.status === "replied"
+                          ? "Mark Unread"
+                          : "Mark Replied"}
                       </button>
                     </div>
                   </div>
@@ -1436,7 +1796,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
         {/* =========================================================================
             TAB 6: STAFF & DELEGATED ACCESS CONTROL ("ANYONE THEY PUT IN CHARGE")
             ========================================================================= */}
-        {activeTab === 'staff' && (
+        {activeTab === "staff" && (
           <div className="space-y-6">
             <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#d6e5dc] shadow-sm flex flex-col md:flex-row justify-between md:items-center gap-4">
               <div>
@@ -1448,7 +1808,10 @@ export const AdminView: React.FC<AdminViewProps> = ({
                   Authorized Church Staff & Leadership
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
-                  Only individuals appointed by church leadership are permitted into this portal. The Head Administrator can delegate access, appoint department leads (Treasury, Secretariat, Intercession, Protocol), and assign security PINs below.
+                  Only individuals appointed by church leadership are permitted
+                  into this portal. The Head Administrator can delegate access,
+                  appoint department leads (Treasury, Secretariat, Intercession,
+                  Protocol), and assign security PINs below.
                 </p>
               </div>
 
@@ -1467,52 +1830,62 @@ export const AdminView: React.FC<AdminViewProps> = ({
             {/* Roster of Authorized Staff */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredStaff.map((staff) => (
-                <div 
-                  key={staff.id} 
+                <div
+                  key={staff.id}
                   className={`bg-white rounded-3xl p-5 border transition-all shadow-sm space-y-4 relative ${
-                    staff.isActive ? 'border-[#d6e5dc]' : 'border-red-200 bg-red-50/20'
+                    staff.isActive
+                      ? "border-[#d6e5dc]"
+                      : "border-red-200 bg-red-50/20"
                   }`}
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <strong className="text-base font-bold text-[#032014] block">{staff.name}</strong>
-                      <span className="text-xs text-[#07472c] font-semibold block">{staff.roleLabel}</span>
-                      <span className="text-[11px] text-slate-400 font-mono mt-0.5 block">{staff.email}</span>
+                      <strong className="text-base font-bold text-[#032014] block">
+                        {staff.name}
+                      </strong>
+                      <span className="text-xs text-[#07472c] font-semibold block">
+                        {staff.roleLabel}
+                      </span>
+                      <span className="text-[11px] text-slate-400 font-mono mt-0.5 block">
+                        {staff.email}
+                      </span>
                     </div>
 
-                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono ${
-                      staff.isActive ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
-                    }`}>
-                      {staff.isActive ? 'ACTIVE' : 'SUSPENDED'}
+                    <span
+                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono ${
+                        staff.isActive
+                          ? "bg-emerald-100 text-emerald-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {staff.isActive ? "ACTIVE" : "SUSPENDED"}
                     </span>
                   </div>
 
                   <div className="p-3 bg-[#f8faf8] rounded-2xl border border-[#edf4ef] space-y-1.5 text-xs">
                     <div className="flex justify-between items-center">
-                      <span className="text-[11px] text-slate-500 font-mono">Assigned Security PIN:</span>
+                      <span className="text-[11px] text-slate-500 font-mono">
+                        Password storage:
+                      </span>
                       <div className="flex items-center space-x-1.5 font-mono">
                         <span className="font-bold text-[#032014] bg-white px-2 py-0.5 rounded border border-slate-200">
-                          {revealedPasscodes[staff.id] ? staff.passcode : '••••'}
+                          Hashed on server
                         </span>
-                        <button
-                          type="button"
-                          onClick={() => toggleRevealPasscode(staff.id)}
-                          className="text-slate-400 hover:text-slate-700 cursor-pointer p-0.5"
-                          title="Reveal / Mask PIN"
-                        >
-                          {revealedPasscodes[staff.id] ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                        </button>
                       </div>
                     </div>
 
                     <div className="flex justify-between items-center text-[11px] text-slate-500">
                       <span>Phone:</span>
-                      <span className="font-mono text-slate-700">{staff.phone || 'N/A'}</span>
+                      <span className="font-mono text-slate-700">
+                        {staff.phone || "N/A"}
+                      </span>
                     </div>
 
                     <div className="flex justify-between items-center text-[11px] text-slate-500">
                       <span>Date Appointed:</span>
-                      <span className="font-mono text-slate-700">{staff.dateAdded}</span>
+                      <span className="font-mono text-slate-700">
+                        {staff.dateAdded}
+                      </span>
                     </div>
                   </div>
 
@@ -1522,10 +1895,12 @@ export const AdminView: React.FC<AdminViewProps> = ({
                       type="button"
                       onClick={() => handleToggleStaffActive(staff.id)}
                       className={`font-semibold cursor-pointer text-[11px] transition-colors ${
-                        staff.isActive ? 'text-amber-700 hover:text-amber-900' : 'text-emerald-700 hover:text-emerald-900'
+                        staff.isActive
+                          ? "text-amber-700 hover:text-amber-900"
+                          : "text-emerald-700 hover:text-emerald-900"
                       }`}
                     >
-                      {staff.isActive ? 'Suspend Access' : 'Reactivate Access'}
+                      {staff.isActive ? "Suspend Access" : "Reactivate Access"}
                     </button>
 
                     <button
@@ -1550,33 +1925,49 @@ export const AdminView: React.FC<AdminViewProps> = ({
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
                 <div className="p-3 rounded-2xl bg-[#042819] border border-[#094729]">
-                  <strong className="text-[#f5cf72] block font-mono">1. Head Administrator (Senior Pastor)</strong>
+                  <strong className="text-[#f5cf72] block font-mono">
+                    1. Head Administrator (Senior Pastor)
+                  </strong>
                   <p className="text-[11px] text-emerald-200/80 mt-1 leading-relaxed">
-                    Full ecclesiastical authority: manage staff, export all church records, oversee treasury, alter altar prayer petitions.
+                    Full ecclesiastical authority: manage staff, export all
+                    church records, oversee treasury, alter altar prayer
+                    petitions.
                   </p>
                 </div>
                 <div className="p-3 rounded-2xl bg-[#042819] border border-[#094729]">
-                  <strong className="text-[#f5cf72] block font-mono">2. Treasury & Accounts (Finance Officer)</strong>
+                  <strong className="text-[#f5cf72] block font-mono">
+                    2. Treasury & Accounts (Finance Officer)
+                  </strong>
                   <p className="text-[11px] text-emerald-200/80 mt-1 leading-relaxed">
-                    Reconciles FirstFruit seeds, tithes, and offerings against MTN Mobile Money and CBG bank statements.
+                    Reconciles FirstFruit seeds, tithes, and offerings against
+                    MTN Mobile Money and CBG bank statements.
                   </p>
                 </div>
                 <div className="p-3 rounded-2xl bg-[#042819] border border-[#094729]">
-                  <strong className="text-[#f5cf72] block font-mono">3. Pastoral Intercession (Prayer Lead)</strong>
+                  <strong className="text-[#f5cf72] block font-mono">
+                    3. Pastoral Intercession (Prayer Lead)
+                  </strong>
                   <p className="text-[11px] text-emerald-200/80 mt-1 leading-relaxed">
-                    Access to altar petitions and confidential prayer requests for pastoral care and intercession nights.
+                    Access to altar petitions and confidential prayer requests
+                    for pastoral care and intercession nights.
                   </p>
                 </div>
                 <div className="p-3 rounded-2xl bg-[#042819] border border-[#094729]">
-                  <strong className="text-[#f5cf72] block font-mono">4. Secretariat & Front Desk</strong>
+                  <strong className="text-[#f5cf72] block font-mono">
+                    4. Secretariat & Front Desk
+                  </strong>
                   <p className="text-[11px] text-emerald-200/80 mt-1 leading-relaxed">
-                    Monitors website inquiries, Wisdom Summit event reservations, and general church correspondence.
+                    Monitors website inquiries, Wisdom Summit event
+                    reservations, and general church correspondence.
                   </p>
                 </div>
                 <div className="p-3 rounded-2xl bg-[#042819] border border-[#094729]">
-                  <strong className="text-[#f5cf72] block font-mono">5. Protocol & Ushers Directorate</strong>
+                  <strong className="text-[#f5cf72] block font-mono">
+                    5. Protocol & Ushers Directorate
+                  </strong>
                   <p className="text-[11px] text-emerald-200/80 mt-1 leading-relaxed">
-                    Manages "I'm New Here" guest visit plans, seating preparations, and special accommodations.
+                    Manages "I'm New Here" guest visit plans, seating
+                    preparations, and special accommodations.
                   </p>
                 </div>
               </div>
@@ -1587,14 +1978,14 @@ export const AdminView: React.FC<AdminViewProps> = ({
         {/* =========================================================================
             TAB 7: BANNERS & CARD MEDIA MANAGER
             ========================================================================= */}
-        {activeTab === 'banners' && (
+        {activeTab === "banners" && (
           <AdminBannerManager onNavigate={onNavigate} />
         )}
 
         {/* =========================================================================
             TAB 8: SITE WRITINGS & COPY MANAGER
             ========================================================================= */}
-        {activeTab === 'content' && (
+        {activeTab === "content" && (
           <AdminContentManager onNavigate={onNavigate} />
         )}
       </div>
@@ -1611,8 +2002,12 @@ export const AdminView: React.FC<AdminViewProps> = ({
                   <UserPlus className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-[#032014] font-serif-title">Appoint Authorized Staff</h3>
-                  <span className="text-[11px] text-slate-500 font-mono">Grant administrative portal access</span>
+                  <h3 className="text-lg font-bold text-[#032014] font-serif-title">
+                    Appoint Authorized Staff
+                  </h3>
+                  <span className="text-[11px] text-slate-500 font-mono">
+                    Grant administrative portal access
+                  </span>
                 </div>
               </div>
               <button
@@ -1626,7 +2021,9 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
             <form onSubmit={handleCreateStaff} className="space-y-4 text-xs">
               <div>
-                <label className="block text-[#032014] font-semibold uppercase mb-1">Full Name & Title *</label>
+                <label className="block text-[#032014] font-semibold uppercase mb-1">
+                  Full Name & Title *
+                </label>
                 <input
                   type="text"
                   required
@@ -1639,7 +2036,9 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[#032014] font-semibold uppercase mb-1">Official Email *</label>
+                  <label className="block text-[#032014] font-semibold uppercase mb-1">
+                    Official Email *
+                  </label>
                   <input
                     type="email"
                     required
@@ -1650,7 +2049,9 @@ export const AdminView: React.FC<AdminViewProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block text-[#032014] font-semibold uppercase mb-1">Phone Number</label>
+                  <label className="block text-[#032014] font-semibold uppercase mb-1">
+                    Phone Number
+                  </label>
                   <input
                     type="tel"
                     value={newStaffPhone}
@@ -1663,21 +2064,33 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[#032014] font-semibold uppercase mb-1">Assigned Role *</label>
+                  <label className="block text-[#032014] font-semibold uppercase mb-1">
+                    Assigned Role *
+                  </label>
                   <select
                     value={newStaffRole}
-                    onChange={(e) => setNewStaffRole(e.target.value as StaffRole)}
+                    onChange={(e) =>
+                      setNewStaffRole(e.target.value as StaffRole)
+                    }
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726]"
                   >
-                    <option value="super-admin">Head Administrator (Full Access)</option>
+                    <option value="super-admin">
+                      Head Administrator (Full Access)
+                    </option>
                     <option value="finance">Treasury & Accounts Officer</option>
-                    <option value="secretariat">Secretariat & Correspondence</option>
-                    <option value="pastoral">Pastoral Care & Prayer Lead</option>
+                    <option value="secretariat">
+                      Secretariat & Correspondence
+                    </option>
+                    <option value="pastoral">
+                      Pastoral Care & Prayer Lead
+                    </option>
                     <option value="protocol">Protocol & Guest Reception</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[#032014] font-semibold uppercase mb-1">Security PIN / Passcode *</label>
+                  <label className="block text-[#032014] font-semibold uppercase mb-1">
+                    Security PIN / Passcode *
+                  </label>
                   <input
                     type="text"
                     required
@@ -1720,7 +2133,9 @@ export const AdminView: React.FC<AdminViewProps> = ({
                 <div className="w-8 h-8 rounded-full bg-[#032014] text-[#f5cf72] flex items-center justify-center">
                   <Shield className="w-4 h-4" />
                 </div>
-                <h3 className="text-lg font-bold text-[#032014] font-serif-title">Staff Portal & Access Guide</h3>
+                <h3 className="text-lg font-bold text-[#032014] font-serif-title">
+                  Staff Portal & Access Guide
+                </h3>
               </div>
               <button
                 type="button"
@@ -1733,34 +2148,67 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
             <div className="space-y-4 text-xs sm:text-sm text-slate-700 leading-relaxed">
               <div className="flex items-start space-x-3">
-                <span className="w-6 h-6 rounded-full bg-[#032014] text-white flex items-center justify-center text-xs font-bold shrink-0">1</span>
+                <span className="w-6 h-6 rounded-full bg-[#032014] text-white flex items-center justify-center text-xs font-bold shrink-0">
+                  1
+                </span>
                 <div>
-                  <strong className="text-[#032014] block">Restricted Access Control:</strong>
-                  <span>This portal is completely hidden from regular members. Only appointed staff with recognized credentials and security PINs can unlock it.</span>
+                  <strong className="text-[#032014] block">
+                    Restricted Access Control:
+                  </strong>
+                  <span>
+                    This portal is completely hidden from regular members. Only
+                    appointed staff with recognized credentials and security
+                    PINs can unlock it.
+                  </span>
                 </div>
               </div>
 
               <div className="flex items-start space-x-3">
-                <span className="w-6 h-6 rounded-full bg-[#032014] text-white flex items-center justify-center text-xs font-bold shrink-0">2</span>
+                <span className="w-6 h-6 rounded-full bg-[#032014] text-white flex items-center justify-center text-xs font-bold shrink-0">
+                  2
+                </span>
                 <div>
-                  <strong className="text-[#032014] block">Delegating Access ("Anyone Put in Charge"):</strong>
-                  <span>Under the <strong>Staff & Access Control</strong> tab, the Head Administrator can appoint new officers (e.g. Treasury Officer, Intercession Lead, Secretariat) and assign customized PINs.</span>
+                  <strong className="text-[#032014] block">
+                    Delegating Access ("Anyone Put in Charge"):
+                  </strong>
+                  <span>
+                    Under the <strong>Staff & Access Control</strong> tab, the
+                    Head Administrator can appoint new officers (e.g. Treasury
+                    Officer, Intercession Lead, Secretariat) and assign
+                    customized PINs.
+                  </span>
                 </div>
               </div>
 
               <div className="flex items-start space-x-3">
-                <span className="w-6 h-6 rounded-full bg-[#032014] text-white flex items-center justify-center text-xs font-bold shrink-0">3</span>
+                <span className="w-6 h-6 rounded-full bg-[#032014] text-white flex items-center justify-center text-xs font-bold shrink-0">
+                  3
+                </span>
                 <div>
-                  <strong className="text-[#032014] block">1-Click CSV / Excel Export:</strong>
-                  <span>Click <strong>"Export to CSV"</strong> on any tab to download an offline spreadsheet for Microsoft Excel or Google Sheets.</span>
+                  <strong className="text-[#032014] block">
+                    1-Click CSV / Excel Export:
+                  </strong>
+                  <span>
+                    Click <strong>"Export to CSV"</strong> on any tab to
+                    download an offline spreadsheet for Microsoft Excel or
+                    Google Sheets.
+                  </span>
                 </div>
               </div>
 
               <div className="flex items-start space-x-3">
-                <span className="w-6 h-6 rounded-full bg-[#032014] text-white flex items-center justify-center text-xs font-bold shrink-0">4</span>
+                <span className="w-6 h-6 rounded-full bg-[#032014] text-white flex items-center justify-center text-xs font-bold shrink-0">
+                  4
+                </span>
                 <div>
-                  <strong className="text-[#032014] block">Locking the Portal:</strong>
-                  <span>When you finish your administrative duties, click <strong>"Lock Portal"</strong> at the top right to immediately lock the session.</span>
+                  <strong className="text-[#032014] block">
+                    Locking the Portal:
+                  </strong>
+                  <span>
+                    When you finish your administrative duties, click{" "}
+                    <strong>"Lock Portal"</strong> at the top right to
+                    immediately lock the session.
+                  </span>
                 </div>
               </div>
             </div>
