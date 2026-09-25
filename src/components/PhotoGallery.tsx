@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChurchPhoto } from '../types';
+import { galleryThumbnailUrl, optimizedImageUrl } from '../utils/optimizedImage';
 import { 
   X, 
   ChevronLeft, 
@@ -28,6 +29,7 @@ interface PhotoGalleryProps {
   onViewAll?: () => void;
   className?: string;
   theme?: 'dark' | 'light';
+  layout?: 'cards' | 'editorial';
 }
 
 const CATEGORIES = [
@@ -49,7 +51,8 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
   limit,
   onViewAll,
   className = "",
-  theme = 'dark'
+  theme = 'dark',
+  layout = 'cards'
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -253,7 +256,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
         </motion.div>
       )}
 
-      {/* Grid of Church Moments - High-end Editorial Showcase */}
+      {/* Grid of Church Moments */}
       {displayPhotos.length === 0 ? (
         <div className="text-center py-16 bg-[#032014]/80 rounded-3xl border border-[#c99726]/30 max-w-xl mx-auto p-8 shadow-xl backdrop-blur-md text-white">
           <Filter className="w-12 h-12 text-[#c99726]/60 mx-auto mb-3" />
@@ -269,7 +272,9 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-7xl mx-auto px-4">
+        <div className={layout === 'editorial'
+          ? 'grid grid-cols-2 md:grid-cols-4 auto-rows-[150px] sm:auto-rows-[190px] lg:auto-rows-[220px] gap-1.5 sm:gap-2 max-w-7xl mx-auto px-4 bg-[#07100c]'
+          : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-7xl mx-auto px-4'}>
           {displayPhotos.map((photo, index) => (
             <motion.div
               key={photo.id}
@@ -278,19 +283,26 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.05 }}
               whileHover={{ y: -6 }}
-              className="group relative rounded-3xl overflow-hidden bg-[#032215] border border-[#c99726]/30 hover:border-[#c99726] transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-[#c99726]/20 flex flex-col justify-between cursor-pointer"
+              className={layout === 'editorial'
+                ? `group relative overflow-hidden bg-[#032215] border border-[#07100c] cursor-pointer ${index % 7 === 0 ? 'col-span-2 row-span-2' : index % 5 === 0 ? 'row-span-2' : index % 3 === 0 ? 'col-span-2' : ''}`
+                : 'group relative rounded-3xl overflow-hidden bg-[#032215] border border-[#c99726]/30 hover:border-[#c99726] transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-[#c99726]/20 flex flex-col justify-between cursor-pointer'}
               onClick={() => {
                 const originalIndex = filteredPhotos.findIndex((p) => p.id === photo.id);
                 setActivePhotoIndex(originalIndex !== -1 ? originalIndex : 0);
               }}
             >
-              {/* Photo Area with 16:11 Aspect Proportion */}
-              <div className="relative w-full aspect-[16/11] overflow-hidden bg-black/40">
+              <div className={layout === 'editorial'
+                ? 'relative w-full h-full min-h-0 overflow-hidden bg-black/40'
+                : 'relative w-full aspect-[16/11] overflow-hidden bg-black/40'}>
                 <img
-                  src={photo.imageUrl}
+                  src={optimizedImageUrl(photo.imageUrl)}
                   alt={photo.title}
+                  width={1200}
+                  height={825}
+                  sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                   className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
                   loading="lazy"
+                  decoding="async"
                   onError={(e) => {
                     const target = e.currentTarget;
                     if (!target.src.includes('unsplash.com')) {
@@ -300,16 +312,23 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   referrerPolicy="no-referrer"
                 />
 
-                {/* Ambient Subtle Overlay */}
-                <div className="absolute inset-0 bg-black/40 pointer-events-none opacity-60 group-hover:opacity-40 transition-opacity" />
+                <div className={layout === 'editorial'
+                  ? 'absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent pointer-events-none opacity-75 group-hover:opacity-45 transition-opacity'
+                  : 'absolute inset-0 bg-black/40 pointer-events-none opacity-60 group-hover:opacity-40 transition-opacity'} />
 
                 {/* Floating Category Badge */}
-                <div className="absolute top-3.5 left-3.5 z-10">
+                <div className={layout === 'editorial' ? 'absolute inset-x-3 bottom-3 z-10' : 'absolute top-3.5 left-3.5 z-10'}>
                   <span className="px-3 py-1 rounded-full bg-[#02180e]/90 text-[#f5cf72] text-[10px] font-mono font-bold tracking-wider uppercase border border-[#c99726]/40 backdrop-blur-md shadow-md flex items-center space-x-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#c99726]" />
                     <span>{photo.category}</span>
                   </span>
                 </div>
+
+                {layout === 'editorial' && (
+                  <div className="absolute left-3 top-3 z-10 max-w-[85%] text-white">
+                    <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.18em] drop-shadow-md line-clamp-2">{photo.title}</span>
+                  </div>
+                )}
 
                 {/* Quick View / Lightbox Icon */}
                 <div className="absolute top-3.5 right-3.5 z-10 w-9 h-9 rounded-full bg-[#02180e]/85 backdrop-blur-md border border-[#c99726]/40 text-[#f5cf72] flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-[#c99726] group-hover:text-[#021a10] transition-all duration-300">
@@ -317,11 +336,10 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                 </div>
               </div>
 
-              {/* Solid Divider Line */}
-              <div className="h-[1px] w-full bg-white/10" />
+              {layout === 'cards' && <div className="h-[1px] w-full bg-white/10" />}
 
               {/* Lower Details Card */}
-              <div className="p-5 sm:p-6 bg-[#032215] flex-1 flex flex-col justify-between space-y-3">
+              <div className={layout === 'editorial' ? 'hidden' : 'p-5 sm:p-6 bg-[#032215] flex-1 flex flex-col justify-between space-y-3'}>
                 {/* Event and Date Header */}
                 <div className="space-y-1.5">
                   <div className="flex items-center space-x-2 text-xs text-[#f5cf72] font-semibold">
@@ -462,9 +480,12 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                 className="relative max-w-5xl max-h-[72vh] flex items-center justify-center"
               >
                 <img
-                  src={currentPhoto.imageUrl}
+                  src={optimizedImageUrl(currentPhoto.imageUrl)}
                   alt={currentPhoto.title}
+                  width={1200}
+                  height={825}
                   className="max-h-[70vh] max-w-full w-auto object-contain rounded-2xl shadow-2xl border border-white/15"
+                  decoding="async"
                   referrerPolicy="no-referrer"
                 />
               </motion.div>
@@ -523,9 +544,13 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                     }`}
                   >
                     <img
-                      src={thumb.imageUrl}
+                      src={galleryThumbnailUrl(thumb.imageUrl)}
                       alt={thumb.title}
+                      width={120}
+                      height={100}
                       className="w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
                       referrerPolicy="no-referrer"
                     />
                   </button>

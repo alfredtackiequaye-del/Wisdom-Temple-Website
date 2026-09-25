@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { optimizedImageUrl } from '../utils/optimizedImage';
 
 interface ICGCLogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -69,7 +70,7 @@ export const ICGCLogo: React.FC<ICGCLogoProps> = ({
     >
       {!imageError ? (
         <img
-          src={logoSrc}
+          src={optimizedImageUrl(logoSrc)}
           alt="Wisdom Temple Emblem"
           width={580}
           height={470}

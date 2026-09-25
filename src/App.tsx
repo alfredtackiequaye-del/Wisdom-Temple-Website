@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from "react";
+import React, { lazy, Suspense, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   PageId,
@@ -34,19 +34,19 @@ import { WhatsAppWidget } from "./components/WhatsAppWidget";
 import { ShareModal } from "./components/ShareModal";
 import { EventRegistrationModal } from "./components/EventRegistrationModal";
 
-// Views
-import { HomeView } from "./views/HomeView";
-import { AboutView } from "./views/AboutView";
-import { WatchListenView } from "./views/WatchListenView";
-import { GrowView } from "./views/GrowView";
-import { MinistriesView } from "./views/MinistriesView";
-import { EventsView } from "./views/EventsView";
-import { GalleryView } from "./views/GalleryView";
-import { NewHereView } from "./views/NewHereView";
-import { PrayerRequestView } from "./views/PrayerRequestView";
-import { GiveView } from "./views/GiveView";
-import { ContactView } from "./views/ContactView";
-import { AdminView } from "./views/AdminView";
+// Views are loaded only when their page is opened.
+const HomeView = lazy(() => import("./views/HomeView").then(({ HomeView }) => ({ default: HomeView })));
+const AboutView = lazy(() => import("./views/AboutView").then(({ AboutView }) => ({ default: AboutView })));
+const WatchListenView = lazy(() => import("./views/WatchListenView").then(({ WatchListenView }) => ({ default: WatchListenView })));
+const GrowView = lazy(() => import("./views/GrowView").then(({ GrowView }) => ({ default: GrowView })));
+const MinistriesView = lazy(() => import("./views/MinistriesView").then(({ MinistriesView }) => ({ default: MinistriesView })));
+const EventsView = lazy(() => import("./views/EventsView").then(({ EventsView }) => ({ default: EventsView })));
+const GalleryView = lazy(() => import("./views/GalleryView").then(({ GalleryView }) => ({ default: GalleryView })));
+const NewHereView = lazy(() => import("./views/NewHereView").then(({ NewHereView }) => ({ default: NewHereView })));
+const PrayerRequestView = lazy(() => import("./views/PrayerRequestView").then(({ PrayerRequestView }) => ({ default: PrayerRequestView })));
+const GiveView = lazy(() => import("./views/GiveView").then(({ GiveView }) => ({ default: GiveView })));
+const ContactView = lazy(() => import("./views/ContactView").then(({ ContactView }) => ({ default: ContactView })));
+const AdminView = lazy(() => import("./views/AdminView").then(({ AdminView }) => ({ default: AdminView })));
 
 // Local storage helper
 const loadFromStorage = <T,>(key: string, defaultValue: T): T => {
@@ -496,40 +496,42 @@ export default function App() {
   if (currentPage === "admin") {
     return (
       <div className="min-h-screen bg-[#f8faf8] font-sans antialiased text-slate-900 selection:bg-[#c99726] selection:text-[#021a10]">
-        <AdminView
-          initialTab={currentSubTab}
-          prayerRequests={prayerRequests}
-          visitPlans={visitPlans}
-          contactMessages={contactMessages}
-          givingRecords={givingRecords}
-          eventRegistrations={eventRegistrations}
-          events={events}
-          onUpdatePrayerStatus={(id, status) => {
-            setPrayerRequests((prev) =>
-              prev.map((p) => (p.id === id ? { ...p, status } : p)),
-            );
-            showToast("Prayer status updated");
-          }}
-          onUpdateVisitStatus={(id, status) => {
-            setVisitPlans((prev) =>
-              prev.map((v) => (v.id === id ? { ...v, status } : v)),
-            );
-            showToast("Visitor status updated");
-          }}
-          onUpdateMessageStatus={(id, status) => {
-            setContactMessages((prev) =>
-              prev.map((m) => (m.id === id ? { ...m, status } : m)),
-            );
-            showToast("Message status updated");
-          }}
-          onUpdateGivingStatus={(id, status) => {
-            setGivingRecords((prev) =>
-              prev.map((g) => (g.id === id ? { ...g, status } : g)),
-            );
-            showToast("Giving status updated");
-          }}
-          onNavigate={handleNavigate}
-        />
+        <Suspense fallback={<div className="min-h-screen" />}>
+          <AdminView
+            initialTab={currentSubTab}
+            prayerRequests={prayerRequests}
+            visitPlans={visitPlans}
+            contactMessages={contactMessages}
+            givingRecords={givingRecords}
+            eventRegistrations={eventRegistrations}
+            events={events}
+            onUpdatePrayerStatus={(id, status) => {
+              setPrayerRequests((prev) =>
+                prev.map((p) => (p.id === id ? { ...p, status } : p)),
+              );
+              showToast("Prayer status updated");
+            }}
+            onUpdateVisitStatus={(id, status) => {
+              setVisitPlans((prev) =>
+                prev.map((v) => (v.id === id ? { ...v, status } : v)),
+              );
+              showToast("Visitor status updated");
+            }}
+            onUpdateMessageStatus={(id, status) => {
+              setContactMessages((prev) =>
+                prev.map((m) => (m.id === id ? { ...m, status } : m)),
+              );
+              showToast("Message status updated");
+            }}
+            onUpdateGivingStatus={(id, status) => {
+              setGivingRecords((prev) =>
+                prev.map((g) => (g.id === id ? { ...g, status } : g)),
+              );
+              showToast("Giving status updated");
+            }}
+            onNavigate={handleNavigate}
+          />
+        </Suspense>
 
         {/* Standalone Admin Toast Alert */}
         {toastMessage && (
@@ -553,7 +555,8 @@ export default function App() {
 
       {/* Main Viewport Content */}
       <main className="flex-1">
-        <AnimatePresence mode="wait">
+        <Suspense fallback={<div className="min-h-[60vh]" />}>
+          <AnimatePresence mode="wait">
           <motion.div
             key={currentPage}
             initial={{ opacity: 0, y: 6 }}
@@ -645,7 +648,8 @@ export default function App() {
               />
             )}
           </motion.div>
-        </AnimatePresence>
+          </AnimatePresence>
+        </Suspense>
       </main>
 
       {/* Global Modals & Sticky Overlays */}

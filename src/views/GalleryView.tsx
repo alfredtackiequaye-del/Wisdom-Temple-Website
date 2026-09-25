@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { PhotoGallery } from '../components/PhotoGallery';
 import { ChurchPhoto, PageId } from '../types';
 import { useBanners } from '../utils/bannerManager';
-import { Camera, Sparkles, MapPin, Calendar, Users, ArrowLeft } from 'lucide-react';
+import { Camera, Church, MapPin, CalendarDays, ArrowLeft } from 'lucide-react';
 
 interface GalleryViewProps {
   photos: ChurchPhoto[];
@@ -12,6 +12,8 @@ interface GalleryViewProps {
 
 export const GalleryView: React.FC<GalleryViewProps> = ({ photos, onNavigate }) => {
   const { getBanner } = useBanners();
+  const serviceAndEventPhotos = photos.filter((photo) => photo.id !== 'photo-pastoral-shepherds');
+
   return (
     <div className="min-h-screen bg-[#02180e] text-white pb-24">
       {/* Hero Header */}
@@ -19,8 +21,8 @@ export const GalleryView: React.FC<GalleryViewProps> = ({ photos, onNavigate }) 
         {/* Background Ambient Header Image & Glow */}
         <div className="absolute inset-0 opacity-15 pointer-events-none">
           <img
-            src={getBanner('page_gallery_hero', 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1920&q=80')}
-            alt="Gallery Header"
+            src={getBanner('page_gallery_hero', 'https://images.unsplash.com/photo-1510525009512-ad7fc13eefab?auto=format&fit=crop&w=1920&q=80')}
+            alt="Congregation worshipping during a church service"
             className="w-full h-full object-cover"
           />
         </div>
@@ -40,31 +42,31 @@ export const GalleryView: React.FC<GalleryViewProps> = ({ photos, onNavigate }) 
             </button>
 
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#07472c] text-[#f5cf72] border border-[#c99726]/40 text-xs font-mono font-bold uppercase tracking-widest">
-              <Camera className="w-3.5 h-3.5 text-[#c99726]" />
-              <span>OFFICIAL CHURCH MEDIA ARCHIVE</span>
+              <Church className="w-3.5 h-3.5 text-[#c99726]" />
+              <span>CHURCH SERVICES & SPECIAL EVENTS</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black font-serif-title tracking-tight text-white">
-              Moments of <span className="text-[#f5cf72]">Faith</span> & Fellowship
+              Worship in <span className="text-[#f5cf72]">Focus</span>
             </h1>
 
             <p className="text-emerald-100/80 text-sm sm:text-base leading-relaxed max-w-2xl">
-              Witness the glory of God at work at Wisdom Temple. Browse high-resolution highlights from our Sunday celebrations, prophetic midweek altars, youth camps, and transformative annual leadership summits.
+              A dedicated visual record of life at Wisdom Temple, from Sunday celebration services and midweek prayer altars to youth gatherings, conferences, and the special events that bring our church family together.
             </p>
 
             {/* Quick Stats Pill Strip */}
             <div className="pt-4 flex flex-wrap gap-4 text-xs font-semibold text-emerald-200">
               <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/10">
-                <Sparkles className="w-4 h-4 text-[#f5cf72]" />
-                <span>{photos.length} Captured Moments</span>
+                <Camera className="w-4 h-4 text-[#f5cf72]" />
+                <span>{serviceAndEventPhotos.length} Service & Event Photos</span>
               </div>
               <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/10">
                 <MapPin className="w-4 h-4 text-[#c99726]" />
                 <span>Star Junction, Tabora - Accra</span>
               </div>
               <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/10">
-                <Users className="w-4 h-4 text-[#f5cf72]" />
-                <span>Charismatic Fellowship</span>
+                <CalendarDays className="w-4 h-4 text-[#f5cf72]" />
+                <span>Sunday, Midweek & Special Gatherings</span>
               </div>
             </div>
           </div>
@@ -74,10 +76,11 @@ export const GalleryView: React.FC<GalleryViewProps> = ({ photos, onNavigate }) 
       {/* Main Gallery Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
         <PhotoGallery
-          photos={photos}
-          title="Recent Church Events Gallery"
-          subtitle="Click on any moment to open the interactive high-resolution lightbox viewer with descriptions, keyboard navigation, and sharing."
+          photos={serviceAndEventPhotos}
+          title="Church Services & Special Events"
+          subtitle="Browse photographs from worship services, prayer gatherings, conferences, youth programs, and special church events. Select any photo to view it in full size."
           showFilters={true}
+          layout="editorial"
         />
       </section>
     </div>

@@ -1695,7 +1695,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
             <div className="rounded-xl overflow-hidden border border-white/10 bg-black">
               <img
-                src="/secret_place_banner.jpg"
+                src={getBanner(
+                  "secret_place_banner",
+                  "/secret_place_banner.jpg",
+                )}
                 alt="The Secret Place - Midweek Encounter"
                 className="w-full h-auto object-contain max-h-[75vh] mx-auto block"
                 referrerPolicy="no-referrer"

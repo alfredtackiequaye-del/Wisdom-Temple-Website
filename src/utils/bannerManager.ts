@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BannerConfig, BannerCategory } from '../types';
 import { PASTORAL_COUPLE_IMAGE } from '../assets/pastoralImage';
+import { optimizedImageUrl } from './optimizedImage';
 
 export const DEFAULT_BANNERS: BannerConfig[] = [
   // --- Hero & Main Homepage ---
@@ -615,6 +616,17 @@ const ALIAS_MAP: Record<string, string[]> = {
   'ministry_couples-marriage': ['ministry_couples', 'ministry_couples_marriage'],
 };
 
+const THEME_GROUPS: string[][] = [
+  ['new_breed_banner', 'ministry_young_adults', 'ministry_young-adults', 'ministry_youth', 'event_youth_summit', 'event_nextgen-youth-camp'],
+  ['event_secret_place_night', 'event_secret-place-allnight', 'secret_place_banner'],
+  ['event_couples_seminar', 'event_couples-marriage-seminar', 'ministry_couples', 'ministry_couples-marriage'],
+];
+
+export const getRelatedBannerIds = (bannerId: string): string[] => {
+  const normalizedId = bannerId.replace(/-/g, '_');
+  return THEME_GROUPS.find((group) => group.some((id) => id === bannerId || id.replace(/-/g, '_') === normalizedId)) || [bannerId];
+};
+
 /**
  * Get active URL for a single banner ID with normalized fallback & alias support
  */
@@ -657,7 +669,7 @@ export const getBannerUrl = (bannerId: string, fallbackUrl?: string): string => 
     }
   }
 
-  return fallbackUrl || defaultItem?.defaultUrl || '';
+  return optimizedImageUrl(fallbackUrl || defaultItem?.defaultUrl || '');
 };
 
 /**
@@ -673,11 +685,15 @@ export const saveBannerUrl = (bannerId: string, newUrl: string): BannerConfig[] 
     minute: '2-digit',
   });
 
-  // 1. Update In-Memory cache synchronously
-  IN_MEMORY_CACHE[bannerId] = {
-    currentUrl: cleanUrl,
-    updatedAt,
-  };
+  const affectedBannerIds = getRelatedBannerIds(bannerId);
+
+  // 1. Update every banner in the same visual theme synchronously
+  affectedBannerIds.forEach((id) => {
+    IN_MEMORY_CACHE[id] = {
+      currentUrl: cleanUrl,
+      updatedAt,
+    };
+  });
 
   // 2. Persist to LocalStorage
   try {
@@ -692,7 +708,9 @@ export const saveBannerUrl = (bannerId: string, newUrl: string): BannerConfig[] 
     try {
       const tx = db.transaction(IDB_STORE_NAME, 'readwrite');
       const store = tx.objectStore(IDB_STORE_NAME);
-      store.put({ id: bannerId, currentUrl: cleanUrl, updatedAt });
+      affectedBannerIds.forEach((id) => {
+        store.put({ id, currentUrl: cleanUrl, updatedAt });
+      });
     } catch (err) {
       console.error('Error writing to IndexedDB:', err);
     }
@@ -700,14 +718,14 @@ export const saveBannerUrl = (bannerId: string, newUrl: string): BannerConfig[] 
 
   // 4. Broadcast change event for all open views & tabs
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent(EVENT_KEY, { detail: { bannerId, newUrl: cleanUrl } }));
+    window.dispatchEvent(new CustomEvent(EVENT_KEY, { detail: { bannerId, affectedBannerIds, newUrl: cleanUrl } }));
   }
 
-  void fetch(`/api/admin/site-banners/${encodeURIComponent(bannerId)}`, {
+  void Promise.all(affectedBannerIds.map((id) => fetch(`/api/admin/site-banners/${encodeURIComponent(id)}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ url: cleanUrl }),
-  });
+  })));
 
   return loadAllBanners();
 };
@@ -716,7 +734,8 @@ export const saveBannerUrl = (bannerId: string, newUrl: string): BannerConfig[] 
  * Reset a single banner to its default asset
  */
 export const resetSingleBanner = (bannerId: string): BannerConfig[] => {
-  delete IN_MEMORY_CACHE[bannerId];
+  const affectedBannerIds = getRelatedBannerIds(bannerId);
+  affectedBannerIds.forEach((id) => delete IN_MEMORY_CACHE[id]);
 
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(IN_MEMORY_CACHE));
@@ -729,17 +748,17 @@ export const resetSingleBanner = (bannerId: string): BannerConfig[] => {
     try {
       const tx = db.transaction(IDB_STORE_NAME, 'readwrite');
       const store = tx.objectStore(IDB_STORE_NAME);
-      store.delete(bannerId);
+      affectedBannerIds.forEach((id) => store.delete(id));
     } catch (err) {
       console.error('Error deleting from IndexedDB:', err);
     }
   });
 
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent(EVENT_KEY, { detail: { bannerId, reset: true } }));
+    window.dispatchEvent(new CustomEvent(EVENT_KEY, { detail: { bannerId, affectedBannerIds, reset: true } }));
   }
 
-  void fetch(`/api/admin/site-banners/${encodeURIComponent(bannerId)}`, { method: 'DELETE' });
+  void Promise.all(affectedBannerIds.map((id) => fetch(`/api/admin/site-banners/${encodeURIComponent(id)}`, { method: 'DELETE' })));
 
   return loadAllBanners();
 };

@@ -7,7 +7,8 @@ import {
   resetSingleBanner, 
   resetAllBannersToDefault,
   exportBannersJson,
-  compressImageFile
+  compressImageFile,
+  getRelatedBannerIds,
 } from '../utils/bannerManager';
 import { 
   Image as ImageIcon, 
@@ -160,7 +161,12 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({ onNaviga
     }
 
     updateBanner(banner.id, newUrl.trim());
-    showToast(`✓ "${banner.name}" updated successfully and is now active across the main website!`);
+    const relatedCount = getRelatedBannerIds(banner.id).length;
+    showToast(
+      relatedCount > 1
+        ? `✓ "${banner.name}" updated across ${relatedCount} linked ${relatedCount === 2 ? 'banner' : 'banners'} with the same theme.`
+        : `✓ "${banner.name}" updated successfully and is now active across the main website!`,
+    );
   };
 
   // Handle Reset Single
