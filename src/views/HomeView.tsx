@@ -179,10 +179,21 @@ export const HomeView: React.FC<HomeViewProps> = ({
               }
             }}
             alt="Wisdom Temple Official Banner"
-            initial={prefersReducedMotion ? { scale: 1, opacity: 0.7 } : { scale: 1.12, opacity: 0.2 }}
-            animate={prefersReducedMotion ? { scale: 1, opacity: 0.7 } : { scale: [1.08, 1.12, 1.08], y: [0, -8, 0], opacity: 0.7 }}
+            initial={
+              prefersReducedMotion
+                ? { scale: 1, opacity: 0.7 }
+                : { scale: 1.12, opacity: 0.2 }
+            }
+            animate={
+              prefersReducedMotion
+                ? { scale: 1, opacity: 0.7 }
+                : { scale: [1.08, 1.12, 1.08], y: [0, -8, 0], opacity: 0.7 }
+            }
             transition={{
-              opacity: { duration: prefersReducedMotion ? 0 : 1.2, ease: "easeOut" },
+              opacity: {
+                duration: prefersReducedMotion ? 0 : 1.2,
+                ease: "easeOut",
+              },
               scale: {
                 duration: 18,
                 repeat: prefersReducedMotion ? 0 : Infinity,

@@ -1,70 +1,70 @@
-import React, { useState } from 'react';
-import { optimizedImageUrl } from '../utils/optimizedImage';
+import React, { useState } from "react";
+import { optimizedImageUrl } from "../utils/optimizedImage";
 
 interface ICGCLogoProps {
-  size?: 'sm' | 'md' | 'lg' | 'xl';
-  variant?: 'full' | 'emblem-only' | 'horizontal';
-  theme?: 'dark' | 'light' | 'gold';
+  size?: "sm" | "md" | "lg" | "xl";
+  variant?: "full" | "emblem-only" | "horizontal";
+  theme?: "dark" | "light" | "gold";
   className?: string;
   forceWhite?: boolean;
 }
 
 export const ICGCLogo: React.FC<ICGCLogoProps> = ({
-  size = 'md',
-  variant = 'horizontal',
-  theme = 'dark',
-  className = '',
+  size = "md",
+  variant = "horizontal",
+  theme = "dark",
+  className = "",
   forceWhite = true, // Default to pure white per user directive
 }) => {
-  const isLight = theme === 'light' && !forceWhite;
-  const isGold = theme === 'gold' && !forceWhite;
+  const isLight = theme === "light" && !forceWhite;
+  const isGold = theme === "gold" && !forceWhite;
 
   // Authentic pure white ICGC emblem assets for dark backgrounds
   const logoSrc = isLight
-    ? '/church_logo_trimmed.png'
+    ? "/church_logo_trimmed.png"
     : isGold
-      ? '/church_logo_gold.png'
-      : '/church_logo_white.png'; // Pure white emblem
+      ? "/church_logo_gold.png"
+      : "/church_logo_white.png"; // Pure white emblem
 
   const [imageError, setImageError] = useState(false);
 
   // Exact 580:470 (1.234) aspect ratio dimensions so emblem and full arc fit containers cleanly
   const getDimensions = () => {
     switch (size) {
-      case 'sm':
+      case "sm":
         return {
-          wrapper: 'h-8 w-10 aspect-[580/470]',
-          title: 'text-sm font-bold',
-          tagline: 'text-[8.5px]',
+          wrapper: "h-8 w-10 aspect-[580/470]",
+          title: "text-sm font-bold",
+          tagline: "text-[8.5px]",
         };
-      case 'lg':
+      case "lg":
         return {
-          wrapper: 'h-12 w-[60px] aspect-[580/470]',
-          title: 'text-xl font-bold',
-          tagline: 'text-[11px]',
+          wrapper: "h-12 w-[60px] aspect-[580/470]",
+          title: "text-xl font-bold",
+          tagline: "text-[11px]",
         };
-      case 'xl':
+      case "xl":
         return {
-          wrapper: 'h-16 w-[80px] aspect-[580/470]',
-          title: 'text-2xl font-bold',
-          tagline: 'text-[13px]',
+          wrapper: "h-16 w-[80px] aspect-[580/470]",
+          title: "text-2xl font-bold",
+          tagline: "text-[13px]",
         };
-      case 'md':
+      case "md":
       default:
         return {
-          wrapper: 'h-10 w-[50px] aspect-[580/470]',
-          title: 'text-base sm:text-lg font-bold',
-          tagline: 'text-[9.5px]',
+          wrapper: "h-10 w-[50px] aspect-[580/470]",
+          title: "text-base sm:text-lg font-bold",
+          tagline: "text-[9.5px]",
         };
     }
   };
 
   const dims = getDimensions();
   // Pure white fill for vector fallback
-  const svgFill = isLight ? '#063c24' : isGold ? '#f5cf72' : '#ffffff';
+  const svgFill = isLight ? "#063c24" : isGold ? "#f5cf72" : "#ffffff";
 
   const emblem = (
-    <div 
+    <div
       className={`relative flex items-center justify-center shrink-0 select-none ${dims.wrapper}`}
       title="Wisdom Temple"
     >
@@ -79,9 +79,9 @@ export const ICGCLogo: React.FC<ICGCLogoProps> = ({
           referrerPolicy="no-referrer"
         />
       ) : (
-        <svg 
-          viewBox="0 0 580 470" 
-          className="w-full h-full drop-shadow-sm transition-transform duration-200 group-hover:scale-105" 
+        <svg
+          viewBox="0 0 580 470"
+          className="w-full h-full drop-shadow-sm transition-transform duration-200 group-hover:scale-105"
           aria-hidden="true"
           fill="none"
         >
@@ -93,10 +93,10 @@ export const ICGCLogo: React.FC<ICGCLogoProps> = ({
           </defs>
 
           {/* Complete Orbital Ring (Back & Front seamless 3D perspective ellipse) */}
-          <path 
+          <path
             fillRule="evenodd"
             clipRule="evenodd"
-            d="M 20,360 A 270 92 0 1 0 560,360 A 270 92 0 1 0 20,360 Z M 58,360 A 232 70 0 1 1 522,360 A 232 70 0 1 1 58,360 Z" 
+            d="M 20,360 A 270 92 0 1 0 560,360 A 270 92 0 1 0 20,360 Z M 58,360 A 232 70 0 1 1 522,360 A 232 70 0 1 1 58,360 Z"
             fill={svgFill}
           />
 
@@ -119,19 +119,22 @@ export const ICGCLogo: React.FC<ICGCLogoProps> = ({
     </div>
   );
 
-  if (variant === 'emblem-only') {
-    return <div className={`inline-flex items-center ${className}`}>{emblem}</div>;
+  if (variant === "emblem-only") {
+    return (
+      <div className={`inline-flex items-center ${className}`}>{emblem}</div>
+    );
   }
 
   return (
     <div className={`flex items-center space-x-3 select-none ${className}`}>
       {emblem}
       <div className="flex flex-col justify-center">
-        <span className={`${dims.title} tracking-tight font-serif-title ${isLight ? 'text-[#063c24]' : 'text-white'}`}>
+        <span
+          className={`${dims.title} tracking-tight font-serif-title ${isLight ? "text-[#063c24]" : "text-white"}`}
+        >
           WISDOM TEMPLE
         </span>
       </div>
     </div>
   );
 };
-

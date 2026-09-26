@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "PORT=3001 tsx server.ts",
+    "dev": "HOST=0.0.0.0 PORT=3001 tsx server.ts",
     "build": "vite build",
-    "start": "PORT=3001 node server.ts",
+    "start": "HOST=0.0.0.0 PORT=3001 node server.ts",
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
