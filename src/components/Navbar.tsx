@@ -120,7 +120,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Desktop Navigation Links - Legacy Hills Church Streamlined Structure */}
-          <nav className="hidden xl:flex items-center space-x-1 lg:space-x-2 text-sm font-medium">
+          <nav className="hidden xl:flex items-center space-x-0.5 2xl:space-x-2 text-sm font-medium whitespace-nowrap">
             <button
               onClick={() => handleNavClick("home")}
               className={`px-3 py-2 rounded-md transition-all ${

@@ -332,7 +332,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   width={1200}
                   height={825}
                   sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                  className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
+                  className={`w-full h-full object-cover ${layout === "editorial" ? "object-top" : "object-center"} group-hover:scale-108 transition-transform duration-700 ease-out`}
                   loading="lazy"
                   decoding="async"
                   onError={(e) => {
@@ -357,23 +357,22 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                 <div
                   className={
                     layout === "editorial"
-                      ? "absolute inset-x-3 bottom-3 z-10"
+                      ? "absolute inset-x-3 bottom-3 z-10 flex flex-col items-start gap-1.5"
                       : "absolute top-3.5 left-3.5 z-10"
                   }
                 >
-                  <span className="px-3 py-1 rounded-full bg-[#02180e]/90 text-[#f5cf72] text-[10px] font-mono font-bold tracking-wider uppercase border border-[#c99726]/40 backdrop-blur-md shadow-md flex items-center space-x-1.5">
+                  {layout === "editorial" && (
+                    <span className="max-w-full px-2.5 py-1 rounded-md bg-[#02180e]/85 backdrop-blur-md border border-[#c99726]/25 text-white text-[10px] sm:text-xs font-bold uppercase tracking-[0.08em] sm:tracking-[0.14em] leading-snug shadow-md">
+                      <span className="line-clamp-2">{photo.title}</span>
+                    </span>
+                  )}
+                  <span
+                    className={`px-3 py-1 rounded-full bg-[#02180e]/90 text-[#f5cf72] text-[10px] font-mono font-bold tracking-wider uppercase border border-[#c99726]/40 backdrop-blur-md shadow-md items-center space-x-1.5 ${layout === "editorial" ? "hidden sm:flex" : "flex"}`}
+                  >
                     <span className="w-1.5 h-1.5 rounded-full bg-[#c99726]" />
                     <span>{photo.category}</span>
                   </span>
                 </div>
-
-                {layout === "editorial" && (
-                  <div className="absolute left-3 top-3 z-10 max-w-[85%] text-white">
-                    <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.18em] drop-shadow-md line-clamp-2">
-                      {photo.title}
-                    </span>
-                  </div>
-                )}
 
                 {/* Quick View / Lightbox Icon */}
                 <div className="absolute top-3.5 right-3.5 z-10 w-9 h-9 rounded-full bg-[#02180e]/85 backdrop-blur-md border border-[#c99726]/40 text-[#f5cf72] flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-[#c99726] group-hover:text-[#021a10] transition-all duration-300">
