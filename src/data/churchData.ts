@@ -141,7 +141,7 @@ export const INITIAL_SERMONS: Sermon[] = [
     summary:
       "Wisdom and knowledge shall be the stability of thy times. An apostolic address calling believers to rise with clarity and spiritual excellence.",
     thumbnail:
-      "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1200&q=80",
+      "/assets/optimized/open_bible.webp",
     audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
     videoEmbedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
   },
@@ -157,7 +157,7 @@ export const INITIAL_SERMONS: Sermon[] = [
     summary:
       "Unlocking divine intervention through sacrificial midnight supplication and authoritative declarations in the Holy Ghost.",
     thumbnail:
-      "https://images.unsplash.com/photo-1508672019048-805b876b67e2?auto=format&fit=crop&w=1200&q=80",
+      "/assets/optimized/open_bible.webp",
     audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
     videoEmbedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
   },
@@ -481,7 +481,7 @@ export const INITIAL_CHURCH_PHOTOS: ChurchPhoto[] = [
     category: "Worship & Prayer",
     date: "September 2026",
     imageUrl:
-      "https://images.unsplash.com/photo-1510525009512-ad7fc13eefab?auto=format&fit=crop&w=1200&q=80",
+      "/assets/optimized/hero_icgc_banner.webp",
     caption:
       "Congregants united in heartfelt praise and spiritual adoration during the 8:00 AM celebration service.",
     location: "Auditorium Sanctuary",
@@ -543,7 +543,7 @@ export const INITIAL_CHURCH_PHOTOS: ChurchPhoto[] = [
     category: "Worship & Prayer",
     date: "July 2026",
     imageUrl:
-      "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=1200&q=80",
     caption:
       "Vibrant celebratory songs and live instrumentation ushering God’s people into divine presence.",
     location: "Main Sanctuary",

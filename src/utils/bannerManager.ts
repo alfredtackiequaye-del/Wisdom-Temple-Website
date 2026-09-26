@@ -382,9 +382,9 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     categoryLabel: "Page Header Banners",
     location: "Events View (Top Header)",
     currentUrl:
-      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1920&q=80",
+      "/assets/optimized/church_council.webp",
     defaultUrl:
-      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1920&q=80",
+      "/assets/optimized/church_council.webp",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,
@@ -437,9 +437,9 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     categoryLabel: "Page Header Banners",
     location: "New Here View (Top Header)",
     currentUrl:
-      "https://images.unsplash.com/photo-1510525009512-ad7fc13eefab?auto=format&fit=crop&w=1920&q=80",
+      "/assets/optimized/hero_icgc_banner.webp",
     defaultUrl:
-      "https://images.unsplash.com/photo-1510525009512-ad7fc13eefab?auto=format&fit=crop&w=1920&q=80",
+      "/assets/optimized/hero_icgc_banner.webp",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,
@@ -473,9 +473,9 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     categoryLabel: "Page Header Banners",
     location: "Gallery View (Top Header)",
     currentUrl:
-      "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1920&q=80",
+      "/assets/optimized/hero_icgc_banner.webp",
     defaultUrl:
-      "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1920&q=80",
+      "/assets/optimized/hero_icgc_banner.webp",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,
@@ -509,9 +509,9 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     categoryLabel: "Page Header Banners",
     location: "Contact View (Top Header)",
     currentUrl:
-      "https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=1920&q=80",
+      "/assets/optimized/hero_icgc_banner.webp",
     defaultUrl:
-      "https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=1920&q=80",
+      "/assets/optimized/hero_icgc_banner.webp",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,

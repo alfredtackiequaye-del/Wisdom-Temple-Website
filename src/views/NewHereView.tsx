@@ -58,7 +58,7 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
       <section className="relative bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e] overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-15">
           <img
-            src={getBanner('page_newhere_hero', 'https://images.unsplash.com/photo-1510525009512-ad7fc13eefab?auto=format&fit=crop&w=1920&q=80')}
+            src={getBanner('page_newhere_hero', '/assets/optimized/hero_icgc_banner.webp')}
             alt="New Here Header"
             className="w-full h-full object-cover"
           />

@@ -8,6 +8,7 @@ import {
   Share2, 
   Ticket
 } from 'lucide-react';
+import { PosterImage } from '../components/PosterImage';
 
 interface EventsViewProps {
   events: ChurchEvent[];
@@ -41,7 +42,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
       <section className="relative bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e] overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-15">
           <img
-            src={getBanner('page_events_hero', 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1920&q=80')}
+            src={getBanner('page_events_hero', '/assets/optimized/church_council.webp')}
             alt="Events Header"
             className="w-full h-full object-cover"
           />
@@ -137,14 +138,13 @@ export const EventsView: React.FC<EventsViewProps> = ({
           {filteredEvents.map((event) => (
             <div
               key={event.id}
-              className="bg-white rounded-2xl border border-[#d6e5dc] overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+              className="group bg-white rounded-2xl border border-[#d6e5dc] overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
             >
               <div>
                 <div className="relative aspect-[16/9] bg-[#02180e] overflow-hidden">
-                  <img
+                  <PosterImage
                     src={getBanner('event_' + event.id, event.image)}
                     alt={event.name}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   />
                   <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#02180e]/90 backdrop-blur-md rounded text-[10px] font-bold text-[#f5cf72] border border-[#c99726]/40">
                     {event.category}

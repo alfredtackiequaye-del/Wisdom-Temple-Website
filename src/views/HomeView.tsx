@@ -4,14 +4,9 @@ import {
   PageId,
   Sermon,
   ChurchEvent,
-  Ministry,
-  PrayerRequest,
   Testimony,
-  ChurchPhoto,
 } from "../types";
-import { CHURCH_INFO, INITIAL_CHURCH_PHOTOS } from "../data/churchData";
-import { PASTORAL_COUPLE_IMAGE } from "../assets/pastoralImage";
-import { PhotoGallery } from "../components/PhotoGallery";
+import { CHURCH_INFO } from "../data/churchData";
 import { PastorsCorner } from "../components/PastorsCorner";
 import { useBanners } from "../utils/bannerManager";
 import { useSiteContent } from "../utils/contentManager";
@@ -25,62 +20,100 @@ import {
   Sparkles,
   Heart,
   Flame,
-  Shield,
-  Users,
   ChevronRight,
   CheckCircle2,
   Quote,
   Share2,
-  Lock,
   Youtube,
   ExternalLink,
   ZoomIn,
   X,
-  Phone,
-  Gift,
-  BookOpen,
-  Compass,
 } from "lucide-react";
+import { PosterImage } from "../components/PosterImage";
+
+interface ServiceSlot {
+  name: string;
+  day: number; // 0 = Sunday
+  time: string; // e.g. "8:00 AM"
+}
+
+const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+/** Next upcoming weekly service in Ghana time (GMT, no DST), or null if times can't be parsed. */
+const getNextService = (slots: ServiceSlot[], now = new Date()) => {
+  let best: { name: string; start: Date } | null = null;
+  for (const slot of slots) {
+    const match = slot.time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+    if (!match) continue;
+    const hours = (Number(match[1]) % 12) + (match[3].toUpperCase() === "PM" ? 12 : 0);
+    const start = new Date(now);
+    start.setUTCHours(hours, Number(match[2]), 0, 0);
+    start.setUTCDate(start.getUTCDate() + ((slot.day - now.getUTCDay() + 7) % 7));
+    // Treat a service as "now" for two hours after it starts.
+    if (start.getTime() + 2 * 3600_000 < now.getTime()) {
+      start.setUTCDate(start.getUTCDate() + 7);
+    }
+    if (!best || start < best.start) best = { name: slot.name, start };
+  }
+  if (!best) return null;
+  const msAway = best.start.getTime() - now.getTime();
+  const daysAway = Math.floor(
+    (Date.UTC(best.start.getUTCFullYear(), best.start.getUTCMonth(), best.start.getUTCDate()) -
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())) /
+      86_400_000,
+  );
+  const when =
+    msAway <= 0
+      ? "Happening now"
+      : daysAway === 0
+        ? "Today"
+        : daysAway === 1
+          ? "Tomorrow"
+          : DAY_NAMES[best.start.getUTCDay()];
+  const slot = slots.find((s) => s.name === best!.name)!;
+  return { name: best.name, label: msAway <= 0 ? when : `${when} · ${slot.time}` };
+};
 
 interface HomeViewProps {
   onNavigate: (page: PageId, subTab?: string) => void;
   sermons: Sermon[];
   events: ChurchEvent[];
-  ministries: Ministry[];
   testimonies: Testimony[];
   onPlayAudio: (sermon: Sermon) => void;
   onWatchVideo: (sermon: Sermon) => void;
   onRegisterEvent: (event: ChurchEvent) => void;
-  onSubmitPrayer: (
-    req: Omit<PrayerRequest, "id" | "dateSubmitted" | "status">,
-  ) => void;
   onShare: (title: string, desc: string) => void;
-  photos?: ChurchPhoto[];
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({
   onNavigate,
   sermons,
   events,
-  ministries,
   testimonies,
   onPlayAudio,
   onWatchVideo,
   onRegisterEvent,
-  onSubmitPrayer,
   onShare,
-  photos = INITIAL_CHURCH_PHOTOS,
 }) => {
   const { getBanner } = useBanners();
   const { content } = useSiteContent();
   const prefersReducedMotion = useReducedMotion();
+
+  // Placeholder testimonies (e.g. "[CHURCH MEMBER NAME]") are never shown publicly.
+  const publishedTestimonies = testimonies.filter(
+    (t) => t.approved && !/^\[.*\]$/.test(t.personName.trim()),
+  );
+
+  const nextService = getNextService([
+    { name: content.sundayServiceName, day: 0, time: content.sundayServiceTime },
+    { name: content.midweekServiceName, day: 3, time: content.midweekServiceTime },
+  ]);
 
   // Latest message
   const latestSermon = sermons[0];
   const featuredSummit = events.find((e) => e.isFeaturedSummit) || events[0];
   const [playLatestInline, setPlayLatestInline] = useState(false);
   const [flyerModalOpen, setFlyerModalOpen] = useState(false);
-  const [secretPlaceModalOpen, setSecretPlaceModalOpen] = useState(false);
 
   // Wisdom Summit Countdown Timer (Target: October 7, 2026)
   const [timeLeft, setTimeLeft] = useState({
@@ -109,42 +142,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
     return () => clearInterval(timer);
   }, []);
 
-  // Prayer form state
-  const [prayerName, setPrayerName] = useState("");
-  const [prayerEmail, setPrayerEmail] = useState("");
-  const [prayerPhone, setPrayerPhone] = useState("");
-  const [prayerText, setPrayerText] = useState("");
-  const [contactMe, setContactMe] = useState(false);
-  const [isPrivate] = useState(true);
-  const [prayerSubmitted, setPrayerSubmitted] = useState(false);
-
   // Testimony modal state
   const [showTestimonyModal, setShowTestimonyModal] = useState(false);
   const [testimonyName, setTestimonyName] = useState("");
   const [testimonyTitle, setTestimonyTitle] = useState("");
   const [testimonyContent, setTestimonyContent] = useState("");
   const [testimonySuccess, setTestimonySuccess] = useState(false);
-
-  const handlePrayerSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!prayerName.trim() || !prayerText.trim()) return;
-
-    onSubmitPrayer({
-      fullName: prayerName,
-      email: prayerEmail || "Not provided",
-      phone: prayerPhone || "Not provided",
-      category: "General Intercession",
-      requestText: prayerText,
-      wantsFollowup: contactMe,
-      isConfidential: isPrivate,
-    });
-
-    setPrayerSubmitted(true);
-    setPrayerName("");
-    setPrayerEmail("");
-    setPrayerPhone("");
-    setPrayerText("");
-  };
 
   const handleTestimonySubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -242,6 +245,19 @@ export const HomeView: React.FC<HomeViewProps> = ({
           >
             {content.heroSubtitle}
           </motion.p>
+          {nextService && (
+            <motion.p
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.75, delay: 0.74, ease: "easeOut" }}
+              className="sm:hidden mt-4 flex items-center gap-2 text-xs font-semibold text-[#f2d49b]"
+            >
+              <Clock className="h-3.5 w-3.5" />
+              <span>
+                Next: {nextService.name} · {nextService.label}
+              </span>
+            </motion.p>
+          )}
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 w-full mt-10">
@@ -276,14 +292,16 @@ export const HomeView: React.FC<HomeViewProps> = ({
           className="absolute right-5 sm:right-8 lg:right-10 bottom-8 hidden sm:flex items-center gap-3 rounded-2xl border border-white/25 bg-[#fdf9ee]/95 px-4 py-3 text-[#123426] shadow-[0_16px_38px_rgba(3,32,20,0.28)] backdrop-blur-md"
         >
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0a5c37] text-[#f5cf72]">
-            <MapPin className="h-4 w-4" />
+            {nextService ? <Clock className="h-4 w-4" /> : <MapPin className="h-4 w-4" />}
           </div>
           <div>
             <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[#b8861d]">
-              Visit Wisdom Temple
+              {nextService ? `Next · ${nextService.name}` : "Visit Wisdom Temple"}
             </span>
             <span className="block text-xs font-semibold">
-              {CHURCH_INFO.landmark}
+              {nextService
+                ? `${nextService.label} · ${CHURCH_INFO.landmark}`
+                : CHURCH_INFO.landmark}
             </span>
           </div>
         </motion.div>
@@ -393,250 +411,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 </button>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 2. FIRST-TIME VISITOR SECTION - Clean Architectural Design */}
-      {/* ========================================================================= */}
-      <section
-        className="py-24 bg-[#fbfcfb] border-b border-slate-200"
-        id="first-time-visitor"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="text-xs uppercase tracking-[0.25em] font-semibold text-[#76550f] mb-2">
-              {content.firstTimeVisitorEyebrow}
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-[#032014] font-serif tracking-tight">
-              {content.firstTimeVisitorTitle}
-            </h2>
-            <p className="text-slate-600 text-base sm:text-lg mt-3 leading-relaxed">
-              {content.firstTimeVisitorDesc}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Card 1: Guest Hospitality */}
-            <div className="bg-white rounded-xl overflow-hidden border border-slate-200 hover:border-[#c99726] shadow-sm transition-all flex flex-col justify-between group">
-              <div>
-                <div className="p-7 border-b border-slate-100">
-                  <div className="flex items-center justify-between mb-5">
-                    <div className="w-12 h-12 rounded-lg bg-[#031e13] text-[#dfb15b] flex items-center justify-center">
-                      <Users className="w-6 h-6 stroke-[2]" />
-                    </div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-[#76550f]">
-                      Guest Hospitality
-                    </span>
-                  </div>
-                  <h3 className="text-2xl font-serif font-bold text-[#032014] tracking-tight">
-                    Come As You Are
-                  </h3>
-                  <p className="text-slate-600 text-sm mt-2 leading-relaxed">
-                    A welcoming environment where you can encounter God and
-                    connect with people. No pretenses—just a warm, supportive
-                    charismatic community eager to walk with you.
-                  </p>
-                </div>
-
-                {/* Feature Highlights */}
-                <div className="p-7 space-y-3">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 block">
-                    What You'll Experience:
-                  </span>
-                  <div className="space-y-2.5 text-xs text-slate-700">
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 font-bold text-[10px]">
-                        ✓
-                      </div>
-                      <span className="font-medium text-slate-800">
-                        Dedicated greeting & hospitality team
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 font-bold text-[10px]">
-                        ✓
-                      </div>
-                      <span className="font-medium text-slate-800">
-                        Assisted compound parking & comfortable seating
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 font-bold text-[10px]">
-                        ✓
-                      </div>
-                      <span className="font-medium text-slate-800">
-                        Complimentary visitor gift pack & reception
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Button */}
-              <div className="p-7 pt-0">
-                <button
-                  onClick={() => onNavigate("new-here")}
-                  className="w-full py-3 px-4 bg-[#f8faf8] hover:bg-[#031e13] text-[#031e13] hover:text-white font-semibold text-xs tracking-wider uppercase rounded-lg border border-slate-200 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer"
-                >
-                  <span>Plan Your Sunday Visit</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Card 2: Worship & The Word */}
-            <div className="bg-white rounded-xl overflow-hidden border border-slate-200 hover:border-[#c99726] shadow-sm transition-all flex flex-col justify-between group">
-              <div>
-                <div className="p-7 border-b border-slate-100">
-                  <div className="flex items-center justify-between mb-5">
-                    <div className="w-12 h-12 rounded-lg bg-[#031e13] text-[#dfb15b] flex items-center justify-center">
-                      <Sparkles className="w-6 h-6 stroke-[2]" />
-                    </div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-[#76550f]">
-                      Worship & The Word
-                    </span>
-                  </div>
-                  <h3 className="text-2xl font-serif font-bold text-[#032014] tracking-tight">
-                    Experience God
-                  </h3>
-                  <p className="text-slate-600 text-sm mt-2 leading-relaxed">
-                    Transformative biblical teaching, intimate worship, and
-                    fervent prayer. Our services are rooted in charismatic
-                    truth, spiritual vitality, and practical wisdom for daily
-                    life.
-                  </p>
-                </div>
-
-                {/* Feature Highlights */}
-                <div className="p-7 space-y-3">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 block">
-                    What You'll Experience:
-                  </span>
-                  <div className="space-y-2.5 text-xs text-slate-700">
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 font-bold text-[10px]">
-                        ✓
-                      </div>
-                      <span className="font-medium text-slate-800">
-                        Practical, life-changing Bible preaching
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 font-bold text-[10px]">
-                        ✓
-                      </div>
-                      <span className="font-medium text-slate-800">
-                        Intimate praise & charismatic worship
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 font-bold text-[10px]">
-                        ✓
-                      </div>
-                      <span className="font-medium text-slate-800">
-                        The Secret Place midweek prayer service
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Button */}
-              <div className="p-7 pt-0">
-                <button
-                  onClick={() => onNavigate("watch-listen")}
-                  className="w-full py-3 px-4 bg-[#f8faf8] hover:bg-[#031e13] text-[#031e13] hover:text-white font-semibold text-xs tracking-wider uppercase rounded-lg border border-slate-200 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer"
-                >
-                  <span>Listen to Latest Messages</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Card 3: Family & Ministries */}
-            <div className="bg-white rounded-xl overflow-hidden border border-slate-200 hover:border-[#c99726] shadow-sm transition-all flex flex-col justify-between group">
-              <div>
-                <div className="p-7 border-b border-slate-100">
-                  <div className="flex items-center justify-between mb-5">
-                    <div className="w-12 h-12 rounded-lg bg-[#031e13] text-[#dfb15b] flex items-center justify-center">
-                      <Shield className="w-6 h-6 stroke-[2]" />
-                    </div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-[#76550f]">
-                      Family & Ministries
-                    </span>
-                  </div>
-                  <h3 className="text-2xl font-serif font-bold text-[#032014] tracking-tight">
-                    Find Your Place
-                  </h3>
-                  <p className="text-slate-600 text-sm mt-2 leading-relaxed">
-                    Discover opportunities to grow, serve, and become part of
-                    our generational church family. There is an active
-                    fellowship for every age and life stage.
-                  </p>
-                </div>
-
-                {/* Feature Highlights */}
-                <div className="p-7 space-y-3">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 block">
-                    Ministries for Everyone:
-                  </span>
-                  <div className="space-y-2.5 text-xs text-slate-700">
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 font-bold text-[10px]">
-                        ✓
-                      </div>
-                      <span className="font-medium text-slate-800">
-                        Men of Integrity & Precious Vessels Women
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 font-bold text-[10px]">
-                        ✓
-                      </div>
-                      <span className="font-medium text-slate-800">
-                        Destiny Generation Youth & Teens Network
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 font-bold text-[10px]">
-                        ✓
-                      </div>
-                      <span className="font-medium text-slate-800">
-                        King's Court safe & fun Children's Church
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Button */}
-              <div className="p-7 pt-0">
-                <button
-                  onClick={() => onNavigate("ministries")}
-                  className="w-full py-3 px-4 bg-[#f8faf8] hover:bg-[#031e13] text-[#031e13] hover:text-white font-semibold text-xs tracking-wider uppercase rounded-lg border border-slate-200 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer"
-                >
-                  <span>Explore All Ministries</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Visitor CTA */}
-          <div className="mt-14 text-center">
-            <button
-              onClick={() => onNavigate("new-here")}
-              className="inline-flex items-center space-x-2 px-8 py-3.5 bg-[#031e13] hover:bg-[#073623] text-white font-semibold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
-            >
-              <span>Register Your First Visit</span>
-              <ArrowRight className="w-4 h-4 text-[#dfb15b]" />
-            </button>
-            <p className="text-xs text-slate-500 mt-2.5">
-              Let us know in advance so our hospitality team can warmly receive
-              you and your family!
-            </p>
           </div>
         </div>
       </section>
@@ -784,113 +558,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* 4. PASTOR'S CORNER - WEEKLY PASTORAL MESSAGE & GREETING */}
       {/* ========================================================================= */}
       <PastorsCorner onNavigate={onNavigate} />
-
-      {/* ========================================================================= */}
-      {/* 5. THE SECRET PLACE (PROMOTIONAL MIDWEEK SECTION) - Solid Architectural Theme */}
-      {/* ========================================================================= */}
-      <section
-        className="py-20 bg-[#031e13] text-white relative border-b border-[#084c2e]"
-        id="the-secret-place"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Content */}
-            <div className="lg:col-span-7 space-y-6">
-              <div className="text-xs uppercase tracking-[0.25em] font-semibold text-[#dfb15b] flex items-center space-x-2">
-                <Flame className="w-4 h-4 text-[#dfb15b]" />
-                <span>Midweek Prayer Service</span>
-              </div>
-
-              <h2 className="text-4xl sm:text-5xl font-light text-white tracking-tight font-serif">
-                The Secret{" "}
-                <span className="font-normal text-[#dfb15b]">Place</span>
-              </h2>
-
-              <p className="text-xl sm:text-2xl text-[#dfb15b] font-serif font-light">
-                A Time of Prayer, Worship and Encounter
-              </p>
-
-              <p className="text-emerald-100/90 text-base leading-relaxed max-w-xl">
-                "He who dwells in the secret place of the Most High shall abide
-                under the shadow of the Almighty." (Psalm 91:1). Step away from
-                the busyness of the week into an atmosphere charged with
-                heartfelt intercession, prophetic guidance, and divine
-                breakthrough.
-              </p>
-
-              <div className="p-4 bg-[#02180e] rounded-xl border border-white/10 max-w-md space-y-2">
-                <div className="flex items-center space-x-3">
-                  <Calendar className="w-5 h-5 text-[#c99726]" />
-                  <div>
-                    <span className="text-xs text-emerald-300/70 uppercase">
-                      Service Schedule
-                    </span>
-                    <p className="text-base font-bold text-white">
-                      Every Wednesday at 7:00 PM
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-3 pt-2 border-t border-white/10">
-                  <MapPin className="w-5 h-5 text-[#c99726]" />
-                  <div>
-                    <span className="text-xs text-emerald-300/70 uppercase">
-                      Venue
-                    </span>
-                    <p className="text-sm text-emerald-200">
-                      Wisdom Temple Auditorium & Online
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <button
-                  onClick={() => onNavigate("prayer")}
-                  className="px-8 py-3.5 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer inline-flex items-center space-x-2 shadow-sm"
-                >
-                  <span>JOIN US AT THE ALTAR</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Right Card: The Official Secret Place Banner */}
-            <div className="lg:col-span-5 flex justify-center">
-              <div
-                onClick={() => setSecretPlaceModalOpen(true)}
-                className="group relative rounded-xl overflow-hidden border border-white/20 shadow-xl bg-black cursor-pointer max-w-sm sm:max-w-md w-full"
-                title="Click to enlarge Secret Place banner"
-              >
-                <img
-                  src={getBanner(
-                    "secret_place_banner",
-                    "/secret_place_banner.jpg",
-                  )}
-                  alt="The Secret Place - Midweek Encounter"
-                  className="w-full aspect-[4/3] object-cover object-top block"
-                  referrerPolicy="no-referrer"
-                />
-
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
-                  <span className="text-xs font-bold text-[#dfb15b] flex items-center space-x-1.5 bg-[#02180e] px-3.5 py-1.5 rounded-lg border border-white/20 shadow">
-                    <ZoomIn className="w-3.5 h-3.5" />
-                    <span>Click to Enlarge Banner</span>
-                  </span>
-                </div>
-
-                {/* Badge top corner */}
-                <div className="absolute top-3 right-3">
-                  <span className="px-2.5 py-1 bg-[#02180e]/90 text-[#dfb15b] border border-white/20 rounded-md text-[10px] font-bold flex items-center space-x-1">
-                    <Flame className="w-3 h-3 text-[#dfb15b]" />
-                    <span>MIDWEEK ALTAR</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ========================================================================= */}
       {/* 5. FEATURED ANNUAL EVENT: WISDOM SUMMIT 2026 */}
@@ -1055,10 +722,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
               >
                 <div>
                   <div className="relative aspect-[16/9] overflow-hidden bg-[#032014]">
-                    <img
+                    <PosterImage
                       src={getBanner("event_" + event.id, event.image)}
                       alt={event.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90"
                     />
                     <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#02180e]/90 text-[#f5cf72] rounded text-xs font-bold backdrop-blur-md border border-[#c99726]/30">
                       {event.category}
@@ -1107,399 +773,68 @@ export const HomeView: React.FC<HomeViewProps> = ({
       </section>
 
       {/* ========================================================================= */}
-      {/* 7. ABOUT THE CHURCH INTRO */}
-      {/* ========================================================================= */}
-      <section
-        className="py-20 bg-white border-b border-[#e0e9e3]"
-        id="about-intro"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-6 space-y-6">
-              <span className="text-xs font-bold tracking-widest text-[#07472c] uppercase bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc]">
-                ABOUT WISDOM TEMPLE
-              </span>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#032014] leading-tight font-serif-title">
-                Raising Leaders. <br />
-                Shaping Visions. <br />
-                Influencing Society.
-              </h2>
-              <p className="text-base sm:text-lg text-slate-700 leading-relaxed">
-                {CHURCH_INFO.description}
-              </p>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                As a vibrant charismatic church in Ghana, our heart is to build
-                believers who reflect Christ's character, excel in their careers
-                and callings, and bring transformative godly leadership to every
-                sphere of human endeavor.
-              </p>
-
-              <div className="flex flex-wrap gap-4 pt-2">
-                <button
-                  onClick={() => onNavigate("about")}
-                  className="px-6 py-3.5 bg-[#032014] hover:bg-[#063821] text-white font-bold text-sm rounded-xl transition-all cursor-pointer shadow-md border border-[#c99726]/30"
-                >
-                  LEARN MORE
-                </button>
-                <button
-                  onClick={() => onNavigate("about", "leadership")}
-                  className="px-6 py-3.5 bg-[#eef6f1] hover:bg-[#e0eee4] text-[#07472c] border border-[#c2decc] font-bold text-sm rounded-xl transition-all cursor-pointer"
-                >
-                  MEET OUR LEADERSHIP
-                </button>
-              </div>
-            </div>
-
-            <div className="lg:col-span-6 grid grid-cols-2 gap-4">
-              <div className="space-y-4">
-                <div className="rounded-2xl overflow-hidden aspect-[4/5] bg-slate-100">
-                  <img
-                    src="/open_bible.jpg"
-                    alt="Open Holy Bible - God's Word at Wisdom Temple"
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-                <div className="p-4 bg-[#eef6f1] border border-[#c2decc] rounded-2xl">
-                  <span className="text-xs text-[#07472c] font-bold uppercase block">
-                    Core Scripture
-                  </span>
-                  <p className="text-xs font-semibold text-[#032014] mt-1">
-                    "Wisdom is the principal thing; therefore get wisdom: and
-                    with all thy getting get understanding."
-                  </p>
-                  <span className="text-[10px] text-[#76550f] block mt-1 font-bold">
-                    Proverbs 4:7
-                  </span>
-                </div>
-              </div>
-
-              <div className="space-y-4 pt-8">
-                <div className="p-5 bg-[#032014] text-white rounded-2xl border border-[#084c2e] shadow-xl">
-                  <span className="text-[#f5cf72] font-serif-title font-bold text-xl block">
-                    Kingdom Heritage
-                  </span>
-                  <p className="text-xs text-emerald-200/80 mt-1 leading-relaxed">
-                    Committed to holistic human development: spiritual,
-                    intellectual, and socioeconomic transformation in Africa.
-                  </p>
-                </div>
-                <div
-                  onClick={() => onNavigate("about", "leadership")}
-                  className="rounded-2xl overflow-hidden aspect-[4/5] bg-[#02180e] relative border-2 border-[#c99726]/40 shadow-xl cursor-pointer group"
-                >
-                  <img
-                    src={getBanner("pastoral_couple", PASTORAL_COUPLE_IMAGE)}
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src =
-                        "/rev_gabriel_and_helena_dela.jpg";
-                    }}
-                    alt="Rev. Gabriel Dela and Lady Dr. Helena Dela - Shepherd and First Lady of Wisdom Temple"
-                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-black/40" />
-                  <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white bg-black/60 p-2.5 rounded-lg border border-white/10">
-                    <span className="text-[10px] text-[#dfb15b] uppercase tracking-wider block font-bold">
-                      SHEPHERD & FIRST LADY
-                    </span>
-                    <p className="text-xs sm:text-sm font-semibold font-serif leading-tight text-white mt-0.5">
-                      Rev. Gabriel Dela & Lady Dr. Helena Dela
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 8. MINISTRIES DIRECTORY PREVIEW */}
-      {/* ========================================================================= */}
-      <section
-        className="py-20 bg-[#f4f7f4] border-b border-[#e0e9e3]"
-        id="ministries-preview"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
-            <div>
-              <span className="text-xs font-bold tracking-widest text-[#07472c] uppercase bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc]">
-                SERVE & GROW TOGETHER
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-[#032014] mt-2 font-serif-title">
-                Our Ministries
-              </h2>
-            </div>
-            <button
-              onClick={() => onNavigate("ministries")}
-              className="inline-flex items-center space-x-1 text-sm font-semibold text-[#07472c] hover:text-[#0b643f] transition-colors"
-            >
-              <span>EXPLORE ALL MINISTRIES</span>
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {ministries.slice(0, 4).map((ministry) => (
-              <div
-                key={ministry.id}
-                className="bg-white rounded-2xl border border-[#d6e5dc] overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
-              >
-                <div>
-                  <div className="aspect-[16/10] bg-[#032014] overflow-hidden">
-                    <img
-                      src={getBanner("ministry_" + ministry.id, ministry.image)}
-                      alt={ministry.name}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="p-5 space-y-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#07472c]">
-                      {ministry.category}
-                    </span>
-                    <h3 className="text-base font-bold text-[#032014] font-serif-title line-clamp-1">
-                      {ministry.name}
-                    </h3>
-                    <p className="text-xs text-slate-600 line-clamp-3">
-                      {ministry.shortDescription}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-5 pt-0">
-                  <button
-                    onClick={() => onNavigate("ministries", ministry.id)}
-                    className="w-full py-2 bg-[#eef6f1] hover:bg-[#e0eee4] text-[#07472c] font-semibold text-xs rounded-lg transition-colors cursor-pointer border border-[#c2decc]"
-                  >
-                    Learn More
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 8. CHURCH LIFE & PHOTO GALLERY (LIGHTBOX ENABLED) */}
-      {/* ========================================================================= */}
-      <section
-        className="py-24 bg-[#02180e] text-white relative border-b border-[#084c2e]"
-        id="church-gallery"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <PhotoGallery
-            photos={photos}
-            title="Moments of Faith & Fellowship"
-            subtitle="Explore high-resolution highlights from our recent Sunday celebrations, prophetic prayer altars, youth camps, and annual leadership summits."
-            showFilters={true}
-            limit={6}
-            theme="dark"
-            onViewAll={() => onNavigate("gallery")}
-          />
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 9. PRAYER REQUEST SECTION - ICGC Forest & Gold Altar */}
-      {/* ========================================================================= */}
-      <section
-        className="py-20 bg-[#02180e] text-white relative border-b border-[#084c2e]"
-        id="prayer-request"
-      >
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10 space-y-3">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#dfb15b]">
-              PASTORAL CARE & INTERCESSION
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-light text-white font-serif">
-              HOW CAN WE{" "}
-              <span className="font-normal text-[#dfb15b]">PRAY FOR YOU?</span>
-            </h2>
-            <p className="text-base sm:text-lg text-emerald-200/80 max-w-xl mx-auto leading-relaxed">
-              Whatever you're facing, you don't have to face it alone. Share
-              your prayer request with us.
-            </p>
-          </div>
-
-          <div className="bg-[#032416] rounded-2xl border border-white/10 p-6 sm:p-10 shadow-xl">
-            {prayerSubmitted ? (
-              <div className="py-12 text-center space-y-4 animate-in zoom-in-95 duration-200">
-                <div className="w-16 h-16 rounded-full bg-[#c99726]/20 border border-[#c99726]/40 text-[#dfb15b] flex items-center justify-center mx-auto">
-                  <CheckCircle2 className="w-9 h-9" />
-                </div>
-                <h3 className="text-2xl font-bold text-white font-serif">
-                  Prayer Request Received
-                </h3>
-                <p className="text-sm text-emerald-200/80 max-w-md mx-auto leading-relaxed">
-                  Our pastoral intercessors and prayer team have received your
-                  request. We will bring it before God at our prayer altars.
-                </p>
-                <div className="pt-4">
-                  <button
-                    onClick={() => setPrayerSubmitted(false)}
-                    className="px-6 py-2.5 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg cursor-pointer transition-colors"
-                  >
-                    Submit Another Request
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <form onSubmit={handlePrayerSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-1.5">
-                      Your Name *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={prayerName}
-                      onChange={(e) => setPrayerName(e.target.value)}
-                      placeholder="e.g. Sister Abena"
-                      className="w-full px-4 py-3 bg-[#02180e] border border-[#084c2e] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726] placeholder-emerald-400/50"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-1.5">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      value={prayerEmail}
-                      onChange={(e) => setPrayerEmail(e.target.value)}
-                      placeholder="abena@example.com"
-                      className="w-full px-4 py-3 bg-[#02180e] border border-[#084c2e] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726] placeholder-emerald-400/50"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-1.5">
-                    Phone Number (Optional)
-                  </label>
-                  <input
-                    type="tel"
-                    value={prayerPhone}
-                    onChange={(e) => setPrayerPhone(e.target.value)}
-                    placeholder="e.g. +233 20 000 0000"
-                    className="w-full px-4 py-3 bg-[#02180e] border border-[#084c2e] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726] placeholder-emerald-400/50"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-1.5">
-                    Prayer Request *
-                  </label>
-                  <textarea
-                    rows={4}
-                    required
-                    value={prayerText}
-                    onChange={(e) => setPrayerText(e.target.value)}
-                    placeholder="Share your prayer need, health situation, family burden, or thanksgiving..."
-                    className="w-full px-4 py-3 bg-[#02180e] border border-[#084c2e] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726] placeholder-emerald-400/50"
-                  />
-                </div>
-
-                {/* Privacy Checkbox */}
-                <div className="space-y-2 pt-2 text-xs text-emerald-200/90">
-                  <label className="flex items-center space-x-2.5 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={contactMe}
-                      onChange={(e) => setContactMe(e.target.checked)}
-                      className="w-4 h-4 rounded border-[#084c2e] text-[#c99726] focus:ring-[#c99726]"
-                    />
-                    <span>
-                      I would like someone from the church to contact me.
-                    </span>
-                  </label>
-
-                  <div className="flex items-center space-x-1.5 text-[11px] text-emerald-300/70">
-                    <Lock className="w-3.5 h-3.5 text-[#c99726] shrink-0" />
-                    <span>
-                      Your request is kept strictly confidential among pastoral
-                      intercessors.
-                    </span>
-                  </div>
-                </div>
-
-                <div className="pt-3">
-                  <button
-                    type="submit"
-                    className="w-full py-3.5 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
-                  >
-                    SUBMIT PRAYER REQUEST
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
       {/* 10. TESTIMONIES SECTION */}
       {/* ========================================================================= */}
-      <section
-        className="py-20 bg-[#f4f7f4] border-b border-[#e0e9e3]"
-        id="testimonies"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-10 max-w-2xl">
-            <div>
-              <span className="text-[10px] font-bold tracking-[0.22em] text-[#07472c] uppercase">
-                TESTIMONIALS
-              </span>
-              <h2 className="text-4xl sm:text-5xl font-extrabold leading-[0.98] text-[#032014] mt-3 font-serif-title">
-                How lives are transformed through love, and faith.
-              </h2>
+      {publishedTestimonies.length > 0 && (
+        <section
+          className="py-20 bg-[#f4f7f4] border-b border-[#e0e9e3]"
+          id="testimonies"
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mb-10 max-w-2xl">
+              <div>
+                <span className="text-[10px] font-bold tracking-[0.22em] text-[#07472c] uppercase">
+                  TESTIMONIALS
+                </span>
+                <h2 className="text-4xl sm:text-5xl font-extrabold leading-[0.98] text-[#032014] mt-3 font-serif-title">
+                  How lives are transformed through love, and faith.
+                </h2>
+              </div>
             </div>
-          </div>
 
-          <div className="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {testimonies.map((item) => (
-              <div
-                key={item.id}
-                className="min-w-[min(86vw,330px)] sm:min-w-[350px] snap-start bg-white rounded-[22px] p-6 sm:p-7 border border-[#d6e5dc] shadow-sm flex flex-col justify-between min-h-[280px]"
-              >
-                <div className="space-y-3">
-                  <Quote className="w-8 h-8 text-[#07472c]/30" />
-                  <h3 className="text-base font-bold text-[#032014] font-serif-title">
-                    {item.title}
-                  </h3>
-                  <p className="text-slate-600 text-xs sm:text-sm leading-relaxed italic">
-                    "{item.testimony}"
-                  </p>
-                </div>
+            <div className="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {publishedTestimonies.map((item) => (
+                <div
+                  key={item.id}
+                  className="min-w-[min(86vw,330px)] sm:min-w-[350px] snap-start bg-white rounded-[22px] p-6 sm:p-7 border border-[#d6e5dc] shadow-sm flex flex-col justify-between min-h-[280px]"
+                >
+                  <div className="space-y-3">
+                    <Quote className="w-8 h-8 text-[#07472c]/30" />
+                    <h3 className="text-base font-bold text-[#032014] font-serif-title">
+                      {item.title}
+                    </h3>
+                    <p className="text-slate-600 text-xs sm:text-sm leading-relaxed italic">
+                      "{item.testimony}"
+                    </p>
+                  </div>
 
-                <div className="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between text-xs">
-                  <div>
-                    <span className="text-[#032014] font-bold block">
-                      {item.personName}
-                    </span>
-                    <span className="text-slate-600 text-[11px]">
-                      {item.date}
+                  <div className="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <div>
+                      <span className="text-[#032014] font-bold block">
+                        {item.personName}
+                      </span>
+                      <span className="text-slate-600 text-[11px]">
+                        {item.date}
+                      </span>
+                    </div>
+                    <span className="px-2 py-0.5 bg-[#eef6f1] text-[#07472c] rounded text-[10px] border border-[#c2decc]">
+                      {item.category}
                     </span>
                   </div>
-                  <span className="px-2 py-0.5 bg-[#eef6f1] text-[#07472c] rounded text-[10px] border border-[#c2decc]">
-                    {item.category}
-                  </span>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          <button
-            onClick={() => setShowTestimonyModal(true)}
-            className="mt-8 inline-flex items-center space-x-2 text-[#07472c] hover:text-[#b8861d] font-bold text-xs uppercase tracking-[0.14em] transition-colors cursor-pointer"
-          >
-            <span>Share your testimony</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
-      </section>
+            <button
+              onClick={() => setShowTestimonyModal(true)}
+              className="mt-8 inline-flex items-center space-x-2 text-[#07472c] hover:text-[#b8861d] font-bold text-xs uppercase tracking-[0.14em] transition-colors cursor-pointer"
+            >
+              <span>Share your testimony</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </section>
+      )}
 
       {/* ========================================================================= */}
       {/* 11. GIVING TEASER ON HOMEPAGE - Official ICGC Forest & Gold */}
@@ -1513,8 +848,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <Heart className="w-6 h-6 fill-[#c99726] text-[#c99726]" />
           </div>
           <h2 className="text-3xl sm:text-4xl font-light text-white font-serif">
-            WORSHIP THROUGH{" "}
-            <span className="font-normal text-[#dfb15b]">GIVING</span>
+            Worship Through{" "}
+            <span className="font-normal text-[#dfb15b]">Giving</span>
           </h2>
           <p className="text-emerald-200/80 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
             Your generosity helps support the work of the ministry and enables
@@ -1675,63 +1010,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
         </div>
       )}
 
-      {/* ========================================================================= */}
-      {/* THE SECRET PLACE BANNER LIGHTBOX MODAL */}
-      {/* ========================================================================= */}
-      {secretPlaceModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm"
-          onClick={() => setSecretPlaceModalOpen(false)}
-        >
-          <div
-            className="relative max-w-2xl w-full bg-[#02180e] rounded-2xl border border-white/20 p-4 sm:p-6 shadow-2xl overflow-hidden text-white"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
-              <div className="flex items-center space-x-2">
-                <Flame className="w-4 h-4 text-[#dfb15b]" />
-                <span className="font-bold text-sm tracking-wide text-[#dfb15b]">
-                  THE SECRET PLACE — OFFICIAL BANNER
-                </span>
-              </div>
-              <button
-                onClick={() => setSecretPlaceModalOpen(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                title="Close"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="rounded-xl overflow-hidden border border-white/10 bg-black">
-              <img
-                src={getBanner(
-                  "secret_place_banner",
-                  "/secret_place_banner.jpg",
-                )}
-                alt="The Secret Place - Midweek Encounter"
-                className="w-full h-auto object-contain max-h-[75vh] mx-auto block"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-
-            <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <span className="text-xs text-emerald-200/80">
-                Every Wednesday at 7:00 PM • Wisdom Temple Auditorium
-              </span>
-              <button
-                onClick={() => {
-                  setSecretPlaceModalOpen(false);
-                  onNavigate("prayer");
-                }}
-                className="w-full sm:w-auto px-6 py-2.5 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
-              >
-                SUBMIT PRAYER REQUEST
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
     </div>
   );

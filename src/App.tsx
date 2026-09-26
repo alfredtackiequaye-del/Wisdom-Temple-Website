@@ -607,12 +607,10 @@ export default function App() {
                   onNavigate={handleNavigate}
                   sermons={sermons}
                   events={events}
-                  ministries={ministries}
                   testimonies={testimonies}
                   onPlayAudio={handlePlayAudio}
                   onWatchVideo={handleWatchVideo}
                   onRegisterEvent={(event) => setRegisteringEvent(event)}
-                  onSubmitPrayer={handlePrayerSubmit}
                   onShare={handleOpenShare}
                 />
               )}

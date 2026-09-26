@@ -47,7 +47,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <div className="text-xs font-semibold text-[#dfb15b] uppercase tracking-[0.2em] mb-2">
                 {content.bulletinEyebrow}
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              <h3 className="text-xl sm:text-2xl text-white font-serif-title">
                 {content.bulletinTitle}
               </h3>
               <p className="text-xs sm:text-sm text-emerald-200/70 mt-1 max-w-xl">

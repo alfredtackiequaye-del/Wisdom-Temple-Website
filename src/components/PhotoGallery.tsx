@@ -337,9 +337,8 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   decoding="async"
                   onError={(e) => {
                     const target = e.currentTarget;
-                    if (!target.src.includes("unsplash.com")) {
-                      target.src =
-                        "https://images.unsplash.com/photo-1510525009512-ad7fc13eefab?auto=format&fit=crop&w=1200&q=80";
+                    if (!target.src.includes("hero_icgc_banner")) {
+                      target.src = "/assets/optimized/hero_icgc_banner.webp";
                     }
                   }}
                   referrerPolicy="no-referrer"

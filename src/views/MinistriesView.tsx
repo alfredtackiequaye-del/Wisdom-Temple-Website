@@ -9,6 +9,7 @@ import {
   X,
   Filter
 } from 'lucide-react';
+import { PosterImage } from '../components/PosterImage';
 
 interface MinistriesViewProps {
   ministries: Ministry[];
@@ -107,14 +108,13 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
           {filteredMinistries.map((ministry) => (
             <div
               key={ministry.id}
-              className="bg-white rounded-2xl border border-[#d6e5dc] overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+              className="group bg-white rounded-2xl border border-[#d6e5dc] overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
             >
               <div>
                 <div className="relative aspect-[16/10] bg-[#02180e] overflow-hidden">
-                  <img
+                  <PosterImage
                     src={getBanner('ministry_' + ministry.id, ministry.image)}
                     alt={ministry.name}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   />
                   <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#02180e]/90 backdrop-blur-md rounded text-[10px] font-bold text-[#f5cf72] border border-[#c99726]/40">
                     {ministry.category}

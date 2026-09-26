@@ -55,7 +55,7 @@ export const GalleryView: React.FC<GalleryViewProps> = ({
           <img
             src={getBanner(
               "page_gallery_hero",
-              "https://images.unsplash.com/photo-1510525009512-ad7fc13eefab?auto=format&fit=crop&w=1920&q=80",
+              "/assets/optimized/hero_icgc_banner.webp",
             )}
             alt="Congregation worshipping during a church service"
             className="w-full h-full object-cover"
