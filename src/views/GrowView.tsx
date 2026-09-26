@@ -133,7 +133,7 @@ export const GrowView: React.FC<GrowViewProps> = ({ onNavigate }) => {
                 </li>
                 <li className="flex items-center space-x-1.5">
                   <CheckCircle2 className="w-3.5 h-3.5 text-forest-700" />
-                  <span>Monthly All-Night Vigils</span>
+                  <span>Atmosphere of Prayer: first Fridays at 7:00 PM</span>
                 </li>
               </ul>
             </div>

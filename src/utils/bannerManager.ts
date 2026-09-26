@@ -76,20 +76,20 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
       "Atmosphere of fervent prayer and worship. Golden and deep emerald tones recommended.",
   },
   {
-    id: "event_secret_place_night",
-    name: "Night of Encounters All-Night Banner",
+    id: "event_atmosphere_of_prayer",
+    name: "Atmosphere of Prayer Banner",
     category: "events",
     categoryLabel: "Events & Conferences",
-    location: "Events Page (All-Night Vigil Card)",
-    currentUrl: "/secret_place_banner.jpg",
-    defaultUrl: "/secret_place_banner.jpg",
+    location: "Events Page (Atmosphere of Prayer Card)",
+    currentUrl: "/assets/optimized/atmosphere_of_prayer.webp",
+    defaultUrl: "/atmosphere_of_prayer.jpg",
     recommendedSize: "1200 × 675 px",
     aspectRatio: "16:9 Landscape",
     width: 1200,
     height: 675,
     description:
-      "Flyer banner for the monthly/quarterly All-Night prophetic vigil.",
-    designNotes: "High contrast with event time: 10:00 PM - 4:30 AM.",
+      "Flyer for Atmosphere of Prayer, held 7:00 PM - 10:00 PM on the first Friday of every month.",
+    designNotes: "Deep plum and gold. Show \"First Friday of Every Month\" clearly.",
   },
   {
     id: "event_youth_summit",
@@ -702,14 +702,6 @@ const ALIAS_MAP: Record<string, string[]> = {
     "event_youth_summit",
     "event_nextgen_youth_camp",
   ],
-  event_secret_place_night: [
-    "event_secret-place-allnight",
-    "event_secret_place_allnight",
-  ],
-  "event_secret-place-allnight": [
-    "event_secret_place_night",
-    "event_secret_place_allnight",
-  ],
   event_couples_seminar: [
     "event_couples-marriage-seminar",
     "event_couples_marriage_seminar",
@@ -733,11 +725,6 @@ const THEME_GROUPS: string[][] = [
     "ministry_youth",
     "event_youth_summit",
     "event_nextgen-youth-camp",
-  ],
-  [
-    "event_secret_place_night",
-    "event_secret-place-allnight",
-    "secret_place_banner",
   ],
   [
     "event_couples_seminar",

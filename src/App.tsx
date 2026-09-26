@@ -269,8 +269,8 @@ export default function App() {
     },
     {
       id: "reg-2",
-      eventId: "night-of-encounters",
-      eventName: "All-Night of Encounters",
+      eventId: "atmosphere-of-prayer",
+      eventName: "Atmosphere of Prayer",
       fullName: "Priscilla Darko",
       email: "pdarko@example.com",
       phone: "+233 50 334 5566",

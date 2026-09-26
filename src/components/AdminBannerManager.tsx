@@ -478,7 +478,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
               </div>
               <p className="text-slate-600 text-[11px] leading-relaxed">
                 High-impact conference & prayer banners (Wisdom Summit, The
-                Secret Place, All-Night).
+                Secret Place, Atmosphere of Prayer).
               </p>
             </div>
 

@@ -185,17 +185,17 @@ export const INITIAL_EVENTS: ChurchEvent[] = [
     isFeaturedSummit: true,
   },
   {
-    id: "secret-place-allnight",
-    name: "The Secret Place: Night of Encounters",
-    theme: "Breaking Territorial Boundaries",
-    date: "October 30, 2026",
-    time: "10:00 PM - 4:30 AM",
+    id: "atmosphere-of-prayer",
+    name: "Atmosphere of Prayer",
+    theme: "Fragrance to Fire",
+    date: "First Friday of every month",
+    time: "7:00 PM - 10:00 PM",
     venue: "Auditorium, Star Junction, Tabora - Accra",
     shortDescription:
-      "A night dedicated to travailing prayer, prophetic declarations, spiritual warfare, and deep immersion in the Holy Spirit.",
+      "A monthly evening where our prayers rise from fragrance to fire: travailing intercession, prophetic declarations, and deep immersion in the Holy Spirit.",
     speaker: "Resident Pastors & Prayer Ministry",
     category: "Prayer",
-    image: "/assets/optimized/secret_place_banner.webp",
+    image: "/assets/optimized/atmosphere_of_prayer.webp",
     registrationRequired: false,
     registrationStatus: "Open",
   },
@@ -578,7 +578,7 @@ export const INITIAL_CHURCH_PHOTOS: ChurchPhoto[] = [
   {
     id: "photo-11",
     title: "Intercessory Prayer Altar",
-    event: "All-Night Vigil",
+    event: "Atmosphere of Prayer",
     category: "Worship & Prayer",
     date: "June 2026",
     imageUrl:
