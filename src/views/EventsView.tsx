@@ -47,11 +47,11 @@ export const EventsView: React.FC<EventsViewProps> = ({
           />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
-          <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
+          <span className="text-xs text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
             CALENDAR & SACRED GATHERINGS
           </span>
           <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            EVENTS & CONFERENCES
+            Events & Conferences
           </h1>
           <p className="text-base sm:text-lg text-emerald-200/80 max-w-2xl mx-auto leading-relaxed">
             Experience spiritual elevation, transformative encounters, and fellowship at our conferences, prayer vigils, and seasonal summits.
@@ -94,7 +94,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
                 </div>
                 <div>
                   <h4 className="font-serif font-light text-white text-xl tracking-tight">WISDOM SUMMIT 2026</h4>
-                  <p className="text-xs text-emerald-300 font-mono mt-1">October 7 - 9 & 11, 2026</p>
+                  <p className="text-xs text-emerald-300 mt-1">October 7 - 9 & 11, 2026</p>
                   <p className="text-xs text-emerald-200/80 mt-2">Admission is free. Register to reserve your seat and receive event notifications.</p>
                 </div>
                 <button
@@ -152,7 +152,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
                 </div>
 
                 <div className="p-6 space-y-3">
-                  <div className="flex items-center justify-between text-xs text-[#07472c] font-mono font-bold">
+                  <div className="flex items-center justify-between text-xs text-[#07472c] font-bold">
                     <span>{event.date}</span>
                     <span className="text-slate-400">{event.time}</span>
                   </div>
@@ -165,7 +165,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
                     {event.shortDescription}
                   </p>
 
-                  <div className="pt-2 text-xs font-mono text-slate-500 space-y-1">
+                  <div className="pt-2 text-xs text-slate-500 space-y-1">
                     <div className="flex items-center space-x-1.5 truncate">
                       <MapPin className="w-3.5 h-3.5 text-[#c99726] shrink-0" />
                       <span className="truncate">{event.venue}</span>

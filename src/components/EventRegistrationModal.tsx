@@ -72,7 +72,7 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
               </div>
 
               <div>
-                <span className="text-[10px] sm:text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3 py-1 rounded-full border border-[#c99726]/40 inline-block">
+                <span className="text-[10px] sm:text-xs text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3 py-1 rounded-full border border-[#c99726]/40 inline-block">
                   REGISTRATION CONFIRMED
                 </span>
                 <h4 className="text-lg sm:text-xl font-bold text-white mt-2 font-serif-title">{event.name}</h4>
@@ -98,7 +98,7 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
                 <div className="grid grid-cols-2 gap-2 pt-1">
                   <div>
                     <span className="text-[10px] text-emerald-300 uppercase">Pass Code</span>
-                    <span className="font-mono text-[#f5cf72] font-bold text-base block">
+                    <span className="text-[#f5cf72] font-bold text-base block">
                       {confirmedRegistration.registrationCode}
                     </span>
                   </div>
@@ -108,7 +108,7 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-[#084c2e] text-[11px] text-emerald-200/80 space-y-0.5 font-mono">
+                <div className="pt-2 border-t border-[#084c2e] text-[11px] text-emerald-200/80 space-y-0.5">
                   <p className="flex items-center space-x-1">
                     <Calendar className="w-3 h-3 text-[#c99726]" />
                     <span>{event.date} • {event.time}</span>

@@ -70,13 +70,13 @@ export const GalleryView: React.FC<GalleryViewProps> = ({
           <div className="max-w-3xl space-y-4">
             <button
               onClick={() => onNavigate("home")}
-              className="inline-flex items-center space-x-2 text-xs font-mono font-bold uppercase tracking-wider text-[#f5cf72] hover:text-white transition-colors cursor-pointer"
+              className="inline-flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-[#f5cf72] hover:text-white transition-colors cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Home</span>
             </button>
 
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#07472c] text-[#f5cf72] border border-[#c99726]/40 text-xs font-mono font-bold uppercase tracking-widest">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#07472c] text-[#f5cf72] border border-[#c99726]/40 text-xs font-bold uppercase tracking-widest">
               <Church className="w-3.5 h-3.5 text-[#c99726]" />
               <span>CHURCH SERVICES & SPECIAL EVENTS</span>
             </div>

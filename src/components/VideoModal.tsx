@@ -24,7 +24,7 @@ export const VideoModal: React.FC<VideoModalProps> = ({ sermon, onClose, onShare
             <span className="px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wider bg-[#042819] text-[#f5cf72] border border-[#c99726]/40">
               {sermon.category}
             </span>
-            <span className="text-xs text-emerald-200 font-mono hidden sm:inline">{sermon.series || 'Wisdom Broadcast'}</span>
+            <span className="text-xs text-emerald-200 hidden sm:inline">{sermon.series || 'Wisdom Broadcast'}</span>
           </div>
           <button
             onClick={onClose}
@@ -58,9 +58,9 @@ export const VideoModal: React.FC<VideoModalProps> = ({ sermon, onClose, onShare
                     <path d="M8 5v14l11-7z" />
                   </svg>
                 </div>
-                <p className="text-xs font-mono text-[#f5cf72] uppercase tracking-widest mb-1">WISDOM TEMPLE STREAMING</p>
+                <p className="text-xs text-[#f5cf72] uppercase tracking-widest mb-1">WISDOM TEMPLE STREAMING</p>
                 <h3 className="text-xl md:text-2xl font-bold text-white max-w-lg font-serif-title">{sermon.title}</h3>
-                <p className="text-xs text-emerald-200 mt-1 font-mono">Broadcast available on church official YouTube & audio feed</p>
+                <p className="text-xs text-emerald-200 mt-1">Broadcast available on church official YouTube & audio feed</p>
               </div>
             </div>
           )}
@@ -74,7 +74,7 @@ export const VideoModal: React.FC<VideoModalProps> = ({ sermon, onClose, onShare
               <div className="flex flex-wrap items-center gap-4 text-xs text-emerald-200/80 mt-2">
                 <div className="flex items-center space-x-1">
                   <User className="w-3.5 h-3.5 text-[#c99726]" />
-                  <span className="font-mono text-emerald-100">{sermon.speaker}</span>
+                  <span className="text-emerald-100">{sermon.speaker}</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <Calendar className="w-3.5 h-3.5 text-emerald-300" />

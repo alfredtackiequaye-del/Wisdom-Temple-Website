@@ -162,8 +162,6 @@ export interface StaffUser {
   isActive: boolean;
 }
 
-export type FontTheme = 'cinzel' | 'playfair' | 'modern' | 'cormorant';
-
 export type BannerCategory = 
   | 'all'
   | 'hero' 

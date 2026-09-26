@@ -12,7 +12,6 @@ import {
 import { CHURCH_INFO, INITIAL_CHURCH_PHOTOS } from "../data/churchData";
 import { PASTORAL_COUPLE_IMAGE } from "../assets/pastoralImage";
 import { PhotoGallery } from "../components/PhotoGallery";
-import { QuickActionsMenu } from "../components/QuickActionsMenu";
 import { PastorsCorner } from "../components/PastorsCorner";
 import { useBanners } from "../utils/bannerManager";
 import { useSiteContent } from "../utils/contentManager";
@@ -427,7 +426,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     <div className="w-12 h-12 rounded-lg bg-[#031e13] text-[#dfb15b] flex items-center justify-center">
                       <Users className="w-6 h-6 stroke-[2]" />
                     </div>
-                    <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#76550f]">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#76550f]">
                       Guest Hospitality
                     </span>
                   </div>
@@ -443,7 +442,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
                 {/* Feature Highlights */}
                 <div className="p-7 space-y-3">
-                  <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-slate-500 block">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 block">
                     What You'll Experience:
                   </span>
                   <div className="space-y-2.5 text-xs text-slate-700">
@@ -495,7 +494,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     <div className="w-12 h-12 rounded-lg bg-[#031e13] text-[#dfb15b] flex items-center justify-center">
                       <Sparkles className="w-6 h-6 stroke-[2]" />
                     </div>
-                    <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#76550f]">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#76550f]">
                       Worship & The Word
                     </span>
                   </div>
@@ -512,7 +511,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
                 {/* Feature Highlights */}
                 <div className="p-7 space-y-3">
-                  <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-slate-500 block">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 block">
                     What You'll Experience:
                   </span>
                   <div className="space-y-2.5 text-xs text-slate-700">
@@ -564,7 +563,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     <div className="w-12 h-12 rounded-lg bg-[#031e13] text-[#dfb15b] flex items-center justify-center">
                       <Shield className="w-6 h-6 stroke-[2]" />
                     </div>
-                    <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#76550f]">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#76550f]">
                       Family & Ministries
                     </span>
                   </div>
@@ -580,7 +579,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
                 {/* Feature Highlights */}
                 <div className="p-7 space-y-3">
-                  <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-slate-500 block">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 block">
                     Ministries for Everyone:
                   </span>
                   <div className="space-y-2.5 text-xs text-slate-700">
@@ -653,11 +652,11 @@ export const HomeView: React.FC<HomeViewProps> = ({
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-[#094c2d] gap-4">
               <div>
-                <span className="text-xs font-mono text-[#f5cf72] uppercase tracking-widest block font-bold">
+                <span className="text-xs text-[#f5cf72] uppercase tracking-widest block font-bold">
                   SPIRITUAL FEEDING & MEDIA
                 </span>
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1 font-serif-title">
-                  LATEST MESSAGE
+                  Latest Message
                 </h2>
               </div>
               <button
@@ -696,14 +695,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       >
                         <Play className="w-7 h-7 ml-1 fill-[#021a10]" />
                       </button>
-                      <span className="text-xs font-mono font-medium text-white uppercase tracking-wider bg-black/80 px-3 py-1 rounded-md">
+                      <span className="text-xs font-medium text-white uppercase tracking-wider bg-black/80 px-3 py-1 rounded-md">
                         Click to Play Video
                       </span>
                     </div>
                     <span className="absolute top-4 left-4 px-3 py-1 bg-[#02180e]/90 rounded text-xs font-bold text-[#dfb15b]">
                       {latestSermon.category}
                     </span>
-                    <span className="absolute bottom-4 right-4 px-2.5 py-1 bg-black/80 rounded font-mono text-xs text-white">
+                    <span className="absolute bottom-4 right-4 px-2.5 py-1 bg-black/80 rounded text-xs text-white">
                       {latestSermon.duration}
                     </span>
                   </div>
@@ -714,21 +713,21 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <div className="lg:col-span-5 space-y-4">
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
-                    <span className="text-xs font-mono text-emerald-300/70">
+                    <span className="text-xs text-emerald-300/70">
                       {latestSermon.date}
                     </span>
                     <span className="text-emerald-700">•</span>
-                    <span className="text-xs font-mono text-[#dfb15b] font-semibold">
+                    <span className="text-xs text-[#dfb15b] font-semibold">
                       {latestSermon.series}
                     </span>
                   </div>
                   <h3 className="text-2xl sm:text-3xl font-bold text-white leading-snug font-serif">
                     {latestSermon.title}
                   </h3>
-                  <p className="text-sm text-[#dfb15b] font-mono font-medium">
+                  <p className="text-sm text-[#dfb15b] font-medium">
                     {latestSermon.speaker}
                   </p>
-                  <p className="text-xs font-mono text-emerald-200/80 mt-1">
+                  <p className="text-xs text-emerald-200/80 mt-1">
                     Scripture: {latestSermon.scripture}
                   </p>
                 </div>
@@ -803,8 +802,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
               </div>
 
               <h2 className="text-4xl sm:text-5xl font-light text-white tracking-tight font-serif">
-                THE SECRET{" "}
-                <span className="font-normal text-[#dfb15b]">PLACE</span>
+                The Secret{" "}
+                <span className="font-normal text-[#dfb15b]">Place</span>
               </h2>
 
               <p className="text-xl sm:text-2xl text-[#dfb15b] font-serif font-light">
@@ -823,7 +822,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <div className="flex items-center space-x-3">
                   <Calendar className="w-5 h-5 text-[#c99726]" />
                   <div>
-                    <span className="text-xs text-emerald-300/70 uppercase font-mono">
+                    <span className="text-xs text-emerald-300/70 uppercase">
                       Service Schedule
                     </span>
                     <p className="text-base font-bold text-white">
@@ -834,10 +833,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <div className="flex items-center space-x-3 pt-2 border-t border-white/10">
                   <MapPin className="w-5 h-5 text-[#c99726]" />
                   <div>
-                    <span className="text-xs text-emerald-300/70 uppercase font-mono">
+                    <span className="text-xs text-emerald-300/70 uppercase">
                       Venue
                     </span>
-                    <p className="text-sm font-mono text-emerald-200">
+                    <p className="text-sm text-emerald-200">
                       Wisdom Temple Auditorium & Online
                     </p>
                   </div>
@@ -868,7 +867,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     "/secret_place_banner.jpg",
                   )}
                   alt="The Secret Place - Midweek Encounter"
-                  className="w-full h-auto object-contain block mx-auto"
+                  className="w-full aspect-[4/3] object-cover object-top block"
                   referrerPolicy="no-referrer"
                 />
 
@@ -882,7 +881,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
                 {/* Badge top corner */}
                 <div className="absolute top-3 right-3">
-                  <span className="px-2.5 py-1 bg-[#02180e]/90 text-[#dfb15b] border border-white/20 rounded-md text-[10px] font-mono font-bold flex items-center space-x-1">
+                  <span className="px-2.5 py-1 bg-[#02180e]/90 text-[#dfb15b] border border-white/20 rounded-md text-[10px] font-bold flex items-center space-x-1">
                     <Flame className="w-3 h-3 text-[#dfb15b]" />
                     <span>MIDWEEK ALTAR</span>
                   </span>
@@ -959,10 +958,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 {/* Countdown & Registration Beside */}
                 <div className="lg:col-span-5 xl:col-span-4 bg-[#02180e] rounded-xl border border-white/15 p-6 sm:p-8 text-center space-y-6">
                   <div>
-                    <span className="text-xs font-mono uppercase tracking-widest text-[#dfb15b] block font-bold">
+                    <span className="text-xs uppercase tracking-widest text-[#dfb15b] block font-bold">
                       CONFERENCE COUNTDOWN
                     </span>
-                    <p className="text-xs text-emerald-300/80 mt-1 font-mono">
+                    <p className="text-xs text-emerald-300/80 mt-1">
                       October 7 - 9 & 11, 2026
                     </p>
                   </div>
@@ -970,7 +969,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   {/* Timer Boxes */}
                   <div className="grid grid-cols-4 gap-2.5 text-center">
                     <div className="bg-[#032416] border border-white/10 rounded-lg p-3">
-                      <span className="text-2xl sm:text-3xl font-black text-[#dfb15b] font-mono block">
+                      <span className="text-2xl sm:text-3xl font-black text-[#dfb15b] block">
                         {timeLeft.days}
                       </span>
                       <span className="text-[10px] uppercase tracking-wider text-emerald-300/70 font-semibold">
@@ -978,7 +977,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       </span>
                     </div>
                     <div className="bg-[#032416] border border-white/10 rounded-lg p-3">
-                      <span className="text-2xl sm:text-3xl font-black text-white font-mono block">
+                      <span className="text-2xl sm:text-3xl font-black text-white block">
                         {timeLeft.hours}
                       </span>
                       <span className="text-[10px] uppercase tracking-wider text-emerald-300/70 font-semibold">
@@ -986,7 +985,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       </span>
                     </div>
                     <div className="bg-[#032416] border border-white/10 rounded-lg p-3">
-                      <span className="text-2xl sm:text-3xl font-black text-white font-mono block">
+                      <span className="text-2xl sm:text-3xl font-black text-white block">
                         {timeLeft.minutes}
                       </span>
                       <span className="text-[10px] uppercase tracking-wider text-emerald-300/70 font-semibold">
@@ -994,7 +993,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       </span>
                     </div>
                     <div className="bg-[#032416] border border-white/10 rounded-lg p-3">
-                      <span className="text-2xl sm:text-3xl font-black text-[#dfb15b] font-mono block">
+                      <span className="text-2xl sm:text-3xl font-black text-[#dfb15b] block">
                         {timeLeft.seconds}
                       </span>
                       <span className="text-[10px] uppercase tracking-wider text-emerald-300/70 font-semibold">
@@ -1032,11 +1031,11 @@ export const HomeView: React.FC<HomeViewProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
             <div>
-              <span className="text-xs font-mono font-bold tracking-widest text-[#07472c] uppercase bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc]">
+              <span className="text-xs font-bold tracking-widest text-[#07472c] uppercase bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc]">
                 CALENDAR & GATHERINGS
               </span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-[#032014] mt-2 font-serif-title">
-                UPCOMING EVENTS
+                Upcoming Events
               </h2>
             </div>
             <button
@@ -1067,7 +1066,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   </div>
 
                   <div className="p-6 space-y-3">
-                    <div className="text-xs font-mono text-[#07472c] font-bold flex items-center space-x-2">
+                    <div className="text-xs text-[#07472c] font-bold flex items-center space-x-2">
                       <Calendar className="w-3.5 h-3.5 text-[#c99726]" />
                       <span>{event.date}</span>
                     </div>
@@ -1080,7 +1079,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       {event.shortDescription}
                     </p>
 
-                    <div className="text-xs text-slate-500 space-y-1 pt-2 font-mono">
+                    <div className="text-xs text-slate-500 space-y-1 pt-2">
                       <div className="flex items-center space-x-1.5 truncate">
                         <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                         <span>{event.time}</span>
@@ -1117,13 +1116,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-6 space-y-6">
-              <span className="text-xs font-mono font-bold tracking-widest text-[#07472c] uppercase bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc]">
+              <span className="text-xs font-bold tracking-widest text-[#07472c] uppercase bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc]">
                 ABOUT WISDOM TEMPLE
               </span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#032014] leading-tight font-serif-title">
-                RAISING LEADERS. <br />
-                SHAPING VISIONS. <br />
-                INFLUENCING SOCIETY.
+                Raising Leaders. <br />
+                Shaping Visions. <br />
+                Influencing Society.
               </h2>
               <p className="text-base sm:text-lg text-slate-700 leading-relaxed">
                 {CHURCH_INFO.description}
@@ -1162,14 +1161,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   />
                 </div>
                 <div className="p-4 bg-[#eef6f1] border border-[#c2decc] rounded-2xl">
-                  <span className="text-xs font-mono text-[#07472c] font-bold uppercase block">
+                  <span className="text-xs text-[#07472c] font-bold uppercase block">
                     Core Scripture
                   </span>
                   <p className="text-xs font-semibold text-[#032014] mt-1">
                     "Wisdom is the principal thing; therefore get wisdom: and
                     with all thy getting get understanding."
                   </p>
-                  <span className="text-[10px] text-[#76550f] font-mono block mt-1 font-bold">
+                  <span className="text-[10px] text-[#76550f] block mt-1 font-bold">
                     Proverbs 4:7
                   </span>
                 </div>
@@ -1200,7 +1199,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   />
                   <div className="absolute inset-0 bg-black/40" />
                   <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white bg-black/60 p-2.5 rounded-lg border border-white/10">
-                    <span className="text-[10px] font-mono text-[#dfb15b] uppercase tracking-wider block font-bold">
+                    <span className="text-[10px] text-[#dfb15b] uppercase tracking-wider block font-bold">
                       SHEPHERD & FIRST LADY
                     </span>
                     <p className="text-xs sm:text-sm font-semibold font-serif leading-tight text-white mt-0.5">
@@ -1224,11 +1223,11 @@ export const HomeView: React.FC<HomeViewProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
             <div>
-              <span className="text-xs font-mono font-bold tracking-widest text-[#07472c] uppercase bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc]">
+              <span className="text-xs font-bold tracking-widest text-[#07472c] uppercase bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc]">
                 SERVE & GROW TOGETHER
               </span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-[#032014] mt-2 font-serif-title">
-                OUR MINISTRIES
+                Our Ministries
               </h2>
             </div>
             <button
@@ -1255,7 +1254,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     />
                   </div>
                   <div className="p-5 space-y-2">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#07472c]">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#07472c]">
                       {ministry.category}
                     </span>
                     <h3 className="text-base font-bold text-[#032014] font-serif-title line-clamp-1">
@@ -1310,7 +1309,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10 space-y-3">
-            <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#dfb15b]">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#dfb15b]">
               PASTORAL CARE & INTERCESSION
             </span>
             <h2 className="text-3xl sm:text-4xl font-light text-white font-serif">
@@ -1450,7 +1449,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-10 max-w-2xl">
             <div>
-              <span className="text-[10px] font-mono font-bold tracking-[0.22em] text-[#07472c] uppercase">
+              <span className="text-[10px] font-bold tracking-[0.22em] text-[#07472c] uppercase">
                 TESTIMONIALS
               </span>
               <h2 className="text-4xl sm:text-5xl font-extrabold leading-[0.98] text-[#032014] mt-3 font-serif-title">
@@ -1477,14 +1476,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
                 <div className="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between text-xs">
                   <div>
-                    <span className="font-mono text-[#032014] font-bold block">
+                    <span className="text-[#032014] font-bold block">
                       {item.personName}
                     </span>
                     <span className="text-slate-600 text-[11px]">
                       {item.date}
                     </span>
                   </div>
-                  <span className="px-2 py-0.5 bg-[#eef6f1] text-[#07472c] rounded font-mono text-[10px] border border-[#c2decc]">
+                  <span className="px-2 py-0.5 bg-[#eef6f1] text-[#07472c] rounded text-[10px] border border-[#c2decc]">
                     {item.category}
                   </span>
                 </div>
@@ -1659,7 +1658,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </div>
 
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <span className="text-xs text-emerald-200/80 font-mono">
+              <span className="text-xs text-emerald-200/80">
                 October 7–9 & October 11, 2026
               </span>
               <button
@@ -1717,7 +1716,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </div>
 
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <span className="text-xs text-emerald-200/80 font-mono">
+              <span className="text-xs text-emerald-200/80">
                 Every Wednesday at 7:00 PM • Wisdom Temple Auditorium
               </span>
               <button
@@ -1734,8 +1733,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
         </div>
       )}
 
-      {/* Floating Quick Actions Menu for immediate one-click navigation */}
-      <QuickActionsMenu onNavigate={onNavigate} />
     </div>
   );
 };

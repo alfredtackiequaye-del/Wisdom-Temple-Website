@@ -58,7 +58,7 @@ export const ContactView: React.FC<ContactViewProps> = ({
           />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 relative z-10">
-          <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
+          <span className="text-xs text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
             GET IN TOUCH
           </span>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight font-serif-title">
@@ -85,7 +85,7 @@ export const ContactView: React.FC<ContactViewProps> = ({
                   </div>
                   <div>
                     <strong className="block text-[#032014] font-semibold mb-0.5">Sanctuary Address</strong>
-                    <p className="font-mono text-xs text-slate-700">{content.churchAddress}</p>
+                    <p className="text-xs text-slate-700">{content.churchAddress}</p>
                     <a
                       href="https://www.google.com/maps/search/?api=1&query=Wisdom+Temple+Star+Junction+Tabora+Accra"
                       target="_blank"
@@ -108,7 +108,7 @@ export const ContactView: React.FC<ContactViewProps> = ({
                       href={`https://wa.me/233${content.churchWhatsApp.replace(/^0/, '')}`} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="font-mono text-sm text-[#07472c] font-bold hover:text-[#c99726] transition-colors block"
+                      className="text-sm text-[#07472c] font-bold hover:text-[#c99726] transition-colors block"
                     >
                       {content.churchPhone}
                     </a>
@@ -124,7 +124,7 @@ export const ContactView: React.FC<ContactViewProps> = ({
                     <strong className="block text-[#032014] font-semibold mb-0.5">Official Email</strong>
                     <a 
                       href={`mailto:${content.churchEmail}`} 
-                      className="font-mono text-xs text-[#07472c] font-bold hover:text-[#c99726] transition-colors block"
+                      className="text-xs text-[#07472c] font-bold hover:text-[#c99726] transition-colors block"
                     >
                       {content.churchEmail}
                     </a>
@@ -157,7 +157,7 @@ export const ContactView: React.FC<ContactViewProps> = ({
           {/* Contact Message Form */}
           <div className="lg:col-span-7 bg-white rounded-3xl p-8 sm:p-12 border border-[#d6e5dc] shadow-md">
             <div className="mb-8 space-y-2">
-              <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#07472c] bg-[#eef6f1] px-3 py-1 rounded-full border border-[#c2decc]">
+              <span className="text-xs font-bold uppercase tracking-widest text-[#07472c] bg-[#eef6f1] px-3 py-1 rounded-full border border-[#c2decc]">
                 SEND A MESSAGE
               </span>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-[#032014] font-serif-title mt-2">
@@ -179,10 +179,10 @@ export const ContactView: React.FC<ContactViewProps> = ({
                 </p>
 
                 <div className="p-4 bg-[#fbf7ee] rounded-2xl border border-[#c99726]/50 max-w-sm mx-auto text-left">
-                  <span className="text-[10px] font-mono uppercase text-[#07472c] font-bold block">
+                  <span className="text-[10px] uppercase text-[#07472c] font-bold block">
                     INQUIRY TICKET CODE
                   </span>
-                  <span className="text-base sm:text-lg font-mono font-black text-[#032014] block">
+                  <span className="text-base sm:text-lg font-black text-[#032014] block">
                     WT-MSG-{Math.floor(1000 + Math.random() * 9000)}
                   </span>
                   <span className="text-[11px] text-slate-500">Subject: {subject}</span>

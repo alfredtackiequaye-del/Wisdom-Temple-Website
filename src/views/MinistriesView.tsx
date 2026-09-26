@@ -66,11 +66,11 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
           />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
-          <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
+          <span className="text-xs text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
             BODY OF CHRIST • WISDOM TEMPLE
           </span>
           <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            MINISTRIES DIRECTORY
+            Ministries Directory
           </h1>
           <p className="text-base sm:text-lg text-emerald-200/80 max-w-2xl mx-auto leading-relaxed">
             Every member has a calling. Find your family, sharpen your talents, and impact society through our vibrant ministry departments.
@@ -130,21 +130,23 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
                     {ministry.shortDescription}
                   </p>
 
-                  <div className="pt-3 border-t border-slate-100 space-y-2 text-xs text-slate-600 font-mono">
+                  <div className="pt-3 border-t border-slate-100 space-y-2 text-xs text-slate-600">
                     <div className="flex items-center space-x-2">
                       <Users className="w-3.5 h-3.5 text-[#c99726] shrink-0" />
                       <span><strong>Audience:</strong> {ministry.audience}</span>
                     </div>
 
-                    <div className="flex items-center space-x-2">
-                      <Clock className="w-3.5 h-3.5 text-[#c99726] shrink-0" />
-                      <span className="truncate"><strong>Meetings:</strong> {ministry.meetingSchedule}</span>
+                    <div className="flex items-start space-x-2">
+                      <Clock className="w-3.5 h-3.5 text-[#c99726] shrink-0 mt-0.5" />
+                      <span><strong>Meetings:</strong> {ministry.meetingSchedule}</span>
                     </div>
 
-                    <div className="flex items-center space-x-2">
-                      <UserCheck className="w-3.5 h-3.5 text-[#c99726] shrink-0" />
-                      <span><strong>Lead:</strong> {ministry.leadPlaceholder}</span>
-                    </div>
+                    {!/^\[.*\]$/.test(ministry.leadPlaceholder.trim()) && (
+                      <div className="flex items-center space-x-2">
+                        <UserCheck className="w-3.5 h-3.5 text-[#c99726] shrink-0" />
+                        <span><strong>Lead:</strong> {ministry.leadPlaceholder}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -168,7 +170,7 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
           <div className="w-full max-w-md bg-[#02180e] border border-[#084c2e] rounded-2xl p-6 shadow-2xl space-y-4 text-white">
             <div className="flex items-center justify-between border-b border-[#084c2e] pb-3">
               <div>
-                <span className="text-[10px] font-mono text-[#f5cf72] font-bold uppercase">MINISTRY ENROLLMENT</span>
+                <span className="text-[10px] text-[#f5cf72] font-bold uppercase">MINISTRY ENROLLMENT</span>
                 <h3 className="font-bold text-white text-base font-serif-title">{activeJoinMinistry.name}</h3>
               </div>
               <button onClick={() => setActiveJoinMinistry(null)} className="text-emerald-300 hover:text-white cursor-pointer">

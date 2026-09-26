@@ -537,7 +537,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
               <button
                 onClick={() => handleNavClick("admin")}
-                className="w-full mt-3 py-2.5 rounded-xl bg-[#042819] hover:bg-[#063821] text-center text-xs font-mono font-bold text-emerald-300 hover:text-[#f5cf72] border border-[#0d5533] flex items-center justify-center space-x-2 transition-colors cursor-pointer"
+                className="w-full mt-3 py-2.5 rounded-xl bg-[#042819] hover:bg-[#063821] text-center text-xs font-bold text-emerald-300 hover:text-[#f5cf72] border border-[#0d5533] flex items-center justify-center space-x-2 transition-colors cursor-pointer"
               >
                 <ShieldCheck className="w-4 h-4 text-[#c99726]" />
                 <span>CHURCH ADMINISTRATION PORTAL</span>

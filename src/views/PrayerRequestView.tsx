@@ -83,11 +83,11 @@ export const PrayerRequestView: React.FC<PrayerRequestViewProps> = ({
           />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 sm:space-y-4 relative z-10">
-          <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
+          <span className="text-xs text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
             THE ALTAR OF INTERCESSION
           </span>
           <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            SUBMIT A PRAYER REQUEST
+            Submit a Prayer Request
           </h1>
           <p className="text-sm sm:text-lg text-emerald-200/80 max-w-2xl mx-auto leading-relaxed">
             "The effectual fervent prayer of a righteous man availeth much." You do not walk alone. Our pastors and Secret Place intercessors stand with you in faith.
@@ -128,10 +128,10 @@ export const PrayerRequestView: React.FC<PrayerRequestViewProps> = ({
               {/* Reference Box */}
               <div className="p-4 sm:p-5 bg-[#fbf7ee] rounded-2xl border border-[#c99726]/50 flex items-center justify-between text-left">
                 <div>
-                  <span className="text-[10px] font-mono uppercase text-[#07472c] font-bold block">
+                  <span className="text-[10px] uppercase text-[#07472c] font-bold block">
                     INTERCESSION REFERENCE CODE
                   </span>
-                  <span className="text-lg font-mono font-black text-[#032014]">
+                  <span className="text-lg font-black text-[#032014]">
                     {submittedCode}
                   </span>
                   <span className="text-[11px] text-slate-500 block">Category: {category}</span>
@@ -283,7 +283,7 @@ export const PrayerRequestView: React.FC<PrayerRequestViewProps> = ({
             </h4>
           </div>
           <p className="text-xs text-slate-700">
-            For critical emergencies or immediate prayer counsel, call our 24/7 Church Line: <strong className="font-mono text-[#07472c] font-bold">{CHURCH_INFO.phone}</strong>
+            For critical emergencies or immediate prayer counsel, call our 24/7 Church Line: <strong className="text-[#07472c] font-bold">{CHURCH_INFO.phone}</strong>
           </p>
         </div>
       </div>

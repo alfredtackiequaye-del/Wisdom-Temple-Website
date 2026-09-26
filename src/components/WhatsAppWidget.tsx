@@ -7,10 +7,10 @@ export const WhatsAppWidget: React.FC = () => {
   const { content } = useSiteContent();
 
   return (
-    <div className="fixed bottom-6 right-6 z-40">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex flex-col items-end">
       {/* Expanded Quick Message Dialog */}
       {isOpen && (
-        <div className="mb-3 w-80 sm:w-88 bg-[#02180e] border border-[#084c2e] rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-3 duration-200 text-white">
+        <div className="mb-3 w-[calc(100vw-2rem)] max-w-80 sm:w-88 bg-[#02180e] border border-[#084c2e] rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-3 duration-200 text-white">
           {/* Header */}
           <div className="bg-[#032014] px-4 py-3 text-white flex items-center justify-between border-b border-[#084c2e]">
             <div className="flex items-center space-x-2">
@@ -51,10 +51,10 @@ export const WhatsAppWidget: React.FC = () => {
             </div>
 
             <div className="pt-1">
-              <span className="text-[10px] font-mono text-emerald-300 uppercase tracking-wider block mb-1">
+              <span className="text-[10px] text-emerald-300 uppercase tracking-wider block mb-1">
                 Direct WhatsApp Line
               </span>
-              <div className="p-2.5 bg-[#042819] rounded-lg border border-[#c99726]/40 flex items-center justify-between font-mono text-[#f5cf72] font-bold text-xs">
+              <div className="p-2.5 bg-[#042819] rounded-lg border border-[#c99726]/40 flex items-center justify-between text-[#f5cf72] font-bold text-xs">
                 <span>{content.churchWhatsApp}</span>
                 <span className="text-[10px] px-2 py-0.5 bg-[#02180e] border border-[#084c2e] rounded text-emerald-300">Ghana</span>
               </div>
@@ -76,7 +76,7 @@ export const WhatsAppWidget: React.FC = () => {
       {/* Floating Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-4 py-3 bg-[#032014] hover:bg-[#063821] text-white rounded-full shadow-2xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer border-2 border-[#c99726]"
+        className="flex items-center space-x-2 p-3 sm:px-4 sm:py-3 bg-[#032014] hover:bg-[#063821] text-white rounded-full shadow-2xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer border-2 border-[#c99726]"
         aria-label="Contact Wisdom Temple on WhatsApp"
         id="whatsapp-floating-btn"
       >

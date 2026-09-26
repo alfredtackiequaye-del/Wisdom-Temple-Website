@@ -117,11 +117,11 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
           />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 sm:space-y-4 relative z-10">
-          <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
+          <span className="text-xs text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
             STEWARDSHIP & GENEROSITY
           </span>
           <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            {content.givingHeadline.toUpperCase()}
+            {content.givingHeadline}
           </h1>
           <p className="text-sm sm:text-lg text-emerald-200/90 max-w-2xl mx-auto leading-relaxed">
             {content.givingInstructions}
@@ -134,7 +134,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
         <div className="bg-[#032014] rounded-2xl p-5 sm:p-8 border border-white/10 shadow-xl overflow-hidden relative">
           <div className="relative z-10 flex flex-col lg:flex-row items-center gap-6 sm:gap-8 justify-between">
             <div className="space-y-3 sm:space-y-4 text-center lg:text-left flex-1">
-              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-[#02180e] border border-white/10 text-[#dfb15b] text-[11px] sm:text-xs font-mono font-bold uppercase">
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-[#02180e] border border-white/10 text-[#dfb15b] text-[11px] sm:text-xs font-bold uppercase">
                 <span>OFFICIAL CHURCH GIVING FLYER</span>
               </div>
               <h2 className="text-xl sm:text-3xl font-light text-white font-serif">
@@ -182,8 +182,8 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                 className="w-full h-auto object-cover"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-all flex items-center justify-center">
-                <span className="px-3 py-1.5 rounded-lg bg-[#02180e]/90 text-[#f5cf72] text-xs font-bold border border-[#c99726]/60 shadow-lg flex items-center space-x-1.5 opacity-90 group-hover:opacity-100">
+              <div className="absolute top-2.5 right-2.5">
+                <span className="px-2.5 py-1 rounded-md bg-[#02180e]/85 text-[#f5cf72] text-[11px] font-semibold border border-[#c99726]/50 shadow-md flex items-center space-x-1.5 opacity-80 group-hover:opacity-100 transition-opacity">
                   <ZoomIn className="w-3.5 h-3.5" />
                   <span>Tap to Enlarge</span>
                 </span>
@@ -204,7 +204,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
               <div className="w-14 h-14 rounded-full bg-[#eef6f1] text-[#07472c] border-2 border-[#c99726] flex items-center justify-center mx-auto shadow-md">
                 <CheckCircle2 className="w-8 h-8 text-[#07472c]" />
               </div>
-              <span className="text-xs font-mono font-bold text-[#07472c] uppercase tracking-wider block">
+              <span className="text-xs font-bold text-[#07472c] uppercase tracking-wider block">
                 OFFICIAL KINGDOM STEWARDSHIP RECEIPT
               </span>
               <h3 className="text-2xl font-black text-[#032014] font-serif-title">
@@ -219,8 +219,8 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
             <div className="bg-[#fbf7ee] rounded-2xl p-5 sm:p-6 border border-[#c99726]/50 space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e5cd96] pb-3">
                 <div>
-                  <span className="text-[10px] font-mono uppercase text-[#07472c] font-bold block">REFERENCE CODE</span>
-                  <span className="text-lg font-mono font-black text-[#032014] tracking-wide">
+                  <span className="text-[10px] uppercase text-[#07472c] font-bold block">REFERENCE CODE</span>
+                  <span className="text-lg font-black text-[#032014] tracking-wide">
                     {completedReceipt.referenceCode}
                   </span>
                 </div>
@@ -244,7 +244,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                 </div>
                 <div>
                   <span className="text-slate-500 block">Amount Seeded</span>
-                  <strong className="text-emerald-900 text-sm font-black font-mono">
+                  <strong className="text-emerald-900 text-sm font-black">
                     {completedReceipt.currency === 'GHS' ? 'GH₵' : '$'} {completedReceipt.amount.toFixed(2)}
                   </strong>
                 </div>
@@ -254,7 +254,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                 </div>
                 <div>
                   <span className="text-slate-500 block">Contact / Txn ID</span>
-                  <span className="font-mono text-slate-700">{completedReceipt.phoneOrTxnId}</span>
+                  <span className="text-slate-700">{completedReceipt.phoneOrTxnId}</span>
                 </div>
                 <div>
                   <span className="text-slate-500 block">Status</span>
@@ -306,7 +306,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
             {/* Left Column: Fund Selection & Giving Form */}
             <div className="lg:col-span-7 bg-white rounded-3xl p-5 sm:p-8 border border-[#d6e5dc] shadow-sm space-y-6">
               <div>
-                <span className="text-[11px] sm:text-xs font-mono text-[#07472c] font-bold uppercase tracking-wider block mb-1">
+                <span className="text-[11px] sm:text-xs text-[#07472c] font-bold uppercase tracking-wider block mb-1">
                   STEP 1: SELECT PURPOSE & AMOUNT
                 </span>
                 <h2 className="text-xl sm:text-2xl font-bold text-[#032014] font-serif-title">
@@ -344,7 +344,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
               {/* Currency & Amount */}
               <div className="pt-4 border-t border-slate-100 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] sm:text-xs font-mono text-[#07472c] font-bold uppercase tracking-wider">
+                  <span className="text-[11px] sm:text-xs text-[#07472c] font-bold uppercase tracking-wider">
                     AMOUNT & CURRENCY
                   </span>
                   <div className="flex items-center space-x-1 bg-[#eef6f1] p-1 rounded-lg text-xs font-bold border border-[#c2decc]">
@@ -407,7 +407,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
               {/* Step 2: Log / Record Your Payment Form */}
               <form onSubmit={handleRecordGiving} className="pt-4 border-t border-slate-100 space-y-4">
                 <div>
-                  <span className="text-[11px] sm:text-xs font-mono text-[#07472c] font-bold uppercase tracking-wider block mb-0.5">
+                  <span className="text-[11px] sm:text-xs text-[#07472c] font-bold uppercase tracking-wider block mb-0.5">
                     STEP 2: GIVER DETAILS & LOG PAYMENT
                   </span>
                   <p className="text-xs text-slate-500">
@@ -501,7 +501,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                   {/* Official MTN MoMo Number from Church Flyer */}
                   <div className="p-4 bg-[#fbf7ee] rounded-2xl border-2 border-[#c99726]/40 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#07472c] font-bold block">
+                      <span className="text-[10px] uppercase tracking-wider text-[#07472c] font-bold block">
                         OFFICIAL CHURCH MOMO NUMBER
                       </span>
                       <button
@@ -515,7 +515,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                       </button>
                     </div>
 
-                    <div className="text-xl sm:text-2xl font-mono text-[#032014] font-black tracking-wider">
+                    <div className="text-xl sm:text-2xl text-[#032014] font-black tracking-wider">
                       {content.givingMomoMtn}
                     </div>
 
@@ -545,7 +545,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                 <div className="p-4 bg-[#f8faf8] rounded-2xl border-2 border-[#d6e5dc] space-y-3">
                   <div className="flex items-start justify-between">
                     <div className="space-y-0.5">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold block">
+                      <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold block">
                         BANK NAME
                       </span>
                       <strong className="text-sm text-[#032014] block">
@@ -556,10 +556,10 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
 
                   <div className="flex items-center justify-between pt-2 border-t border-slate-200">
                     <div className="space-y-0.5">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold block">
+                      <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold block">
                         ACCOUNT NUMBER
                       </span>
-                      <span className="text-sm sm:text-base font-mono text-[#032014] font-black tracking-wide block">
+                      <span className="text-sm sm:text-base text-[#032014] font-black tracking-wide block">
                         {content.givingBankAccountNumber}
                       </span>
                     </div>
@@ -575,7 +575,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                   </div>
 
                   <div className="pt-2 border-t border-slate-200">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold block">
+                    <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold block">
                       ACCOUNT NAME
                     </span>
                     <span className="text-xs font-semibold text-slate-800">
@@ -601,7 +601,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                   </div>
                 </div>
 
-                <div className="p-3 bg-[#f8faf8] rounded-xl border border-[#d6e5dc] text-xs text-slate-600 font-mono truncate">
+                <div className="p-3 bg-[#f8faf8] rounded-xl border border-[#d6e5dc] text-xs text-slate-600 truncate">
                   {GIVING_DETAILS.online.paymentUrl}
                 </div>
 
@@ -616,7 +616,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
 
         {/* Accountability & Integrity Pledge */}
         <div className="bg-[#032014] text-white rounded-3xl p-6 sm:p-12 border border-[#084c2e] space-y-4 shadow-xl">
-          <div className="flex items-center space-x-2 text-[#f5cf72] text-xs font-mono font-bold uppercase">
+          <div className="flex items-center space-x-2 text-[#f5cf72] text-xs font-bold uppercase">
             <ShieldCheck className="w-4 h-4" />
             <span>FINANCIAL INTEGRITY & GOVERNANCE</span>
           </div>
@@ -676,9 +676,9 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
 
               <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 text-xs text-emerald-200/90">
                 <div className="flex items-center space-x-2">
-                  <span>MoMo: <strong className="text-white font-mono">0555577099</strong></span>
+                  <span>MoMo: <strong className="text-white">0555577099</strong></span>
                   <span>•</span>
-                  <span>CBG: <strong className="text-white font-mono">0523529100002</strong></span>
+                  <span>CBG: <strong className="text-white">0523529100002</strong></span>
                 </div>
                 <a
                   href="/giving_details_official.jpg"

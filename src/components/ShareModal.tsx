@@ -63,7 +63,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, title, 
           </button>
         </div>
 
-        <div className="pt-2 text-center text-[11px] text-emerald-300/70 font-mono">
+        <div className="pt-2 text-center text-[11px] text-emerald-300/70">
           Official Media • Wisdom Temple Ghana
         </div>
       </div>

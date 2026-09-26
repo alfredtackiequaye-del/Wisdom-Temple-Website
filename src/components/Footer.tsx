@@ -222,7 +222,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     href={`https://wa.me/233${content.churchWhatsApp.replace(/^0/, '')}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="text-emerald-300 hover:text-[#f5cf72] transition-colors font-mono text-xs"
+                    className="text-emerald-300 hover:text-[#f5cf72] transition-colors text-xs"
                   >
                     {content.churchPhone}
                   </a>

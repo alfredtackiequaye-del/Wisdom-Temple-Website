@@ -57,7 +57,7 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({ sermon, onClose 
           <div className="min-w-0 flex-1">
             <h4 className="text-sm font-bold text-white truncate font-serif-title">{sermon.title}</h4>
             <p className="text-xs text-[#f5cf72] truncate">{sermon.speaker}</p>
-            <span className="text-[11px] text-emerald-300/80 font-mono">{sermon.scripture}</span>
+            <span className="text-[11px] text-emerald-300/80">{sermon.scripture}</span>
           </div>
         </div>
 
@@ -89,13 +89,13 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({ sermon, onClose 
 
             <button
               onClick={cyclePlaybackRate}
-              className="px-2 py-0.5 rounded text-xs bg-[#042819] text-[#f5cf72] font-mono font-semibold hover:bg-[#063821] border border-[#084c2e] cursor-pointer"
+              className="px-2 py-0.5 rounded text-xs bg-[#042819] text-[#f5cf72] font-semibold hover:bg-[#063821] border border-[#084c2e] cursor-pointer"
             >
               {playbackRate}x
             </button>
           </div>
 
-          <div className="w-full flex items-center space-x-2 text-[11px] text-emerald-200/80 font-mono">
+          <div className="w-full flex items-center space-x-2 text-[11px] text-emerald-200/80">
             <span>{formatTime(currentTime)}</span>
             <input
               type="range"

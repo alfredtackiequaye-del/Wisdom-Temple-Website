@@ -71,11 +71,11 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
           />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
-          <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
+          <span className="text-xs text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
             DIGITAL SANCTUARY & TEACHINGS
           </span>
           <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            WATCH & LISTEN
+            Watch & Listen
           </h1>
           <p className="text-base sm:text-lg text-emerald-200/80 max-w-2xl mx-auto leading-relaxed">
             Feast on the timeless, transformational counsel of God. Explore Sunday messages, midweek encounters at The Secret Place, and Wisdom Summit teachings.
@@ -85,7 +85,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
           <div className="pt-2">
             <div className="inline-flex items-center space-x-2 px-4 py-2 bg-[#042819] border border-[#084c2e] rounded-full text-xs text-emerald-200">
               <Youtube className="w-4 h-4 text-red-500" />
-              <span>Official YouTube Channel: <strong className="font-mono text-[#f5cf72]">{CHURCH_INFO.social.youtube}</strong></span>
+              <span>Official YouTube Channel: <strong className="text-[#f5cf72]">{CHURCH_INFO.social.youtube}</strong></span>
             </div>
           </div>
         </div>
@@ -134,7 +134,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
               <select
                 value={selectedSpeaker}
                 onChange={(e) => setSelectedSpeaker(e.target.value)}
-                className="px-3 py-1.5 bg-[#f8faf8] border border-[#d6e5dc] rounded-lg text-slate-800 font-mono focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                className="px-3 py-1.5 bg-[#f8faf8] border border-[#d6e5dc] rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#c99726]"
               >
                 {speakers.map((spk) => (
                   <option key={spk} value={spk}>
@@ -154,11 +154,11 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
           <div className="mb-12 bg-[#032014] rounded-3xl p-6 sm:p-8 border border-[#084c2e] shadow-2xl text-white">
             <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-[#084c2e]">
               <div className="flex items-center space-x-2.5">
-                <span className="px-3 py-1 bg-red-600/20 text-red-400 text-xs font-mono font-bold rounded-full border border-red-500/30 flex items-center space-x-1.5">
+                <span className="px-3 py-1 bg-red-600/20 text-red-400 text-xs font-bold rounded-full border border-red-500/30 flex items-center space-x-1.5">
                   <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
                   <span>LATEST MESSAGE</span>
                 </span>
-                <span className="text-xs text-[#f5cf72] font-mono font-semibold">Wisdom Temple YouTube Broadcast</span>
+                <span className="text-xs text-[#f5cf72] font-semibold">Wisdom Temple YouTube Broadcast</span>
               </div>
 
               {sermons[0].youtubeUrl && (
@@ -198,13 +198,13 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
               {/* Message Details */}
               <div className="lg:col-span-5 space-y-4">
                 <div>
-                  <span className="text-xs font-mono text-[#f5cf72] uppercase tracking-wider block font-semibold">
+                  <span className="text-xs text-[#f5cf72] uppercase tracking-wider block font-semibold">
                     {sermons[0].category} • {sermons[0].series || 'Vision & Destiny'}
                   </span>
                   <h2 className="text-2xl sm:text-3xl font-extrabold text-white mt-1 font-serif-title">
                     {sermons[0].title}
                   </h2>
-                  <p className="text-xs font-mono text-emerald-200/90 mt-1">
+                  <p className="text-xs text-emerald-200/90 mt-1">
                     {sermons[0].speaker} • Scripture: {sermons[0].scripture}
                   </p>
                 </div>
@@ -282,7 +282,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
                       {sermon.category}
                     </span>
 
-                    <span className="absolute bottom-3 right-3 px-2 py-0.5 bg-[#02180e]/90 text-emerald-200 font-mono text-[10px] rounded">
+                    <span className="absolute bottom-3 right-3 px-2 py-0.5 bg-[#02180e]/90 text-emerald-200 text-[10px] rounded">
                       {sermon.duration}
                     </span>
 
@@ -301,7 +301,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
                   {/* Sermon Details */}
                   <div className="p-6 space-y-2.5">
                     <div className="flex items-center justify-between text-xs text-slate-400">
-                      <span className="font-mono">{sermon.date}</span>
+                      <span className="">{sermon.date}</span>
                       {sermon.series && (
                         <span className="text-[#07472c] font-semibold truncate max-w-[140px]">
                           {sermon.series}
@@ -313,11 +313,11 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
                       {sermon.title}
                     </h3>
 
-                    <p className="text-xs text-slate-500 font-mono font-medium">
+                    <p className="text-xs text-slate-500 font-medium">
                       {sermon.speaker}
                     </p>
 
-                    <div className="flex items-center space-x-1.5 text-xs text-[#07472c] font-semibold font-mono bg-[#eef6f1] border border-[#c2decc] px-2.5 py-1 rounded-md w-fit">
+                    <div className="flex items-center space-x-1.5 text-xs text-[#07472c] font-semibold bg-[#eef6f1] border border-[#c2decc] px-2.5 py-1 rounded-md w-fit">
                       <BookOpen className="w-3.5 h-3.5 text-[#c99726]" />
                       <span>{sermon.scripture}</span>
                     </div>

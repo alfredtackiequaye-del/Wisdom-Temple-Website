@@ -64,11 +64,11 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
           />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
-          <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
+          <span className="text-xs text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
             YOU ARE OUR HONORED GUEST
           </span>
           <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            PLAN YOUR VISIT
+            Plan Your Visit
           </h1>
           <p className="text-base sm:text-lg text-emerald-200/80 max-w-2xl mx-auto leading-relaxed">
             Visiting a church for the first time should be warm, refreshing, and inspiring. We can't wait to welcome you to Wisdom Temple.
@@ -93,7 +93,7 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
                 <div className="w-12 h-12 rounded-xl bg-[#c99726] text-[#021a10] border border-[#dfb15b] flex items-center justify-center font-bold text-xl">
                   1
                 </div>
-                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-amber-900 bg-amber-100 px-3 py-1 rounded-md border border-amber-300">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-amber-900 bg-amber-100 px-3 py-1 rounded-md border border-amber-300">
                   BEFORE YOU COME
                 </span>
               </div>
@@ -146,7 +146,7 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
                 <div className="w-12 h-12 rounded-xl bg-[#07472c] text-[#dfb15b] border border-[#084c2e] flex items-center justify-center font-bold text-xl">
                   2
                 </div>
-                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-900 bg-emerald-100 px-3 py-1 rounded-md border border-emerald-300">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-900 bg-emerald-100 px-3 py-1 rounded-md border border-emerald-300">
                   WHEN YOU ARRIVE
                 </span>
               </div>
@@ -195,7 +195,7 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
                 <div className="w-12 h-12 rounded-xl bg-[#032014] text-[#dfb15b] border border-[#084c2e] flex items-center justify-center font-bold text-xl">
                   3
                 </div>
-                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-teal-900 bg-teal-100 px-3 py-1 rounded-md border border-teal-300">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-teal-900 bg-teal-100 px-3 py-1 rounded-md border border-teal-300">
                   AFTER SERVICE
                 </span>
               </div>
@@ -230,7 +230,7 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
         {/* Plan Your Visit Interactive Form */}
         <div className="bg-white rounded-3xl p-8 sm:p-12 border border-[#d6e5dc] shadow-md max-w-3xl mx-auto">
           <div className="text-center mb-8 space-y-2">
-            <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#07472c] bg-[#eef6f1] px-3 py-1 rounded-full border border-[#c2decc]">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#07472c] bg-[#eef6f1] px-3 py-1 rounded-full border border-[#c2decc]">
               LET US KNOW YOU'RE COMING
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#032014] font-serif-title mt-2">
@@ -252,10 +252,10 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
               </p>
 
               <div className="p-4 bg-[#fbf7ee] rounded-2xl border border-[#c99726]/50 max-w-md mx-auto text-left space-y-1">
-                <span className="text-[10px] font-mono uppercase text-[#07472c] font-bold block">
+                <span className="text-[10px] uppercase text-[#07472c] font-bold block">
                   VISITOR RESERVATION CODE
                 </span>
-                <span className="text-base sm:text-lg font-mono font-black text-[#032014] block">
+                <span className="text-base sm:text-lg font-black text-[#032014] block">
                   WT-GUEST-{Math.floor(1000 + Math.random() * 9000)}
                 </span>
                 <span className="text-xs text-slate-600 block">

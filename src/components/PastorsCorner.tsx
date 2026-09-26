@@ -109,7 +109,7 @@ export const PastorsCorner: React.FC<PastorsCornerProps> = ({
 
               {/* Bottom Scrim for text readability */}
               <div className="absolute inset-x-0 bottom-0 bg-[#02180e]/95 border-t border-white/10 p-5 text-white pointer-events-none">
-                <span className="text-[11px] font-mono text-[#dfb15b] uppercase tracking-wider block font-bold">
+                <span className="text-[11px] text-[#dfb15b] uppercase tracking-wider block font-bold">
                   RESIDENT PASTOR
                 </span>
                 <h3 className="text-xl sm:text-2xl font-serif text-white mt-0.5">
@@ -143,7 +143,7 @@ export const PastorsCorner: React.FC<PastorsCornerProps> = ({
           <div className="lg:col-span-7 space-y-6">
             {/* Theme & Scripture Block */}
             <div className="p-5 rounded-xl bg-[#f8faf8] border-l-4 border-[#c99726] border-y border-r border-slate-200">
-              <span className="text-[11px] font-mono font-bold text-[#032014] uppercase tracking-wider block">
+              <span className="text-[11px] font-bold text-[#032014] uppercase tracking-wider block">
                 This Week's Pastoral Theme
               </span>
               <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#032014] mt-1 tracking-tight">
@@ -159,7 +159,7 @@ export const PastorsCorner: React.FC<PastorsCornerProps> = ({
             <div className="relative pl-6 sm:pl-8 border-l-2 border-slate-200 space-y-3">
               <Quote className="w-8 h-8 text-[#c99726]/20 absolute -left-4 -top-2 fill-[#c99726]/10" />
 
-              <p className="text-base sm:text-lg text-slate-800 leading-relaxed font-serif italic text-justify">
+              <p className="text-base sm:text-lg text-slate-800 leading-relaxed font-serif italic text-pretty">
                 "{greetingSummary}"
               </p>
             </div>
@@ -167,17 +167,17 @@ export const PastorsCorner: React.FC<PastorsCornerProps> = ({
             {/* Key Action Principles for the Week */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
               <div className="p-3 bg-[#f8faf8] rounded-lg border border-slate-200">
-                <span className="text-[10px] font-mono text-[#07472c] font-bold uppercase block">1. Focus</span>
+                <span className="text-[10px] text-[#07472c] font-bold uppercase block">1. Focus</span>
                 <p className="text-xs font-bold text-[#032014] mt-0.5">Seek God First</p>
                 <span className="text-[10px] text-slate-500 block mt-0.5">Prioritize morning devotion</span>
               </div>
               <div className="p-3 bg-[#f8faf8] rounded-lg border border-slate-200">
-                <span className="text-[10px] font-mono text-[#07472c] font-bold uppercase block">2. Posture</span>
+                <span className="text-[10px] text-[#07472c] font-bold uppercase block">2. Posture</span>
                 <p className="text-xs font-bold text-[#032014] mt-0.5">Guard Your Peace</p>
                 <span className="text-[10px] text-slate-500 block mt-0.5">Reject fear & negativity</span>
               </div>
               <div className="p-3 bg-[#f8faf8] rounded-lg border border-slate-200">
-                <span className="text-[10px] font-mono text-[#07472c] font-bold uppercase block">3. Expectation</span>
+                <span className="text-[10px] text-[#07472c] font-bold uppercase block">3. Expectation</span>
                 <p className="text-xs font-bold text-[#032014] mt-0.5">Walk in Boldness</p>
                 <span className="text-[10px] text-slate-500 block mt-0.5">God goes before you</span>
               </div>
@@ -232,7 +232,7 @@ export const PastorsCorner: React.FC<PastorsCornerProps> = ({
               {/* Header */}
               <div className="bg-[#02180e] text-white p-6 border-b border-[#07472c] flex items-start justify-between">
                 <div>
-                  <span className="text-[10px] font-mono text-[#f5cf72] uppercase tracking-wider block font-bold">
+                  <span className="text-[10px] text-[#f5cf72] uppercase tracking-wider block font-bold">
                     PASTOR'S CORNER • FULL WEEKLY CHARGE
                   </span>
                   <h3 className="text-xl sm:text-2xl font-bold font-serif-title text-white mt-1">

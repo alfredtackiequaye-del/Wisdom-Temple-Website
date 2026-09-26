@@ -169,7 +169,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
           initial={{ opacity: 0, y: -12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-[#c99726]/15 border border-[#c99726]/40 text-[#fce49e] text-xs font-mono font-bold uppercase tracking-widest shadow-lg backdrop-blur-md"
+          className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-[#c99726]/15 border border-[#c99726]/40 text-[#fce49e] text-xs font-bold uppercase tracking-widest shadow-lg backdrop-blur-md"
         >
           <Sparkles className="w-3.5 h-3.5 text-[#f5cf72] animate-pulse" />
           <span>MOMENTS OF FAITH & GLORY</span>
@@ -367,7 +367,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                     </span>
                   )}
                   <span
-                    className={`px-3 py-1 rounded-full bg-[#02180e]/90 text-[#f5cf72] text-[10px] font-mono font-bold tracking-wider uppercase border border-[#c99726]/40 backdrop-blur-md shadow-md items-center space-x-1.5 ${layout === "editorial" ? "hidden sm:flex" : "flex"}`}
+                    className={`px-3 py-1 rounded-full bg-[#02180e]/90 text-[#f5cf72] text-[10px] font-bold tracking-wider uppercase border border-[#c99726]/40 backdrop-blur-md shadow-md items-center space-x-1.5 ${layout === "editorial" ? "hidden sm:flex" : "flex"}`}
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-[#c99726]" />
                     <span>{photo.category}</span>
@@ -464,10 +464,10 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
             {/* Lightbox Header Bar */}
             <div className="relative z-20 flex items-center justify-between px-4 sm:px-8 py-4 bg-black/90 border-b border-white/10 text-white">
               <div className="flex items-center space-x-3">
-                <span className="px-3 py-1 rounded-full bg-[#07472c] text-[#f5cf72] text-xs font-mono font-bold tracking-wider uppercase border border-[#c99726]/40">
+                <span className="px-3 py-1 rounded-full bg-[#07472c] text-[#f5cf72] text-xs font-bold tracking-wider uppercase border border-[#c99726]/40">
                   {currentPhoto.category}
                 </span>
-                <span className="text-xs text-white/70 font-mono hidden sm:inline-block">
+                <span className="text-xs text-white/70 hidden sm:inline-block">
                   Photo {activePhotoIndex !== null ? activePhotoIndex + 1 : 1}{" "}
                   of {filteredPhotos.length}
                 </span>

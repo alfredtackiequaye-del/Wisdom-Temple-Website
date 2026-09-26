@@ -39,11 +39,11 @@ export const GrowView: React.FC<GrowViewProps> = ({ onNavigate }) => {
           />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
-          <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
+          <span className="text-xs text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
             SPIRITUAL MATURITY & DISCIPLESHIP
           </span>
           <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            GROW IN CHRIST
+            Grow in Christ
           </h1>
           <p className="text-base sm:text-lg text-emerald-200/80 max-w-2xl mx-auto leading-relaxed">
             "Grow in the grace and knowledge of our Lord and Savior Jesus Christ." Equipping every believer with sound doctrine, fervent prayer, and daily fellowship with God.
@@ -57,19 +57,19 @@ export const GrowView: React.FC<GrowViewProps> = ({ onNavigate }) => {
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
             <div className="flex items-center space-x-2 text-[#07472c]">
               <Sparkles className="w-5 h-5 text-[#c99726]" />
-              <span className="text-xs font-mono font-bold uppercase tracking-wider">DAILY BREAD & MEDITATION</span>
+              <span className="text-xs font-bold uppercase tracking-wider">DAILY BREAD & MEDITATION</span>
             </div>
-            <span className="text-xs font-mono text-slate-500">Saturday, September 19, 2026</span>
+            <span className="text-xs text-slate-500">Saturday, September 19, 2026</span>
           </div>
 
           <div className="space-y-4 max-w-3xl">
-            <span className="text-xs font-mono px-3 py-1 bg-[#eef6f1] text-[#07472c] border border-[#c2decc] rounded-full font-bold inline-block">
+            <span className="text-xs px-3 py-1 bg-[#eef6f1] text-[#07472c] border border-[#c2decc] rounded-full font-bold inline-block">
               THEME: WALKING IN PRUDENCE
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#032014] font-serif-title">
               "The Prudent Man Foreseeth the Evil"
             </h2>
-            <div className="p-4 bg-[#f8faf8] border-l-4 border-[#c99726] rounded-r-xl text-slate-800 font-mono text-xs sm:text-sm">
+            <div className="p-4 bg-[#f8faf8] border-l-4 border-[#c99726] rounded-r-xl text-slate-800 text-xs sm:text-sm">
               "A prudent man foreseeth the evil, and hideth himself; but the simple pass on, and are punished." — Proverbs 22:3
             </div>
 
@@ -87,7 +87,7 @@ export const GrowView: React.FC<GrowViewProps> = ({ onNavigate }) => {
         {/* Section 2: 4 Pathways of Growth */}
         <div>
           <div className="mb-8">
-            <span className="text-xs font-mono font-bold tracking-widest text-[#07472c] bg-[#eef6f1] px-3 py-1 rounded-full border border-[#c2decc] uppercase">
+            <span className="text-xs font-bold tracking-widest text-[#07472c] bg-[#eef6f1] px-3 py-1 rounded-full border border-[#c2decc] uppercase">
               STRUCTURED DISCIPLESHIP
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#032014] font-serif-title mt-2">
@@ -165,7 +165,7 @@ export const GrowView: React.FC<GrowViewProps> = ({ onNavigate }) => {
         <div className="bg-[#02180e] text-white rounded-3xl p-8 sm:p-10 border border-[#084c2e]">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 space-y-4">
-              <span className="text-xs font-mono text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
+              <span className="text-xs text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
                 NEW CONVERTS & BELIEVERS
               </span>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-serif-title">
@@ -174,7 +174,7 @@ export const GrowView: React.FC<GrowViewProps> = ({ onNavigate }) => {
               <p className="text-sm text-emerald-100/80 leading-relaxed">
                 Whether you just accepted Jesus Christ, recently moved to our neighborhood, or desire to ground your theological understanding in the charismatic faith, Foundation School is tailored for you.
               </p>
-              <div className="flex items-center space-x-2 text-xs text-emerald-200 font-mono">
+              <div className="flex items-center space-x-2 text-xs text-emerald-200">
                 <Calendar className="w-4 h-4 text-[#c99726]" />
                 <span>Next Intake: First Sunday of Every Month at 7:00 AM</span>
               </div>
