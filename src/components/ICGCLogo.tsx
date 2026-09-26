@@ -130,7 +130,7 @@ export const ICGCLogo: React.FC<ICGCLogoProps> = ({
       {emblem}
       <div className="flex flex-col justify-center">
         <span
-          className={`${dims.title} tracking-tight font-sans ${isLight ? "text-[#063c24]" : "text-white"}`}
+          className={`${dims.title} tracking-tight font-sans ${isLight ? "text-forest-800" : "text-white"}`}
         >
           WISDOM TEMPLE
         </span>

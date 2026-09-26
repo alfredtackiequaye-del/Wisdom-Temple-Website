@@ -22,6 +22,7 @@ import {
   ArrowRight,
   Eye,
 } from "lucide-react";
+import { reveal } from "../utils/motion";
 
 interface PhotoGalleryProps {
   photos: ChurchPhoto[];
@@ -166,27 +167,23 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
       {/* Section Header */}
       <div className="text-center max-w-3xl mx-auto space-y-3 px-4">
         <motion.div
-          initial={{ opacity: 0, y: -12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-[#c99726]/15 border border-[#c99726]/40 text-[#fce49e] text-xs font-bold uppercase tracking-widest shadow-lg backdrop-blur-md"
+          {...reveal()}
+                    className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gold-500/15 border border-gold-500/40 text-gold-200 text-xs font-bold uppercase tracking-widest shadow-lg backdrop-blur-md"
         >
-          <Sparkles className="w-3.5 h-3.5 text-[#f5cf72] animate-pulse" />
+          <Sparkles className="w-3.5 h-3.5 text-gold-300 animate-pulse" />
           <span>MOMENTS OF FAITH & GLORY</span>
         </motion.div>
 
         <motion.h2
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className={`text-3xl sm:text-4xl lg:text-5xl font-black font-serif-title tracking-tight uppercase ${
-            isDark ? "text-white" : "text-[#032014]"
+          {...reveal()}
+                    className={`text-3xl sm:text-4xl lg:text-5xl font-black font-serif-title tracking-tight uppercase ${
+            isDark ? "text-white" : "text-forest-900"
           }`}
         >
           {title.includes("&") ? (
             <>
               {title.split("&")[0]}
-              <span className="text-[#dfb15b]">& {title.split("&")[1]}</span>
+              <span className="text-gold-400">& {title.split("&")[1]}</span>
             </>
           ) : (
             title
@@ -195,10 +192,8 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
 
         {subtitle && (
           <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className={`text-sm sm:text-base leading-relaxed max-w-2xl mx-auto ${
+            {...reveal()}
+                        className={`text-sm sm:text-base leading-relaxed max-w-2xl mx-auto ${
               isDark ? "text-emerald-100/80" : "text-slate-600"
             }`}
           >
@@ -210,13 +205,11 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
       {/* Filter and Search Bar */}
       {showFilters && (
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 max-w-6xl mx-auto px-4"
+          {...reveal()}
+                    className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 max-w-6xl mx-auto px-4"
         >
           {/* Category Tabs Pill Bar */}
-          <div className="flex items-center space-x-1.5 overflow-x-auto pb-2 sm:pb-0 scrollbar-none p-1.5 rounded-2xl bg-[#02180e]/90 border border-[#c99726]/30 backdrop-blur-md shadow-xl">
+          <div className="flex items-center space-x-1.5 overflow-x-auto pb-2 sm:pb-0 scrollbar-none p-1.5 rounded-2xl bg-forest-950/90 border border-gold-500/30 backdrop-blur-md shadow-xl">
             {CATEGORIES.map((cat) => {
               const isActive = selectedCategory === cat;
               const count =
@@ -229,7 +222,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   onClick={() => setSelectedCategory(cat)}
                   className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors duration-200 cursor-pointer flex items-center space-x-1.5 ${
                     isActive
-                      ? "bg-[#c99726] text-[#021a10] shadow-sm font-bold"
+                      ? "bg-gold-500 text-forest-950 shadow-sm font-bold"
                       : "text-emerald-100/80 hover:text-white hover:bg-white/10 font-medium"
                   }`}
                 >
@@ -237,7 +230,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   <span
                     className={`text-[10px] px-1.5 py-0.5 rounded-full ${
                       isActive
-                        ? "bg-[#021a10]/20 text-[#021a10]"
+                        ? "bg-forest-950/20 text-forest-950"
                         : "bg-black/30 text-emerald-200"
                     }`}
                   >
@@ -250,13 +243,13 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
 
           {/* Search Box */}
           <div className="relative w-full lg:w-72 shrink-0">
-            <Search className="w-4 h-4 text-[#c99726] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-gold-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by event, keyword..."
-              className="w-full pl-10 pr-9 py-2.5 text-xs rounded-2xl bg-[#02180e]/90 border border-[#c99726]/35 focus:outline-none focus:border-[#c99726] focus:ring-2 focus:ring-[#c99726]/20 shadow-xl text-white placeholder-emerald-200/50 backdrop-blur-md"
+              className="w-full pl-10 pr-9 py-2.5 text-xs rounded-2xl bg-forest-950/90 border border-gold-500/35 focus:outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/20 shadow-xl text-white placeholder-emerald-200/50 backdrop-blur-md"
             />
             {searchQuery && (
               <button
@@ -272,8 +265,8 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
 
       {/* Grid of Church Moments */}
       {displayPhotos.length === 0 ? (
-        <div className="text-center py-16 bg-[#032014]/80 rounded-3xl border border-[#c99726]/30 max-w-xl mx-auto p-8 shadow-xl backdrop-blur-md text-white">
-          <Filter className="w-12 h-12 text-[#c99726]/60 mx-auto mb-3" />
+        <div className="text-center py-16 bg-forest-900/80 rounded-3xl border border-gold-500/30 max-w-xl mx-auto p-8 shadow-xl backdrop-blur-md text-white">
+          <Filter className="w-12 h-12 text-gold-500/60 mx-auto mb-3" />
           <h3 className="text-lg font-bold text-white font-serif-title">
             No Moments Found
           </h3>
@@ -286,7 +279,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
               setSelectedCategory("All");
               setSearchQuery("");
             }}
-            className="mt-5 px-5 py-2.5 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] text-xs font-bold uppercase tracking-wider rounded-lg cursor-pointer shadow-sm transition-colors"
+            className="mt-5 px-5 py-2.5 bg-gold-500 hover:bg-gold-600 text-forest-950 text-xs font-bold uppercase tracking-wider rounded-lg cursor-pointer shadow-sm transition-colors"
           >
             Reset Filters
           </button>
@@ -295,22 +288,19 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
         <div
           className={
             layout === "editorial"
-              ? "grid grid-cols-2 md:grid-cols-4 auto-rows-[150px] sm:auto-rows-[190px] lg:auto-rows-[220px] gap-1.5 sm:gap-2 max-w-7xl mx-auto px-4 bg-[#07100c]"
+              ? "grid grid-cols-2 md:grid-cols-4 auto-rows-[150px] sm:auto-rows-[190px] lg:auto-rows-[220px] gap-1.5 sm:gap-2 max-w-7xl mx-auto px-4 bg-forest-950"
               : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-7xl mx-auto px-4"
           }
         >
           {displayPhotos.map((photo, index) => (
             <motion.div
               key={photo.id}
-              initial={{ opacity: 0, y: 22 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.05 }}
-              whileHover={{ y: -6 }}
+              {...reveal(Math.min(index, 6) * 0.05)}
+                            whileHover={{ y: -6 }}
               className={
                 layout === "editorial"
-                  ? `group relative overflow-hidden bg-[#032215] border border-[#07100c] cursor-pointer ${index % 7 === 0 ? "col-span-2 row-span-2" : index % 5 === 0 ? "row-span-2" : index % 3 === 0 ? "col-span-2" : ""}`
-                  : "group relative rounded-3xl overflow-hidden bg-[#032215] border border-[#c99726]/30 hover:border-[#c99726] transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-[#c99726]/20 flex flex-col justify-between cursor-pointer"
+                  ? `group relative overflow-hidden bg-forest-900 border border-forest-950 cursor-pointer ${index % 7 === 0 ? "col-span-2 row-span-2" : index % 5 === 0 ? "row-span-2" : index % 3 === 0 ? "col-span-2" : ""}`
+                  : "group relative rounded-3xl overflow-hidden bg-forest-900 border border-gold-500/30 hover:border-gold-500 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-gold-500/20 flex flex-col justify-between cursor-pointer"
               }
               onClick={() => {
                 const originalIndex = filteredPhotos.findIndex(
@@ -361,20 +351,20 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   }
                 >
                   {layout === "editorial" && (
-                    <span className="max-w-full px-2.5 py-1 rounded-md bg-[#02180e]/85 backdrop-blur-md border border-[#c99726]/25 text-white text-[10px] sm:text-xs font-bold uppercase tracking-[0.08em] sm:tracking-[0.14em] leading-snug shadow-md">
+                    <span className="max-w-full px-2.5 py-1 rounded-md bg-forest-950/85 backdrop-blur-md border border-gold-500/25 text-white text-[10px] sm:text-xs font-bold uppercase tracking-[0.08em] sm:tracking-[0.14em] leading-snug shadow-md">
                       <span className="line-clamp-2">{photo.title}</span>
                     </span>
                   )}
                   <span
-                    className={`px-3 py-1 rounded-full bg-[#02180e]/90 text-[#f5cf72] text-[10px] font-bold tracking-wider uppercase border border-[#c99726]/40 backdrop-blur-md shadow-md items-center space-x-1.5 ${layout === "editorial" ? "hidden sm:flex" : "flex"}`}
+                    className={`px-3 py-1 rounded-full bg-forest-950/90 text-gold-300 text-[10px] font-bold tracking-wider uppercase border border-gold-500/40 backdrop-blur-md shadow-md items-center space-x-1.5 ${layout === "editorial" ? "hidden sm:flex" : "flex"}`}
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#c99726]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-gold-500" />
                     <span>{photo.category}</span>
                   </span>
                 </div>
 
                 {/* Quick View / Lightbox Icon */}
-                <div className="absolute top-3.5 right-3.5 z-10 w-9 h-9 rounded-full bg-[#02180e]/85 backdrop-blur-md border border-[#c99726]/40 text-[#f5cf72] flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-[#c99726] group-hover:text-[#021a10] transition-all duration-300">
+                <div className="absolute top-3.5 right-3.5 z-10 w-9 h-9 rounded-full bg-forest-950/85 backdrop-blur-md border border-gold-500/40 text-gold-300 flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-gold-500 group-hover:text-forest-950 transition-all duration-300">
                   <Maximize2 className="w-4 h-4" />
                 </div>
               </div>
@@ -388,22 +378,22 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                 className={
                   layout === "editorial"
                     ? "hidden"
-                    : "p-5 sm:p-6 bg-[#032215] flex-1 flex flex-col justify-between space-y-3"
+                    : "p-5 sm:p-6 bg-forest-900 flex-1 flex flex-col justify-between space-y-3"
                 }
               >
                 {/* Event and Date Header */}
                 <div className="space-y-1.5">
-                  <div className="flex items-center space-x-2 text-xs text-[#f5cf72] font-semibold">
-                    <Calendar className="w-3.5 h-3.5 text-[#c99726]" />
+                  <div className="flex items-center space-x-2 text-xs text-gold-300 font-semibold">
+                    <Calendar className="w-3.5 h-3.5 text-gold-500" />
                     <span>{photo.date}</span>
-                    <span className="text-[#c99726]/50">•</span>
+                    <span className="text-gold-500/50">•</span>
                     <span className="text-emerald-200/90 truncate font-medium">
                       {photo.event}
                     </span>
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-lg sm:text-xl font-bold font-serif-title text-white group-hover:text-[#fce49e] transition-colors leading-snug tracking-tight">
+                  <h3 className="text-lg sm:text-xl font-bold font-serif-title text-white group-hover:text-gold-200 transition-colors leading-snug tracking-tight">
                     {photo.title}
                   </h3>
 
@@ -414,17 +404,17 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                 </div>
 
                 {/* Footer Metadata & Action */}
-                <div className="pt-3 border-t border-[#07472c]/70 flex items-center justify-between text-xs">
+                <div className="pt-3 border-t border-forest-700/70 flex items-center justify-between text-xs">
                   <div className="flex items-center space-x-1.5 text-emerald-300/80 truncate max-w-[65%]">
-                    <MapPin className="w-3.5 h-3.5 text-[#c99726] shrink-0" />
+                    <MapPin className="w-3.5 h-3.5 text-gold-500 shrink-0" />
                     <span className="text-[11px] truncate">
                       {photo.location || "Wisdom Temple, Tabora"}
                     </span>
                   </div>
 
-                  <span className="inline-flex items-center space-x-1 text-xs font-bold text-[#f5cf72] group-hover:translate-x-1 transition-transform shrink-0">
+                  <span className="inline-flex items-center space-x-1 text-xs font-bold text-gold-300 group-hover:translate-x-1 transition-transform shrink-0">
                     <span>View Moment</span>
-                    <ChevronRight className="w-4 h-4 text-[#c99726]" />
+                    <ChevronRight className="w-4 h-4 text-gold-500" />
                   </span>
                 </div>
               </div>
@@ -438,7 +428,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
         <div className="text-center pt-4">
           <button
             onClick={onViewAll}
-            className="px-8 py-3.5 rounded-lg bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider shadow-sm transition-colors cursor-pointer inline-flex items-center space-x-2"
+            className="px-8 py-3.5 rounded-lg bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider shadow-sm transition-colors cursor-pointer inline-flex items-center space-x-2"
           >
             <span>EXPLORE ALL CHURCH MOMENTS ({photos.length})</span>
             <ArrowRight className="w-4 h-4" />
@@ -463,7 +453,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
             {/* Lightbox Header Bar */}
             <div className="relative z-20 flex items-center justify-between px-4 sm:px-8 py-4 bg-black/90 border-b border-white/10 text-white">
               <div className="flex items-center space-x-3">
-                <span className="px-3 py-1 rounded-full bg-[#07472c] text-[#f5cf72] text-xs font-bold tracking-wider uppercase border border-[#c99726]/40">
+                <span className="px-3 py-1 rounded-full bg-forest-700 text-gold-300 text-xs font-bold tracking-wider uppercase border border-gold-500/40">
                   {currentPhoto.category}
                 </span>
                 <span className="text-xs text-white/70 hidden sm:inline-block">
@@ -488,7 +478,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                     </>
                   ) : (
                     <>
-                      <Share2 className="w-4 h-4 text-[#f5cf72]" />
+                      <Share2 className="w-4 h-4 text-gold-300" />
                       <span className="hidden sm:inline">Share</span>
                     </>
                   )}
@@ -500,9 +490,9 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   title="Toggle Fullscreen"
                 >
                   {isFullscreen ? (
-                    <Minimize2 className="w-4 h-4 text-[#f5cf72]" />
+                    <Minimize2 className="w-4 h-4 text-gold-300" />
                   ) : (
-                    <Maximize2 className="w-4 h-4 text-[#f5cf72]" />
+                    <Maximize2 className="w-4 h-4 text-gold-300" />
                   )}
                 </button>
 
@@ -525,7 +515,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   e.stopPropagation();
                   handlePrev();
                 }}
-                className="absolute left-3 sm:left-8 top-1/2 -translate-y-1/2 z-30 p-3 sm:p-4 rounded-2xl bg-black/70 hover:bg-[#07472c] text-white border border-white/20 hover:border-[#c99726] transition-all cursor-pointer shadow-2xl backdrop-blur-md group"
+                className="absolute left-3 sm:left-8 top-1/2 -translate-y-1/2 z-30 p-3 sm:p-4 rounded-2xl bg-black/70 hover:bg-forest-700 text-white border border-white/20 hover:border-gold-500 transition-all cursor-pointer shadow-2xl backdrop-blur-md group"
                 title="Previous Photo (Left Arrow)"
               >
                 <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
@@ -557,7 +547,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   e.stopPropagation();
                   handleNext();
                 }}
-                className="absolute right-3 sm:right-8 top-1/2 -translate-y-1/2 z-30 p-3 sm:p-4 rounded-2xl bg-black/70 hover:bg-[#07472c] text-white border border-white/20 hover:border-[#c99726] transition-all cursor-pointer shadow-2xl backdrop-blur-md group"
+                className="absolute right-3 sm:right-8 top-1/2 -translate-y-1/2 z-30 p-3 sm:p-4 rounded-2xl bg-black/70 hover:bg-forest-700 text-white border border-white/20 hover:border-gold-500 transition-all cursor-pointer shadow-2xl backdrop-blur-md group"
                 title="Next Photo (Right Arrow)"
               >
                 <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
@@ -569,7 +559,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
               {/* Photo Title & Metadata */}
               <div className="max-w-4xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-2">
                 <div className="space-y-1">
-                  <div className="flex items-center space-x-2 text-xs text-[#f5cf72] font-semibold">
+                  <div className="flex items-center space-x-2 text-xs text-gold-300 font-semibold">
                     <span>{currentPhoto.event}</span>
                     <span className="text-white/40">•</span>
                     <span className="flex items-center space-x-1">
@@ -603,7 +593,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                     onClick={() => setActivePhotoIndex(idx)}
                     className={`relative w-14 h-12 rounded-lg overflow-hidden shrink-0 transition-all cursor-pointer ${
                       idx === activePhotoIndex
-                        ? "ring-2 ring-[#c99726] scale-105 opacity-100"
+                        ? "ring-2 ring-gold-500 scale-105 opacity-100"
                         : "opacity-50 hover:opacity-90"
                     }`}
                   >

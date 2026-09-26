@@ -4,7 +4,7 @@
  */
 
 import React, { lazy, Suspense, useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, MotionConfig } from "motion/react";
 import {
   PageId,
   Sermon,
@@ -33,6 +33,8 @@ import { VideoModal } from "./components/VideoModal";
 import { WhatsAppWidget } from "./components/WhatsAppWidget";
 import { ShareModal } from "./components/ShareModal";
 import { EventRegistrationModal } from "./components/EventRegistrationModal";
+import { useSiteContent } from "./utils/contentManager";
+import { useStructuredData } from "./utils/structuredData";
 
 // Views are loaded only when their page is opened.
 const HomeView = lazy(() =>
@@ -203,6 +205,8 @@ export default function App() {
   // State Collections for Interactive Church Features
   const [sermons] = useState<Sermon[]>(INITIAL_SERMONS);
   const [events, setEvents] = useState<ChurchEvent[]>(INITIAL_EVENTS);
+  const { content: siteContent } = useSiteContent();
+  useStructuredData(siteContent, events);
   const [ministries] = useState(INITIAL_MINISTRIES);
   const [testimonies] = useState(INITIAL_TESTIMONIES);
   const [photos] = useState<ChurchPhoto[]>(INITIAL_CHURCH_PHOTOS);
@@ -533,7 +537,7 @@ export default function App() {
   // =========================================================================
   if (currentPage === "admin") {
     return (
-      <div className="min-h-screen bg-[#f8faf8] font-sans antialiased text-slate-900 selection:bg-[#c99726] selection:text-[#021a10]">
+      <div className="min-h-screen bg-mist-50 font-sans antialiased text-slate-900 selection:bg-gold-500 selection:text-forest-950">
         <Suspense fallback={<div className="min-h-screen" />}>
           <AdminView
             initialTab={currentSubTab}
@@ -573,8 +577,8 @@ export default function App() {
 
         {/* Standalone Admin Toast Alert */}
         {toastMessage && (
-          <div className="fixed bottom-6 right-6 z-50 bg-[#032416] text-white border border-[#c99726]/60 px-5 py-3 rounded-2xl shadow-2xl text-xs font-semibold flex items-center space-x-2 animate-in fade-in slide-in-from-bottom-2 duration-200">
-            <span className="w-2 h-2 rounded-full bg-[#f5cf72] animate-pulse" />
+          <div className="fixed bottom-6 right-6 z-50 bg-forest-900 text-white border border-gold-500/60 px-5 py-3 rounded-2xl shadow-2xl text-xs font-semibold flex items-center space-x-2 animate-in fade-in slide-in-from-bottom-2 duration-200">
+            <span className="w-2 h-2 rounded-full bg-gold-300 animate-pulse" />
             <span>{toastMessage}</span>
           </div>
         )}
@@ -583,167 +587,169 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8faf8] font-sans text-[#0f241a] flex flex-col selection:bg-[#c99726] selection:text-[#021a10]">
-      {/* Persistent Navigation */}
-      <Navbar
-        currentPage={currentPage}
-        onNavigate={handleNavigate}
-        unreadAdminCount={unreadCount}
-      />
-
-      {/* Main Viewport Content */}
-      <main className="flex-1">
-        <Suspense fallback={<div className="min-h-[60vh]" />}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentPage}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.22, ease: "easeInOut" }}
-            >
-              {currentPage === "home" && (
-                <HomeView
-                  onNavigate={handleNavigate}
-                  sermons={sermons}
-                  events={events}
-                  testimonies={testimonies}
-                  onPlayAudio={handlePlayAudio}
-                  onWatchVideo={handleWatchVideo}
-                  onRegisterEvent={(event) => setRegisteringEvent(event)}
-                  onShare={handleOpenShare}
-                />
-              )}
-
-              {currentPage === "about" && (
-                <AboutView
-                  onNavigate={handleNavigate}
-                  initialSubTab={currentSubTab}
-                />
-              )}
-
-              {currentPage === "watch-listen" && (
-                <WatchListenView
-                  sermons={sermons}
-                  initialCategory={currentSubTab}
-                  onPlayAudio={handlePlayAudio}
-                  onWatchVideo={handleWatchVideo}
-                  onShare={handleOpenShare}
-                />
-              )}
-
-              {currentPage === "grow" && (
-                <GrowView onNavigate={handleNavigate} />
-              )}
-
-              {currentPage === "ministries" && (
-                <MinistriesView
-                  ministries={ministries}
-                  onJoinMinistry={handleJoinMinistry}
-                  onNavigate={handleNavigate}
-                />
-              )}
-
-              {currentPage === "events" && (
-                <EventsView
-                  events={events}
-                  initialSubTab={currentSubTab}
-                  onRegisterEvent={(event) => setRegisteringEvent(event)}
-                  onShare={handleOpenShare}
-                  onNavigate={handleNavigate}
-                />
-              )}
-
-              {currentPage === "gallery" && (
-                <GalleryView photos={photos} onNavigate={handleNavigate} />
-              )}
-
-              {currentPage === "new-here" && (
-                <NewHereView
-                  onNavigate={handleNavigate}
-                  onSubmitVisitPlan={handleVisitPlanSubmit}
-                />
-              )}
-
-              {(currentPage === "prayer" ||
-                currentPage === "prayer-request") && (
-                <PrayerRequestView
-                  onNavigate={handleNavigate}
-                  onSubmitPrayerRequest={handlePrayerSubmit}
-                />
-              )}
-
-              {currentPage === "give" && (
-                <GiveView
-                  onNavigate={handleNavigate}
-                  onSubmitGiving={handleGivingSubmit}
-                />
-              )}
-
-              {currentPage === "contact" && (
-                <ContactView
-                  onNavigate={handleNavigate}
-                  onSubmitContactMessage={handleContactSubmit}
-                />
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </Suspense>
-      </main>
-
-      {/* Global Modals & Sticky Overlays */}
-      {/* 1. Video Player Modal */}
-      {activeVideoSermon && (
-        <VideoModal
-          sermon={activeVideoSermon}
-          onClose={() => setActiveVideoSermon(null)}
-          onShare={() =>
-            handleOpenShare(
-              activeVideoSermon.title,
-              `Watch this message from Wisdom Temple: ${activeVideoSermon.scripture}`,
-            )
-          }
+    <MotionConfig reducedMotion="user">
+      <div className="min-h-screen bg-mist-50 font-sans text-forest-900 flex flex-col selection:bg-gold-500 selection:text-forest-950">
+        {/* Persistent Navigation */}
+        <Navbar
+          currentPage={currentPage}
+          onNavigate={handleNavigate}
+          unreadAdminCount={unreadCount}
         />
-      )}
 
-      {/* 2. Event Registration Modal */}
-      {registeringEvent && (
-        <EventRegistrationModal
-          event={registeringEvent}
-          onClose={() => setRegisteringEvent(null)}
-          onRegister={handleRegisterEventSubmit}
+        {/* Main Viewport Content */}
+        <main className="flex-1">
+          <Suspense fallback={<div className="min-h-[60vh]" />}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentPage}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.22, ease: "easeInOut" }}
+              >
+                {currentPage === "home" && (
+                  <HomeView
+                    onNavigate={handleNavigate}
+                    sermons={sermons}
+                    events={events}
+                    testimonies={testimonies}
+                    onPlayAudio={handlePlayAudio}
+                    onWatchVideo={handleWatchVideo}
+                    onRegisterEvent={(event) => setRegisteringEvent(event)}
+                    onShare={handleOpenShare}
+                  />
+                )}
+
+                {currentPage === "about" && (
+                  <AboutView
+                    onNavigate={handleNavigate}
+                    initialSubTab={currentSubTab}
+                  />
+                )}
+
+                {currentPage === "watch-listen" && (
+                  <WatchListenView
+                    sermons={sermons}
+                    initialCategory={currentSubTab}
+                    onPlayAudio={handlePlayAudio}
+                    onWatchVideo={handleWatchVideo}
+                    onShare={handleOpenShare}
+                  />
+                )}
+
+                {currentPage === "grow" && (
+                  <GrowView onNavigate={handleNavigate} />
+                )}
+
+                {currentPage === "ministries" && (
+                  <MinistriesView
+                    ministries={ministries}
+                    onJoinMinistry={handleJoinMinistry}
+                    onNavigate={handleNavigate}
+                  />
+                )}
+
+                {currentPage === "events" && (
+                  <EventsView
+                    events={events}
+                    initialSubTab={currentSubTab}
+                    onRegisterEvent={(event) => setRegisteringEvent(event)}
+                    onShare={handleOpenShare}
+                    onNavigate={handleNavigate}
+                  />
+                )}
+
+                {currentPage === "gallery" && (
+                  <GalleryView photos={photos} onNavigate={handleNavigate} />
+                )}
+
+                {currentPage === "new-here" && (
+                  <NewHereView
+                    onNavigate={handleNavigate}
+                    onSubmitVisitPlan={handleVisitPlanSubmit}
+                  />
+                )}
+
+                {(currentPage === "prayer" ||
+                  currentPage === "prayer-request") && (
+                  <PrayerRequestView
+                    onNavigate={handleNavigate}
+                    onSubmitPrayerRequest={handlePrayerSubmit}
+                  />
+                )}
+
+                {currentPage === "give" && (
+                  <GiveView
+                    onNavigate={handleNavigate}
+                    onSubmitGiving={handleGivingSubmit}
+                  />
+                )}
+
+                {currentPage === "contact" && (
+                  <ContactView
+                    onNavigate={handleNavigate}
+                    onSubmitContactMessage={handleContactSubmit}
+                  />
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </Suspense>
+        </main>
+
+        {/* Global Modals & Sticky Overlays */}
+        {/* 1. Video Player Modal */}
+        {activeVideoSermon && (
+          <VideoModal
+            sermon={activeVideoSermon}
+            onClose={() => setActiveVideoSermon(null)}
+            onShare={() =>
+              handleOpenShare(
+                activeVideoSermon.title,
+                `Watch this message from Wisdom Temple: ${activeVideoSermon.scripture}`,
+              )
+            }
+          />
+        )}
+
+        {/* 2. Event Registration Modal */}
+        {registeringEvent && (
+          <EventRegistrationModal
+            event={registeringEvent}
+            onClose={() => setRegisteringEvent(null)}
+            onRegister={handleRegisterEventSubmit}
+          />
+        )}
+
+        {/* 3. Share Modal */}
+        <ShareModal
+          isOpen={shareData.isOpen}
+          title={shareData.title}
+          description={shareData.desc}
+          onClose={() => setShareData((prev) => ({ ...prev, isOpen: false }))}
         />
-      )}
 
-      {/* 3. Share Modal */}
-      <ShareModal
-        isOpen={shareData.isOpen}
-        title={shareData.title}
-        description={shareData.desc}
-        onClose={() => setShareData((prev) => ({ ...prev, isOpen: false }))}
-      />
+        {/* 4. Floating WhatsApp Concierge */}
+        <WhatsAppWidget />
 
-      {/* 4. Floating WhatsApp Concierge */}
-      <WhatsAppWidget />
+        {/* 5. Sticky Audio Player Bar */}
+        {activeAudioSermon && (
+          <AudioPlayerBar
+            sermon={activeAudioSermon}
+            onClose={() => setActiveAudioSermon(null)}
+          />
+        )}
 
-      {/* 5. Sticky Audio Player Bar */}
-      {activeAudioSermon && (
-        <AudioPlayerBar
-          sermon={activeAudioSermon}
-          onClose={() => setActiveAudioSermon(null)}
-        />
-      )}
+        {/* 6. Toast Notification */}
+        {toastMessage && (
+          <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-forest-900 text-white border border-gold-500/60 px-5 py-3 rounded-2xl shadow-2xl text-xs font-semibold flex items-center space-x-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
+            <span className="w-2 h-2 rounded-full bg-gold-300 animate-pulse" />
+            <span>{toastMessage}</span>
+          </div>
+        )}
 
-      {/* 6. Toast Notification */}
-      {toastMessage && (
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-[#032416] text-white border border-[#c99726]/60 px-5 py-3 rounded-2xl shadow-2xl text-xs font-semibold flex items-center space-x-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
-          <span className="w-2 h-2 rounded-full bg-[#f5cf72] animate-pulse" />
-          <span>{toastMessage}</span>
-        </div>
-      )}
-
-      {/* Comprehensive Church Footer */}
-      <Footer onNavigate={handleNavigate} />
-    </div>
+        {/* Comprehensive Church Footer */}
+        <Footer onNavigate={handleNavigate} />
+      </div>
+    </MotionConfig>
   );
 }

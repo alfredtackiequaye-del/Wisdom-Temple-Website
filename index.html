@@ -20,43 +20,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Schema.org Church Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Church",
-      "name": "Wisdom Temple",
-      "logo": "/church_logo_white.png",
-      "image": "/wisdom_summit_banner.jpg",
-      "description": "A Bible-believing charismatic Church committed to raising leaders, shaping visions and influencing society through Christ.",
-      "address": {
-        "@type": "PostalAddress",
-        "addressCountry": "Ghana",
-        "streetAddress": "Star Junction, Tabora",
-        "addressLocality": "Tabora - Accra"
-      },
-      "telephone": "+233 24 500 9764",
-      "email": "icgcwisdomtemple@gmail.com",
-      "openingHoursSpecification": [
-        {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": ["Sunday"],
-          "opens": "08:00",
-          "closes": "11:00",
-          "description": "Sunday Celebration Service"
-        },
-        {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": ["Wednesday"],
-          "opens": "19:00",
-          "closes": "21:00",
-          "description": "The Secret Place - Midweek Prayer Service"
-        }
-      ]
-    }
-    </script>
+    <!-- Schema.org Church + Event structured data is generated at runtime (src/utils/structuredData.ts) -->
   </head>
-  <body class="bg-[#f8faf8] text-slate-900 font-sans antialiased selection:bg-[#07472c] selection:text-[#f5cf72]">
+  <body class="bg-mist-50 text-slate-900 font-sans antialiased selection:bg-forest-700 selection:text-gold-300">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

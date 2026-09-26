@@ -45,18 +45,18 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({ sermon, onClose 
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#02180e] border-t border-[#084c2e] text-white shadow-2xl px-4 py-3 sm:px-6">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-forest-950 border-t border-forest-700 text-white shadow-2xl px-4 py-3 sm:px-6">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
         {/* Sermon Details */}
         <div className="flex items-center space-x-3 w-full md:w-1/3">
           <img
             src={sermon.thumbnail}
             alt={sermon.title}
-            className="w-12 h-12 rounded-lg object-cover border border-[#084c2e] shrink-0"
+            className="w-12 h-12 rounded-lg object-cover border border-forest-700 shrink-0"
           />
           <div className="min-w-0 flex-1">
             <h4 className="text-sm font-bold text-white truncate font-serif-title">{sermon.title}</h4>
-            <p className="text-xs text-[#f5cf72] truncate">{sermon.speaker}</p>
+            <p className="text-xs text-gold-300 truncate">{sermon.speaker}</p>
             <span className="text-[11px] text-emerald-300/80">{sermon.scripture}</span>
           </div>
         </div>
@@ -74,9 +74,9 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({ sermon, onClose 
 
             <button
               onClick={togglePlay}
-              className="w-10 h-10 rounded-full bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] flex items-center justify-center shadow-sm transition-colors cursor-pointer"
+              className="w-10 h-10 rounded-full bg-gold-500 hover:bg-gold-600 text-forest-950 flex items-center justify-center shadow-sm transition-colors cursor-pointer"
             >
-              {isPlaying ? <Pause className="w-5 h-5 fill-[#021a10]" /> : <Play className="w-5 h-5 fill-[#021a10] ml-0.5" />}
+              {isPlaying ? <Pause className="w-5 h-5 fill-forest-950" /> : <Play className="w-5 h-5 fill-forest-950 ml-0.5" />}
             </button>
 
             <button
@@ -89,7 +89,7 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({ sermon, onClose 
 
             <button
               onClick={cyclePlaybackRate}
-              className="px-2 py-0.5 rounded text-xs bg-[#042819] text-[#f5cf72] font-semibold hover:bg-[#063821] border border-[#084c2e] cursor-pointer"
+              className="px-2 py-0.5 rounded text-xs bg-forest-850 text-gold-300 font-semibold hover:bg-forest-800 border border-forest-700 cursor-pointer"
             >
               {playbackRate}x
             </button>
@@ -103,7 +103,7 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({ sermon, onClose 
               max={duration}
               value={currentTime}
               onChange={(e) => setCurrentTime(Number(e.target.value))}
-              className="w-full h-1 bg-[#042819] rounded-lg appearance-none cursor-pointer accent-[#c99726]"
+              className="w-full h-1 bg-forest-850 rounded-lg appearance-none cursor-pointer accent-gold-500"
             />
             <span>{sermon.duration}</span>
           </div>
@@ -117,12 +117,12 @@ export const AudioPlayerBar: React.FC<AudioPlayerBarProps> = ({ sermon, onClose 
           >
             {isMuted ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4" />}
           </button>
-          <span className="text-xs px-2 py-1 bg-[#042819] text-[#f5cf72] rounded border border-[#c99726]/40 font-medium">
+          <span className="text-xs px-2 py-1 bg-forest-850 text-gold-300 rounded border border-gold-500/40 font-medium">
             {sermon.category}
           </span>
           <button
             onClick={onClose}
-            className="p-1 rounded-full text-emerald-200/70 hover:text-white hover:bg-[#042819] transition-colors cursor-pointer"
+            className="p-1 rounded-full text-emerald-200/70 hover:text-white hover:bg-forest-850 transition-colors cursor-pointer"
             title="Close Player"
           >
             <X className="w-5 h-5" />

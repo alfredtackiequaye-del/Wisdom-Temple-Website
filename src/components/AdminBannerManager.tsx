@@ -345,19 +345,19 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
     <div className="space-y-8">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#032014] text-white border border-[#c99726] px-5 py-3.5 rounded-xl shadow-2xl flex items-center space-x-3 animate-fade-in">
-          <Sparkles className="w-5 h-5 text-[#f5cf72] shrink-0" />
+        <div className="fixed bottom-6 right-6 z-50 bg-forest-900 text-white border border-gold-500 px-5 py-3.5 rounded-xl shadow-2xl flex items-center space-x-3 animate-fade-in">
+          <Sparkles className="w-5 h-5 text-gold-300 shrink-0" />
           <span className="text-xs sm:text-sm font-medium">{toastMessage}</span>
         </div>
       )}
 
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-[#02180e] via-[#042d1b] to-[#02180e] rounded-2xl p-6 sm:p-8 text-white border border-[#c99726]/40 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-[#c99726]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="bg-gradient-to-r from-forest-950 via-forest-850 to-forest-950 rounded-2xl p-6 sm:p-8 text-white border border-gold-500/40 shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-gold-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#c99726]/20 border border-[#c99726]/40 text-[#f5cf72] text-[11px] font-mono font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-gold-500/20 border border-gold-500/40 text-gold-300 text-[11px] font-mono font-bold uppercase tracking-wider">
               <Layers className="w-3.5 h-3.5" />
               <span>MEDIA & ASSET MANAGEMENT PORTAL</span>
             </div>
@@ -378,7 +378,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
               className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold border border-white/20 backdrop-blur-sm transition-all flex items-center space-x-2 cursor-pointer"
               title="Download backup configuration of all banner URLs"
             >
-              <Download className="w-4 h-4 text-[#f5cf72]" />
+              <Download className="w-4 h-4 text-gold-300" />
               <span>Export Roster (JSON)</span>
             </button>
             <button
@@ -394,17 +394,17 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
       </div>
 
       {/* Recommended Sizes Designer Cheat Sheet */}
-      <div className="bg-white rounded-2xl border border-[#d6e5dc] shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-mist-300 shadow-sm overflow-hidden">
         <button
           onClick={() => setShowGuideAccordion(!showGuideAccordion)}
-          className="w-full px-6 py-4 bg-[#f8faf8] border-b border-[#e2ede6] flex items-center justify-between text-left hover:bg-[#eef6f1] transition-colors cursor-pointer"
+          className="w-full px-6 py-4 bg-mist-50 border-b border-mist-200 flex items-center justify-between text-left hover:bg-mist-100 transition-colors cursor-pointer"
         >
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-lg bg-[#032014] text-[#f5cf72] flex items-center justify-center font-bold text-xs">
+            <div className="w-8 h-8 rounded-lg bg-forest-900 text-gold-300 flex items-center justify-center font-bold text-xs">
               📐
             </div>
             <div>
-              <h3 className="text-sm font-bold text-[#032014]">
+              <h3 className="text-sm font-bold text-forest-900">
                 Church Media Team • Dimension Cheat Sheet & Design Guidelines
               </h3>
               <p className="text-xs text-slate-500">
@@ -413,7 +413,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
               </p>
             </div>
           </div>
-          <div className="flex items-center space-x-2 text-xs font-semibold text-[#07472c]">
+          <div className="flex items-center space-x-2 text-xs font-semibold text-forest-700">
             <span>{showGuideAccordion ? "Hide Specs" : "View Specs"}</span>
             {showGuideAccordion ? (
               <ChevronUp className="w-4 h-4" />
@@ -426,16 +426,16 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
         {showGuideAccordion && (
           <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 bg-white text-xs">
             {/* Spec 1: Hero */}
-            <div className="p-4 rounded-xl bg-[#f8faf8] border border-[#d6e5dc] space-y-2">
+            <div className="p-4 rounded-xl bg-mist-50 border border-mist-300 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-[#032014] text-sm">
+                <span className="font-bold text-forest-900 text-sm">
                   Homepage Hero
                 </span>
                 <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono font-bold text-[10px]">
                   16:9
                 </span>
               </div>
-              <div className="text-base font-extrabold text-[#07472c] font-mono">
+              <div className="text-base font-extrabold text-forest-700 font-mono">
                 1920 × 1080 px
               </div>
               <p className="text-slate-600 text-[11px] leading-relaxed">
@@ -445,16 +445,16 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
             </div>
 
             {/* Spec 2: Ministry Cards */}
-            <div className="p-4 rounded-xl bg-[#f8faf8] border border-[#d6e5dc] space-y-2">
+            <div className="p-4 rounded-xl bg-mist-50 border border-mist-300 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-[#032014] text-sm">
+                <span className="font-bold text-forest-900 text-sm">
                   Ministry Cards
                 </span>
                 <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-mono font-bold text-[10px]">
                   4:3 / 16:10
                 </span>
               </div>
-              <div className="text-base font-extrabold text-[#07472c] font-mono">
+              <div className="text-base font-extrabold text-forest-700 font-mono">
                 800 × 600 px
               </div>
               <p className="text-slate-600 text-[11px] leading-relaxed">
@@ -464,16 +464,16 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
             </div>
 
             {/* Spec 3: Featured Events */}
-            <div className="p-4 rounded-xl bg-[#f8faf8] border border-[#d6e5dc] space-y-2">
+            <div className="p-4 rounded-xl bg-mist-50 border border-mist-300 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-[#032014] text-sm">
+                <span className="font-bold text-forest-900 text-sm">
                   Event & Summit Flyers
                 </span>
                 <span className="px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-mono font-bold text-[10px]">
                   16:9 Landscape
                 </span>
               </div>
-              <div className="text-base font-extrabold text-[#07472c] font-mono">
+              <div className="text-base font-extrabold text-forest-700 font-mono">
                 1200 × 675 px
               </div>
               <p className="text-slate-600 text-[11px] leading-relaxed">
@@ -483,16 +483,16 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
             </div>
 
             {/* Spec 4: Page Headers & Flyers */}
-            <div className="p-4 rounded-xl bg-[#f8faf8] border border-[#d6e5dc] space-y-2">
+            <div className="p-4 rounded-xl bg-mist-50 border border-mist-300 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-[#032014] text-sm">
+                <span className="font-bold text-forest-900 text-sm">
                   Giving Flyer & Page Headers
                 </span>
                 <span className="px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-mono font-bold text-[10px]">
                   4:5 / 3.2:1
                 </span>
               </div>
-              <div className="text-base font-extrabold text-[#07472c] font-mono">
+              <div className="text-base font-extrabold text-forest-700 font-mono">
                 1080×1350 / 1920×600 px
               </div>
               <p className="text-slate-600 text-[11px] leading-relaxed">
@@ -514,15 +514,15 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
               onClick={() => setSelectedCategory(cat.key)}
               className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1.5 ${
                 selectedCategory === cat.key
-                  ? "bg-[#032014] text-[#f5cf72] shadow-md border border-[#c99726]/40"
-                  : "bg-white text-slate-700 hover:bg-[#eef6f1] border border-[#d6e5dc]"
+                  ? "bg-forest-900 text-gold-300 shadow-md border border-gold-500/40"
+                  : "bg-white text-slate-700 hover:bg-mist-100 border border-mist-300"
               }`}
             >
               <span>{cat.label}</span>
               <span
                 className={`px-1.5 py-0.5 rounded-full text-[10px] ${
                   selectedCategory === cat.key
-                    ? "bg-[#c99726] text-[#021a10]"
+                    ? "bg-gold-500 text-forest-950"
                     : "bg-slate-100 text-slate-600"
                 }`}
               >
@@ -540,7 +540,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search banner, size, page..."
-            className="w-full pl-10 pr-4 py-2 bg-white rounded-xl border border-[#d6e5dc] text-xs focus:ring-2 focus:ring-[#07472c] focus:outline-none placeholder-slate-400 shadow-xs"
+            className="w-full pl-10 pr-4 py-2 bg-white rounded-xl border border-mist-300 text-xs focus:ring-2 focus:ring-forest-700 focus:outline-none placeholder-slate-400 shadow-xs"
           />
           {searchQuery && (
             <button
@@ -568,14 +568,14 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
               key={banner.id}
               className={`bg-white rounded-2xl border transition-all duration-200 overflow-hidden shadow-sm hover:shadow-md flex flex-col justify-between ${
                 isCustom
-                  ? "border-[#c99726] ring-1 ring-[#c99726]/30"
-                  : "border-[#d6e5dc]"
+                  ? "border-gold-500 ring-1 ring-gold-500/30"
+                  : "border-mist-300"
               }`}
             >
               {/* Top Banner Card Info */}
               <div>
                 {/* Visual Preview Container */}
-                <div className="relative aspect-[16/9] bg-[#02180e] overflow-hidden group">
+                <div className="relative aspect-[16/9] bg-forest-950 overflow-hidden group">
                   <img
                     src={currentUrlValue}
                     alt={banner.name}
@@ -590,7 +590,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
 
                   {/* Top Badges */}
                   <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
-                    <span className="px-2 py-0.5 rounded bg-[#02180e]/90 text-[#f5cf72] text-[10px] font-mono font-bold border border-[#c99726]/40 backdrop-blur-md">
+                    <span className="px-2 py-0.5 rounded bg-forest-950/90 text-gold-300 text-[10px] font-mono font-bold border border-gold-500/40 backdrop-blur-md">
                       {banner.categoryLabel}
                     </span>
                     {isCustom ? (
@@ -609,7 +609,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
                   <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between">
                     <button
                       onClick={() => handleCopyDimension(banner)}
-                      className="px-2.5 py-1 rounded bg-[#02180e]/95 hover:bg-[#032014] text-[#f5cf72] text-[11px] font-mono font-bold border border-[#c99726]/60 backdrop-blur-md flex items-center space-x-1 cursor-pointer transition-colors shadow-sm"
+                      className="px-2.5 py-1 rounded bg-forest-950/95 hover:bg-forest-900 text-gold-300 text-[11px] font-mono font-bold border border-gold-500/60 backdrop-blur-md flex items-center space-x-1 cursor-pointer transition-colors shadow-sm"
                       title="Click to copy dimension for Canva / Photoshop"
                     >
                       <span>📏 {banner.recommendedSize}</span>
@@ -622,7 +622,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
 
                     <button
                       onClick={() => setPreviewModalBanner(banner)}
-                      className="p-1.5 rounded-lg bg-[#02180e]/90 hover:bg-[#032014] text-white border border-white/20 backdrop-blur-md transition-colors cursor-pointer"
+                      className="p-1.5 rounded-lg bg-forest-950/90 hover:bg-forest-900 text-white border border-white/20 backdrop-blur-md transition-colors cursor-pointer"
                       title="Full Screen Preview"
                     >
                       <Maximize2 className="w-3.5 h-3.5" />
@@ -633,7 +633,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
                 {/* Content Details */}
                 <div className="p-5 space-y-4">
                   <div>
-                    <h3 className="text-base font-bold text-[#032014] font-serif-title leading-snug">
+                    <h3 className="text-base font-bold text-forest-900 font-serif-title leading-snug">
                       {banner.name}
                     </h3>
                     <div className="flex items-center space-x-2 mt-1">
@@ -647,12 +647,12 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
                   </div>
 
                   {/* Recommended Aspect & Size Highlight Box */}
-                  <div className="p-3 bg-[#f8faf8] rounded-xl border border-[#d6e5dc] space-y-1.5">
+                  <div className="p-3 bg-mist-50 rounded-xl border border-mist-300 space-y-1.5">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-semibold text-slate-700">
                         Target Size:
                       </span>
-                      <span className="font-mono font-bold text-[#07472c]">
+                      <span className="font-mono font-bold text-forest-700">
                         {banner.recommendedSize}
                       </span>
                     </div>
@@ -680,7 +680,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
                       }
                       className={`text-xs font-bold pb-1 transition-colors cursor-pointer flex items-center space-x-1.5 ${
                         mode === "upload"
-                          ? "text-[#07472c] border-b-2 border-[#07472c]"
+                          ? "text-forest-700 border-b-2 border-forest-700"
                           : "text-slate-400 hover:text-slate-600"
                       }`}
                     >
@@ -696,7 +696,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
                       }
                       className={`text-xs font-bold pb-1 transition-colors cursor-pointer flex items-center space-x-1.5 ${
                         mode === "url"
-                          ? "text-[#07472c] border-b-2 border-[#07472c]"
+                          ? "text-forest-700 border-b-2 border-forest-700"
                           : "text-slate-400 hover:text-slate-600"
                       }`}
                     >
@@ -721,19 +721,19 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
                         onClick={() =>
                           fileInputRefs.current[banner.id]?.click()
                         }
-                        className="border-2 border-dashed border-[#c2decc] hover:border-[#07472c] bg-[#f8faf8] hover:bg-[#eef6f1] rounded-xl p-4 text-center cursor-pointer transition-all space-y-1 group relative"
+                        className="border-2 border-dashed border-mist-400 hover:border-forest-700 bg-mist-50 hover:bg-mist-100 rounded-xl p-4 text-center cursor-pointer transition-all space-y-1 group relative"
                       >
                         {isCompressing ? (
                           <div className="py-2 flex flex-col items-center justify-center space-y-1">
-                            <Loader2 className="w-6 h-6 text-[#07472c] animate-spin" />
-                            <span className="text-xs font-bold text-[#07472c]">
+                            <Loader2 className="w-6 h-6 text-forest-700 animate-spin" />
+                            <span className="text-xs font-bold text-forest-700">
                               Optimizing & Compressing...
                             </span>
                           </div>
                         ) : (
                           <>
-                            <UploadCloud className="w-6 h-6 text-[#07472c] mx-auto group-hover:scale-110 transition-transform" />
-                            <div className="text-xs font-bold text-[#032014]">
+                            <UploadCloud className="w-6 h-6 text-forest-700 mx-auto group-hover:scale-110 transition-transform" />
+                            <div className="text-xs font-bold text-forest-900">
                               Choose Photo or Drag & Drop
                             </div>
                             <p className="text-[10px] text-slate-500">
@@ -799,7 +799,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
                           }
                         }}
                         placeholder="https://i.imgur.com/example.jpg"
-                        className="w-full px-3 py-2 bg-white rounded-lg border border-[#d6e5dc] text-xs focus:ring-2 focus:ring-[#07472c] focus:outline-none font-mono"
+                        className="w-full px-3 py-2 bg-white rounded-lg border border-mist-300 text-xs focus:ring-2 focus:ring-forest-700 focus:outline-none font-mono"
                       />
                     </div>
                   )}
@@ -811,9 +811,9 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
                 <div className="flex items-center gap-2 pt-3">
                   <button
                     onClick={() => handleSaveBanner(banner)}
-                    className="flex-1 py-2.5 bg-[#032014] hover:bg-[#07472c] text-[#f5cf72] font-bold text-xs rounded-xl shadow transition-all cursor-pointer flex items-center justify-center space-x-1.5 border border-[#c99726]/40"
+                    className="flex-1 py-2.5 bg-forest-900 hover:bg-forest-700 text-gold-300 font-bold text-xs rounded-xl shadow transition-all cursor-pointer flex items-center justify-center space-x-1.5 border border-gold-500/40"
                   >
-                    <Check className="w-4 h-4 text-[#f5cf72]" />
+                    <Check className="w-4 h-4 text-gold-300" />
                     <span>Save Live Banner</span>
                   </button>
 
@@ -836,7 +836,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
                       onClick={() =>
                         onNavigate(routeInfo.page, routeInfo.subTab)
                       }
-                      className="text-[#07472c] hover:text-[#c99726] font-semibold flex items-center space-x-1 cursor-pointer transition-colors"
+                      className="text-forest-700 hover:text-gold-500 font-semibold flex items-center space-x-1 cursor-pointer transition-colors"
                     >
                       <Eye className="w-3 h-3" />
                       <span>{routeInfo.label}</span>
@@ -858,13 +858,13 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
       {/* Full Lightbox Preview Modal */}
       {previewModalBanner && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-[#02180e] border border-[#c99726]/60 rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl">
-            <div className="p-4 bg-[#032014] border-b border-[#084c2e] flex items-center justify-between text-white">
+          <div className="bg-forest-950 border border-gold-500/60 rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl">
+            <div className="p-4 bg-forest-900 border-b border-forest-700 flex items-center justify-between text-white">
               <div className="flex items-center space-x-2">
                 <span className="font-bold font-serif-title">
                   {previewModalBanner.name}
                 </span>
-                <span className="px-2 py-0.5 rounded bg-[#c99726]/20 text-[#f5cf72] text-[10px] font-mono">
+                <span className="px-2 py-0.5 rounded bg-gold-500/20 text-gold-300 text-[10px] font-mono">
                   {previewModalBanner.recommendedSize}
                 </span>
               </div>
@@ -887,11 +887,11 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
               />
             </div>
 
-            <div className="p-4 bg-[#032014] border-t border-[#084c2e] flex items-center justify-between text-xs text-emerald-200">
+            <div className="p-4 bg-forest-900 border-t border-forest-700 flex items-center justify-between text-xs text-emerald-200">
               <span>📍 {previewModalBanner.location}</span>
               <button
                 onClick={() => setPreviewModalBanner(null)}
-                className="px-4 py-2 rounded-xl bg-[#c99726] text-[#021a10] font-bold cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-gold-500 text-forest-950 font-bold cursor-pointer"
               >
                 Close Preview
               </button>

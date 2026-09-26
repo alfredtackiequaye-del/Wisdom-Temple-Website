@@ -47,9 +47,9 @@ export const GalleryView: React.FC<GalleryViewProps> = ({
     });
 
   return (
-    <div className="min-h-screen bg-[#02180e] text-white pb-24">
+    <div className="min-h-screen bg-forest-950 text-white pb-24">
       {/* Hero Header */}
-      <section className="relative py-20 lg:py-24 bg-[#032014] text-white overflow-hidden border-b border-[#c99726]/30">
+      <section className="relative py-20 lg:py-24 bg-forest-900 text-white overflow-hidden border-b border-gold-500/30">
         {/* Background Ambient Header Image & Glow */}
         <div className="absolute inset-0 opacity-15 pointer-events-none">
           <img
@@ -62,27 +62,27 @@ export const GalleryView: React.FC<GalleryViewProps> = ({
           />
         </div>
         <div className="absolute inset-0 opacity-20 pointer-events-none">
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#c99726] rounded-full filter blur-[120px]" />
-          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-[#07472c] rounded-full filter blur-[120px]" />
+          <div className="absolute top-0 right-1/4 w-96 h-96 bg-gold-500 rounded-full filter blur-[120px]" />
+          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-forest-700 rounded-full filter blur-[120px]" />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl space-y-4">
             <button
               onClick={() => onNavigate("home")}
-              className="inline-flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-[#f5cf72] hover:text-white transition-colors cursor-pointer"
+              className="inline-flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-gold-300 hover:text-white transition-colors cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Home</span>
             </button>
 
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#07472c] text-[#f5cf72] border border-[#c99726]/40 text-xs font-bold uppercase tracking-widest">
-              <Church className="w-3.5 h-3.5 text-[#c99726]" />
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-forest-700 text-gold-300 border border-gold-500/40 text-xs font-bold uppercase tracking-widest">
+              <Church className="w-3.5 h-3.5 text-gold-500" />
               <span>CHURCH SERVICES & SPECIAL EVENTS</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black font-serif-title tracking-tight text-white">
-              Worship in <span className="text-[#f5cf72]">Focus</span>
+              Worship in <span className="text-gold-300">Focus</span>
             </h1>
 
             <p className="text-emerald-100/80 text-sm sm:text-base leading-relaxed max-w-2xl">
@@ -95,17 +95,17 @@ export const GalleryView: React.FC<GalleryViewProps> = ({
             {/* Quick Stats Pill Strip */}
             <div className="pt-4 flex flex-wrap gap-4 text-xs font-semibold text-emerald-200">
               <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/10">
-                <Camera className="w-4 h-4 text-[#f5cf72]" />
+                <Camera className="w-4 h-4 text-gold-300" />
                 <span>
                   {serviceAndEventPhotos.length} Service & Event Photos
                 </span>
               </div>
               <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/10">
-                <MapPin className="w-4 h-4 text-[#c99726]" />
+                <MapPin className="w-4 h-4 text-gold-500" />
                 <span>Star Junction, Tabora - Accra</span>
               </div>
               <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/10">
-                <CalendarDays className="w-4 h-4 text-[#f5cf72]" />
+                <CalendarDays className="w-4 h-4 text-gold-300" />
                 <span>Sunday, Midweek & Special Gatherings</span>
               </div>
             </div>

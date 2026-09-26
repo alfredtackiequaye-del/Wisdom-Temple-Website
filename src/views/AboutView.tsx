@@ -33,9 +33,9 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
   }, [initialSubTab]);
 
   return (
-    <div className="bg-[#f8faf8] min-h-screen text-slate-900 pb-24">
+    <div className="bg-mist-50 min-h-screen text-slate-900 pb-24">
       {/* Page Header Banner - ICGC Forest & Gold */}
-      <section className="relative bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e] overflow-hidden">
+      <section className="relative bg-forest-950 text-white py-16 sm:py-20 border-b border-forest-700 overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-15">
           <img
             src={getBanner('page_about_hero', 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=1920&q=80')}
@@ -44,7 +44,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
           />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
-          <span className="text-xs text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
+          <span className="text-xs text-gold-300 font-bold uppercase tracking-widest bg-forest-850 px-3.5 py-1.5 rounded-full border border-gold-500/40 inline-block">
             {content.churchAddress.toUpperCase()}
           </span>
           <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
@@ -57,7 +57,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
       </section>
 
       {/* Sub-Navigation Tabs */}
-      <div className="sticky top-20 z-30 bg-white/95 backdrop-blur-md border-b border-[#d6e5dc] shadow-sm">
+      <div className="sticky top-20 z-30 bg-white/95 backdrop-blur-md border-b border-mist-300 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto">
           <div className="flex space-x-1 py-3 min-w-max text-xs font-bold uppercase tracking-wider">
             {[
@@ -75,11 +75,11 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center space-x-1.5 px-4 py-2.5 rounded-xl transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-[#032014] text-white shadow-sm border border-[#c99726]/50'
-                      : 'text-slate-600 hover:text-[#032014] hover:bg-[#eef6f1]'
+                      ? 'bg-forest-900 text-white shadow-sm border border-gold-500/50'
+                      : 'text-slate-600 hover:text-forest-900 hover:bg-mist-100'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-[#f5cf72]' : 'text-slate-400'}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-gold-300' : 'text-slate-400'}`} />
                   <span>{tab.label}</span>
                 </button>
               );
@@ -94,10 +94,10 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
         {activeTab === 'who-we-are' && (
           <div className="space-y-10 animate-in fade-in duration-150">
             <div className="space-y-4">
-              <span className="text-xs text-[#07472c] font-bold uppercase tracking-widest bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc]">
+              <span className="text-xs text-forest-700 font-bold uppercase tracking-widest bg-mist-200 px-3 py-1 rounded-full border border-mist-400">
                 IDENTITY & NATURE
               </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-[#032014] font-serif-title">
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-forest-900 font-serif-title">
                 A Christ-Centered Assembly in Ghana
               </h2>
               <p className="text-base text-slate-700 leading-relaxed">
@@ -110,31 +110,31 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
 
             {/* Core Values Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-              <div className="bg-white p-6 rounded-2xl border border-[#d6e5dc] shadow-sm space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-[#eef6f1] text-[#07472c] border border-[#c2decc] flex items-center justify-center font-bold">
+              <div className="bg-white p-6 rounded-2xl border border-mist-300 shadow-sm space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-mist-100 text-forest-700 border border-mist-400 flex items-center justify-center font-bold">
                   1
                 </div>
-                <h3 className="text-lg font-bold text-[#032014] font-serif-title">Spiritual Fervor</h3>
+                <h3 className="text-lg font-bold text-forest-900 font-serif-title">Spiritual Fervor</h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Passionate worship and dedicated prayer at our Sunday services and Wednesday's <em>The Secret Place</em>.
                 </p>
               </div>
 
-              <div className="bg-white p-6 rounded-2xl border border-[#d6e5dc] shadow-sm space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-[#eef6f1] text-[#07472c] border border-[#c2decc] flex items-center justify-center font-bold">
+              <div className="bg-white p-6 rounded-2xl border border-mist-300 shadow-sm space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-mist-100 text-forest-700 border border-mist-400 flex items-center justify-center font-bold">
                   2
                 </div>
-                <h3 className="text-lg font-bold text-[#032014] font-serif-title">Intellectual Excellence</h3>
+                <h3 className="text-lg font-bold text-forest-900 font-serif-title">Intellectual Excellence</h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Sound doctrine that engages the mind, provides practical solutions, and fosters marketplace dominance.
                 </p>
               </div>
 
-              <div className="bg-white p-6 rounded-2xl border border-[#d6e5dc] shadow-sm space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-[#eef6f1] text-[#07472c] border border-[#c2decc] flex items-center justify-center font-bold">
+              <div className="bg-white p-6 rounded-2xl border border-mist-300 shadow-sm space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-mist-100 text-forest-700 border border-mist-400 flex items-center justify-center font-bold">
                   3
                 </div>
-                <h3 className="text-lg font-bold text-[#032014] font-serif-title">Social Responsibility</h3>
+                <h3 className="text-lg font-bold text-forest-900 font-serif-title">Social Responsibility</h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Active commitment to our community, welfare programs, student mentoring, and civic righteousness.
                 </p>
@@ -142,16 +142,16 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
             </div>
 
             {/* Service Schedule Banner */}
-            <div className="bg-[#032014] text-white rounded-3xl p-8 border border-[#084c2e] space-y-4 shadow-xl">
-              <h3 className="text-2xl font-bold font-serif-title text-[#f5cf72]">Join Us for Worship</h3>
+            <div className="bg-forest-900 text-white rounded-3xl p-8 border border-forest-700 space-y-4 shadow-xl">
+              <h3 className="text-2xl font-bold font-serif-title text-gold-300">Join Us for Worship</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                <div className="p-4 bg-[#02180e] rounded-xl border border-[#084c2e]">
-                  <span className="text-xs text-[#f5cf72] font-bold block">{content.sundayServiceName.toUpperCase()}</span>
+                <div className="p-4 bg-forest-950 rounded-xl border border-forest-700">
+                  <span className="text-xs text-gold-300 font-bold block">{content.sundayServiceName.toUpperCase()}</span>
                   <p className="text-lg font-bold text-white mt-1">Every Sunday at {content.sundayServiceTime}</p>
                   <p className="text-xs text-emerald-300/70 mt-1">{content.sundayServiceDesc}</p>
                 </div>
-                <div className="p-4 bg-[#02180e] rounded-xl border border-[#084c2e]">
-                  <span className="text-xs text-[#f5cf72] font-bold block">{content.midweekServiceName.toUpperCase()}</span>
+                <div className="p-4 bg-forest-950 rounded-xl border border-forest-700">
+                  <span className="text-xs text-gold-300 font-bold block">{content.midweekServiceName.toUpperCase()}</span>
                   <p className="text-lg font-bold text-white mt-1">Every Wednesday at {content.midweekServiceTime}</p>
                   <p className="text-xs text-emerald-300/70 mt-1">{content.midweekServiceDesc}</p>
                 </div>
@@ -159,10 +159,10 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
             </div>
 
             {/* Pastoral Leadership Feature on Who We Are */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#d6e5dc] shadow-sm flex flex-col md:flex-row gap-6 items-center">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-mist-300 shadow-sm flex flex-col md:flex-row gap-6 items-center">
               <div 
                 onClick={() => setActiveTab('leadership')}
-                className="w-full md:w-56 shrink-0 aspect-[3/4] rounded-2xl overflow-hidden bg-[#032014] border-2 border-[#c99726]/40 shadow-md relative group cursor-pointer"
+                className="w-full md:w-56 shrink-0 aspect-[3/4] rounded-2xl overflow-hidden bg-forest-900 border-2 border-gold-500/40 shadow-md relative group cursor-pointer"
               >
                 <img
                   src={getBanner('pastoral_couple', PASTORAL_COUPLE_IMAGE)}
@@ -172,7 +172,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                 />
                 <div className="absolute inset-0 bg-black/40 pointer-events-none" />
                 <div className="absolute bottom-2.5 left-2.5 right-2.5 text-white">
-                  <span className="text-[9px] text-[#f5cf72] font-bold uppercase tracking-wider block">
+                  <span className="text-[9px] text-gold-300 font-bold uppercase tracking-wider block">
                     PASTORAL LEADERSHIP
                   </span>
                   <p className="text-xs font-bold font-serif-title leading-tight text-white mt-0.5">
@@ -182,10 +182,10 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
               </div>
 
               <div className="space-y-3 flex-1 text-center md:text-left">
-                <span className="text-xs text-[#07472c] font-bold uppercase tracking-widest bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc] inline-block">
+                <span className="text-xs text-forest-700 font-bold uppercase tracking-widest bg-mist-200 px-3 py-1 rounded-full border border-mist-400 inline-block">
                   SHEPHERD OF WISDOM TEMPLE
                 </span>
-                <h3 className="text-xl sm:text-2xl font-extrabold text-[#032014] font-serif-title">
+                <h3 className="text-xl sm:text-2xl font-extrabold text-forest-900 font-serif-title">
                   {content.combinedPastoralTitle}
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
@@ -193,7 +193,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                 </p>
                 <button
                   onClick={() => setActiveTab('leadership')}
-                  className="inline-flex items-center space-x-2 text-xs font-bold text-[#07472c] hover:text-[#c99726] transition-colors uppercase tracking-wider cursor-pointer pt-1"
+                  className="inline-flex items-center space-x-2 text-xs font-bold text-forest-700 hover:text-gold-500 transition-colors uppercase tracking-wider cursor-pointer pt-1"
                 >
                   <span>Read Full Leadership Profile & Vision</span>
                   <span>→</span>
@@ -208,14 +208,14 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
           <div className="space-y-10 animate-in fade-in duration-150">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Vision Card */}
-              <div className="bg-white rounded-3xl p-8 border border-[#d6e5dc] shadow-sm space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#eef6f1] text-[#07472c] border border-[#c2decc] flex items-center justify-center">
+              <div className="bg-white rounded-3xl p-8 border border-mist-300 shadow-sm space-y-4">
+                <div className="w-12 h-12 rounded-2xl bg-mist-100 text-forest-700 border border-mist-400 flex items-center justify-center">
                   <Compass className="w-6 h-6" />
                 </div>
-                <span className="text-xs text-[#07472c] font-bold uppercase tracking-widest block">
+                <span className="text-xs text-forest-700 font-bold uppercase tracking-widest block">
                   OUR VISION
                 </span>
-                <h3 className="text-2xl font-bold text-[#032014] font-serif-title">
+                <h3 className="text-2xl font-bold text-forest-900 font-serif-title">
                   {content.aboutVisionTitle}
                 </h3>
                 <p className="text-sm text-slate-600 leading-relaxed">
@@ -224,14 +224,14 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
               </div>
 
               {/* Mission Card */}
-              <div className="bg-white rounded-3xl p-8 border border-[#d6e5dc] shadow-sm space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#eef6f1] text-[#07472c] border border-[#c2decc] flex items-center justify-center">
+              <div className="bg-white rounded-3xl p-8 border border-mist-300 shadow-sm space-y-4">
+                <div className="w-12 h-12 rounded-2xl bg-mist-100 text-forest-700 border border-mist-400 flex items-center justify-center">
                   <Target className="w-6 h-6" />
                 </div>
-                <span className="text-xs text-[#07472c] font-bold uppercase tracking-widest block">
+                <span className="text-xs text-forest-700 font-bold uppercase tracking-widest block">
                   OUR MISSION
                 </span>
-                <h3 className="text-2xl font-bold text-[#032014] font-serif-title">
+                <h3 className="text-2xl font-bold text-forest-900 font-serif-title">
                   {content.aboutMissionTitle}
                 </h3>
                 <p className="text-sm text-slate-600 leading-relaxed">
@@ -241,29 +241,29 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
             </div>
 
             {/* The 3 Pillars */}
-            <div className="bg-white rounded-3xl p-8 border border-[#d6e5dc] space-y-6">
-              <h3 className="text-xl font-bold text-[#032014] font-serif-title">
+            <div className="bg-white rounded-3xl p-8 border border-mist-300 space-y-6">
+              <h3 className="text-xl font-bold text-forest-900 font-serif-title">
                 The Three Pillars of Our Mandate
               </h3>
               <div className="space-y-4 text-sm text-slate-700">
                 <div className="flex items-start space-x-3">
-                  <CheckCircle2 className="w-5 h-5 text-[#07472c] shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-forest-700 shrink-0 mt-0.5" />
                   <div>
-                    <strong className="text-[#032014] block font-semibold">1. {content.pillar1Title}</strong>
+                    <strong className="text-forest-900 block font-semibold">1. {content.pillar1Title}</strong>
                     {content.pillar1Desc}
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <CheckCircle2 className="w-5 h-5 text-[#07472c] shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-forest-700 shrink-0 mt-0.5" />
                   <div>
-                    <strong className="text-[#032014] block font-semibold">2. {content.pillar2Title}</strong>
+                    <strong className="text-forest-900 block font-semibold">2. {content.pillar2Title}</strong>
                     {content.pillar2Desc}
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <CheckCircle2 className="w-5 h-5 text-[#07472c] shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-forest-700 shrink-0 mt-0.5" />
                   <div>
-                    <strong className="text-[#032014] block font-semibold">3. {content.pillar3Title}</strong>
+                    <strong className="text-forest-900 block font-semibold">3. {content.pillar3Title}</strong>
                     {content.pillar3Desc}
                   </div>
                 </div>
@@ -276,10 +276,10 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
         {activeTab === 'beliefs' && (
           <div className="space-y-8 animate-in fade-in duration-150">
             <div className="space-y-2">
-              <span className="text-xs text-[#07472c] font-bold uppercase tracking-widest bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc]">
+              <span className="text-xs text-forest-700 font-bold uppercase tracking-widest bg-mist-200 px-3 py-1 rounded-full border border-mist-400">
                 DOCTRINAL STATEMENT
               </span>
-              <h2 className="text-3xl font-extrabold text-[#032014] font-serif-title mt-2">
+              <h2 className="text-3xl font-extrabold text-forest-900 font-serif-title mt-2">
                 What We Believe
               </h2>
               <p className="text-sm text-slate-600">
@@ -289,12 +289,12 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {BELIEFS.map((belief, idx) => (
-                <div key={idx} className="bg-white p-6 rounded-2xl border border-[#d6e5dc] shadow-sm space-y-2">
-                  <div className="flex items-center space-x-2 text-[#07472c] text-xs font-bold">
-                    <Shield className="w-4 h-4 text-[#c99726]" />
+                <div key={idx} className="bg-white p-6 rounded-2xl border border-mist-300 shadow-sm space-y-2">
+                  <div className="flex items-center space-x-2 text-forest-700 text-xs font-bold">
+                    <Shield className="w-4 h-4 text-gold-500" />
                     <span>ARTICLE {idx + 1}</span>
                   </div>
-                  <h3 className="text-lg font-bold text-[#032014] font-serif-title">{belief.title}</h3>
+                  <h3 className="text-lg font-bold text-forest-900 font-serif-title">{belief.title}</h3>
                   <p className="text-xs text-slate-600 leading-relaxed">{belief.text}</p>
                 </div>
               ))}
@@ -306,10 +306,10 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
         {activeTab === 'leadership' && (
           <div className="space-y-8 animate-in fade-in duration-150">
             <div className="space-y-2">
-              <span className="text-xs text-[#07472c] font-bold uppercase tracking-widest bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc]">
+              <span className="text-xs text-forest-700 font-bold uppercase tracking-widest bg-mist-200 px-3 py-1 rounded-full border border-mist-400">
                 SPIRITUAL OVERSIGHT
               </span>
-              <h2 className="text-3xl font-extrabold text-[#032014] font-serif-title mt-2">
+              <h2 className="text-3xl font-extrabold text-forest-900 font-serif-title mt-2">
                 Our Pastoral Leadership
               </h2>
               <p className="text-sm text-slate-600">
@@ -318,8 +318,8 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
             </div>
 
             {/* Senior Minister & Shepherd Profile Card */}
-            <div className="bg-white rounded-3xl p-6 sm:p-10 border border-[#d6e5dc] shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              <div className="lg:col-span-5 rounded-2xl bg-[#032014] overflow-hidden relative border-2 border-[#c99726]/40 shadow-xl group aspect-[3/4] flex items-center justify-center">
+            <div className="bg-white rounded-3xl p-6 sm:p-10 border border-mist-300 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <div className="lg:col-span-5 rounded-2xl bg-forest-900 overflow-hidden relative border-2 border-gold-500/40 shadow-xl group aspect-[3/4] flex items-center justify-center">
                 <img
                   src={getBanner('pastoral_couple', PASTORAL_COUPLE_IMAGE)}
                   onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/rev_gabriel_and_helena_dela.jpg'; }}
@@ -328,7 +328,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                 />
                 <div className="absolute inset-0 bg-black/40 pointer-events-none" />
                 <div className="absolute bottom-4 left-4 right-4">
-                  <span className="text-[10px] text-[#f5cf72] font-bold uppercase tracking-widest bg-[#02180e]/90 px-2.5 py-1 rounded-md border border-[#c99726]/40 inline-block mb-1">
+                  <span className="text-[10px] text-gold-300 font-bold uppercase tracking-widest bg-forest-950/90 px-2.5 py-1 rounded-md border border-gold-500/40 inline-block mb-1">
                     PASTORAL COUPLE
                   </span>
                   <p className="font-serif-title font-bold text-base sm:text-lg text-white leading-tight">
@@ -342,25 +342,25 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
 
               <div className="lg:col-span-7 space-y-5">
                 <div>
-                  <span className="text-xs text-[#07472c] font-bold uppercase tracking-widest bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc] inline-block mb-2">
+                  <span className="text-xs text-forest-700 font-bold uppercase tracking-widest bg-mist-200 px-3 py-1 rounded-full border border-mist-400 inline-block mb-2">
                     SHEPHERD OF WISDOM TEMPLE
                   </span>
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-[#032014] font-serif-title">
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-forest-900 font-serif-title">
                     Rev. Gabriel Dela
                   </h3>
                   <div className="flex flex-wrap items-center gap-2 mt-1">
-                    <span className="text-xs text-[#c99726] font-bold">Shepherd & Senior Minister</span>
+                    <span className="text-xs text-gold-500 font-bold">Shepherd & Senior Minister</span>
                     <span className="text-slate-300">•</span>
-                    <span className="text-xs text-slate-600 font-medium">With <strong className="text-[#032014]">Lady Dr. Helena Dela</strong></span>
+                    <span className="text-xs text-slate-600 font-medium">With <strong className="text-forest-900">Lady Dr. Helena Dela</strong></span>
                   </div>
                 </div>
 
                 <div className="space-y-3 text-sm text-slate-600 leading-relaxed">
                   <p>
-                    <strong className="text-[#032014]">Rev. Gabriel Dela</strong> is the Shepherd and Senior Minister of ICGC Wisdom Temple. Called with an apostolic heart and an unquenchable passion for the Kingdom of God, Rev. Gabriel leads the Wisdom Temple congregation with doctrinal clarity, prophetic insight, and a shepherd's compassionate care.
+                    <strong className="text-forest-900">Rev. Gabriel Dela</strong> is the Shepherd and Senior Minister of ICGC Wisdom Temple. Called with an apostolic heart and an unquenchable passion for the Kingdom of God, Rev. Gabriel leads the Wisdom Temple congregation with doctrinal clarity, prophetic insight, and a shepherd's compassionate care.
                   </p>
                   <p>
-                    Ministering side-by-side with him is his beloved wife, <strong className="text-[#032014]">Lady Dr. Helena Dela</strong>, who serves graciously as the First Lady of Wisdom Temple. Lady Dr. Helena Dela is a pillar of wisdom, prayer, and encouragement, actively nurturing the women's fellowship, family life ministries, and raising believers who embody godly dignity and professional excellence.
+                    Ministering side-by-side with him is his beloved wife, <strong className="text-forest-900">Lady Dr. Helena Dela</strong>, who serves graciously as the First Lady of Wisdom Temple. Lady Dr. Helena Dela is a pillar of wisdom, prayer, and encouragement, actively nurturing the women's fellowship, family life ministries, and raising believers who embody godly dignity and professional excellence.
                   </p>
                   <p>
                     Together, Rev. Gabriel Dela and Lady Dr. Helena Dela are committed to fulfilling the God-given mandate of Wisdom Temple: <em>"Raising Leaders, Shaping Visions, and Influencing Society Through Christ."</em> Under their pastoral oversight, Wisdom Temple has flourished as a vibrant house of prayer, leadership excellence, and transformative ministry in Tabora, Accra, and across Ghana.
@@ -369,26 +369,26 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
 
                 {/* Key Ministry Pillars under their Pastoral Care */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                  <div className="p-3 bg-[#f4f7f4] rounded-xl border border-[#d6e5dc]">
-                    <span className="text-[10px] text-[#07472c] font-bold uppercase block">Core Emphasis</span>
-                    <p className="text-xs font-bold text-[#032014] mt-0.5">Biblical Exposition</p>
+                  <div className="p-3 bg-mist-50 rounded-xl border border-mist-300">
+                    <span className="text-[10px] text-forest-700 font-bold uppercase block">Core Emphasis</span>
+                    <p className="text-xs font-bold text-forest-900 mt-0.5">Biblical Exposition</p>
                     <span className="text-[10px] text-slate-500 block mt-0.5">Practical life application</span>
                   </div>
-                  <div className="p-3 bg-[#f4f7f4] rounded-xl border border-[#d6e5dc]">
-                    <span className="text-[10px] text-[#07472c] font-bold uppercase block">Prayer Altar</span>
-                    <p className="text-xs font-bold text-[#032014] mt-0.5">The Secret Place</p>
+                  <div className="p-3 bg-mist-50 rounded-xl border border-mist-300">
+                    <span className="text-[10px] text-forest-700 font-bold uppercase block">Prayer Altar</span>
+                    <p className="text-xs font-bold text-forest-900 mt-0.5">The Secret Place</p>
                     <span className="text-[10px] text-slate-500 block mt-0.5">Midweek prayer & power</span>
                   </div>
-                  <div className="p-3 bg-[#f4f7f4] rounded-xl border border-[#d6e5dc]">
-                    <span className="text-[10px] text-[#07472c] font-bold uppercase block">Leadership</span>
-                    <p className="text-xs font-bold text-[#032014] mt-0.5">Wisdom Summit</p>
+                  <div className="p-3 bg-mist-50 rounded-xl border border-mist-300">
+                    <span className="text-[10px] text-forest-700 font-bold uppercase block">Leadership</span>
+                    <p className="text-xs font-bold text-forest-900 mt-0.5">Wisdom Summit</p>
                     <span className="text-[10px] text-slate-500 block mt-0.5">Annual leadership conference</span>
                   </div>
                 </div>
 
-                <div className="p-4 bg-[#eef6f1] rounded-xl border border-[#c2decc] text-xs text-slate-700 space-y-1">
-                  <p className="font-bold text-[#032014] flex items-center space-x-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#07472c]"></span>
+                <div className="p-4 bg-mist-100 rounded-xl border border-mist-400 text-xs text-slate-700 space-y-1">
+                  <p className="font-bold text-forest-900 flex items-center space-x-1.5">
+                    <span className="w-2 h-2 rounded-full bg-forest-700"></span>
                     <span>Pastoral Counsel & Consultation:</span>
                   </p>
                   <p>
@@ -401,21 +401,21 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
             {/* Church Council, Pastoral Council & Leadership Governance */}
             <div className="space-y-4 pt-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-[#032014] font-serif-title flex items-center space-x-2">
-                  <Shield className="w-5 h-5 text-[#c99726]" />
+                <h3 className="text-lg font-bold text-forest-900 font-serif-title flex items-center space-x-2">
+                  <Shield className="w-5 h-5 text-gold-500" />
                   <span>Church Governance & Leadership Councils</span>
                 </h3>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 {/* 1. Pastoral Council */}
-                <div className="bg-white p-6 rounded-2xl border border-[#d6e5dc] text-center space-y-2 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                <div className="bg-white p-6 rounded-2xl border border-mist-300 text-center space-y-2 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
                   <div className="space-y-2">
-                    <div className="w-12 h-12 rounded-full bg-[#eef6f1] text-[#07472c] mx-auto flex items-center justify-center font-bold border border-[#c2decc]">
+                    <div className="w-12 h-12 rounded-full bg-mist-100 text-forest-700 mx-auto flex items-center justify-center font-bold border border-mist-400">
                       PC
                     </div>
-                    <h4 className="text-sm font-bold text-[#032014] font-serif-title">Pastoral Council</h4>
-                    <p className="text-xs text-[#07472c] font-semibold">Spiritual Oversight</p>
+                    <h4 className="text-sm font-bold text-forest-900 font-serif-title">Pastoral Council</h4>
+                    <p className="text-xs text-forest-700 font-semibold">Spiritual Oversight</p>
                     <p className="text-[11px] text-slate-500 leading-relaxed">
                       Doctrinal integrity, pastoral intercession, discipleship, and spiritual shepherd care across all congregations.
                     </p>
@@ -428,9 +428,9 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                 {/* 2. Church Council (Formerly Church Board) with Official Photo */}
                 <div 
                   onClick={() => setShowCouncilModal(true)}
-                  className="bg-white rounded-2xl border-2 border-[#c99726]/50 hover:border-[#c99726] overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col justify-between group cursor-pointer"
+                  className="bg-white rounded-2xl border-2 border-gold-500/50 hover:border-gold-500 overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col justify-between group cursor-pointer"
                 >
-                  <div className="relative aspect-[16/11] bg-[#02180e] overflow-hidden">
+                  <div className="relative aspect-[16/11] bg-forest-950 overflow-hidden">
                     <img
                       src="/church_council.png"
                       onError={(e) => {
@@ -444,7 +444,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                     />
                     <div className="absolute inset-0 bg-black/40 pointer-events-none" />
                     <div className="absolute bottom-2.5 left-3 right-3 text-white">
-                      <span className="text-[9px] uppercase tracking-wider text-[#f5cf72] font-bold block">
+                      <span className="text-[9px] uppercase tracking-wider text-gold-300 font-bold block">
                         STEWARDSHIP & GOVERNANCE
                       </span>
                       <span className="text-xs font-bold text-white block">Wisdom Temple</span>
@@ -453,28 +453,28 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
 
                   <div className="p-4 text-center space-y-1 bg-white flex-1 flex flex-col justify-between">
                     <div>
-                      <h4 className="text-sm font-bold text-[#032014] font-serif-title group-hover:text-[#c99726] transition-colors">
+                      <h4 className="text-sm font-bold text-forest-900 font-serif-title group-hover:text-gold-500 transition-colors">
                         Church Council
                       </h4>
-                      <p className="text-xs text-[#07472c] font-semibold">Governance & Administration</p>
+                      <p className="text-xs text-forest-700 font-semibold">Governance & Administration</p>
                       <p className="text-[11px] text-slate-500 leading-snug mt-1">
                         Institutional policies, capital developments, annual budgets, and fiduciary kingdom stewardship.
                       </p>
                     </div>
-                    <span className="text-[10px] text-[#c99726] font-bold block pt-2 border-t border-slate-100">
+                    <span className="text-[10px] text-gold-500 font-bold block pt-2 border-t border-slate-100">
                       Click to View Photo ↗
                     </span>
                   </div>
                 </div>
 
                 {/* 3. Ministry Deacons */}
-                <div className="bg-white p-6 rounded-2xl border border-[#d6e5dc] text-center space-y-2 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                <div className="bg-white p-6 rounded-2xl border border-mist-300 text-center space-y-2 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
                   <div className="space-y-2">
-                    <div className="w-12 h-12 rounded-full bg-[#eef6f1] text-[#07472c] mx-auto flex items-center justify-center font-bold border border-[#c2decc]">
+                    <div className="w-12 h-12 rounded-full bg-mist-100 text-forest-700 mx-auto flex items-center justify-center font-bold border border-mist-400">
                       DM
                     </div>
-                    <h4 className="text-sm font-bold text-[#032014] font-serif-title">Ministry Deacons</h4>
-                    <p className="text-xs text-[#07472c] font-semibold">Sanctuary Operations</p>
+                    <h4 className="text-sm font-bold text-forest-900 font-serif-title">Ministry Deacons</h4>
+                    <p className="text-xs text-forest-700 font-semibold">Sanctuary Operations</p>
                     <p className="text-[11px] text-slate-500 leading-relaxed">
                       Hospitality, protocol, member welfare, logistical execution, and order within the sanctuary.
                     </p>
@@ -492,10 +492,10 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
         {activeTab === 'story' && (
           <div className="space-y-8 animate-in fade-in duration-150">
             <div className="space-y-3">
-              <span className="text-xs text-[#07472c] font-bold uppercase tracking-widest bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc]">
+              <span className="text-xs text-forest-700 font-bold uppercase tracking-widest bg-mist-200 px-3 py-1 rounded-full border border-mist-400">
                 OUR JOURNEY OF FAITH
               </span>
-              <h2 className="text-3xl font-extrabold text-[#032014] font-serif-title mt-2">
+              <h2 className="text-3xl font-extrabold text-forest-900 font-serif-title mt-2">
                 {content.heritageStoryHeadline}
               </h2>
               <p className="text-base text-slate-700 leading-relaxed">
@@ -504,17 +504,17 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
             </div>
 
             <div className="space-y-6">
-              <div className="border-l-4 border-[#c99726] pl-6 space-y-2 bg-white p-6 rounded-r-2xl border border-l-0 border-[#d6e5dc]">
-                <span className="text-xs text-[#07472c] font-bold">FOUNDATIONAL PHILOSOPHY</span>
-                <h3 className="text-xl font-bold text-[#032014] font-serif-title">Dignity, Excellence & Empowerment</h3>
+              <div className="border-l-4 border-gold-500 pl-6 space-y-2 bg-white p-6 rounded-r-2xl border border-l-0 border-mist-300">
+                <span className="text-xs text-forest-700 font-bold">FOUNDATIONAL PHILOSOPHY</span>
+                <h3 className="text-xl font-bold text-forest-900 font-serif-title">Dignity, Excellence & Empowerment</h3>
                 <p className="text-sm text-slate-600 leading-relaxed">
                   {content.heritageStoryText1}
                 </p>
               </div>
 
-              <div className="border-l-4 border-[#c99726] pl-6 space-y-2 bg-white p-6 rounded-r-2xl border border-l-0 border-[#d6e5dc]">
-                <span className="text-xs text-[#07472c] font-bold">LOOKING TO THE FUTURE</span>
-                <h3 className="text-xl font-bold text-[#032014] font-serif-title">Building for Generations</h3>
+              <div className="border-l-4 border-gold-500 pl-6 space-y-2 bg-white p-6 rounded-r-2xl border border-l-0 border-mist-300">
+                <span className="text-xs text-forest-700 font-bold">LOOKING TO THE FUTURE</span>
+                <h3 className="text-xl font-bold text-forest-900 font-serif-title">Building for Generations</h3>
                 <p className="text-sm text-slate-600 leading-relaxed">
                   {content.heritageStoryText2}
                 </p>
@@ -531,13 +531,13 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
           onClick={() => setShowCouncilModal(false)}
         >
           <div 
-            className="relative max-w-4xl w-full bg-[#02180e] rounded-3xl border-2 border-[#c99726]/60 shadow-2xl overflow-hidden text-white"
+            className="relative max-w-4xl w-full bg-forest-950 rounded-3xl border-2 border-gold-500/60 shadow-2xl overflow-hidden text-white"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-[#07472c] bg-[#032014]">
+            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-forest-700 bg-forest-900">
               <div>
-                <span className="text-[10px] font-bold text-[#f5cf72] uppercase tracking-wider block">
+                <span className="text-[10px] font-bold text-gold-300 uppercase tracking-wider block">
                   ICGC WISDOM TEMPLE
                 </span>
                 <h3 className="text-lg font-bold font-serif-title text-white">
@@ -568,8 +568,8 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 sm:p-5 bg-[#032014] border-t border-[#07472c] text-center space-y-1">
-              <p className="text-xs font-bold text-[#fce49e] uppercase tracking-wider">
+            <div className="p-4 sm:p-5 bg-forest-900 border-t border-forest-700 text-center space-y-1">
+              <p className="text-xs font-bold text-gold-200 uppercase tracking-wider">
                 Governance, Strategic Oversight & Fiduciary Kingdom Stewardship
               </p>
               <p className="text-[11px] text-emerald-200/80">

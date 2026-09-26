@@ -213,8 +213,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
             referrerPolicy="no-referrer"
           />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.05),_transparent_55%)]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#071914]/35 via-[#071914]/10 to-[#071914]/90 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#071914]/80 via-[#071914]/18 to-[#071914]/28 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-forest-950/35 via-forest-950/10 to-forest-950/90 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-forest-950/80 via-forest-950/18 to-forest-950/28 pointer-events-none" />
         </div>
 
         <div className="hero-content-column relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 text-left flex flex-col items-start">
@@ -222,9 +222,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
-            className="glass-chip inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-[#f2d49b] text-[8px] sm:text-[9px] font-medium tracking-[0.32em] uppercase mb-6"
+            className="glass-chip inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-gold-200 text-[8px] sm:text-[9px] font-medium tracking-[0.32em] uppercase mb-6"
           >
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#f2d49b]" />
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-gold-200" />
             <span>{content.heroEyebrow}</span>
           </motion.div>
 
@@ -250,7 +250,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.75, delay: 0.74, ease: "easeOut" }}
-              className="sm:hidden mt-4 flex items-center gap-2 text-xs font-semibold text-[#f2d49b]"
+              className="sm:hidden mt-4 flex items-center gap-2 text-xs font-semibold text-gold-200"
             >
               <Clock className="h-3.5 w-3.5" />
               <span>
@@ -269,7 +269,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           >
             <button
               onClick={() => onNavigate("new-here")}
-              className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-[#f3d79a] via-[#e0b96a] to-[#c7933a] text-[#1b120d] font-extrabold text-[10px] uppercase tracking-[0.2em] shadow-[0_18px_32px_rgba(196,149,58,0.22)] transition-all hover:-translate-y-0.5 hover:brightness-105 flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-gold-200 via-gold-400 to-gold-500 text-forest-950 font-extrabold text-[10px] uppercase tracking-[0.2em] shadow-[0_18px_32px_rgba(196,149,58,0.22)] transition-all hover:-translate-y-0.5 hover:brightness-105 flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>{content.heroButtonPrimary}</span>
               <ArrowRight className="w-4 h-4" />
@@ -277,9 +277,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
             <button
               onClick={() => onNavigate("events")}
-              className="w-full sm:w-auto px-8 py-4 rounded-full border border-white/12 bg-white/[0.04] text-[#f8f5f1] font-semibold text-[10px] uppercase tracking-[0.2em] backdrop-blur-sm transition-all hover:bg-white/[0.07] flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-4 rounded-full border border-white/12 bg-white/[0.04] text-gold-50 font-semibold text-[10px] uppercase tracking-[0.2em] backdrop-blur-sm transition-all hover:bg-white/[0.07] flex items-center justify-center gap-2 cursor-pointer"
             >
-              <Calendar className="w-4 h-4 text-[#f5cf72]" />
+              <Calendar className="w-4 h-4 text-gold-300" />
               <span>{content.heroButtonSecondary}</span>
             </button>
           </motion.div>
@@ -289,13 +289,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
           initial={{ opacity: 0, x: 18 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, delay: 0.6 }}
-          className="absolute right-5 sm:right-8 lg:right-10 bottom-8 hidden sm:flex items-center gap-3 rounded-2xl border border-white/25 bg-[#fdf9ee]/95 px-4 py-3 text-[#123426] shadow-[0_16px_38px_rgba(3,32,20,0.28)] backdrop-blur-md"
+          className="absolute right-5 sm:right-8 lg:right-10 bottom-8 hidden sm:flex items-center gap-3 rounded-2xl border border-white/25 bg-gold-50/95 px-4 py-3 text-forest-900 shadow-[0_16px_38px_rgba(3,32,20,0.28)] backdrop-blur-md"
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0a5c37] text-[#f5cf72]">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-forest-600 text-gold-300">
             {nextService ? <Clock className="h-4 w-4" /> : <MapPin className="h-4 w-4" />}
           </div>
           <div>
-            <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[#b8861d]">
+            <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-gold-600">
               {nextService ? `Next · ${nextService.name}` : "Visit Wisdom Temple"}
             </span>
             <span className="block text-xs font-semibold">
@@ -313,10 +313,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
       <section className="cinematic-panel py-16 sm:py-20 border-b border-slate-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-[11px] font-semibold text-[#0d5a3d] uppercase tracking-[0.22em] bg-[#edf6f0] px-3.5 py-2 rounded-full border border-[#d4e9db] inline-block mb-4">
+            <span className="text-[11px] font-semibold text-forest-600 uppercase tracking-[0.22em] bg-mist-100 px-3.5 py-2 rounded-full border border-mist-300 inline-block mb-4">
               {content.experienceSectionBadge}
             </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#142d24] font-display tracking-[-0.06em]">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-forest-900 font-display tracking-[-0.06em]">
               {content.experienceSectionTitle}
             </h2>
             <p className="text-sm sm:text-base text-slate-600 mt-3 leading-relaxed">
@@ -328,14 +328,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
             {/* Module 1: Visit In-Person */}
             <div className="editorial-card premium-card rounded-[4px] p-7 sm:p-8 md:col-span-5 hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between">
               <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-[#0d1f18] text-[#f5cf72] flex items-center justify-center shadow-[0_15px_30px_rgba(13,31,24,0.2)]">
-                  <MapPin className="w-6 h-6 text-[#d7a94b]" />
+                <div className="w-14 h-14 rounded-2xl bg-forest-950 text-gold-300 flex items-center justify-center shadow-lift">
+                  <MapPin className="w-6 h-6 text-gold-400" />
                 </div>
                 <div className="space-y-1.5">
-                  <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#0d5a3d]">
+                  <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-forest-600">
                     SUNDAYS @ {content.sundayServiceTime}
                   </span>
-                  <h3 className="text-2xl font-bold text-[#142d24] font-display tracking-[-0.04em]">
+                  <h3 className="text-2xl font-bold text-forest-900 font-display tracking-[-0.04em]">
                     {content.experienceMod1Title}
                   </h3>
                 </div>
@@ -346,7 +346,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <div className="pt-6 mt-5 border-t border-slate-200/80">
                 <button
                   onClick={() => onNavigate("new-here")}
-                  className="inline-flex items-center gap-2 text-xs font-bold text-[#0a3d2d] group-hover:text-[#b88418] transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-2 text-xs font-bold text-forest-800 group-hover:text-gold-600 transition-colors cursor-pointer"
                 >
                   <span>Plan Your Sunday Visit</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -357,14 +357,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
             {/* Module 2: Watch on Demand */}
             <div className="editorial-card premium-card rounded-[4px] p-7 sm:p-8 md:col-span-4 hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between">
               <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-[#0d1f18] text-[#f5cf72] flex items-center justify-center shadow-[0_15px_30px_rgba(13,31,24,0.2)]">
-                  <Play className="w-6 h-6 text-[#d7a94b] fill-[#d7a94b]" />
+                <div className="w-14 h-14 rounded-2xl bg-forest-950 text-gold-300 flex items-center justify-center shadow-lift">
+                  <Play className="w-6 h-6 text-gold-400 fill-gold-400" />
                 </div>
                 <div className="space-y-1.5">
-                  <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#0d5a3d]">
+                  <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-forest-600">
                     MESSAGES & PODCASTS
                   </span>
-                  <h3 className="text-2xl font-bold text-[#142d24] font-display tracking-[-0.04em]">
+                  <h3 className="text-2xl font-bold text-forest-900 font-display tracking-[-0.04em]">
                     {content.experienceMod2Title}
                   </h3>
                 </div>
@@ -375,7 +375,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <div className="pt-6 mt-5 border-t border-slate-200/80">
                 <button
                   onClick={() => onNavigate("watch-listen")}
-                  className="inline-flex items-center gap-2 text-xs font-bold text-[#0a3d2d] group-hover:text-[#b88418] transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-2 text-xs font-bold text-forest-800 group-hover:text-gold-600 transition-colors cursor-pointer"
                 >
                   <span>Browse Sermon Archive</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -386,14 +386,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
             {/* Module 3: The Secret Place */}
             <div className="editorial-card premium-card rounded-[4px] p-7 sm:p-8 md:col-span-3 hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between">
               <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-[#0d1f18] text-[#f5cf72] flex items-center justify-center shadow-[0_15px_30px_rgba(13,31,24,0.2)]">
-                  <Flame className="w-6 h-6 text-[#d7a94b]" />
+                <div className="w-14 h-14 rounded-2xl bg-forest-950 text-gold-300 flex items-center justify-center shadow-lift">
+                  <Flame className="w-6 h-6 text-gold-400" />
                 </div>
                 <div className="space-y-1.5">
-                  <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#0d5a3d]">
+                  <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-forest-600">
                     WEDNESDAYS @ {content.midweekServiceTime}
                   </span>
-                  <h3 className="text-2xl font-bold text-[#142d24] font-display tracking-[-0.04em]">
+                  <h3 className="text-2xl font-bold text-forest-900 font-display tracking-[-0.04em]">
                     {content.experienceMod3Title}
                   </h3>
                 </div>
@@ -404,7 +404,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <div className="pt-6 mt-5 border-t border-slate-200/80">
                 <button
                   onClick={() => onNavigate("prayer")}
-                  className="inline-flex items-center gap-2 text-xs font-bold text-[#0a3d2d] group-hover:text-[#b88418] transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-2 text-xs font-bold text-forest-800 group-hover:text-gold-600 transition-colors cursor-pointer"
                 >
                   <span>Submit Prayer / Join</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -420,13 +420,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* ========================================================================= */}
       {latestSermon && (
         <section
-          className="py-20 bg-[#02180e] text-white border-b border-[#084c2e]"
+          className="py-20 bg-forest-950 text-white border-b border-forest-700"
           id="latest-message"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-[#094c2d] gap-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-forest-700 gap-4">
               <div>
-                <span className="text-xs text-[#f5cf72] uppercase tracking-widest block font-bold">
+                <span className="text-xs text-gold-300 uppercase tracking-widest block font-bold">
                   SPIRITUAL FEEDING & MEDIA
                 </span>
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1 font-serif-title">
@@ -435,7 +435,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               </div>
               <button
                 onClick={() => onNavigate("watch-listen")}
-                className="inline-flex items-center space-x-1 text-sm font-semibold text-[#f5cf72] hover:text-white transition-colors"
+                className="inline-flex items-center space-x-1 text-sm font-semibold text-gold-300 hover:text-white transition-colors"
               >
                 <span>VIEW ALL MESSAGES</span>
                 <ChevronRight className="w-4 h-4" />
@@ -443,9 +443,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </div>
 
             {/* Featured Message Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-[#032416] rounded-3xl p-6 sm:p-8 border border-[#094c2d] shadow-2xl">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-forest-900 rounded-3xl p-6 sm:p-8 border border-forest-700 shadow-2xl">
               {/* Media Thumbnail Container / Embedded Player */}
-              <div className="lg:col-span-7 relative rounded-2xl overflow-hidden shadow-2xl aspect-video bg-black border border-[#084c2e]">
+              <div className="lg:col-span-7 relative rounded-2xl overflow-hidden shadow-2xl aspect-video bg-black border border-forest-700">
                 {playLatestInline && latestSermon.videoEmbedUrl ? (
                   <iframe
                     src={`${latestSermon.videoEmbedUrl}?autoplay=1&rel=0`}
@@ -464,16 +464,16 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center">
                       <button
                         onClick={() => setPlayLatestInline(true)}
-                        className="w-16 h-16 rounded-full bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95 cursor-pointer mb-2"
+                        className="w-16 h-16 rounded-full bg-gold-500 hover:bg-gold-600 text-forest-950 flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95 cursor-pointer mb-2"
                         aria-label="Play Message Video inline"
                       >
-                        <Play className="w-7 h-7 ml-1 fill-[#021a10]" />
+                        <Play className="w-7 h-7 ml-1 fill-forest-950" />
                       </button>
                       <span className="text-xs font-medium text-white uppercase tracking-wider bg-black/80 px-3 py-1 rounded-md">
                         Click to Play Video
                       </span>
                     </div>
-                    <span className="absolute top-4 left-4 px-3 py-1 bg-[#02180e]/90 rounded text-xs font-bold text-[#dfb15b]">
+                    <span className="absolute top-4 left-4 px-3 py-1 bg-forest-950/90 rounded text-xs font-bold text-gold-400">
                       {latestSermon.category}
                     </span>
                     <span className="absolute bottom-4 right-4 px-2.5 py-1 bg-black/80 rounded text-xs text-white">
@@ -491,14 +491,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       {latestSermon.date}
                     </span>
                     <span className="text-emerald-700">•</span>
-                    <span className="text-xs text-[#dfb15b] font-semibold">
+                    <span className="text-xs text-gold-400 font-semibold">
                       {latestSermon.series}
                     </span>
                   </div>
                   <h3 className="text-2xl sm:text-3xl font-bold text-white leading-snug font-serif">
                     {latestSermon.title}
                   </h3>
-                  <p className="text-sm text-[#dfb15b] font-medium">
+                  <p className="text-sm text-gold-400 font-medium">
                     {latestSermon.speaker}
                   </p>
                   <p className="text-xs text-emerald-200/80 mt-1">
@@ -519,9 +519,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
                         onWatchVideo(latestSermon);
                       }
                     }}
-                    className="px-6 py-3 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg transition-colors flex items-center space-x-2 cursor-pointer shadow-sm"
+                    className="px-6 py-3 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors flex items-center space-x-2 cursor-pointer shadow-sm"
                   >
-                    <Play className="w-4 h-4 fill-[#021a10]" />
+                    <Play className="w-4 h-4 fill-forest-950" />
                     <span>
                       {playLatestInline ? "EXPAND PLAYER" : "WATCH MESSAGE"}
                     </span>
@@ -531,7 +531,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     onClick={() => onPlayAudio(latestSermon)}
                     className="px-5 py-3 bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-wider rounded-lg border border-white/15 transition-colors flex items-center space-x-2 cursor-pointer"
                   >
-                    <Headphones className="w-4 h-4 text-[#dfb15b]" />
+                    <Headphones className="w-4 h-4 text-gold-400" />
                     <span>LISTEN AUDIO</span>
                   </button>
 
@@ -564,14 +564,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* ========================================================================= */}
       {featuredSummit && (
         <section
-          className="py-20 bg-[#02180e] text-white relative border-b border-[#084c2e]"
+          className="py-20 bg-forest-950 text-white relative border-b border-forest-700"
           id="wisdom-summit"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-[#042015] rounded-2xl border border-white/15 p-8 sm:p-12 relative shadow-xl">
+            <div className="bg-forest-900 rounded-2xl border border-white/15 p-8 sm:p-12 relative shadow-xl">
               {/* Event Badge */}
               <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-                <span className="px-3.5 py-1 bg-[#c99726] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-md">
+                <span className="px-3.5 py-1 bg-gold-500 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-md">
                   ANNUAL FLAGSHIP CONFERENCE
                 </span>
                 <button
@@ -581,9 +581,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       `${featuredSummit.theme} - Join us for Wisdom Summit 2026 at Wisdom Temple`,
                     )
                   }
-                  className="p-2 rounded-lg bg-[#031a10] hover:bg-[#06301f] text-emerald-200 hover:text-white transition-colors flex items-center space-x-1.5 text-xs font-semibold cursor-pointer border border-white/10"
+                  className="p-2 rounded-lg bg-forest-950 hover:bg-forest-800 text-emerald-200 hover:text-white transition-colors flex items-center space-x-1.5 text-xs font-semibold cursor-pointer border border-white/10"
                 >
-                  <Share2 className="w-3.5 h-3.5 text-[#c99726]" />
+                  <Share2 className="w-3.5 h-3.5 text-gold-500" />
                   <span>Share Event</span>
                 </button>
               </div>
@@ -608,24 +608,24 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
                     {/* Hover Overlay with Enlarge Cue */}
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
-                      <span className="text-xs font-bold text-[#dfb15b] flex items-center space-x-1.5 bg-[#02180e] px-3.5 py-1.5 rounded-lg border border-white/20 shadow">
+                      <span className="text-xs font-bold text-gold-400 flex items-center space-x-1.5 bg-forest-950 px-3.5 py-1.5 rounded-lg border border-white/20 shadow">
                         <ZoomIn className="w-3.5 h-3.5" />
                         <span>Click to Enlarge Official Banner</span>
                       </span>
                     </div>
 
                     {/* Corner Badge */}
-                    <div className="absolute top-3 right-3 bg-[#02180e]/90 px-3 py-1 rounded-md border border-white/20 text-[10px] font-bold text-[#dfb15b] uppercase tracking-wider flex items-center space-x-1">
-                      <Sparkles className="w-3 h-3 text-[#dfb15b]" />
+                    <div className="absolute top-3 right-3 bg-forest-950/90 px-3 py-1 rounded-md border border-white/20 text-[10px] font-bold text-gold-400 uppercase tracking-wider flex items-center space-x-1">
+                      <Sparkles className="w-3 h-3 text-gold-400" />
                       <span>Wisdom Summit</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Countdown & Registration Beside */}
-                <div className="lg:col-span-5 xl:col-span-4 bg-[#02180e] rounded-xl border border-white/15 p-6 sm:p-8 text-center space-y-6">
+                <div className="lg:col-span-5 xl:col-span-4 bg-forest-950 rounded-xl border border-white/15 p-6 sm:p-8 text-center space-y-6">
                   <div>
-                    <span className="text-xs uppercase tracking-widest text-[#dfb15b] block font-bold">
+                    <span className="text-xs uppercase tracking-widest text-gold-400 block font-bold">
                       CONFERENCE COUNTDOWN
                     </span>
                     <p className="text-xs text-emerald-300/80 mt-1">
@@ -635,15 +635,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
                   {/* Timer Boxes */}
                   <div className="grid grid-cols-4 gap-2.5 text-center">
-                    <div className="bg-[#032416] border border-white/10 rounded-lg p-3">
-                      <span className="text-2xl sm:text-3xl font-black text-[#dfb15b] block">
+                    <div className="bg-forest-900 border border-white/10 rounded-lg p-3">
+                      <span className="text-2xl sm:text-3xl font-black text-gold-400 block">
                         {timeLeft.days}
                       </span>
                       <span className="text-[10px] uppercase tracking-wider text-emerald-300/70 font-semibold">
                         Days
                       </span>
                     </div>
-                    <div className="bg-[#032416] border border-white/10 rounded-lg p-3">
+                    <div className="bg-forest-900 border border-white/10 rounded-lg p-3">
                       <span className="text-2xl sm:text-3xl font-black text-white block">
                         {timeLeft.hours}
                       </span>
@@ -651,7 +651,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                         Hours
                       </span>
                     </div>
-                    <div className="bg-[#032416] border border-white/10 rounded-lg p-3">
+                    <div className="bg-forest-900 border border-white/10 rounded-lg p-3">
                       <span className="text-2xl sm:text-3xl font-black text-white block">
                         {timeLeft.minutes}
                       </span>
@@ -659,8 +659,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
                         Mins
                       </span>
                     </div>
-                    <div className="bg-[#032416] border border-white/10 rounded-lg p-3">
-                      <span className="text-2xl sm:text-3xl font-black text-[#dfb15b] block">
+                    <div className="bg-forest-900 border border-white/10 rounded-lg p-3">
+                      <span className="text-2xl sm:text-3xl font-black text-gold-400 block">
                         {timeLeft.seconds}
                       </span>
                       <span className="text-[10px] uppercase tracking-wider text-emerald-300/70 font-semibold">
@@ -673,7 +673,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   <div className="space-y-2 pt-2">
                     <button
                       onClick={() => onRegisterEvent(featuredSummit)}
-                      className="w-full py-3.5 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
+                      className="w-full py-3.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
                     >
                       REGISTER FOR WISDOM SUMMIT
                     </button>
@@ -692,22 +692,22 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* 6. UPCOMING EVENTS GRID */}
       {/* ========================================================================= */}
       <section
-        className="py-16 sm:py-20 bg-[#f4f7f4] border-b border-[#e0e9e3]"
+        className="py-16 sm:py-20 bg-mist-50 border-b border-mist-200"
         id="upcoming-events"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
             <div>
-              <span className="text-xs font-bold tracking-widest text-[#07472c] uppercase bg-[#e4f0e8] px-3 py-1 rounded-full border border-[#c2decc]">
+              <span className="text-xs font-bold tracking-widest text-forest-700 uppercase bg-mist-200 px-3 py-1 rounded-full border border-mist-400">
                 CALENDAR & GATHERINGS
               </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-[#032014] mt-2 font-serif-title">
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-forest-900 mt-2 font-serif-title">
                 Upcoming Events
               </h2>
             </div>
             <button
               onClick={() => onNavigate("events")}
-              className="inline-flex items-center space-x-1 text-sm font-semibold text-[#07472c] hover:text-[#0b643f] transition-colors"
+              className="inline-flex items-center space-x-1 text-sm font-semibold text-forest-700 hover:text-forest-500 transition-colors"
             >
               <span>VIEW ALL EVENTS</span>
               <ChevronRight className="w-4 h-4" />
@@ -718,26 +718,26 @@ export const HomeView: React.FC<HomeViewProps> = ({
             {events.slice(0, 3).map((event) => (
               <div
                 key={event.id}
-                className="bg-white rounded-2xl border border-[#d6e5dc] overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between group"
+                className="bg-white rounded-2xl border border-mist-300 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between group"
               >
                 <div>
-                  <div className="relative aspect-[16/9] overflow-hidden bg-[#032014]">
+                  <div className="relative aspect-[16/9] overflow-hidden bg-forest-900">
                     <PosterImage
                       src={getBanner("event_" + event.id, event.image)}
                       alt={event.name}
                     />
-                    <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#02180e]/90 text-[#f5cf72] rounded text-xs font-bold backdrop-blur-md border border-[#c99726]/30">
+                    <span className="absolute top-3 left-3 px-2.5 py-1 bg-forest-950/90 text-gold-300 rounded text-xs font-bold backdrop-blur-md border border-gold-500/30">
                       {event.category}
                     </span>
                   </div>
 
                   <div className="p-6 space-y-3">
-                    <div className="text-xs text-[#07472c] font-bold flex items-center space-x-2">
-                      <Calendar className="w-3.5 h-3.5 text-[#c99726]" />
+                    <div className="text-xs text-forest-700 font-bold flex items-center space-x-2">
+                      <Calendar className="w-3.5 h-3.5 text-gold-500" />
                       <span>{event.date}</span>
                     </div>
 
-                    <h3 className="text-lg font-bold text-[#032014] group-hover:text-[#07472c] transition-colors line-clamp-1 font-serif-title">
+                    <h3 className="text-lg font-bold text-forest-900 group-hover:text-forest-700 transition-colors line-clamp-1 font-serif-title">
                       {event.name}
                     </h3>
 
@@ -761,7 +761,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <div className="p-6 pt-0">
                   <button
                     onClick={() => onRegisterEvent(event)}
-                    className="w-full py-2.5 bg-[#032014] hover:bg-[#063821] text-white font-bold text-xs rounded-xl transition-all cursor-pointer border border-[#c99726]/30"
+                    className="w-full py-2.5 bg-forest-900 hover:bg-forest-800 text-white font-bold text-xs rounded-xl transition-all cursor-pointer border border-gold-500/30"
                   >
                     REGISTER NOW
                   </button>
@@ -777,16 +777,16 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* ========================================================================= */}
       {publishedTestimonies.length > 0 && (
         <section
-          className="py-20 bg-[#f4f7f4] border-b border-[#e0e9e3]"
+          className="py-20 bg-mist-50 border-b border-mist-200"
           id="testimonies"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-10 max-w-2xl">
               <div>
-                <span className="text-[10px] font-bold tracking-[0.22em] text-[#07472c] uppercase">
+                <span className="text-[10px] font-bold tracking-[0.22em] text-forest-700 uppercase">
                   TESTIMONIALS
                 </span>
-                <h2 className="text-4xl sm:text-5xl font-extrabold leading-[0.98] text-[#032014] mt-3 font-serif-title">
+                <h2 className="text-4xl sm:text-5xl font-extrabold leading-[0.98] text-forest-900 mt-3 font-serif-title">
                   How lives are transformed through love, and faith.
                 </h2>
               </div>
@@ -796,11 +796,11 @@ export const HomeView: React.FC<HomeViewProps> = ({
               {publishedTestimonies.map((item) => (
                 <div
                   key={item.id}
-                  className="min-w-[min(86vw,330px)] sm:min-w-[350px] snap-start bg-white rounded-[22px] p-6 sm:p-7 border border-[#d6e5dc] shadow-sm flex flex-col justify-between min-h-[280px]"
+                  className="min-w-[min(86vw,330px)] sm:min-w-[350px] snap-start bg-white rounded-[22px] p-6 sm:p-7 border border-mist-300 shadow-sm flex flex-col justify-between min-h-[280px]"
                 >
                   <div className="space-y-3">
-                    <Quote className="w-8 h-8 text-[#07472c]/30" />
-                    <h3 className="text-base font-bold text-[#032014] font-serif-title">
+                    <Quote className="w-8 h-8 text-forest-700/30" />
+                    <h3 className="text-base font-bold text-forest-900 font-serif-title">
                       {item.title}
                     </h3>
                     <p className="text-slate-600 text-xs sm:text-sm leading-relaxed italic">
@@ -810,14 +810,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
                   <div className="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between text-xs">
                     <div>
-                      <span className="text-[#032014] font-bold block">
+                      <span className="text-forest-900 font-bold block">
                         {item.personName}
                       </span>
                       <span className="text-slate-600 text-[11px]">
                         {item.date}
                       </span>
                     </div>
-                    <span className="px-2 py-0.5 bg-[#eef6f1] text-[#07472c] rounded text-[10px] border border-[#c2decc]">
+                    <span className="px-2 py-0.5 bg-mist-100 text-forest-700 rounded text-[10px] border border-mist-400">
                       {item.category}
                     </span>
                   </div>
@@ -827,7 +827,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
             <button
               onClick={() => setShowTestimonyModal(true)}
-              className="mt-8 inline-flex items-center space-x-2 text-[#07472c] hover:text-[#b8861d] font-bold text-xs uppercase tracking-[0.14em] transition-colors cursor-pointer"
+              className="mt-8 inline-flex items-center space-x-2 text-forest-700 hover:text-gold-600 font-bold text-xs uppercase tracking-[0.14em] transition-colors cursor-pointer"
             >
               <span>Share your testimony</span>
               <ArrowRight className="w-4 h-4" />
@@ -840,16 +840,16 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* 11. GIVING TEASER ON HOMEPAGE - Official ICGC Forest & Gold */}
       {/* ========================================================================= */}
       <section
-        className="py-16 bg-[#032014] text-white border-t border-white/10"
+        className="py-16 bg-forest-900 text-white border-t border-white/10"
         id="giving-teaser"
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <div className="w-12 h-12 bg-[#c99726]/20 border border-[#c99726]/40 rounded-full flex items-center justify-center mx-auto text-[#dfb15b]">
-            <Heart className="w-6 h-6 fill-[#c99726] text-[#c99726]" />
+          <div className="w-12 h-12 bg-gold-500/20 border border-gold-500/40 rounded-full flex items-center justify-center mx-auto text-gold-400">
+            <Heart className="w-6 h-6 fill-gold-500 text-gold-500" />
           </div>
           <h2 className="text-3xl sm:text-4xl font-light text-white font-serif">
             Worship Through{" "}
-            <span className="font-normal text-[#dfb15b]">Giving</span>
+            <span className="font-normal text-gold-400">Giving</span>
           </h2>
           <p className="text-emerald-200/80 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
             Your generosity helps support the work of the ministry and enables
@@ -859,7 +859,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           <div className="pt-4">
             <button
               onClick={() => onNavigate("give")}
-              className="px-8 py-3.5 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer inline-flex items-center space-x-2"
+              className="px-8 py-3.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer inline-flex items-center space-x-2"
             >
               <span>GIVE FIRST FRUIT & OFFERINGS</span>
               <ArrowRight className="w-4 h-4" />
@@ -871,8 +871,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* Share Testimony Modal */}
       {showTestimonyModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-lg bg-[#032416] border border-[#094c2d] rounded-2xl p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-[#084c2e] pb-3">
+          <div className="w-full max-w-lg bg-forest-900 border border-forest-700 rounded-2xl p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-forest-700 pb-3">
               <h3 className="font-bold text-white text-base font-serif-title">
                 Share Your Testimony
               </h3>
@@ -886,7 +886,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
             {testimonySuccess ? (
               <div className="py-8 text-center text-emerald-300 space-y-2">
-                <CheckCircle2 className="w-10 h-10 mx-auto text-[#f5cf72]" />
+                <CheckCircle2 className="w-10 h-10 mx-auto text-gold-300" />
                 <p className="text-sm font-bold text-white">
                   Thank you for sharing what God has done!
                 </p>
@@ -909,7 +909,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     value={testimonyName}
                     onChange={(e) => setTestimonyName(e.target.value)}
                     placeholder="e.g. Brother Kojo"
-                    className="w-full px-3.5 py-2.5 bg-[#02180e] border border-[#084c2e] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                    className="w-full px-3.5 py-2.5 bg-forest-950 border border-forest-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-gold-500"
                   />
                 </div>
 
@@ -923,7 +923,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     value={testimonyTitle}
                     onChange={(e) => setTestimonyTitle(e.target.value)}
                     placeholder="e.g. Breakthrough in Employment"
-                    className="w-full px-3.5 py-2.5 bg-[#02180e] border border-[#084c2e] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                    className="w-full px-3.5 py-2.5 bg-forest-950 border border-forest-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-gold-500"
                   />
                 </div>
 
@@ -937,14 +937,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     value={testimonyContent}
                     onChange={(e) => setTestimonyContent(e.target.value)}
                     placeholder="Describe how the Lord intervened or answered prayer..."
-                    className="w-full px-3.5 py-2.5 bg-[#02180e] border border-[#084c2e] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                    className="w-full px-3.5 py-2.5 bg-forest-950 border border-forest-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-gold-500"
                   />
                 </div>
 
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full py-3 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer"
+                    className="w-full py-3 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer"
                   >
                     SUBMIT PRAISE REPORT
                   </button>
@@ -964,13 +964,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
           onClick={() => setFlyerModalOpen(false)}
         >
           <div
-            className="relative max-w-4xl w-full bg-[#02180e] rounded-2xl border border-white/20 p-4 sm:p-6 shadow-2xl overflow-hidden text-white"
+            className="relative max-w-4xl w-full bg-forest-950 rounded-2xl border border-white/20 p-4 sm:p-6 shadow-2xl overflow-hidden text-white"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
               <div className="flex items-center space-x-2">
-                <Sparkles className="w-4 h-4 text-[#c99726]" />
-                <span className="font-bold text-sm tracking-wide text-[#dfb15b]">
+                <Sparkles className="w-4 h-4 text-gold-500" />
+                <span className="font-bold text-sm tracking-wide text-gold-400">
                   WISDOM SUMMIT 2026 — OFFICIAL BANNER
                 </span>
               </div>
@@ -1001,7 +1001,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   setFlyerModalOpen(false);
                   if (featuredSummit) onRegisterEvent(featuredSummit);
                 }}
-                className="w-full sm:w-auto px-6 py-2.5 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
+                className="w-full sm:w-auto px-6 py-2.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
               >
                 REGISTER NOW
               </button>

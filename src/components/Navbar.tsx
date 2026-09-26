@@ -46,16 +46,16 @@ export const Navbar: React.FC<NavbarProps> = ({
       className={`z-40 w-full text-white ${
         currentPage === "home"
           ? "absolute top-0 left-0 bg-transparent"
-          : "sticky top-0 bg-[#032014] shadow-xl border-b border-[#c99726]/30"
+          : "sticky top-0 bg-forest-900 shadow-xl border-b border-gold-500/30"
       }`}
     >
       {/* Top Utility Announcement Bar - ICGC Official Deep Forest & Gold */}
       <div
-        className={`${currentPage === "home" ? "hidden" : "hidden md:flex"} justify-between items-center px-4 lg:px-8 py-2 bg-[#02170e]/85 text-xs text-emerald-100/80 border-b border-[#05321f]/70`}
+        className={`${currentPage === "home" ? "hidden" : "hidden md:flex"} justify-between items-center px-4 lg:px-8 py-2 bg-forest-950/85 text-xs text-emerald-100/80 border-b border-forest-800/70`}
       >
         <div className="flex items-center space-x-6">
-          <div className="flex items-center space-x-1.5 text-[#e5b138] font-medium">
-            <Clock className="w-3.5 h-3.5 text-[#e5b138]" />
+          <div className="flex items-center space-x-1.5 text-gold-400 font-medium">
+            <Clock className="w-3.5 h-3.5 text-gold-400" />
             <span>
               Sundays: <strong>8:00 AM</strong>
             </span>
@@ -65,38 +65,38 @@ export const Navbar: React.FC<NavbarProps> = ({
             </span>
           </div>
           <div className="flex items-center space-x-1.5 text-emerald-200/70">
-            <MapPin className="w-3.5 h-3.5 text-[#c99726]" />
+            <MapPin className="w-3.5 h-3.5 text-gold-500" />
             <span>{CHURCH_INFO.location}</span>
           </div>
         </div>
         <div className="flex items-center space-x-5">
           <button
             onClick={() => handleNavClick("about", "leadership")}
-            className="hover:text-[#f5cf72] transition-colors font-medium cursor-pointer text-[#e5b138]"
+            className="hover:text-gold-300 transition-colors font-medium cursor-pointer text-gold-400"
           >
             Our Leadership
           </button>
           <span className="text-emerald-900">•</span>
           <button
             onClick={() => handleNavClick("new-here")}
-            className="hover:text-[#f5cf72] transition-colors font-medium cursor-pointer"
+            className="hover:text-gold-300 transition-colors font-medium cursor-pointer"
           >
             I'm New Here
           </button>
           <span className="text-emerald-900">•</span>
           <button
             onClick={() => handleNavClick("prayer")}
-            className="hover:text-[#f5cf72] transition-colors cursor-pointer"
+            className="hover:text-gold-300 transition-colors cursor-pointer"
           >
             Request Prayer
           </button>
           <span className="text-emerald-900">•</span>
           <button
             onClick={() => handleNavClick("admin")}
-            className="text-emerald-300 hover:text-[#f5cf72] font-semibold transition-colors cursor-pointer flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-[#042819] hover:bg-[#073c25] border border-[#c99726]/40"
+            className="text-emerald-300 hover:text-gold-300 font-semibold transition-colors cursor-pointer flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-forest-850 hover:bg-forest-800 border border-gold-500/40"
             title="Church Leadership & Staff Administration"
           >
-            <ShieldCheck className="w-3.5 h-3.5 text-[#c99726]" />
+            <ShieldCheck className="w-3.5 h-3.5 text-gold-500" />
             <span>Admin Portal</span>
           </button>
         </div>
@@ -125,8 +125,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick("home")}
               className={`px-3 py-2 rounded-md transition-all ${
                 currentPage === "home"
-                  ? "text-[#f5cf72] bg-[#07472c] font-bold border-b-2 border-[#c99726]"
-                  : "text-emerald-100 hover:text-white hover:bg-[#063821]"
+                  ? "text-gold-300 bg-forest-700 font-bold border-b-2 border-gold-500"
+                  : "text-emerald-100 hover:text-white hover:bg-forest-800"
               }`}
             >
               HOME
@@ -137,8 +137,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick("new-here")}
               className={`px-3 py-2 rounded-md transition-all font-semibold ${
                 currentPage === "new-here"
-                  ? "text-[#fce49e] bg-[#07472c] font-bold border-b-2 border-[#c99726]"
-                  : "text-emerald-100 hover:text-white hover:bg-[#063821]"
+                  ? "text-gold-200 bg-forest-700 font-bold border-b-2 border-gold-500"
+                  : "text-emerald-100 hover:text-white hover:bg-forest-800"
               }`}
             >
               PLAN A VISIT
@@ -154,12 +154,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={() => handleNavClick("about")}
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md transition-all ${
                   currentPage === "about"
-                    ? "text-[#f5cf72] bg-[#07472c] font-bold border-b-2 border-[#c99726]"
-                    : "text-emerald-100 hover:text-white hover:bg-[#063821]"
+                    ? "text-gold-300 bg-forest-700 font-bold border-b-2 border-gold-500"
+                    : "text-emerald-100 hover:text-white hover:bg-forest-800"
                 }`}
               >
                 <span>ABOUT</span>
-                <ChevronDown className="w-3.5 h-3.5 text-[#c99726]" />
+                <ChevronDown className="w-3.5 h-3.5 text-gold-500" />
               </button>
 
               <AnimatePresence>
@@ -169,35 +169,35 @@ export const Navbar: React.FC<NavbarProps> = ({
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 6, scale: 0.96 }}
                     transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute top-full left-0 w-56 bg-[#042d1c] border border-[#c99726]/30 rounded-lg shadow-2xl py-2 mt-0 z-50 backdrop-blur-md"
+                    className="absolute top-full left-0 w-56 bg-forest-850 border border-gold-500/30 rounded-lg shadow-2xl py-2 mt-0 z-50 backdrop-blur-md"
                   >
                     <button
                       onClick={() => handleNavClick("about", "who-we-are")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-[#085233] hover:text-[#f5cf72] transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
                     >
                       Who We Are
                     </button>
                     <button
                       onClick={() => handleNavClick("about", "vision-mission")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-[#085233] hover:text-[#f5cf72] transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
                     >
                       Our Vision & Mission
                     </button>
                     <button
                       onClick={() => handleNavClick("about", "beliefs")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-[#085233] hover:text-[#f5cf72] transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
                     >
                       Our Beliefs
                     </button>
                     <button
                       onClick={() => handleNavClick("about", "leadership")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-[#085233] hover:text-[#f5cf72] transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
                     >
                       Our Leadership
                     </button>
                     <button
                       onClick={() => handleNavClick("about", "story")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-[#085233] hover:text-[#f5cf72] transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
                     >
                       Our Story & Heritage
                     </button>
@@ -216,12 +216,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={() => handleNavClick("watch-listen")}
                 className={`flex items-center space-x-1 px-3 py-2 rounded-md transition-all ${
                   currentPage === "watch-listen"
-                    ? "text-[#f5cf72] bg-[#07472c] font-bold border-b-2 border-[#c99726]"
-                    : "text-emerald-100 hover:text-white hover:bg-[#063821]"
+                    ? "text-gold-300 bg-forest-700 font-bold border-b-2 border-gold-500"
+                    : "text-emerald-100 hover:text-white hover:bg-forest-800"
                 }`}
               >
                 <span>WATCH</span>
-                <ChevronDown className="w-3.5 h-3.5 text-[#c99726]" />
+                <ChevronDown className="w-3.5 h-3.5 text-gold-500" />
               </button>
 
               <AnimatePresence>
@@ -231,11 +231,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 6, scale: 0.96 }}
                     transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute top-full left-0 w-56 bg-[#042d1c] border border-[#c99726]/30 rounded-lg shadow-2xl py-2 mt-0 z-50 backdrop-blur-md"
+                    className="absolute top-full left-0 w-56 bg-forest-850 border border-gold-500/30 rounded-lg shadow-2xl py-2 mt-0 z-50 backdrop-blur-md"
                   >
                     <button
                       onClick={() => handleNavClick("watch-listen", "all")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-[#085233] hover:text-[#f5cf72] transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
                     >
                       All Sermons & Media
                     </button>
@@ -243,7 +243,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onClick={() =>
                         handleNavClick("watch-listen", "Sunday Message")
                       }
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-[#085233] hover:text-[#f5cf72] transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
                     >
                       Sunday Messages
                     </button>
@@ -251,7 +251,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onClick={() =>
                         handleNavClick("watch-listen", "The Secret Place")
                       }
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-[#085233] hover:text-[#f5cf72] transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
                     >
                       The Secret Place (Wednesdays)
                     </button>
@@ -259,7 +259,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onClick={() =>
                         handleNavClick("watch-listen", "Wisdom Summit")
                       }
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-[#085233] hover:text-[#f5cf72] transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
                     >
                       Wisdom Summit Archive
                     </button>
@@ -273,8 +273,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick("grow")}
               className={`px-3 py-2 rounded-md transition-all ${
                 currentPage === "grow"
-                  ? "text-[#f5cf72] bg-[#07472c] font-bold border-b-2 border-[#c99726]"
-                  : "text-emerald-100 hover:text-white hover:bg-[#063821]"
+                  ? "text-gold-300 bg-forest-700 font-bold border-b-2 border-gold-500"
+                  : "text-emerald-100 hover:text-white hover:bg-forest-800"
               }`}
             >
               GROW
@@ -285,8 +285,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick("ministries")}
               className={`px-3 py-2 rounded-md transition-all ${
                 currentPage === "ministries"
-                  ? "text-[#f5cf72] bg-[#07472c] font-bold border-b-2 border-[#c99726]"
-                  : "text-emerald-100 hover:text-white hover:bg-[#063821]"
+                  ? "text-gold-300 bg-forest-700 font-bold border-b-2 border-gold-500"
+                  : "text-emerald-100 hover:text-white hover:bg-forest-800"
               }`}
             >
               MINISTRIES
@@ -297,8 +297,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick("events")}
               className={`px-3 py-2 rounded-md transition-all ${
                 currentPage === "events"
-                  ? "text-[#f5cf72] bg-[#07472c] font-bold border-b-2 border-[#c99726]"
-                  : "text-emerald-100 hover:text-white hover:bg-[#063821]"
+                  ? "text-gold-300 bg-forest-700 font-bold border-b-2 border-gold-500"
+                  : "text-emerald-100 hover:text-white hover:bg-forest-800"
               }`}
             >
               EVENTS
@@ -309,8 +309,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick("gallery")}
               className={`px-3 py-2 rounded-md transition-all ${
                 currentPage === "gallery"
-                  ? "text-[#f5cf72] bg-[#07472c] font-bold border-b-2 border-[#c99726]"
-                  : "text-emerald-100 hover:text-white hover:bg-[#063821]"
+                  ? "text-gold-300 bg-forest-700 font-bold border-b-2 border-gold-500"
+                  : "text-emerald-100 hover:text-white hover:bg-forest-800"
               }`}
             >
               GALLERY
@@ -329,12 +329,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                   currentPage === "new-here" ||
                   currentPage === "prayer" ||
                   currentPage === "contact"
-                    ? "text-[#f5cf72] bg-[#07472c] font-bold border-b-2 border-[#c99726]"
-                    : "text-emerald-100 hover:text-white hover:bg-[#063821]"
+                    ? "text-gold-300 bg-forest-700 font-bold border-b-2 border-gold-500"
+                    : "text-emerald-100 hover:text-white hover:bg-forest-800"
                 }`}
               >
                 <span>CONNECT</span>
-                <ChevronDown className="w-3.5 h-3.5 text-[#c99726]" />
+                <ChevronDown className="w-3.5 h-3.5 text-gold-500" />
               </button>
 
               <AnimatePresence>
@@ -344,35 +344,35 @@ export const Navbar: React.FC<NavbarProps> = ({
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 6, scale: 0.96 }}
                     transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute top-full left-0 w-56 bg-[#042d1c] border border-[#c99726]/30 rounded-lg shadow-2xl py-2 mt-0 z-50 backdrop-blur-md"
+                    className="absolute top-full left-0 w-56 bg-forest-850 border border-gold-500/30 rounded-lg shadow-2xl py-2 mt-0 z-50 backdrop-blur-md"
                   >
                     <button
                       onClick={() => handleNavClick("new-here")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-[#085233] hover:text-[#f5cf72] transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
                     >
                       I'm New / Plan Your Visit
                     </button>
                     <button
                       onClick={() => handleNavClick("prayer")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-[#085233] hover:text-[#f5cf72] transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
                     >
                       Prayer Request
                     </button>
                     <button
                       onClick={() => handleNavClick("contact")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-[#085233] hover:text-[#f5cf72] transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
                     >
                       Contact Us
                     </button>
                     <button
                       onClick={() => handleNavClick("connect", "membership")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-[#085233] hover:text-[#f5cf72] transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
                     >
                       Membership & Growth
                     </button>
                     <button
                       onClick={() => handleNavClick("connect", "testimonies")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-[#085233] hover:text-[#f5cf72] transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
                     >
                       Member Testimonies
                     </button>
@@ -386,18 +386,18 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="hidden sm:flex items-center space-x-2.5">
             <button
               onClick={() => handleNavClick("admin")}
-              className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-lg border border-white/35 bg-black/10 text-white/90 hover:bg-white/10 hover:text-[#f5cf72] font-semibold text-[10px] uppercase tracking-[0.12em] transition-colors cursor-pointer"
+              className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-lg border border-white/35 bg-black/10 text-white/90 hover:bg-white/10 hover:text-gold-300 font-semibold text-[10px] uppercase tracking-[0.12em] transition-colors cursor-pointer"
               title="Open church staff administration portal"
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-[#f5cf72]" />
+              <ShieldCheck className="w-3.5 h-3.5 text-gold-300" />
               <span>Staff Portal</span>
             </button>
             <button
               onClick={() => handleNavClick("give")}
-              className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-lg bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-sm"
+              className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-lg bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-sm"
               id="nav-give-btn"
             >
-              <Heart className="w-3.5 h-3.5 fill-[#021a10] text-[#021a10]" />
+              <Heart className="w-3.5 h-3.5 fill-forest-950 text-forest-950" />
               <span>GIVE</span>
             </button>
           </div>
@@ -406,15 +406,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex xl:hidden items-center space-x-2">
             <button
               onClick={() => handleNavClick("give")}
-              className="px-3.5 py-1.5 rounded-md bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider flex items-center space-x-1"
+              className="px-3.5 py-1.5 rounded-md bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider flex items-center space-x-1"
             >
-              <Heart className="w-3 h-3 fill-[#021a10]" />
+              <Heart className="w-3 h-3 fill-forest-950" />
               <span>GIVE</span>
             </button>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-md text-emerald-200 hover:text-white hover:bg-[#063821] focus:outline-none cursor-pointer transition-colors"
+              className="p-2 rounded-md text-emerald-200 hover:text-white hover:bg-forest-800 focus:outline-none cursor-pointer transition-colors"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? (
@@ -435,16 +435,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="xl:hidden bg-[#032014] border-t border-[#c99726]/30 px-4 pt-3 pb-6 space-y-2 max-h-[85vh] overflow-y-auto"
+            className="xl:hidden bg-forest-900 border-t border-gold-500/30 px-4 pt-3 pb-6 space-y-2 max-h-[85vh] overflow-y-auto"
           >
             {/* Quick Schedule Reminder */}
-            <div className="p-3 bg-[#02170e] rounded-lg border border-[#063c24] text-xs text-emerald-200/90 space-y-1">
-              <div className="flex items-center space-x-1 text-[#f5cf72] font-semibold">
-                <Clock className="w-3.5 h-3.5 text-[#c99726]" />
+            <div className="p-3 bg-forest-950 rounded-lg border border-forest-800 text-xs text-emerald-200/90 space-y-1">
+              <div className="flex items-center space-x-1 text-gold-300 font-semibold">
+                <Clock className="w-3.5 h-3.5 text-gold-500" />
                 <span>Sunday: 8:00 AM | Secret Place (Wed): 7:00 PM</span>
               </div>
               <div className="text-emerald-300/80 flex items-center space-x-1">
-                <MapPin className="w-3.5 h-3.5 text-[#c99726]" />
+                <MapPin className="w-3.5 h-3.5 text-gold-500" />
                 <span>{CHURCH_INFO.location}</span>
               </div>
             </div>
@@ -452,13 +452,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="grid grid-cols-2 gap-2 pt-2">
               <button
                 onClick={() => handleNavClick("home")}
-                className={`p-3 rounded-lg text-left text-sm font-semibold transition-colors ${currentPage === "home" ? "bg-[#c99726] text-[#021a10] font-bold" : "bg-[#063821] text-white hover:bg-[#084c2e]"}`}
+                className={`p-3 rounded-lg text-left text-sm font-semibold transition-colors ${currentPage === "home" ? "bg-gold-500 text-forest-950 font-bold" : "bg-forest-800 text-white hover:bg-forest-700"}`}
               >
                 HOME
               </button>
               <button
                 onClick={() => handleNavClick("new-here")}
-                className={`p-3 rounded-lg text-left text-sm font-semibold transition-colors ${currentPage === "new-here" ? "bg-[#c99726] text-[#021a10] font-bold" : "bg-[#063821] text-[#f5cf72] hover:bg-[#084c2e]"}`}
+                className={`p-3 rounded-lg text-left text-sm font-semibold transition-colors ${currentPage === "new-here" ? "bg-gold-500 text-forest-950 font-bold" : "bg-forest-800 text-gold-300 hover:bg-forest-700"}`}
               >
                 ✨ PLAN A VISIT
               </button>
@@ -467,79 +467,79 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="pt-2 space-y-1">
               <button
                 onClick={() => handleNavClick("about")}
-                className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-100 hover:bg-[#07472c] hover:text-[#f5cf72] transition-colors"
+                className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-100 hover:bg-forest-700 hover:text-gold-300 transition-colors"
               >
                 ABOUT THE CHURCH
               </button>
               <button
                 onClick={() => handleNavClick("about", "leadership")}
-                className="w-full text-left pl-6 pr-3 py-2 rounded-md text-xs font-semibold text-[#f5cf72] hover:bg-[#07472c] flex items-center space-x-1.5 transition-colors"
+                className="w-full text-left pl-6 pr-3 py-2 rounded-md text-xs font-semibold text-gold-300 hover:bg-forest-700 flex items-center space-x-1.5 transition-colors"
               >
                 <span>↳ Our Pastoral Leadership</span>
               </button>
               <button
                 onClick={() => handleNavClick("watch-listen")}
-                className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-100 hover:bg-[#07472c] hover:text-[#f5cf72] flex items-center justify-between transition-colors"
+                className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-100 hover:bg-forest-700 hover:text-gold-300 flex items-center justify-between transition-colors"
               >
                 <span>WATCH & LISTEN</span>
-                <Headphones className="w-4 h-4 text-[#e5b138]" />
+                <Headphones className="w-4 h-4 text-gold-400" />
               </button>
               <button
                 onClick={() => handleNavClick("grow")}
-                className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-100 hover:bg-[#07472c] hover:text-[#f5cf72] transition-colors"
+                className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-100 hover:bg-forest-700 hover:text-gold-300 transition-colors"
               >
                 GROW (BIBLE & DEVOTIONALS)
               </button>
               <button
                 onClick={() => handleNavClick("ministries")}
-                className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-100 hover:bg-[#07472c] hover:text-[#f5cf72] transition-colors"
+                className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-100 hover:bg-forest-700 hover:text-gold-300 transition-colors"
               >
                 MINISTRIES DIRECTORY
               </button>
               <button
                 onClick={() => handleNavClick("events")}
-                className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-100 hover:bg-[#07472c] hover:text-[#f5cf72] flex items-center justify-between transition-colors"
+                className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-100 hover:bg-forest-700 hover:text-gold-300 flex items-center justify-between transition-colors"
               >
                 <span>EVENTS & WISDOM SUMMIT</span>
-                <Sparkles className="w-4 h-4 text-[#e5b138]" />
+                <Sparkles className="w-4 h-4 text-gold-400" />
               </button>
               <button
                 onClick={() => handleNavClick("gallery")}
-                className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-100 hover:bg-[#07472c] hover:text-[#f5cf72] flex items-center justify-between transition-colors"
+                className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-100 hover:bg-forest-700 hover:text-gold-300 flex items-center justify-between transition-colors"
               >
                 <span>PHOTO GALLERY & MOMENTS</span>
-                <Camera className="w-4 h-4 text-[#e5b138]" />
+                <Camera className="w-4 h-4 text-gold-400" />
               </button>
               <button
                 onClick={() => handleNavClick("prayer")}
-                className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-100 hover:bg-[#07472c] hover:text-[#f5cf72] transition-colors"
+                className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-100 hover:bg-forest-700 hover:text-gold-300 transition-colors"
               >
                 PRAYER REQUEST
               </button>
               <button
                 onClick={() => handleNavClick("contact")}
-                className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-100 hover:bg-[#07472c] hover:text-[#f5cf72] transition-colors"
+                className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-emerald-100 hover:bg-forest-700 hover:text-gold-300 transition-colors"
               >
                 CONTACT US
               </button>
             </div>
 
-            <div className="pt-4 border-t border-[#063c24]">
+            <div className="pt-4 border-t border-forest-800">
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleNavClick("give")}
-                className="w-full py-3 rounded-lg bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center space-x-2 transition-colors cursor-pointer shadow-sm"
+                className="w-full py-3 rounded-lg bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center space-x-2 transition-colors cursor-pointer shadow-sm"
               >
-                <Heart className="w-4 h-4 fill-[#021a10]" />
+                <Heart className="w-4 h-4 fill-forest-950" />
                 <span>GIVE / FIRST FRUIT & OFFERINGS</span>
               </motion.button>
 
               <button
                 onClick={() => handleNavClick("admin")}
-                className="w-full mt-3 py-2.5 rounded-xl bg-[#042819] hover:bg-[#063821] text-center text-xs font-bold text-emerald-300 hover:text-[#f5cf72] border border-[#0d5533] flex items-center justify-center space-x-2 transition-colors cursor-pointer"
+                className="w-full mt-3 py-2.5 rounded-xl bg-forest-850 hover:bg-forest-800 text-center text-xs font-bold text-emerald-300 hover:text-gold-300 border border-forest-600 flex items-center justify-center space-x-2 transition-colors cursor-pointer"
               >
-                <ShieldCheck className="w-4 h-4 text-[#c99726]" />
+                <ShieldCheck className="w-4 h-4 text-gold-500" />
                 <span>CHURCH ADMINISTRATION PORTAL</span>
               </button>
             </div>

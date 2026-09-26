@@ -46,17 +46,17 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#02180e]/85 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto bg-[#02180e] border border-[#084c2e] rounded-2xl shadow-2xl text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-forest-950/85 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto bg-forest-950 border border-forest-700 rounded-2xl shadow-2xl text-white">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-[#084c2e] bg-[#01120a] sticky top-0 z-10">
-          <div className="flex items-center space-x-2 text-[#f5cf72]">
-            <Ticket className="w-5 h-5 text-[#c99726]" />
+        <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-forest-700 bg-forest-950 sticky top-0 z-10">
+          <div className="flex items-center space-x-2 text-gold-300">
+            <Ticket className="w-5 h-5 text-gold-500" />
             <h3 className="font-bold text-white text-sm sm:text-base font-serif-title">Event Registration</h3>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-emerald-300 hover:text-white hover:bg-[#042819] transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-emerald-300 hover:text-white hover:bg-forest-850 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -67,12 +67,12 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
           {confirmedRegistration ? (
             /* Confirmation Pass */
             <div className="space-y-5 text-center animate-in zoom-in-95 duration-200">
-              <div className="w-12 sm:w-14 h-12 sm:h-14 bg-[#c99726]/20 border border-[#c99726]/40 rounded-full flex items-center justify-center mx-auto text-[#f5cf72]">
-                <CheckCircle2 className="w-7 sm:w-8 h-7 sm:h-8 text-[#07472c]" />
+              <div className="w-12 sm:w-14 h-12 sm:h-14 bg-gold-500/20 border border-gold-500/40 rounded-full flex items-center justify-center mx-auto text-gold-300">
+                <CheckCircle2 className="w-7 sm:w-8 h-7 sm:h-8 text-forest-700" />
               </div>
 
               <div>
-                <span className="text-[10px] sm:text-xs text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3 py-1 rounded-full border border-[#c99726]/40 inline-block">
+                <span className="text-[10px] sm:text-xs text-gold-300 font-bold uppercase tracking-widest bg-forest-850 px-3 py-1 rounded-full border border-gold-500/40 inline-block">
                   REGISTRATION CONFIRMED
                 </span>
                 <h4 className="text-lg sm:text-xl font-bold text-white mt-2 font-serif-title">{event.name}</h4>
@@ -80,17 +80,17 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
               </div>
 
               {/* Digital Pass Ticket Card */}
-              <div className="bg-[#042819] border border-[#c99726]/40 rounded-xl p-4 text-left relative overflow-hidden shadow-lg space-y-2">
-                <div className="flex items-center justify-between pb-2 border-b border-[#084c2e]">
+              <div className="bg-forest-850 border border-gold-500/40 rounded-xl p-4 text-left relative overflow-hidden shadow-lg space-y-2">
+                <div className="flex items-center justify-between pb-2 border-b border-forest-700">
                   <div>
                     <span className="text-[10px] text-emerald-300 uppercase tracking-wider block">Attendee</span>
                     <span className="font-bold text-white text-sm">{confirmedRegistration.fullName}</span>
                   </div>
                   <button
                     onClick={() => handleCopyCode(confirmedRegistration.registrationCode)}
-                    className="px-2.5 py-1 bg-[#02180e] hover:bg-[#063821] text-[#f5cf72] text-[11px] rounded border border-[#c99726]/50 flex items-center space-x-1 cursor-pointer"
+                    className="px-2.5 py-1 bg-forest-950 hover:bg-forest-800 text-gold-300 text-[11px] rounded border border-gold-500/50 flex items-center space-x-1 cursor-pointer"
                   >
-                    {copiedCode ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3 text-[#c99726]" />}
+                    {copiedCode ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3 text-gold-500" />}
                     <span>{copiedCode ? 'Copied' : 'Copy Code'}</span>
                   </button>
                 </div>
@@ -98,7 +98,7 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
                 <div className="grid grid-cols-2 gap-2 pt-1">
                   <div>
                     <span className="text-[10px] text-emerald-300 uppercase">Pass Code</span>
-                    <span className="text-[#f5cf72] font-bold text-base block">
+                    <span className="text-gold-300 font-bold text-base block">
                       {confirmedRegistration.registrationCode}
                     </span>
                   </div>
@@ -108,13 +108,13 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-[#084c2e] text-[11px] text-emerald-200/80 space-y-0.5">
+                <div className="pt-2 border-t border-forest-700 text-[11px] text-emerald-200/80 space-y-0.5">
                   <p className="flex items-center space-x-1">
-                    <Calendar className="w-3 h-3 text-[#c99726]" />
+                    <Calendar className="w-3 h-3 text-gold-500" />
                     <span>{event.date} • {event.time}</span>
                   </p>
                   <p className="flex items-center space-x-1">
-                    <MapPin className="w-3 h-3 text-[#c99726]" />
+                    <MapPin className="w-3 h-3 text-gold-500" />
                     <span className="truncate">{event.venue}</span>
                   </p>
                 </div>
@@ -126,7 +126,7 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
 
               <button
                 onClick={onClose}
-                className="w-full py-3 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
+                className="w-full py-3 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
               >
                 Done
               </button>
@@ -134,15 +134,15 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
           ) : (
             /* Registration Form */
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="p-3.5 bg-[#042819] rounded-xl border border-[#084c2e]">
+              <div className="p-3.5 bg-forest-850 rounded-xl border border-forest-700">
                 <h4 className="text-sm font-bold text-white font-serif-title">{event.name}</h4>
                 <div className="text-xs text-emerald-200/80 mt-1 space-y-1">
                   <div className="flex items-center space-x-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-[#c99726] shrink-0" />
+                    <Calendar className="w-3.5 h-3.5 text-gold-500 shrink-0" />
                     <span>{event.date} • {event.time}</span>
                   </div>
                   <div className="flex items-center space-x-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-[#c99726] shrink-0" />
+                    <MapPin className="w-3.5 h-3.5 text-gold-500 shrink-0" />
                     <span className="truncate">{event.venue}</span>
                   </div>
                 </div>
@@ -158,7 +158,7 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="e.g. Kwame Mensah"
-                  className="w-full px-3.5 py-2.5 bg-[#042819] border border-[#084c2e] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                  className="w-full px-3.5 py-2.5 bg-forest-850 border border-forest-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-gold-500"
                 />
               </div>
 
@@ -173,7 +173,7 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="kwame@example.com"
-                    className="w-full px-3.5 py-2.5 bg-[#042819] border border-[#084c2e] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                    className="w-full px-3.5 py-2.5 bg-forest-850 border border-forest-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-gold-500"
                   />
                 </div>
                 <div>
@@ -185,7 +185,7 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="e.g. +233 24 000 0000"
-                    className="w-full px-3.5 py-2.5 bg-[#042819] border border-[#084c2e] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                    className="w-full px-3.5 py-2.5 bg-forest-850 border border-forest-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-gold-500"
                   />
                 </div>
               </div>
@@ -197,7 +197,7 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
                 <select
                   value={attendeesCount}
                   onChange={(e) => setAttendeesCount(Number(e.target.value))}
-                  className="w-full px-3.5 py-2.5 bg-[#042819] border border-[#084c2e] rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                  className="w-full px-3.5 py-2.5 bg-forest-850 border border-forest-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-gold-500"
                 >
                   <option value={1}>1 Attendee (Just myself)</option>
                   <option value={2}>2 Attendees</option>
@@ -210,7 +210,7 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full py-3.5 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
+                  className="w-full py-3.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
                 >
                   CONFIRM FREE REGISTRATION
                 </button>

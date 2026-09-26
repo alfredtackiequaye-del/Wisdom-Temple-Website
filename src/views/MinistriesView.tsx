@@ -56,9 +56,9 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
   };
 
   return (
-    <div className="bg-[#f8faf8] min-h-screen text-slate-900 pb-24">
+    <div className="bg-mist-50 min-h-screen text-slate-900 pb-24">
       {/* Header Banner - ICGC Forest & Gold */}
-      <section className="relative bg-[#02180e] text-white py-16 sm:py-20 border-b border-[#084c2e] overflow-hidden">
+      <section className="relative bg-forest-950 text-white py-16 sm:py-20 border-b border-forest-700 overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-15">
           <img
             src={getBanner('page_ministries_hero', 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1920&q=80')}
@@ -67,7 +67,7 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
           />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
-          <span className="text-xs text-[#f5cf72] font-bold uppercase tracking-widest bg-[#042819] px-3.5 py-1.5 rounded-full border border-[#c99726]/40 inline-block">
+          <span className="text-xs text-gold-300 font-bold uppercase tracking-widest bg-forest-850 px-3.5 py-1.5 rounded-full border border-gold-500/40 inline-block">
             BODY OF CHRIST • WISDOM TEMPLE
           </span>
           <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
@@ -81,9 +81,9 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
 
       {/* Category Tabs */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
-        <div className="bg-white rounded-2xl p-4 border border-[#d6e5dc] shadow-md flex items-center gap-2 overflow-x-auto">
-          <span className="text-xs font-semibold text-[#07472c] mr-2 flex items-center space-x-1 shrink-0">
-            <Filter className="w-3.5 h-3.5 text-[#c99726]" />
+        <div className="bg-white rounded-2xl p-4 border border-mist-300 shadow-md flex items-center gap-2 overflow-x-auto">
+          <span className="text-xs font-semibold text-forest-700 mr-2 flex items-center space-x-1 shrink-0">
+            <Filter className="w-3.5 h-3.5 text-gold-500" />
             <span>Filter:</span>
           </span>
           {categories.map((cat) => (
@@ -92,8 +92,8 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
               onClick={() => setSelectedCategory(cat)}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 selectedCategory === cat
-                  ? 'bg-[#032014] text-[#f5cf72] shadow-sm border border-[#c99726]/40'
-                  : 'bg-[#eef6f1] text-[#07472c] hover:bg-[#e0eee4]'
+                  ? 'bg-forest-900 text-gold-300 shadow-sm border border-gold-500/40'
+                  : 'bg-mist-100 text-forest-700 hover:bg-mist-200'
               }`}
             >
               {cat}
@@ -108,21 +108,21 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
           {filteredMinistries.map((ministry) => (
             <div
               key={ministry.id}
-              className="group bg-white rounded-2xl border border-[#d6e5dc] overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+              className="group bg-white rounded-2xl border border-mist-300 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
             >
               <div>
-                <div className="relative aspect-[16/10] bg-[#02180e] overflow-hidden">
+                <div className="relative aspect-[16/10] bg-forest-950 overflow-hidden">
                   <PosterImage
                     src={getBanner('ministry_' + ministry.id, ministry.image)}
                     alt={ministry.name}
                   />
-                  <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#02180e]/90 backdrop-blur-md rounded text-[10px] font-bold text-[#f5cf72] border border-[#c99726]/40">
+                  <span className="absolute top-3 left-3 px-2.5 py-1 bg-forest-950/90 backdrop-blur-md rounded text-[10px] font-bold text-gold-300 border border-gold-500/40">
                     {ministry.category}
                   </span>
                 </div>
 
                 <div className="p-6 space-y-3">
-                  <h3 className="text-xl font-bold text-[#032014] font-serif-title">
+                  <h3 className="text-xl font-bold text-forest-900 font-serif-title">
                     {ministry.name}
                   </h3>
 
@@ -132,18 +132,18 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
 
                   <div className="pt-3 border-t border-slate-100 space-y-2 text-xs text-slate-600">
                     <div className="flex items-center space-x-2">
-                      <Users className="w-3.5 h-3.5 text-[#c99726] shrink-0" />
+                      <Users className="w-3.5 h-3.5 text-gold-500 shrink-0" />
                       <span><strong>Audience:</strong> {ministry.audience}</span>
                     </div>
 
                     <div className="flex items-start space-x-2">
-                      <Clock className="w-3.5 h-3.5 text-[#c99726] shrink-0 mt-0.5" />
+                      <Clock className="w-3.5 h-3.5 text-gold-500 shrink-0 mt-0.5" />
                       <span><strong>Meetings:</strong> {ministry.meetingSchedule}</span>
                     </div>
 
                     {!/^\[.*\]$/.test(ministry.leadPlaceholder.trim()) && (
                       <div className="flex items-center space-x-2">
-                        <UserCheck className="w-3.5 h-3.5 text-[#c99726] shrink-0" />
+                        <UserCheck className="w-3.5 h-3.5 text-gold-500 shrink-0" />
                         <span><strong>Lead:</strong> {ministry.leadPlaceholder}</span>
                       </div>
                     )}
@@ -154,7 +154,7 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
               <div className="p-6 pt-0">
                 <button
                   onClick={() => setActiveJoinMinistry(ministry)}
-                  className="w-full py-2.5 bg-[#032014] hover:bg-[#063821] text-white font-bold text-xs rounded-xl shadow transition-all cursor-pointer flex items-center justify-center space-x-1.5 border border-[#c99726]/30"
+                  className="w-full py-2.5 bg-forest-900 hover:bg-forest-800 text-white font-bold text-xs rounded-xl shadow transition-all cursor-pointer flex items-center justify-center space-x-1.5 border border-gold-500/30"
                 >
                   <span>JOIN THIS MINISTRY</span>
                 </button>
@@ -166,11 +166,11 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
 
       {/* Join Ministry Modal */}
       {activeJoinMinistry && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#02180e]/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-md bg-[#02180e] border border-[#084c2e] rounded-2xl p-6 shadow-2xl space-y-4 text-white">
-            <div className="flex items-center justify-between border-b border-[#084c2e] pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-forest-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-md bg-forest-950 border border-forest-700 rounded-2xl p-6 shadow-2xl space-y-4 text-white">
+            <div className="flex items-center justify-between border-b border-forest-700 pb-3">
               <div>
-                <span className="text-[10px] text-[#f5cf72] font-bold uppercase">MINISTRY ENROLLMENT</span>
+                <span className="text-[10px] text-gold-300 font-bold uppercase">MINISTRY ENROLLMENT</span>
                 <h3 className="font-bold text-white text-base font-serif-title">{activeJoinMinistry.name}</h3>
               </div>
               <button onClick={() => setActiveJoinMinistry(null)} className="text-emerald-300 hover:text-white cursor-pointer">
@@ -179,8 +179,8 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
             </div>
 
             {joinSuccess ? (
-              <div className="py-8 text-center text-[#f5cf72] space-y-2 animate-in zoom-in-95 duration-150">
-                <CheckCircle2 className="w-10 h-10 mx-auto text-[#c99726]" />
+              <div className="py-8 text-center text-gold-300 space-y-2 animate-in zoom-in-95 duration-150">
+                <CheckCircle2 className="w-10 h-10 mx-auto text-gold-500" />
                 <h4 className="font-bold text-white text-base">Interest Registered!</h4>
                 <p className="text-xs text-emerald-200">
                   The coordinator for {activeJoinMinistry.name} will reach out to you with fellowship details.
@@ -200,7 +200,7 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
                     value={userName}
                     onChange={(e) => setUserName(e.target.value)}
                     placeholder="e.g. Ama Serwaa"
-                    className="w-full px-3.5 py-2.5 bg-[#042819] border border-[#084c2e] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                    className="w-full px-3.5 py-2.5 bg-forest-850 border border-forest-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-gold-500"
                   />
                 </div>
 
@@ -212,7 +212,7 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
                     value={userPhone}
                     onChange={(e) => setUserPhone(e.target.value)}
                     placeholder="e.g. +233 24 000 0000"
-                    className="w-full px-3.5 py-2.5 bg-[#042819] border border-[#084c2e] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                    className="w-full px-3.5 py-2.5 bg-forest-850 border border-forest-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-gold-500"
                   />
                 </div>
 
@@ -223,14 +223,14 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
                     value={userEmail}
                     onChange={(e) => setUserEmail(e.target.value)}
                     placeholder="ama@example.com"
-                    className="w-full px-3.5 py-2.5 bg-[#042819] border border-[#084c2e] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-[#c99726]"
+                    className="w-full px-3.5 py-2.5 bg-forest-850 border border-forest-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-gold-500"
                   />
                 </div>
 
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full py-3 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
+                    className="w-full py-3 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
                   >
                     SUBMIT INTEREST
                   </button>

@@ -804,8 +804,8 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
     <div className="space-y-6">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#032014] text-[#f5cf72] border-2 border-[#c99726] px-5 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 animate-in fade-in slide-in-from-bottom-5">
-          <CheckCircle2 className="w-5 h-5 text-[#f5cf72]" />
+        <div className="fixed bottom-6 right-6 z-50 bg-forest-900 text-gold-300 border-2 border-gold-500 px-5 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 animate-in fade-in slide-in-from-bottom-5">
+          <CheckCircle2 className="w-5 h-5 text-gold-300" />
           <span className="text-sm font-bold">{toastMessage}</span>
         </div>
       )}
@@ -820,12 +820,12 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
       />
 
       {/* Top Header Card */}
-      <div className="bg-gradient-to-br from-[#032014] via-[#02180e] to-[#010e08] rounded-3xl p-6 sm:p-8 border border-[#084c2e] text-white shadow-xl">
+      <div className="bg-gradient-to-br from-forest-900 via-forest-950 to-forest-950 rounded-3xl p-6 sm:p-8 border border-forest-700 text-white shadow-xl">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
             <div className="flex items-center space-x-2.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#f5cf72] animate-pulse"></span>
-              <span className="text-xs font-mono font-bold text-[#f5cf72] uppercase tracking-widest bg-[#042819] px-3 py-1 rounded-full border border-[#c99726]/40">
+              <span className="w-2.5 h-2.5 rounded-full bg-gold-300 animate-pulse"></span>
+              <span className="text-xs font-mono font-bold text-gold-300 uppercase tracking-widest bg-forest-850 px-3 py-1 rounded-full border border-gold-500/40">
                 CHURCH CONTENT & WRITINGS MANAGER
               </span>
             </div>
@@ -841,7 +841,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
           <div className="flex flex-wrap items-center gap-2.5">
             <button
               onClick={() => handleSaveAllSection(selectedCategory)}
-              className="px-4 py-2.5 bg-[#c99726] hover:bg-[#b8861d] text-[#021a10] font-black text-xs uppercase tracking-wider rounded-xl shadow-lg transition-all flex items-center space-x-1.5 cursor-pointer hover:scale-102"
+              className="px-4 py-2.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-black text-xs uppercase tracking-wider rounded-xl shadow-lg transition-all flex items-center space-x-1.5 cursor-pointer hover:scale-102"
               title="Save all changes currently edited"
             >
               <Save className="w-4 h-4" />
@@ -850,19 +850,19 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
 
             <button
               onClick={exportContentJson}
-              className="px-3.5 py-2.5 bg-[#042819] hover:bg-[#063821] text-emerald-200 hover:text-white border border-[#084c2e] hover:border-[#c99726]/50 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
+              className="px-3.5 py-2.5 bg-forest-850 hover:bg-forest-800 text-emerald-200 hover:text-white border border-forest-700 hover:border-gold-500/50 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
               title="Download full JSON backup of all text"
             >
-              <Download className="w-3.5 h-3.5 text-[#f5cf72]" />
+              <Download className="w-3.5 h-3.5 text-gold-300" />
               <span>Export Backup</span>
             </button>
 
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="px-3.5 py-2.5 bg-[#042819] hover:bg-[#063821] text-emerald-200 hover:text-white border border-[#084c2e] hover:border-[#c99726]/50 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
+              className="px-3.5 py-2.5 bg-forest-850 hover:bg-forest-800 text-emerald-200 hover:text-white border border-forest-700 hover:border-gold-500/50 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
               title="Upload previously exported JSON backup"
             >
-              <Upload className="w-3.5 h-3.5 text-[#f5cf72]" />
+              <Upload className="w-3.5 h-3.5 text-gold-300" />
               <span>Import Backup</span>
             </button>
 
@@ -878,20 +878,20 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
         </div>
 
         {/* Quick Stats & Info Bar */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 mt-6 border-t border-[#084c2e]/70 text-xs">
-          <div className="p-3 bg-[#02180e] rounded-xl border border-[#084c2e]/60">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 mt-6 border-t border-forest-700/70 text-xs">
+          <div className="p-3 bg-forest-950 rounded-xl border border-forest-700/60">
             <span className="text-emerald-400 font-mono text-[11px] block">Total Editable Fields</span>
             <span className="text-lg font-bold text-white font-mono">{FIELD_SPECS.length} Fields</span>
           </div>
-          <div className="p-3 bg-[#02180e] rounded-xl border border-[#084c2e]/60">
+          <div className="p-3 bg-forest-950 rounded-xl border border-forest-700/60">
             <span className="text-emerald-400 font-mono text-[11px] block">Customized Text</span>
-            <span className="text-lg font-bold text-[#f5cf72] font-mono">{modifiedCount} Modified</span>
+            <span className="text-lg font-bold text-gold-300 font-mono">{modifiedCount} Modified</span>
           </div>
-          <div className="p-3 bg-[#02180e] rounded-xl border border-[#084c2e]/60">
+          <div className="p-3 bg-forest-950 rounded-xl border border-forest-700/60">
             <span className="text-emerald-400 font-mono text-[11px] block">Sync Mode</span>
             <span className="text-lg font-bold text-emerald-300 font-mono">Live Reactive</span>
           </div>
-          <div className="p-3 bg-[#02180e] rounded-xl border border-[#084c2e]/60">
+          <div className="p-3 bg-forest-950 rounded-xl border border-forest-700/60">
             <span className="text-emerald-400 font-mono text-[11px] block">Storage Engine</span>
             <span className="text-lg font-bold text-white font-mono">Persistent Local</span>
           </div>
@@ -899,7 +899,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
       </div>
 
       {/* Navigation Filter Tabs & Search Bar */}
-      <div className="bg-white rounded-2xl p-4 border border-[#d6e5dc] shadow-xs space-y-4">
+      <div className="bg-white rounded-2xl p-4 border border-mist-300 shadow-xs space-y-4">
         {/* Category Tabs */}
         <div className="flex space-x-1.5 overflow-x-auto pb-1 text-xs font-bold scrollbar-none">
           {CATEGORY_TABS.map(tab => {
@@ -915,14 +915,14 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
                 onClick={() => setSelectedCategory(tab.id)}
                 className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
                   isActive
-                    ? 'bg-[#032014] text-[#f5cf72] shadow-xs ring-1 ring-[#c99726]'
-                    : 'text-slate-600 hover:bg-[#eef6f1] hover:text-[#032014]'
+                    ? 'bg-forest-900 text-gold-300 shadow-xs ring-1 ring-gold-500'
+                    : 'text-slate-600 hover:bg-mist-100 hover:text-forest-900'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#f5cf72]' : 'text-slate-400'}`} />
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-gold-300' : 'text-slate-400'}`} />
                 <span>{tab.label}</span>
                 <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                  isActive ? 'bg-[#063821] text-[#f5cf72]' : 'bg-slate-100 text-slate-500'
+                  isActive ? 'bg-forest-800 text-gold-300' : 'bg-slate-100 text-slate-500'
                 }`}>
                   {count}
                 </span>
@@ -939,7 +939,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search writings by title, field name, placement, or content text..."
-            className="w-full pl-9 pr-4 py-2.5 bg-[#f8faf8] border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#07472c] focus:border-[#07472c]"
+            className="w-full pl-9 pr-4 py-2.5 bg-mist-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-forest-700 focus:border-forest-700"
           />
           {searchQuery && (
             <button
@@ -955,7 +955,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
       {/* Fields List */}
       <div className="space-y-4">
         {filteredFields.length === 0 ? (
-          <div className="bg-white rounded-2xl p-12 text-center border border-[#d6e5dc] space-y-3">
+          <div className="bg-white rounded-2xl p-12 text-center border border-mist-300 space-y-3">
             <Search className="w-8 h-8 text-slate-300 mx-auto" />
             <h4 className="text-base font-bold text-slate-700">No matching writings found</h4>
             <p className="text-xs text-slate-500">Try refining your search keyword or switch to another section.</p>
@@ -975,21 +975,21 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
                 key={spec.key}
                 className={`bg-white rounded-2xl p-5 sm:p-6 border transition-all shadow-xs space-y-4 ${
                   hasUnsavedChanges
-                    ? 'border-[#c99726] ring-1 ring-[#c99726]/40 bg-amber-50/20'
+                    ? 'border-gold-500 ring-1 ring-gold-500/40 bg-amber-50/20'
                     : isModified
-                    ? 'border-[#084c2e]/30'
-                    : 'border-[#d6e5dc]'
+                    ? 'border-forest-700/30'
+                    : 'border-mist-300'
                 }`}
               >
                 {/* Header Row */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
                   <div className="space-y-1">
                     <div className="flex items-center space-x-2">
-                      <h3 className="text-sm font-bold text-[#032014] font-serif-title">
+                      <h3 className="text-sm font-bold text-forest-900 font-serif-title">
                         {spec.label}
                       </h3>
                       {isModified && (
-                        <span className="text-[10px] font-mono font-bold bg-[#eef6f1] text-[#07472c] px-2 py-0.5 rounded-full border border-[#c2decc]">
+                        <span className="text-[10px] font-mono font-bold bg-mist-100 text-forest-700 px-2 py-0.5 rounded-full border border-mist-400">
                           Customized
                         </span>
                       )}
@@ -1000,7 +1000,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
                       )}
                     </div>
                     <div className="flex items-center space-x-2 text-[11px] text-slate-500">
-                      <span className="font-mono text-[#07472c] font-bold">Placement:</span>
+                      <span className="font-mono text-forest-700 font-bold">Placement:</span>
                       <span>{spec.location}</span>
                     </div>
                   </div>
@@ -1046,7 +1046,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
                       type="text"
                       value={currentValue as string || ''}
                       onChange={(e) => handleFieldChange(spec.key, e.target.value)}
-                      className="w-full px-4 py-2.5 bg-[#f8faf8] border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#07472c] focus:border-[#07472c] focus:bg-white transition-all"
+                      className="w-full px-4 py-2.5 bg-mist-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-forest-700 focus:border-forest-700 focus:bg-white transition-all"
                     />
                   )}
 
@@ -1055,7 +1055,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
                       rows={spec.rows || 3}
                       value={currentValue as string || ''}
                       onChange={(e) => handleFieldChange(spec.key, e.target.value)}
-                      className="w-full px-4 py-2.5 bg-[#f8faf8] border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#07472c] focus:border-[#07472c] focus:bg-white transition-all leading-relaxed"
+                      className="w-full px-4 py-2.5 bg-mist-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-forest-700 focus:border-forest-700 focus:bg-white transition-all leading-relaxed"
                     />
                   )}
 
@@ -1086,7 +1086,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
                               updated[pIdx] = e.target.value;
                               handleFieldChange(spec.key, updated);
                             }}
-                            className="w-full px-4 py-2.5 bg-[#f8faf8] border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#07472c] focus:border-[#07472c] focus:bg-white transition-all leading-relaxed"
+                            className="w-full px-4 py-2.5 bg-mist-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-forest-700 focus:border-forest-700 focus:bg-white transition-all leading-relaxed"
                           />
                         </div>
                       ))}
@@ -1096,7 +1096,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
                           const updated = [...(currentValue as string[] || []), 'New paragraph text...'];
                           handleFieldChange(spec.key, updated);
                         }}
-                        className="px-3 py-1.5 bg-[#eef6f1] hover:bg-[#e4f0e8] text-[#07472c] font-bold text-xs rounded-lg border border-[#c2decc] flex items-center space-x-1.5 transition-colors cursor-pointer"
+                        className="px-3 py-1.5 bg-mist-100 hover:bg-mist-200 text-forest-700 font-bold text-xs rounded-lg border border-mist-400 flex items-center space-x-1.5 transition-colors cursor-pointer"
                       >
                         <Plus className="w-3.5 h-3.5" />
                         <span>Add Another Paragraph</span>
@@ -1106,7 +1106,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
 
                   {spec.hint && (
                     <p className="text-[11px] text-slate-500 mt-1.5 italic flex items-center space-x-1">
-                      <Info className="w-3 h-3 text-[#c99726] shrink-0 inline mr-1" />
+                      <Info className="w-3 h-3 text-gold-500 shrink-0 inline mr-1" />
                       <span>{spec.hint}</span>
                     </p>
                   )}
@@ -1129,7 +1129,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
 
                     <button
                       onClick={() => handleSaveField(spec.key)}
-                      className="px-4 py-1.5 bg-[#032014] hover:bg-[#07472c] text-[#f5cf72] font-bold text-xs rounded-xl shadow-xs transition-colors cursor-pointer flex items-center space-x-1"
+                      className="px-4 py-1.5 bg-forest-900 hover:bg-forest-700 text-gold-300 font-bold text-xs rounded-xl shadow-xs transition-colors cursor-pointer flex items-center space-x-1"
                     >
                       <Save className="w-3.5 h-3.5" />
                       <span>Save Field</span>
@@ -1149,13 +1149,13 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
           onClick={() => setPreviewField(null)}
         >
           <div 
-            className="relative max-w-2xl w-full bg-white rounded-3xl border border-[#d6e5dc] shadow-2xl overflow-hidden text-slate-900"
+            className="relative max-w-2xl w-full bg-white rounded-3xl border border-mist-300 shadow-2xl overflow-hidden text-slate-900"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-5 border-b border-slate-100 bg-[#032014] text-white">
+            <div className="flex items-center justify-between p-5 border-b border-slate-100 bg-forest-900 text-white">
               <div>
-                <span className="text-[10px] font-mono font-bold text-[#f5cf72] uppercase tracking-wider block">
+                <span className="text-[10px] font-mono font-bold text-gold-300 uppercase tracking-wider block">
                   LIVE FORMAT PREVIEW
                 </span>
                 <h3 className="text-base font-bold font-serif-title text-white">
@@ -1172,11 +1172,11 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
 
             {/* Modal Content */}
             <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-              <div className="p-3 bg-[#eef6f1] rounded-xl border border-[#c2decc] text-xs text-[#07472c] font-mono">
+              <div className="p-3 bg-mist-100 rounded-xl border border-mist-400 text-xs text-forest-700 font-mono">
                 <strong>Placement:</strong> {previewField.location}
               </div>
 
-              <div className="p-6 bg-[#fbfcfb] rounded-2xl border border-slate-200 space-y-3">
+              <div className="p-6 bg-mist-50 rounded-2xl border border-slate-200 space-y-3">
                 <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">
                   Website Typography Rendering
                 </span>
@@ -1187,7 +1187,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
                     ))}
                   </div>
                 ) : (
-                  <div className="text-base font-medium text-[#032014] leading-relaxed">
+                  <div className="text-base font-medium text-forest-900 leading-relaxed">
                     {String(formValues[previewField.key])}
                   </div>
                 )}
@@ -1201,7 +1201,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
               </span>
               <button
                 onClick={() => setPreviewField(null)}
-                className="px-4 py-2 bg-[#032014] text-white font-bold text-xs rounded-xl cursor-pointer hover:bg-[#07472c] transition-colors"
+                className="px-4 py-2 bg-forest-900 text-white font-bold text-xs rounded-xl cursor-pointer hover:bg-forest-700 transition-colors"
               >
                 Close Preview
               </button>

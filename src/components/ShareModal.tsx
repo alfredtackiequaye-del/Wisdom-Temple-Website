@@ -28,11 +28,11 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, title, 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#02180e]/85 backdrop-blur-sm animate-in fade-in duration-150">
-      <div className="w-full max-w-md bg-[#02180e] border border-[#084c2e] rounded-2xl p-6 shadow-2xl space-y-4 text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-forest-950/85 backdrop-blur-sm animate-in fade-in duration-150">
+      <div className="w-full max-w-md bg-forest-950 border border-forest-700 rounded-2xl p-6 shadow-2xl space-y-4 text-white">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2 text-[#f5cf72]">
-            <Share2 className="w-5 h-5 text-[#c99726]" />
+          <div className="flex items-center space-x-2 text-gold-300">
+            <Share2 className="w-5 h-5 text-gold-500" />
             <h3 className="text-lg font-bold text-white font-serif-title">Share Content</h3>
           </div>
           <button onClick={onClose} className="p-1 rounded-lg text-emerald-300 hover:text-white cursor-pointer">
@@ -40,7 +40,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, title, 
           </button>
         </div>
 
-        <div className="p-3 bg-[#042819] rounded-xl border border-[#084c2e]">
+        <div className="p-3 bg-forest-850 rounded-xl border border-forest-700">
           <h4 className="text-sm font-semibold text-white font-serif-title">{title}</h4>
           <p className="text-xs text-emerald-200/80 mt-1 line-clamp-2">{description}</p>
         </div>
@@ -48,7 +48,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, title, 
         <div className="space-y-2 pt-2">
           <button
             onClick={shareToWhatsApp}
-            className="w-full py-2.5 px-4 bg-[#25D366] hover:bg-[#20ba59] text-white font-bold rounded-xl flex items-center justify-center space-x-2 text-sm shadow transition-all cursor-pointer"
+            className="w-full py-2.5 px-4 bg-whatsapp hover:bg-whatsapp-dark text-white font-bold rounded-xl flex items-center justify-center space-x-2 text-sm shadow transition-all cursor-pointer"
           >
             <MessageSquare className="w-4 h-4" />
             <span>Share via WhatsApp</span>
@@ -56,9 +56,9 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, title, 
 
           <button
             onClick={copyToClipboard}
-            className="w-full py-2.5 px-4 bg-[#042819] hover:bg-[#063821] text-emerald-100 font-semibold rounded-xl flex items-center justify-center space-x-2 text-sm transition-all cursor-pointer border border-[#084c2e]"
+            className="w-full py-2.5 px-4 bg-forest-850 hover:bg-forest-800 text-emerald-100 font-semibold rounded-xl flex items-center justify-center space-x-2 text-sm transition-all cursor-pointer border border-forest-700"
           >
-            {copied ? <Check className="w-4 h-4 text-[#f5cf72]" /> : <Copy className="w-4 h-4 text-[#c99726]" />}
+            {copied ? <Check className="w-4 h-4 text-gold-300" /> : <Copy className="w-4 h-4 text-gold-500" />}
             <span>{copied ? 'Link Copied to Clipboard!' : 'Copy Link to Share'}</span>
           </button>
         </div>
