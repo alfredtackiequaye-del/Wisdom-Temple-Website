@@ -34,6 +34,10 @@ interface PhotoGalleryProps {
   className?: string;
   theme?: "dark" | "light";
   layout?: "cards" | "editorial";
+  /** Omit the built-in eyebrow/title/subtitle block. */
+  hideHeader?: boolean;
+  /** Editorial tiles without title and category labels (e.g. album photos). */
+  plainTiles?: boolean;
 }
 
 const CATEGORIES = [
@@ -57,6 +61,8 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
   className = "",
   theme = "dark",
   layout = "cards",
+  hideHeader = false,
+  plainTiles = false,
 }) => {
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryFilter>("All");
@@ -165,48 +171,50 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
   return (
     <div className={`space-y-10 sm:space-y-12 ${className}`}>
       {/* Section Header */}
-      <div className="text-center max-w-3xl mx-auto space-y-3 px-4">
-        <motion.div
-          {...reveal()}
-                    className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gold-500/15 border border-gold-500/40 text-gold-200 text-xs font-bold uppercase tracking-widest shadow-lg backdrop-blur-md"
-        >
-          <Sparkles className="w-3.5 h-3.5 text-gold-300 animate-pulse" />
-          <span>MOMENTS OF FAITH & GLORY</span>
-        </motion.div>
-
-        <motion.h2
-          {...reveal()}
-                    className={`text-3xl sm:text-4xl lg:text-5xl font-black font-serif-title tracking-tight uppercase ${
-            isDark ? "text-white" : "text-forest-900"
-          }`}
-        >
-          {title.includes("&") ? (
-            <>
-              {title.split("&")[0]}
-              <span className="text-gold-400">& {title.split("&")[1]}</span>
-            </>
-          ) : (
-            title
-          )}
-        </motion.h2>
-
-        {subtitle && (
-          <motion.p
+      {!hideHeader && (
+        <div className="text-center max-w-3xl mx-auto space-y-3 px-4">
+          <motion.div
             {...reveal()}
-                        className={`text-sm sm:text-base leading-relaxed max-w-2xl mx-auto ${
-              isDark ? "text-emerald-100/80" : "text-slate-600"
+            className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gold-500/15 border border-gold-500/40 text-gold-200 text-xs font-bold uppercase tracking-widest shadow-lg backdrop-blur-md"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-gold-300 animate-pulse" />
+            <span>MOMENTS OF FAITH & GLORY</span>
+          </motion.div>
+
+          <motion.h2
+            {...reveal()}
+            className={`text-3xl sm:text-4xl lg:text-5xl font-black font-serif-title tracking-tight uppercase ${
+              isDark ? "text-white" : "text-forest-900"
             }`}
           >
-            {subtitle}
-          </motion.p>
-        )}
-      </div>
+            {title.includes("&") ? (
+              <>
+                {title.split("&")[0]}
+                <span className="text-gold-400">& {title.split("&")[1]}</span>
+              </>
+            ) : (
+              title
+            )}
+          </motion.h2>
+
+          {subtitle && (
+            <motion.p
+              {...reveal()}
+              className={`text-sm sm:text-base leading-relaxed max-w-2xl mx-auto ${
+                isDark ? "text-emerald-100/80" : "text-slate-600"
+              }`}
+            >
+              {subtitle}
+            </motion.p>
+          )}
+        </div>
+      )}
 
       {/* Filter and Search Bar */}
       {showFilters && (
         <motion.div
           {...reveal()}
-                    className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 max-w-6xl mx-auto px-4"
+          className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 max-w-6xl mx-auto px-4"
         >
           {/* Category Tabs Pill Bar */}
           <div className="flex items-center space-x-1.5 overflow-x-auto pb-2 sm:pb-0 scrollbar-none p-1.5 rounded-2xl bg-forest-950/90 border border-gold-500/30 backdrop-blur-md shadow-xl">
@@ -296,7 +304,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
             <motion.div
               key={photo.id}
               {...reveal(Math.min(index, 6) * 0.05)}
-                            whileHover={{ y: -6 }}
+              whileHover={{ y: -6 }}
               className={
                 layout === "editorial"
                   ? `group relative overflow-hidden bg-forest-900 border border-forest-950 cursor-pointer ${index % 7 === 0 ? "col-span-2 row-span-2" : index % 5 === 0 ? "row-span-2" : index % 3 === 0 ? "col-span-2" : ""}`
@@ -317,7 +325,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                 }
               >
                 <img
-                  src={optimizedImageUrl(photo.imageUrl)}
+                  src={photo.thumbnailUrl ?? optimizedImageUrl(photo.imageUrl)}
                   alt={photo.title}
                   width={1200}
                   height={825}
@@ -343,25 +351,27 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                 />
 
                 {/* Floating Category Badge */}
-                <div
-                  className={
-                    layout === "editorial"
-                      ? "absolute inset-x-3 bottom-3 z-10 flex flex-col items-start gap-1.5"
-                      : "absolute top-3.5 left-3.5 z-10"
-                  }
-                >
-                  {layout === "editorial" && (
-                    <span className="max-w-full px-2.5 py-1 rounded-md bg-forest-950/85 backdrop-blur-md border border-gold-500/25 text-white text-[10px] sm:text-xs font-bold uppercase tracking-[0.08em] sm:tracking-[0.14em] leading-snug shadow-md">
-                      <span className="line-clamp-2">{photo.title}</span>
-                    </span>
-                  )}
-                  <span
-                    className={`px-3 py-1 rounded-full bg-forest-950/90 text-gold-300 text-[10px] font-bold tracking-wider uppercase border border-gold-500/40 backdrop-blur-md shadow-md items-center space-x-1.5 ${layout === "editorial" ? "hidden sm:flex" : "flex"}`}
+                {!plainTiles && (
+                  <div
+                    className={
+                      layout === "editorial"
+                        ? "absolute inset-x-3 bottom-3 z-10 flex flex-col items-start gap-1.5"
+                        : "absolute top-3.5 left-3.5 z-10"
+                    }
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-gold-500" />
-                    <span>{photo.category}</span>
-                  </span>
-                </div>
+                    {layout === "editorial" && (
+                      <span className="max-w-full px-2.5 py-1 rounded-md bg-forest-950/85 backdrop-blur-md border border-gold-500/25 text-white text-[10px] sm:text-xs font-bold uppercase tracking-[0.08em] sm:tracking-[0.14em] leading-snug shadow-md">
+                        <span className="line-clamp-2">{photo.title}</span>
+                      </span>
+                    )}
+                    <span
+                      className={`px-3 py-1 rounded-full bg-forest-950/90 text-gold-300 text-[10px] font-bold tracking-wider uppercase border border-gold-500/40 backdrop-blur-md shadow-md items-center space-x-1.5 ${layout === "editorial" ? "hidden sm:flex" : "flex"}`}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-gold-500" />
+                      <span>{photo.category}</span>
+                    </span>
+                  </div>
+                )}
 
                 {/* Quick View / Lightbox Icon */}
                 <div className="absolute top-3.5 right-3.5 z-10 w-9 h-9 rounded-full bg-forest-950/85 backdrop-blur-md border border-gold-500/40 text-gold-300 flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-gold-500 group-hover:text-forest-950 transition-all duration-300">
@@ -598,7 +608,10 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                     }`}
                   >
                     <img
-                      src={galleryThumbnailUrl(thumb.imageUrl)}
+                      src={
+                        thumb.thumbnailUrl ??
+                        galleryThumbnailUrl(thumb.imageUrl)
+                      }
                       alt={thumb.title}
                       width={120}
                       height={100}

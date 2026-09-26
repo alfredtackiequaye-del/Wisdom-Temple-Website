@@ -142,9 +142,40 @@ export interface ChurchPhoto {
   category: 'All' | 'Worship & Prayer' | 'Conferences & Summits' | 'Fellowship & Community' | 'Youth & Kids' | 'Special Services';
   date: string;
   imageUrl: string;
+  /** Smaller image for grids; falls back to imageUrl. */
+  thumbnailUrl?: string;
   caption: string;
   location?: string;
   featured?: boolean;
+}
+
+export type AlbumCategory = Exclude<ChurchPhoto['category'], 'All'>;
+
+export interface AlbumPhoto {
+  id: string;
+  width: number;
+  height: number;
+  caption?: string;
+  uploadedAt: string;
+  sortKey?: string;
+  url: string;
+  thumbUrl: string;
+}
+
+export interface PhotoAlbum {
+  id: string;
+  title: string;
+  description: string;
+  category: AlbumCategory;
+  date: string; // YYYY-MM-DD
+  location?: string;
+  coverPhotoId?: string;
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
+  photoCount: number;
+  cover: { url: string; thumbUrl: string } | null;
+  photos?: AlbumPhoto[];
 }
 
 export type StaffRole = 'super-admin' | 'pastoral' | 'finance' | 'secretariat' | 'protocol';

@@ -16,6 +16,7 @@ import { exportContentJson } from "../utils/contentManager";
 import { ICGCLogo } from "../components/ICGCLogo";
 import { AdminBannerManager } from "../components/AdminBannerManager";
 import { AdminContentManager } from "../components/AdminContentManager";
+import { AdminAlbumManager } from "../components/AdminAlbumManager";
 import {
   Users,
   Heart,
@@ -50,6 +51,7 @@ import {
   Edit3,
   FileText,
   Image as ImageIcon,
+  Images,
   Sparkles,
 } from "lucide-react";
 
@@ -87,6 +89,7 @@ type AdminTab =
   | "visits"
   | "messages"
   | "banners"
+  | "albums"
   | "content"
   | "staff";
 
@@ -97,6 +100,7 @@ const TAB_ACCESS: Record<AdminTab, StaffRole[]> = {
   visits: ["super-admin", "protocol", "secretariat"],
   messages: ["super-admin", "secretariat"],
   banners: ["super-admin"],
+  albums: ["super-admin", "secretariat"],
   content: ["super-admin"],
   staff: ["super-admin"],
 };
@@ -208,6 +212,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
         "visits",
         "messages",
         "banners",
+        "albums",
         "content",
         "staff",
       ].includes(initialTab)
@@ -227,6 +232,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
         "visits",
         "messages",
         "banners",
+        "albums",
         "content",
         "staff",
       ].includes(initialTab)
@@ -1124,6 +1130,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                 <option value="banners">
                   🖼️ Banners & Card Media (22 Slots)
                 </option>
+                <option value="albums">📷 Photo Albums</option>
                 <option value="giving">
                   💰 Giving & MoMo Reconciliation ({givingRecords.length})
                 </option>
@@ -1175,6 +1182,18 @@ export const AdminView: React.FC<AdminViewProps> = ({
                 <span className="ml-1 px-1.5 py-0.2 rounded-full bg-gold-500 text-forest-950 text-[10px]">
                   22
                 </span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab("albums")}
+                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                  activeTab === "albums"
+                    ? "bg-forest-900 text-gold-300 shadow-sm ring-1 ring-gold-500"
+                    : "text-slate-700 hover:bg-mist-100 hover:text-forest-900"
+                }`}
+              >
+                <Images className="w-3.5 h-3.5 text-gold-500" />
+                <span>Photo Albums</span>
               </button>
 
               <span className="h-4 w-px bg-slate-200 mx-1" />
@@ -1981,6 +2000,8 @@ export const AdminView: React.FC<AdminViewProps> = ({
         {activeTab === "banners" && (
           <AdminBannerManager onNavigate={onNavigate} />
         )}
+
+        {activeTab === "albums" && <AdminAlbumManager />}
 
         {/* =========================================================================
             TAB 8: SITE WRITINGS & COPY MANAGER

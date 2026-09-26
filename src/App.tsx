@@ -129,6 +129,10 @@ const getInitialPage = (): PageId => {
     ) {
       return "admin";
     }
+    // Shared album links (/?album=<id>) open straight into the gallery.
+    if (new URLSearchParams(window.location.search).has("album")) {
+      return "gallery";
+    }
   }
   return "home";
 };
@@ -416,6 +420,9 @@ export default function App() {
           } catch {
             window.location.hash = "";
           }
+        } else if (window.location.search.includes("album=")) {
+          // Leaving an open album: drop its share link from the address bar.
+          window.history.replaceState(null, "", "/");
         }
       }
     }

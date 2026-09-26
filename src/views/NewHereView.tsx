@@ -83,7 +83,7 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
           {/* Phase 1: Before You Come - Amber Gold Theme */}
           <motion.div
             {...reveal()}
-                        whileHover={{ y: -6, boxShadow: "0 20px 25px -5px rgba(201, 151, 38, 0.15)" }}
+            whileHover={{ y: -6, boxShadow: "0 20px 25px -5px rgba(201, 151, 38, 0.15)" }}
             className="bg-white rounded-3xl overflow-hidden border-2 border-amber-200/90 shadow-md hover:border-gold-500 transition-all flex flex-col justify-between"
           >
             <div>
@@ -133,7 +133,7 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
           {/* Phase 2: When You Arrive - ICGC Forest Emerald Theme */}
           <motion.div
             {...reveal(0.08)}
-                        whileHover={{ y: -6, boxShadow: "0 20px 25px -5px rgba(7, 71, 44, 0.15)" }}
+            whileHover={{ y: -6, boxShadow: "0 20px 25px -5px rgba(7, 71, 44, 0.15)" }}
             className="bg-white rounded-3xl overflow-hidden border-2 border-emerald-200/90 shadow-md hover:border-emerald-600 transition-all flex flex-col justify-between"
           >
             <div>
@@ -179,7 +179,7 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
           {/* Phase 3: After Service - ICGC Bronze & Teal Theme */}
           <motion.div
             {...reveal(0.16)}
-                        whileHover={{ y: -6, boxShadow: "0 20px 25px -5px rgba(13, 148, 136, 0.15)" }}
+            whileHover={{ y: -6, boxShadow: "0 20px 25px -5px rgba(13, 148, 136, 0.15)" }}
             className="bg-white rounded-3xl overflow-hidden border-2 border-teal-200/90 shadow-md hover:border-teal-600 transition-all flex flex-col justify-between"
           >
             <div>

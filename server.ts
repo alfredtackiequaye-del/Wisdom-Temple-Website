@@ -28,6 +28,18 @@ import {
   updateSiteContent,
 } from "./server/siteConfig";
 import { closeDatabase } from "./server/database";
+import {
+  UPLOAD_DIR,
+  createAlbum,
+  deleteAlbum,
+  deleteAlbumPhoto,
+  getPublicAlbum,
+  listAdminAlbums,
+  listPublicAlbums,
+  updateAlbum,
+  updateAlbumPhoto,
+  uploadAlbumPhoto,
+} from "./server/albums";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,7 +55,23 @@ async function start() {
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(compression());
   app.use(express.json({ limit: "256kb" }));
-  app.use("/api/admin", rateLimit({ windowMs: 15 * 60 * 1000, limit: 120, standardHeaders: true, legacyHeaders: false }));
+  const isPhotoUpload = (req: express.Request) =>
+    req.method === "POST" && /^\/albums\/[^/]+\/photos$/.test(req.path);
+  app.use(
+    "/api/admin",
+    rateLimit({
+      windowMs: 15 * 60 * 1000,
+      limit: 120,
+      standardHeaders: true,
+      legacyHeaders: false,
+      // Album uploads send one request per photo and are session-protected.
+      skip: isPhotoUpload,
+    }),
+  );
+  app.use(
+    "/uploads",
+    express.static(UPLOAD_DIR, { immutable: true, maxAge: "365d", index: false }),
+  );
   app.get("/healthz", (_req, res) => res.json({ ok: true, service: "wisdom-temple" }));
 
   app.post("/api/admin/login", loginAdmin);
@@ -85,6 +113,23 @@ async function start() {
   app.get("/api/site-banners", getSiteBanners);
   app.put("/api/admin/site-banners/:id", requireAdmin, requireRole("super-admin"), updateSiteBanner);
   app.delete("/api/admin/site-banners/:id", requireAdmin, requireRole("super-admin"), resetSiteBanner);
+
+  const albumEditors = requireRole("super-admin", "secretariat");
+  app.get("/api/albums", listPublicAlbums);
+  app.get("/api/albums/:id", getPublicAlbum);
+  app.get("/api/admin/albums", requireAdmin, albumEditors, listAdminAlbums);
+  app.post("/api/admin/albums", requireAdmin, albumEditors, createAlbum);
+  app.patch("/api/admin/albums/:id", requireAdmin, albumEditors, updateAlbum);
+  app.delete("/api/admin/albums/:id", requireAdmin, albumEditors, deleteAlbum);
+  app.post(
+    "/api/admin/albums/:id/photos",
+    requireAdmin,
+    albumEditors,
+    express.raw({ type: "image/*", limit: "25mb" }),
+    uploadAlbumPhoto,
+  );
+  app.patch("/api/admin/albums/:id/photos/:photoId", requireAdmin, albumEditors, updateAlbumPhoto);
+  app.delete("/api/admin/albums/:id/photos/:photoId", requireAdmin, albumEditors, deleteAlbumPhoto);
 
   if (!isProd) {
     const { createServer: createViteServer } = await import("vite");
