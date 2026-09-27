@@ -567,6 +567,29 @@ const AlbumEditor: React.FC<{
         </div>
       </div>
 
+      {!album.published && photos.length > 0 && !uploading && (
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-2xl bg-gold-50 border-2 border-gold-500/60">
+          <div className="flex items-start gap-3">
+            <EyeOff className="w-5 h-5 text-gold-600 shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-bold text-forest-900">
+                This album is a draft, so visitors can't see it yet.
+              </p>
+              <p className="text-xs text-slate-600">
+                Check the photos below, then publish it to show it on the
+                Gallery page.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setPublished(true)}
+            className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-gold-500 text-forest-950 text-sm font-bold hover:bg-gold-400 cursor-pointer shrink-0"
+          >
+            <Eye className="w-4 h-4" /> Publish to Gallery
+          </button>
+        </div>
+      )}
+
       {/* Upload */}
       <div
         onDragOver={(e) => {

@@ -33,13 +33,23 @@ export const albumToGalleryPhotos = (album: PhotoAlbum): ChurchPhoto[] =>
     location: album.location,
   }));
 
+const SERVER_OUTDATED =
+  "The photo album service isn't available on this server. Restart it (npm run dev) or redeploy, then try again.";
+
 async function request<T>(url: string, init?: RequestInit): Promise<T> {
   const response = await fetch(url, { credentials: "same-origin", ...init });
+  // A server started before albums existed answers with the site's HTML page.
+  const isJson = (response.headers.get("content-type") || "").includes(
+    "application/json",
+  );
   if (!response.ok) {
-    const body = await response.json().catch(() => ({}));
+    const body = isJson ? await response.json().catch(() => ({})) : {};
+    if (!isJson && response.status === 404) throw new Error(SERVER_OUTDATED);
     throw new Error(body.error || `Request failed (${response.status})`);
   }
-  return (response.status === 204 ? undefined : await response.json()) as T;
+  if (response.status === 204) return undefined as T;
+  if (!isJson) throw new Error(SERVER_OUTDATED);
+  return (await response.json()) as T;
 }
 
 const jsonInit = (method: string, body: unknown): RequestInit => ({
