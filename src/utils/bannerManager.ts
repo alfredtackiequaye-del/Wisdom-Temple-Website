@@ -89,7 +89,8 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     height: 675,
     description:
       "Flyer for Atmosphere of Prayer, held 7:00 PM - 10:00 PM on the first Friday of every month.",
-    designNotes: "Deep plum and gold. Show \"First Friday of Every Month\" clearly.",
+    designNotes:
+      'Deep plum and gold. Show "First Friday of Every Month" clearly.',
   },
   {
     id: "event_youth_summit",
@@ -346,9 +347,9 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     categoryLabel: "Page Header Banners",
     location: "About View (Top Header)",
     currentUrl:
-      "https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=1280&q=50",
     defaultUrl:
-      "https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=1280&q=50",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,
@@ -365,9 +366,9 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     categoryLabel: "Page Header Banners",
     location: "Ministries View (Top Header)",
     currentUrl:
-      "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1280&q=50",
     defaultUrl:
-      "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1280&q=50",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,
@@ -381,10 +382,8 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     category: "pages",
     categoryLabel: "Page Header Banners",
     location: "Events View (Top Header)",
-    currentUrl:
-      "/assets/optimized/church_council.webp",
-    defaultUrl:
-      "/assets/optimized/church_council.webp",
+    currentUrl: "/assets/optimized/church_council.webp",
+    defaultUrl: "/assets/optimized/church_council.webp",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,
@@ -399,9 +398,9 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     categoryLabel: "Page Header Banners",
     location: "Watch & Listen View (Top Header)",
     currentUrl:
-      "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1280&q=50",
     defaultUrl:
-      "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1280&q=50",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,
@@ -418,9 +417,9 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     categoryLabel: "Page Header Banners",
     location: "Grow View (Top Header)",
     currentUrl:
-      "https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=1280&q=50",
     defaultUrl:
-      "https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=1280&q=50",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,
@@ -436,10 +435,8 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     category: "pages",
     categoryLabel: "Page Header Banners",
     location: "New Here View (Top Header)",
-    currentUrl:
-      "/assets/optimized/hero_icgc_banner.webp",
-    defaultUrl:
-      "/assets/optimized/hero_icgc_banner.webp",
+    currentUrl: "/assets/optimized/hero_icgc_banner.webp",
+    defaultUrl: "/assets/optimized/hero_icgc_banner.webp",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,
@@ -455,9 +452,9 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     categoryLabel: "Page Header Banners",
     location: "Give View (Top Header)",
     currentUrl:
-      "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=1280&q=50",
     defaultUrl:
-      "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=1280&q=50",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,
@@ -472,10 +469,8 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     category: "pages",
     categoryLabel: "Page Header Banners",
     location: "Gallery View (Top Header)",
-    currentUrl:
-      "/assets/optimized/hero_icgc_banner.webp",
-    defaultUrl:
-      "/assets/optimized/hero_icgc_banner.webp",
+    currentUrl: "/assets/optimized/hero_icgc_banner.webp",
+    defaultUrl: "/assets/optimized/hero_icgc_banner.webp",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,
@@ -491,9 +486,9 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     categoryLabel: "Page Header Banners",
     location: "Prayer Request View (Top Header)",
     currentUrl:
-      "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=1280&q=50",
     defaultUrl:
-      "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=1280&q=50",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,
@@ -508,10 +503,8 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     category: "pages",
     categoryLabel: "Page Header Banners",
     location: "Contact View (Top Header)",
-    currentUrl:
-      "/assets/optimized/hero_icgc_banner.webp",
-    defaultUrl:
-      "/assets/optimized/hero_icgc_banner.webp",
+    currentUrl: "/assets/optimized/hero_icgc_banner.webp",
+    defaultUrl: "/assets/optimized/hero_icgc_banner.webp",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,
@@ -675,14 +668,15 @@ export const compressImageFile = (
 export const loadAllBanners = (): BannerConfig[] => {
   return DEFAULT_BANNERS.map((banner) => {
     const override = IN_MEMORY_CACHE[banner.id];
+    // Local JPG/PNG paths (defaults, or saved as a path) have WebP copies.
     if (override && override.currentUrl) {
       return {
         ...banner,
-        currentUrl: override.currentUrl,
+        currentUrl: optimizedImageUrl(override.currentUrl),
         updatedAt: override.updatedAt,
       };
     }
-    return banner;
+    return { ...banner, currentUrl: optimizedImageUrl(banner.currentUrl) };
   });
 };
 
@@ -754,18 +748,18 @@ export const getBannerUrl = (
 ): string => {
   // 1. Direct match in cache
   if (IN_MEMORY_CACHE[bannerId]?.currentUrl) {
-    return IN_MEMORY_CACHE[bannerId].currentUrl;
+    return optimizedImageUrl(IN_MEMORY_CACHE[bannerId].currentUrl);
   }
 
   // 2. Normalized underscores / hyphens
   const underscoreKey = bannerId.replace(/-/g, "_");
   if (IN_MEMORY_CACHE[underscoreKey]?.currentUrl) {
-    return IN_MEMORY_CACHE[underscoreKey].currentUrl;
+    return optimizedImageUrl(IN_MEMORY_CACHE[underscoreKey].currentUrl);
   }
 
   const hyphenKey = bannerId.replace(/_/g, "-");
   if (IN_MEMORY_CACHE[hyphenKey]?.currentUrl) {
-    return IN_MEMORY_CACHE[hyphenKey].currentUrl;
+    return optimizedImageUrl(IN_MEMORY_CACHE[hyphenKey].currentUrl);
   }
 
   // 3. Alias matches in cache
@@ -776,7 +770,7 @@ export const getBannerUrl = (
     [];
   for (const alias of aliases) {
     if (IN_MEMORY_CACHE[alias]?.currentUrl) {
-      return IN_MEMORY_CACHE[alias].currentUrl;
+      return optimizedImageUrl(IN_MEMORY_CACHE[alias].currentUrl);
     }
   }
 
@@ -785,14 +779,14 @@ export const getBannerUrl = (
     (b) => b.id === bannerId || b.id === underscoreKey || b.id === hyphenKey,
   );
   if (defaultItem?.currentUrl) {
-    return defaultItem.currentUrl;
+    return optimizedImageUrl(defaultItem.currentUrl);
   }
 
   // 5. Check alias default
   for (const alias of aliases) {
     const aliasDefault = DEFAULT_BANNERS.find((b) => b.id === alias);
     if (aliasDefault?.currentUrl) {
-      return aliasDefault.currentUrl;
+      return optimizedImageUrl(aliasDefault.currentUrl);
     }
   }
 
@@ -859,14 +853,46 @@ export const saveBannerUrl = (
   }
 
   void Promise.all(
-    affectedBannerIds.map((id) =>
-      fetch(`/api/admin/site-banners/${encodeURIComponent(id)}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: cleanUrl }),
-      }),
-    ),
-  );
+    affectedBannerIds.map(async (id) => {
+      const response = await fetch(
+        `/api/admin/site-banners/${encodeURIComponent(id)}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: cleanUrl }),
+        },
+      );
+      if (!response.ok) return;
+      // The server stores uploads as image files; swap the inline data URL
+      // for the file URL so this browser stops holding the large copy.
+      const { banner } = (await response.json()) as {
+        banner?: { currentUrl?: string };
+      };
+      if (banner?.currentUrl && banner.currentUrl !== cleanUrl) {
+        IN_MEMORY_CACHE[id] = { currentUrl: banner.currentUrl, updatedAt };
+      }
+    }),
+  ).then(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(IN_MEMORY_CACHE));
+    } catch {
+      // Storage full or blocked: the server copy is authoritative anyway.
+    }
+    openBannerDB().then((db) => {
+      if (!db) return;
+      try {
+        const store = db
+          .transaction(IDB_STORE_NAME, "readwrite")
+          .objectStore(IDB_STORE_NAME);
+        affectedBannerIds.forEach((id) => {
+          if (IN_MEMORY_CACHE[id]) store.put({ id, ...IN_MEMORY_CACHE[id] });
+        });
+      } catch {
+        // Non-critical cache.
+      }
+    });
+    window.dispatchEvent(new CustomEvent(EVENT_KEY));
+  });
 
   return loadAllBanners();
 };
@@ -970,6 +996,29 @@ export const exportBannersJson = (): string => {
 /**
  * React hook to listen for banner changes across the entire app in real time
  */
+// Every view that shows banners uses this hook; share one request per page
+// load instead of re-fetching on each mount and navigation. The response is
+// merged into the cache once, so later mounts can't overwrite newer local edits.
+let remoteBannersRequest: Promise<void> | null = null;
+const loadRemoteBanners = () => {
+  remoteBannersRequest ??= fetch("/api/site-banners")
+    .then((response) => (response.ok ? response.json() : {}))
+    .then((remoteBanners: Record<string, unknown>) => {
+      Object.entries(remoteBanners || {}).forEach(([id, value]) => {
+        const banner = value as { currentUrl?: string; updatedAt?: string };
+        if (banner.currentUrl)
+          IN_MEMORY_CACHE[id] = banner as {
+            currentUrl: string;
+            updatedAt?: string;
+          };
+      });
+    })
+    .catch(() => {
+      remoteBannersRequest = null;
+    });
+  return remoteBannersRequest;
+};
+
 export const useBanners = (): {
   banners: BannerConfig[];
   getBanner: (id: string, fallback?: string) => string;
@@ -986,20 +1035,7 @@ export const useBanners = (): {
 
     window.addEventListener(EVENT_KEY, handleUpdate);
     window.addEventListener("storage", handleUpdate);
-    fetch("/api/site-banners")
-      .then((response) => (response.ok ? response.json() : {}))
-      .then((remoteBanners) => {
-        Object.entries(remoteBanners || {}).forEach(([id, value]) => {
-          const banner = value as { currentUrl?: string; updatedAt?: string };
-          if (banner.currentUrl)
-            IN_MEMORY_CACHE[id] = banner as {
-              currentUrl: string;
-              updatedAt?: string;
-            };
-        });
-        setBanners(loadAllBanners());
-      })
-      .catch(() => undefined);
+    loadRemoteBanners().then(() => setBanners(loadAllBanners()));
     return () => {
       window.removeEventListener(EVENT_KEY, handleUpdate);
       window.removeEventListener("storage", handleUpdate);

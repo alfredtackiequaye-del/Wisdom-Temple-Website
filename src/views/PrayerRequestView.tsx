@@ -77,7 +77,7 @@ export const PrayerRequestView: React.FC<PrayerRequestViewProps> = ({
       <section className="relative bg-forest-950 text-white py-14 sm:py-20 border-b border-forest-700 overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-15">
           <img
-            src={getBanner('page_prayer_hero', 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=1920&q=80')}
+            src={getBanner('page_prayer_hero', 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=1280&q=50')}
             alt="Prayer Request Header"
             className="w-full h-full object-cover"
           />

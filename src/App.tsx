@@ -4,7 +4,13 @@
  */
 
 import React, { lazy, Suspense, useState, useEffect } from "react";
-import { motion, AnimatePresence, MotionConfig } from "motion/react";
+import {
+  m,
+  AnimatePresence,
+  domAnimation,
+  LazyMotion,
+  MotionConfig,
+} from "motion/react";
 import {
   PageId,
   Sermon,
@@ -595,6 +601,8 @@ export default function App() {
 
   return (
     <MotionConfig reducedMotion="user">
+      {/* Loads only the animation features the site uses; strict flags any full `motion.*` component. */}
+      <LazyMotion features={domAnimation} strict>
       <div className="min-h-screen bg-mist-50 font-sans text-forest-900 flex flex-col selection:bg-gold-500 selection:text-forest-950">
         {/* Persistent Navigation */}
         <Navbar
@@ -607,7 +615,7 @@ export default function App() {
         <main className="flex-1">
           <Suspense fallback={<div className="min-h-[60vh]" />}>
             <AnimatePresence mode="wait">
-              <motion.div
+              <m.div
                 key={currentPage}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -698,7 +706,7 @@ export default function App() {
                     onSubmitContactMessage={handleContactSubmit}
                   />
                 )}
-              </motion.div>
+              </m.div>
             </AnimatePresence>
           </Suspense>
         </main>
@@ -757,6 +765,7 @@ export default function App() {
         {/* Comprehensive Church Footer */}
         <Footer onNavigate={handleNavigate} />
       </div>
+      </LazyMotion>
     </MotionConfig>
   );
 }

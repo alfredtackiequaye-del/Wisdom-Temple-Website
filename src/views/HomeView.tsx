@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { m, useReducedMotion } from "motion/react";
 import {
   PageId,
   Sermon,
@@ -172,7 +172,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
         id="hero-section"
       >
         <div className="absolute inset-0 z-0 overflow-hidden">
-          <motion.img
+          <m.img
             src={getBanner("hero_banner", "/hero_icgc_banner.jpg")}
             onError={(e) => {
               const target = e.currentTarget;
@@ -218,7 +218,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
         </div>
 
         <div className="hero-content-column relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 text-left flex flex-col items-start">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
@@ -226,27 +226,27 @@ export const HomeView: React.FC<HomeViewProps> = ({
           >
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-gold-200" />
             <span>{content.heroEyebrow}</span>
-          </motion.div>
+          </m.div>
 
-          <motion.h1
+          <m.h1
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.42, ease: "easeOut" }}
             className="max-w-3xl text-4xl sm:text-5xl md:text-6xl lg:text-[5.8rem] leading-[0.98] tracking-[-0.02em] font-bold text-white font-display text-shadow-hero drop-shadow-[0_5px_18px_rgba(0,0,0,0.5)]"
           >
             {content.heroHeadline}
-          </motion.h1>
+          </m.h1>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.75, delay: 0.62, ease: "easeOut" }}
             className="mt-7 max-w-md text-sm sm:text-base text-emerald-50/90 leading-[1.7] font-medium drop-shadow-[0_3px_12px_rgba(0,0,0,0.55)]"
           >
             {content.heroSubtitle}
-          </motion.p>
+          </m.p>
           {nextService && (
-            <motion.p
+            <m.p
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.75, delay: 0.74, ease: "easeOut" }}
@@ -256,12 +256,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <span>
                 Next: {nextService.name} · {nextService.label}
               </span>
-            </motion.p>
+            </m.p>
           )}
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 w-full mt-10">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.75, delay: 0.86, ease: "easeOut" }}
@@ -282,10 +282,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <Calendar className="w-4 h-4 text-gold-300" />
               <span>{content.heroButtonSecondary}</span>
             </button>
-          </motion.div>
+          </m.div>
         </div>
 
-        <motion.div
+        <m.div
           initial={{ opacity: 0, x: 18 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, delay: 0.6 }}
@@ -304,7 +304,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 : CHURCH_INFO.landmark}
             </span>
           </div>
-        </motion.div>
+        </m.div>
       </section>
 
       {/* ========================================================================= */}

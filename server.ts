@@ -23,6 +23,7 @@ import {
 import {
   getSiteBanners,
   getSiteContent,
+  migrateInlineBanners,
   resetSiteBanner,
   updateSiteBanner,
   updateSiteContent,
@@ -45,6 +46,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function start() {
+  await migrateInlineBanners();
   const app = express();
   const HOST = process.env.HOST || "127.0.0.1";
   const PORT = Number(process.env.PORT || 3000);
@@ -54,7 +56,11 @@ async function start() {
   app.set("trust proxy", 1);
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(compression());
-  app.use(express.json({ limit: "256kb" }));
+  // Banner uploads arrive as data: URLs and get their own, larger limit below.
+  const smallJson = express.json({ limit: "256kb" });
+  app.use((req, res, next) =>
+    req.path.startsWith("/api/admin/site-banners/") ? next() : smallJson(req, res, next),
+  );
   const isPhotoUpload = (req: express.Request) =>
     req.method === "POST" && /^\/albums\/[^/]+\/photos$/.test(req.path);
   app.use(
@@ -111,7 +117,13 @@ async function start() {
   app.get("/api/site-content", getSiteContent);
   app.put("/api/site-content", requireAdmin, requireRole("super-admin"), updateSiteContent);
   app.get("/api/site-banners", getSiteBanners);
-  app.put("/api/admin/site-banners/:id", requireAdmin, requireRole("super-admin"), updateSiteBanner);
+  app.put(
+    "/api/admin/site-banners/:id",
+    requireAdmin,
+    requireRole("super-admin"),
+    express.json({ limit: "12mb" }),
+    updateSiteBanner,
+  );
   app.delete("/api/admin/site-banners/:id", requireAdmin, requireRole("super-admin"), resetSiteBanner);
 
   const albumEditors = requireRole("super-admin", "secretariat");

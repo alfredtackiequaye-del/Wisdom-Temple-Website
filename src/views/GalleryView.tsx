@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { PhotoGallery } from "../components/PhotoGallery";
 import { ChurchPhoto, PageId, PhotoAlbum } from "../types";
 import { useBanners } from "../utils/bannerManager";
@@ -191,7 +191,7 @@ const AlbumGrid: React.FC<{
   onOpen: (albumId: string) => void;
 }> = ({ albums, onOpen }) => (
   <section className="pt-14 sm:pt-16">
-    <motion.div {...reveal()} className="max-w-2xl space-y-2 mb-8 sm:mb-10">
+    <m.div {...reveal()} className="max-w-2xl space-y-2 mb-8 sm:mb-10">
       <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-gold-300">
         Photo Albums
       </span>
@@ -202,7 +202,7 @@ const AlbumGrid: React.FC<{
         Full photo collections from our services, conferences and special
         programs. Open an album to browse every photo.
       </p>
-    </motion.div>
+    </m.div>
 
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
       {albums === null
@@ -214,7 +214,7 @@ const AlbumGrid: React.FC<{
             </div>
           ))
         : albums.map((album, index) => (
-            <motion.button
+            <m.button
               key={album.id}
               {...reveal(Math.min(index, 5) * 0.06)}
               onClick={() => onOpen(album.id)}
@@ -251,7 +251,7 @@ const AlbumGrid: React.FC<{
                   </p>
                 )}
               </div>
-            </motion.button>
+            </m.button>
           ))}
     </div>
   </section>

@@ -61,7 +61,7 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
       <section className="relative bg-forest-950 text-white py-16 sm:py-20 border-b border-forest-700 overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-15">
           <img
-            src={getBanner('page_ministries_hero', 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1920&q=80')}
+            src={getBanner('page_ministries_hero', 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1280&q=50')}
             alt="Ministries Header"
             className="w-full h-full object-cover"
           />

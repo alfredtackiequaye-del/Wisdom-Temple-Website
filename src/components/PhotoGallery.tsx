@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { ChurchPhoto } from "../types";
 import {
   galleryThumbnailUrl,
@@ -173,15 +173,15 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
       {/* Section Header */}
       {!hideHeader && (
         <div className="text-center max-w-3xl mx-auto space-y-3 px-4">
-          <motion.div
+          <m.div
             {...reveal()}
             className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gold-500/15 border border-gold-500/40 text-gold-200 text-xs font-bold uppercase tracking-widest shadow-lg backdrop-blur-md"
           >
             <Sparkles className="w-3.5 h-3.5 text-gold-300 animate-pulse" />
             <span>MOMENTS OF FAITH & GLORY</span>
-          </motion.div>
+          </m.div>
 
-          <motion.h2
+          <m.h2
             {...reveal()}
             className={`text-3xl sm:text-4xl lg:text-5xl font-black font-serif-title tracking-tight uppercase ${
               isDark ? "text-white" : "text-forest-900"
@@ -195,24 +195,24 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
             ) : (
               title
             )}
-          </motion.h2>
+          </m.h2>
 
           {subtitle && (
-            <motion.p
+            <m.p
               {...reveal()}
               className={`text-sm sm:text-base leading-relaxed max-w-2xl mx-auto ${
                 isDark ? "text-emerald-100/80" : "text-slate-600"
               }`}
             >
               {subtitle}
-            </motion.p>
+            </m.p>
           )}
         </div>
       )}
 
       {/* Filter and Search Bar */}
       {showFilters && (
-        <motion.div
+        <m.div
           {...reveal()}
           className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 max-w-6xl mx-auto px-4"
         >
@@ -268,7 +268,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
               </button>
             )}
           </div>
-        </motion.div>
+        </m.div>
       )}
 
       {/* Grid of Church Moments */}
@@ -301,7 +301,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
           }
         >
           {displayPhotos.map((photo, index) => (
-            <motion.div
+            <m.div
               key={photo.id}
               {...reveal(Math.min(index, 6) * 0.05)}
               whileHover={{ y: -6 }}
@@ -428,7 +428,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   </span>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           ))}
         </div>
       )}
@@ -451,7 +451,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
       {/* ========================================================================= */}
       <AnimatePresence>
         {currentPhoto && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -532,7 +532,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
               </button>
 
               {/* Main Photo Display with Motion */}
-              <motion.div
+              <m.div
                 key={currentPhoto.id}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -549,7 +549,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   decoding="async"
                   referrerPolicy="no-referrer"
                 />
-              </motion.div>
+              </m.div>
 
               {/* Next Arrow Button */}
               <button
@@ -624,7 +624,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                 ))}
               </div>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

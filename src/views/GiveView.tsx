@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 import { PageId, GivingRecord } from '../types';
 import { GIVING_DETAILS } from '../data/churchData';
 import { useBanners } from '../utils/bannerManager';
@@ -111,7 +111,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
       <section className="relative bg-forest-950 text-white py-14 sm:py-20 border-b border-forest-700 overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-15">
           <img
-            src={getBanner('page_give_hero', 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=1920&q=80')}
+            src={getBanner('page_give_hero', 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=1280&q=50')}
             alt="Give Header"
             className="w-full h-full object-cover"
           />
@@ -195,7 +195,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
         {/* Giving Form & Details */}
         {completedReceipt ? (
           /* Official Digital Giving Receipt Confirmation */
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white rounded-3xl p-6 sm:p-10 border-2 border-gold-500/60 shadow-xl space-y-6 max-w-2xl mx-auto"
@@ -300,7 +300,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                 Staff Portal
               </button>.
             </div>
-          </motion.div>
+          </m.div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
             {/* Left Column: Fund Selection & Giving Form */}
@@ -637,7 +637,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
       {/* Official Giving Flyer Modal */}
       <AnimatePresence>
         {flyerModalOpen && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -645,7 +645,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
             className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md"
             onClick={() => setFlyerModalOpen(false)}
           >
-            <motion.div
+            <m.div
               initial={{ scale: 0.95, opacity: 0, y: 15 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 15 }}
@@ -696,8 +696,8 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                   <span>Download High-Res Flyer</span>
                 </a>
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

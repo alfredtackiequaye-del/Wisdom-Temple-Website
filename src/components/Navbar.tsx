@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { PageId } from "../types";
 import { CHURCH_INFO } from "../data/churchData";
 import { ICGCLogo } from "./ICGCLogo";
@@ -164,7 +164,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
               <AnimatePresence>
                 {aboutDropdownOpen && (
-                  <motion.div
+                  <m.div
                     initial={{ opacity: 0, y: 8, scale: 0.96 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 6, scale: 0.96 }}
@@ -201,7 +201,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     >
                       Our Story & Heritage
                     </button>
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
             </div>
@@ -226,7 +226,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
               <AnimatePresence>
                 {watchDropdownOpen && (
-                  <motion.div
+                  <m.div
                     initial={{ opacity: 0, y: 8, scale: 0.96 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 6, scale: 0.96 }}
@@ -263,7 +263,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     >
                       Wisdom Summit Archive
                     </button>
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
             </div>
@@ -339,7 +339,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
               <AnimatePresence>
                 {connectDropdownOpen && (
-                  <motion.div
+                  <m.div
                     initial={{ opacity: 0, y: 8, scale: 0.96 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 6, scale: 0.96 }}
@@ -376,7 +376,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     >
                       Member Testimonies
                     </button>
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
             </div>
@@ -430,7 +430,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Mobile Drawer Menu in ICGC Deep Forest & Gold */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
@@ -525,7 +525,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             <div className="pt-4 border-t border-forest-800">
-              <motion.button
+              <m.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleNavClick("give")}
@@ -533,7 +533,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               >
                 <Heart className="w-4 h-4 fill-forest-950" />
                 <span>GIVE / FIRST FRUIT & OFFERINGS</span>
-              </motion.button>
+              </m.button>
 
               <button
                 onClick={() => handleNavClick("admin")}
@@ -543,7 +543,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span>CHURCH ADMINISTRATION PORTAL</span>
               </button>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </header>

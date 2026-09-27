@@ -65,7 +65,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
       <section className="relative bg-forest-950 text-white py-16 sm:py-20 border-b border-forest-700 overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-15">
           <img
-            src={getBanner('page_watch_hero', 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1920&q=80')}
+            src={getBanner('page_watch_hero', 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1280&q=50')}
             alt="Watch Listen Header"
             className="w-full h-full object-cover"
           />

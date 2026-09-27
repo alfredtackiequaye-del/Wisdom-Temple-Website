@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import { PageId, VisitPlan } from '../types';
 import { CHURCH_INFO } from '../data/churchData';
 import { useBanners } from '../utils/bannerManager';
@@ -81,7 +81,7 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
         {/* The 3-Step Visitor Roadmap */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Phase 1: Before You Come - Amber Gold Theme */}
-          <motion.div
+          <m.div
             {...reveal()}
             whileHover={{ y: -6, boxShadow: "0 20px 25px -5px rgba(201, 151, 38, 0.15)" }}
             className="bg-white rounded-3xl overflow-hidden border-2 border-amber-200/90 shadow-md hover:border-gold-500 transition-all flex flex-col justify-between"
@@ -128,10 +128,10 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
                 Doors open 45 minutes before service
               </div>
             </div>
-          </motion.div>
+          </m.div>
 
           {/* Phase 2: When You Arrive - ICGC Forest Emerald Theme */}
-          <motion.div
+          <m.div
             {...reveal(0.08)}
             whileHover={{ y: -6, boxShadow: "0 20px 25px -5px rgba(7, 71, 44, 0.15)" }}
             className="bg-white rounded-3xl overflow-hidden border-2 border-emerald-200/90 shadow-md hover:border-emerald-600 transition-all flex flex-col justify-between"
@@ -174,10 +174,10 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
                 Dedicated hosts ready at the welcome desk
               </div>
             </div>
-          </motion.div>
+          </m.div>
 
           {/* Phase 3: After Service - ICGC Bronze & Teal Theme */}
-          <motion.div
+          <m.div
             {...reveal(0.16)}
             whileHover={{ y: -6, boxShadow: "0 20px 25px -5px rgba(13, 148, 136, 0.15)" }}
             className="bg-white rounded-3xl overflow-hidden border-2 border-teal-200/90 shadow-md hover:border-teal-600 transition-all flex flex-col justify-between"
@@ -216,7 +216,7 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
                 Pastoral fellowship & devotional gift pack
               </div>
             </div>
-          </motion.div>
+          </m.div>
         </div>
 
         {/* Plan Your Visit Interactive Form */}

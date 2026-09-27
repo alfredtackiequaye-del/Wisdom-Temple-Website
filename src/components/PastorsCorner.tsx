@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 import { PageId } from '../types';
 import { PASTORAL_COUPLE_IMAGE } from '../assets/pastoralImage';
 import { useBanners } from '../utils/bannerManager';
@@ -222,7 +222,7 @@ export const PastorsCorner: React.FC<PastorsCornerProps> = ({
             className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
             onClick={() => setIsModalOpen(false)}
           >
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
@@ -278,7 +278,7 @@ export const PastorsCorner: React.FC<PastorsCornerProps> = ({
                   </button>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           </div>
         )}
       </AnimatePresence>
