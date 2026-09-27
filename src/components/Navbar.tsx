@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { m, AnimatePresence } from "motion/react";
 import { PageId } from "../types";
 import { CHURCH_INFO } from "../data/churchData";
@@ -31,6 +31,19 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
   const [watchDropdownOpen, setWatchDropdownOpen] = useState(false);
   const [connectDropdownOpen, setConnectDropdownOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const isHome = currentPage === "home";
+  // Frosted glass: the page shows through, the menu stays readable over photos.
+  const frosted =
+    "bg-forest-950/85 backdrop-blur-md backdrop-saturate-150 border-b border-gold-500/20 shadow-lg shadow-black/20";
 
   const handleNavClick = (page: PageId, subTab?: string) => {
     onNavigate(page, subTab);
@@ -43,15 +56,17 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header
-      className={`z-40 w-full text-white ${
-        currentPage === "home"
-          ? "absolute top-0 left-0 bg-transparent"
-          : "sticky top-0 bg-forest-900 shadow-xl border-b border-gold-500/30"
+      className={`z-40 w-full text-white transition-[background-color,box-shadow,border-color] duration-300 ${
+        isHome
+          ? // Clear over the home hero, frosted once the page scrolls.
+            `fixed top-0 left-0 ${scrolled || mobileMenuOpen ? frosted : "bg-transparent border-b border-transparent"}`
+          : // The 40px info strip scrolls away; the main menu bar stays pinned.
+            `sticky top-0 md:-top-10 ${frosted}`
       }`}
     >
       {/* Top Utility Announcement Bar - ICGC Official Deep Forest & Gold */}
       <div
-        className={`${currentPage === "home" ? "hidden" : "hidden md:flex"} justify-between items-center px-4 lg:px-8 py-2 bg-forest-950/85 text-xs text-emerald-100/80 border-b border-forest-800/70`}
+        className={`${isHome ? "hidden" : "hidden md:flex"} justify-between items-center px-4 lg:px-8 h-10 bg-forest-950/60 text-xs text-emerald-100/80 border-b border-forest-800/70`}
       >
         <div className="flex items-center space-x-6">
           <div className="flex items-center space-x-1.5 text-gold-400 font-medium">
