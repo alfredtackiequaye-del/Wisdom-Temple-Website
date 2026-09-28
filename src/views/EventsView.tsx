@@ -42,9 +42,9 @@ export const EventsView: React.FC<EventsViewProps> = ({
       <section className="relative bg-forest-950 text-white py-16 sm:py-20 border-b border-forest-700 overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-15">
           <img
-            src={getBanner('page_events_hero', '/assets/optimized/church_council.webp')}
-            alt="Events Header"
-            className="w-full h-full object-cover"
+            src={getBanner('page_events_hero', '/assets/photos/wisdom-summit-full-team.webp')}
+            alt=""
+            className="w-full h-full object-cover object-[center_30%]"
           />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">

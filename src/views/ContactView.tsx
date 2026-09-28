@@ -52,9 +52,9 @@ export const ContactView: React.FC<ContactViewProps> = ({
       <section className="relative bg-forest-950 text-white py-14 sm:py-18 border-b border-forest-700 overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-15">
           <img
-            src={getBanner('page_contact_hero', '/assets/optimized/hero_icgc_banner.webp')}
-            alt="Contact Us Header"
-            className="w-full h-full object-cover"
+            src={getBanner('page_contact_hero', '/assets/photos/wisdom-summit-sisters.webp')}
+            alt=""
+            className="w-full h-full object-cover object-[center_18%]"
           />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 relative z-10">

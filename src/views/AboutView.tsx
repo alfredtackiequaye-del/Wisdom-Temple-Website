@@ -38,9 +38,9 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
       <section className="relative bg-forest-950 text-white py-16 sm:py-20 border-b border-forest-700 overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-15">
           <img
-            src={getBanner('page_about_hero', 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=1280&q=50')}
-            alt="About Us Header"
-            className="w-full h-full object-cover"
+            src={getBanner('page_about_hero', '/assets/photos/wisdom-summit-team-red.webp')}
+            alt=""
+            className="w-full h-full object-cover object-[center_30%]"
           />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
