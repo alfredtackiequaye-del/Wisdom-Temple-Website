@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PageId } from '../types';
 import { CHURCH_INFO, BELIEFS } from '../data/churchData';
 import { PASTORAL_COUPLE_IMAGE } from '../assets/pastoralImage';
+import { optimizedImageUrl } from '../utils/optimizedImage';
 import { useBanners } from '../utils/bannerManager';
 import { useSiteContent } from '../utils/contentManager';
 import { 
@@ -432,7 +433,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                 >
                   <div className="relative aspect-[16/11] bg-forest-950 overflow-hidden">
                     <img
-                      src="/church_council.png"
+                      src={optimizedImageUrl('/church_council.png')}
                       onError={(e) => {
                         const target = e.currentTarget;
                         if (target.src !== '/church_council.jpg') {
@@ -555,7 +556,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
             {/* Modal Photo */}
             <div className="relative aspect-[3831/2275] max-h-[75vh] w-full bg-black/80 flex items-center justify-center p-2">
               <img
-                src="/church_council.png"
+                src={optimizedImageUrl('/church_council.png')}
                 onError={(e) => {
                   const target = e.currentTarget;
                   if (target.src !== '/church_council.jpg') {

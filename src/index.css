@@ -220,3 +220,26 @@ h2.font-display {
 .text-icgc-gold-accent {
   color: var(--color-gold-400);
 }
+
+/* Hero scroll cue: a slow, deliberate bob inviting the visitor to keep going. */
+@keyframes scroll-cue-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
+}
+
+.scroll-cue {
+  animation: scroll-cue-bob 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue {
+    animation: none;
+  }
+}

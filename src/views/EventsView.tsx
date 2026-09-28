@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
+import { m } from 'motion/react';
 import { ChurchEvent, PageId } from '../types';
+import { CHURCH_INFO } from '../data/churchData';
 import { useBanners } from '../utils/bannerManager';
-import { 
-  Calendar, 
-  Clock, 
-  MapPin, 
-  Share2, 
-  Ticket
+import { reveal, staggerContainer, staggerItem, LIFT_SPRING } from '../utils/motion';
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Share2,
+  Ticket,
+  Sun,
+  Flame,
 } from 'lucide-react';
 import { PosterImage } from '../components/PosterImage';
 
@@ -63,7 +68,10 @@ export const EventsView: React.FC<EventsViewProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 space-y-16">
         {/* Featured Wisdom Summit Card */}
         {featuredSummit && (
-          <div className="bg-forest-900 rounded-2xl border border-white/15 p-8 sm:p-12 text-white shadow-xl relative">
+          <m.div
+            {...reveal()}
+            className="bg-forest-900 rounded-2xl border border-white/15 p-8 sm:p-12 text-white shadow-xl relative"
+          >
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
               <span className="px-3.5 py-1 bg-gold-500 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-md">
                 ANNUAL FLAGSHIP CONFERENCE
@@ -106,11 +114,14 @@ export const EventsView: React.FC<EventsViewProps> = ({
                 </button>
               </div>
             </div>
-          </div>
+          </m.div>
         )}
 
         {/* Filter Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-mist-300 pb-4">
+        <m.div
+          {...reveal()}
+          className="flex flex-wrap items-center justify-between gap-4 border-b border-mist-300 pb-4"
+        >
           <div>
             <h3 className="text-xl font-bold text-forest-900 font-serif-title">All Scheduled Gatherings</h3>
             <p className="text-xs text-slate-500">Filter church calendar by category</p>
@@ -131,14 +142,22 @@ export const EventsView: React.FC<EventsViewProps> = ({
               </button>
             ))}
           </div>
-        </div>
+        </m.div>
 
-        {/* Events Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Events Grid — flex-wrap so an incomplete last row centers itself
+            instead of leaving a lone card stranded beside empty grid columns. */}
+        <m.div
+          key={selectedCategory}
+          {...staggerContainer(0.1)}
+          className="flex flex-wrap justify-center gap-8"
+        >
           {filteredEvents.map((event) => (
-            <div
+            <m.div
               key={event.id}
-              className="group bg-white rounded-2xl border border-mist-300 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+              variants={staggerItem}
+              whileHover={{ y: -6 }}
+              transition={LIFT_SPRING}
+              className="group bg-white rounded-2xl border border-mist-300 overflow-hidden shadow-sm hover:shadow-lg transition-shadow flex flex-col justify-between w-full sm:w-[calc((100%-2rem)/2)] lg:w-[calc((100%-4rem)/3)]"
             >
               <div>
                 <div className="relative aspect-[16/9] bg-forest-950 overflow-hidden">
@@ -151,25 +170,29 @@ export const EventsView: React.FC<EventsViewProps> = ({
                   </span>
                 </div>
 
-                <div className="p-6 space-y-3">
-                  <div className="flex items-center justify-between text-xs text-forest-700 font-bold">
-                    <span>{event.date}</span>
-                    <span className="text-slate-400">{event.time}</span>
+                <div className="p-6 space-y-4">
+                  <div className="space-y-1.5">
+                    <div className="flex items-start gap-1.5 text-xs text-forest-700 font-bold">
+                      <Calendar className="w-3.5 h-3.5 text-gold-500 shrink-0 mt-0.5" />
+                      <span>{event.date}</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs text-slate-500 font-medium">
+                      <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+                      <span>{event.time}</span>
+                    </div>
                   </div>
 
-                  <h3 className="text-lg font-bold text-forest-900 font-serif-title line-clamp-1">
+                  <h3 className="text-lg font-bold text-forest-900 font-serif-title line-clamp-2 leading-snug">
                     {event.name}
                   </h3>
 
-                  <p className="text-xs text-slate-600 line-clamp-3">
+                  <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed">
                     {event.shortDescription}
                   </p>
 
-                  <div className="pt-2 text-xs text-slate-500 space-y-1">
-                    <div className="flex items-center space-x-1.5 truncate">
-                      <MapPin className="w-3.5 h-3.5 text-gold-500 shrink-0" />
-                      <span className="truncate">{event.venue}</span>
-                    </div>
+                  <div className="flex items-start gap-1.5 text-xs text-slate-500">
+                    <MapPin className="w-3.5 h-3.5 text-gold-500 shrink-0 mt-0.5" />
+                    <span>{event.venue}</span>
                   </div>
                 </div>
               </div>
@@ -182,17 +205,65 @@ export const EventsView: React.FC<EventsViewProps> = ({
                   REGISTER NOW
                 </button>
               </div>
-            </div>
+            </m.div>
           ))}
-        </div>
+        </m.div>
 
-        {/* Weekly Regular Service Times Reminder */}
-        <div className="bg-mist-100 rounded-2xl p-6 border border-mist-400 text-center space-y-2">
-          <h4 className="font-bold text-forest-900 text-sm font-serif-title">Regular Weekly Gatherings</h4>
-          <p className="text-xs text-forest-700">
-            Sunday Celebration Service: <strong>Every Sunday at 8:00 AM</strong> • The Secret Place: <strong>Every Wednesday at 7:00 PM</strong>
-          </p>
-        </div>
+        {/* Weekly Regular Services */}
+        <m.div {...reveal()}>
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <span className="text-[11px] font-semibold text-forest-600 uppercase tracking-[0.22em] bg-mist-100 px-3.5 py-2 rounded-full border border-mist-300 inline-block mb-4">
+              Every Week
+            </span>
+            <h3 className="text-3xl sm:text-4xl font-extrabold text-forest-900 font-serif-title tracking-[-0.03em]">
+              Regular Weekly Gatherings
+            </h3>
+            <p className="text-sm text-slate-600 mt-3 leading-relaxed">
+              No registration needed — just come as you are.
+            </p>
+          </div>
+
+          <m.div
+            {...staggerContainer(0.15)}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-4xl mx-auto"
+          >
+            {[
+              { icon: Sun, ...CHURCH_INFO.services.sunday },
+              { icon: Flame, ...CHURCH_INFO.services.midweek },
+            ].map((service) => (
+              <m.div
+                key={service.name}
+                variants={staggerItem}
+                whileHover={{ y: -6 }}
+                transition={LIFT_SPRING}
+                className="editorial-card premium-card rounded-[4px] p-7 sm:p-8 flex flex-col gap-4"
+              >
+                <div className="w-14 h-14 rounded-2xl bg-forest-950 text-gold-300 flex items-center justify-center shadow-lift">
+                  <service.icon className="w-6 h-6 text-gold-400" />
+                </div>
+                <div className="space-y-1.5">
+                  <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-forest-600">
+                    {service.day.toUpperCase()} @ {service.time}
+                  </span>
+                  <h4 className="text-xl font-bold text-forest-900 font-display tracking-[-0.03em]">
+                    {service.name}
+                  </h4>
+                </div>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  {service.description}
+                </p>
+                <div className="pt-4 mt-1 border-t border-slate-200/80">
+                  <button
+                    onClick={() => onNavigate('new-here')}
+                    className="inline-flex items-center gap-2 text-xs font-bold text-forest-800 hover:text-gold-600 transition-colors cursor-pointer"
+                  >
+                    <span>Plan Your Visit</span>
+                  </button>
+                </div>
+              </m.div>
+            ))}
+          </m.div>
+        </m.div>
       </div>
     </div>
   );

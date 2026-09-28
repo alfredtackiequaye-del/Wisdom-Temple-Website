@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { m, useReducedMotion } from "motion/react";
+import React, { useState, useEffect, useRef } from "react";
+import { m, AnimatePresence, useReducedMotion, useScroll, useTransform } from "motion/react";
 import {
   PageId,
   Sermon,
@@ -9,7 +9,9 @@ import {
 import { CHURCH_INFO } from "../data/churchData";
 import { PastorsCorner } from "../components/PastorsCorner";
 import { useBanners } from "../utils/bannerManager";
+import { optimizedImageUrl } from "../utils/optimizedImage";
 import { useSiteContent } from "../utils/contentManager";
+import { EASE_OUT, reveal, staggerContainer, staggerItem, LIFT_SPRING } from "../utils/motion";
 import {
   Play,
   Headphones,
@@ -21,6 +23,7 @@ import {
   Heart,
   Flame,
   ChevronRight,
+  ChevronDown,
   CheckCircle2,
   Quote,
   Share2,
@@ -30,6 +33,7 @@ import {
   X,
 } from "lucide-react";
 import { PosterImage } from "../components/PosterImage";
+import { ScrollProgressRail } from "../components/ScrollProgressRail";
 
 interface ServiceSlot {
   name: string;
@@ -74,6 +78,35 @@ const getNextService = (slots: ServiceSlot[], now = new Date()) => {
   return { name: best.name, label: msAway <= 0 ? when : `${when} · ${slot.time}` };
 };
 
+/** One odometer-style countdown digit: the old value slides out as the new one slides in. */
+const CountdownUnit: React.FC<{
+  value: number;
+  label: string;
+  tone: "gold" | "white";
+}> = ({ value, label, tone }) => (
+  <div className="bg-forest-900 border border-white/10 rounded-lg p-3">
+    <div className="relative h-8 sm:h-9 overflow-hidden flex items-center justify-center">
+      <AnimatePresence mode="popLayout" initial={false}>
+        <m.span
+          key={value}
+          initial={{ y: 18, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -18, opacity: 0 }}
+          transition={{ duration: 0.35, ease: EASE_OUT }}
+          className={`absolute text-2xl sm:text-3xl font-black ${
+            tone === "gold" ? "text-gold-400" : "text-white"
+          }`}
+        >
+          {String(value).padStart(2, "0")}
+        </m.span>
+      </AnimatePresence>
+    </div>
+    <span className="text-[10px] uppercase tracking-wider text-emerald-300/70 font-semibold block text-center mt-1">
+      {label}
+    </span>
+  </div>
+);
+
 interface HomeViewProps {
   onNavigate: (page: PageId, subTab?: string) => void;
   sermons: Sermon[];
@@ -98,6 +131,18 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const { getBanner } = useBanners();
   const { content } = useSiteContent();
   const prefersReducedMotion = useReducedMotion();
+
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress: heroScrollProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const heroImageY = useTransform(
+    heroScrollProgress,
+    [0, 1],
+    [0, prefersReducedMotion ? 0 : 110],
+  );
+  const heroWords = content.heroHeadline.split(" ");
 
   // Placeholder testimonies (e.g. "[CHURCH MEMBER NAME]") are never shown publicly.
   const publishedTestimonies = testimonies.filter(
@@ -162,16 +207,31 @@ export const HomeView: React.FC<HomeViewProps> = ({
     }, 2000);
   };
 
+  const railSections = [
+    { id: "hero-section", label: "Welcome" },
+    { id: "experience-row", label: "Experience" },
+    ...(latestSermon ? [{ id: "latest-message", label: "Latest Message" }] : []),
+    ...(featuredSummit ? [{ id: "wisdom-summit", label: "Wisdom Summit" }] : []),
+    { id: "upcoming-events", label: "Events" },
+    ...(publishedTestimonies.length > 0
+      ? [{ id: "testimonies", label: "Testimonies" }]
+      : []),
+    { id: "giving-teaser", label: "Give" },
+  ];
+
   return (
     <div className="space-y-0 text-slate-900">
+      <ScrollProgressRail sections={railSections} />
+
       {/* ========================================================================= */}
       {/* 1. HERO SECTION - Minimal, Airy, Image-Forward (connection-rincon style) */}
       {/* ========================================================================= */}
       <section
+        ref={heroRef}
         className="premium-hero relative min-h-[78vh] lg:min-h-[86vh] flex flex-col justify-end overflow-hidden pt-24 sm:pt-32 pb-12 sm:pb-16"
         id="hero-section"
       >
-        <div className="absolute inset-0 z-0 overflow-hidden">
+        <m.div className="absolute inset-0 z-0 overflow-hidden" style={{ y: heroImageY }}>
           <m.img
             src={getBanner("hero_banner", "/hero_icgc_banner.jpg")}
             onError={(e) => {
@@ -215,7 +275,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.05),_transparent_55%)]" />
           <div className="absolute inset-0 bg-gradient-to-b from-forest-950/35 via-forest-950/10 to-forest-950/90 pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-r from-forest-950/80 via-forest-950/18 to-forest-950/28 pointer-events-none" />
-        </div>
+        </m.div>
 
         <div className="hero-content-column relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 text-left flex flex-col items-start">
           <m.div
@@ -228,14 +288,32 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <span>{content.heroEyebrow}</span>
           </m.div>
 
-          <m.h1
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.42, ease: "easeOut" }}
+          <h1
+            aria-label={content.heroHeadline}
             className="max-w-3xl text-4xl sm:text-5xl md:text-6xl lg:text-[5.8rem] leading-[0.98] tracking-[-0.02em] font-bold text-white font-display text-shadow-hero drop-shadow-[0_5px_18px_rgba(0,0,0,0.5)]"
           >
-            {content.heroHeadline}
-          </m.h1>
+            <span aria-hidden="true">
+              {heroWords.map((word, i) => (
+                <m.span
+                  key={`${word}-${i}`}
+                  initial={
+                    prefersReducedMotion
+                      ? { opacity: 1, y: 0 }
+                      : { opacity: 0, y: 34 }
+                  }
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.75,
+                    delay: prefersReducedMotion ? 0 : 0.42 + i * 0.07,
+                    ease: EASE_OUT,
+                  }}
+                  className="inline-block mr-[0.22em] last:mr-0"
+                >
+                  {word}
+                </m.span>
+              ))}
+            </span>
+          </h1>
 
           <m.p
             initial={{ opacity: 0, y: 14 }}
@@ -305,14 +383,35 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </span>
           </div>
         </m.div>
+
+        <m.button
+          onClick={() =>
+            document
+              .getElementById("experience-row")
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 1.3 }}
+          aria-label="Scroll to explore"
+          className="scroll-cue absolute left-1/2 -translate-x-1/2 bottom-3 z-10 hidden sm:flex flex-col items-center gap-1.5 text-gold-200/90 hover:text-white transition-colors cursor-pointer"
+        >
+          <span className="text-[9px] font-semibold uppercase tracking-[0.3em]">
+            Explore
+          </span>
+          <ChevronDown className="w-4 h-4" />
+        </m.button>
       </section>
 
       {/* ========================================================================= */}
       {/* 2. MODULAR EXPERIENCE ROW - Inspired by connection-rincon.com */}
       {/* ========================================================================= */}
-      <section className="cinematic-panel py-16 sm:py-20 border-b border-slate-200/80">
+      <section
+        id="experience-row"
+        className="cinematic-panel py-16 sm:py-20 border-b border-slate-200/80"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
+          <m.div {...reveal()} className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-[11px] font-semibold text-forest-600 uppercase tracking-[0.22em] bg-mist-100 px-3.5 py-2 rounded-full border border-mist-300 inline-block mb-4">
               {content.experienceSectionBadge}
             </span>
@@ -322,11 +421,19 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <p className="text-sm sm:text-base text-slate-600 mt-3 leading-relaxed">
               {content.experienceSectionSubtitle}
             </p>
-          </div>
+          </m.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5">
+          <m.div
+            {...staggerContainer(0.15)}
+            className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5"
+          >
             {/* Module 1: Visit In-Person */}
-            <div className="editorial-card premium-card rounded-[4px] p-7 sm:p-8 md:col-span-5 hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between">
+            <m.div
+              variants={staggerItem}
+              whileHover={{ y: -6 }}
+              transition={LIFT_SPRING}
+              className="editorial-card premium-card rounded-[4px] p-7 sm:p-8 md:col-span-5 group flex flex-col justify-between"
+            >
               <div className="space-y-4">
                 <div className="w-14 h-14 rounded-2xl bg-forest-950 text-gold-300 flex items-center justify-center shadow-lift">
                   <MapPin className="w-6 h-6 text-gold-400" />
@@ -352,10 +459,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
               </div>
-            </div>
+            </m.div>
 
             {/* Module 2: Watch on Demand */}
-            <div className="editorial-card premium-card rounded-[4px] p-7 sm:p-8 md:col-span-4 hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between">
+            <m.div
+              variants={staggerItem}
+              whileHover={{ y: -6 }}
+              transition={LIFT_SPRING}
+              className="editorial-card premium-card rounded-[4px] p-7 sm:p-8 md:col-span-4 group flex flex-col justify-between"
+            >
               <div className="space-y-4">
                 <div className="w-14 h-14 rounded-2xl bg-forest-950 text-gold-300 flex items-center justify-center shadow-lift">
                   <Play className="w-6 h-6 text-gold-400 fill-gold-400" />
@@ -381,10 +493,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
               </div>
-            </div>
+            </m.div>
 
             {/* Module 3: The Secret Place */}
-            <div className="editorial-card premium-card rounded-[4px] p-7 sm:p-8 md:col-span-3 hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between">
+            <m.div
+              variants={staggerItem}
+              whileHover={{ y: -6 }}
+              transition={LIFT_SPRING}
+              className="editorial-card premium-card rounded-[4px] p-7 sm:p-8 md:col-span-3 group flex flex-col justify-between"
+            >
               <div className="space-y-4">
                 <div className="w-14 h-14 rounded-2xl bg-forest-950 text-gold-300 flex items-center justify-center shadow-lift">
                   <Flame className="w-6 h-6 text-gold-400" />
@@ -410,8 +527,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
               </div>
-            </div>
-          </div>
+            </m.div>
+          </m.div>
         </div>
       </section>
 
@@ -424,7 +541,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
           id="latest-message"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-forest-700 gap-4">
+            <m.div
+              {...reveal()}
+              className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-forest-700 gap-4"
+            >
               <div>
                 <span className="text-xs text-gold-300 uppercase tracking-widest block font-bold">
                   SPIRITUAL FEEDING & MEDIA
@@ -440,10 +560,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <span>VIEW ALL MESSAGES</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
-            </div>
+            </m.div>
 
             {/* Featured Message Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-forest-900 rounded-3xl p-6 sm:p-8 border border-forest-700 shadow-2xl">
+            <m.div
+              {...reveal(0.1)}
+              className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-forest-900 rounded-3xl p-6 sm:p-8 border border-forest-700 shadow-2xl"
+            >
               {/* Media Thumbnail Container / Embedded Player */}
               <div className="lg:col-span-7 relative rounded-2xl overflow-hidden shadow-2xl aspect-video bg-black border border-forest-700">
                 {playLatestInline && latestSermon.videoEmbedUrl ? (
@@ -549,7 +672,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   )}
                 </div>
               </div>
-            </div>
+            </m.div>
           </div>
         </section>
       )}
@@ -568,7 +691,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
           id="wisdom-summit"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-forest-900 rounded-2xl border border-white/15 p-8 sm:p-12 relative shadow-xl">
+            <m.div
+              {...reveal()}
+              className="bg-forest-900 rounded-2xl border border-white/15 p-8 sm:p-12 relative shadow-xl"
+            >
               {/* Event Badge */}
               <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
                 <span className="px-3.5 py-1 bg-gold-500 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-md">
@@ -635,38 +761,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
                   {/* Timer Boxes */}
                   <div className="grid grid-cols-4 gap-2.5 text-center">
-                    <div className="bg-forest-900 border border-white/10 rounded-lg p-3">
-                      <span className="text-2xl sm:text-3xl font-black text-gold-400 block">
-                        {timeLeft.days}
-                      </span>
-                      <span className="text-[10px] uppercase tracking-wider text-emerald-300/70 font-semibold">
-                        Days
-                      </span>
-                    </div>
-                    <div className="bg-forest-900 border border-white/10 rounded-lg p-3">
-                      <span className="text-2xl sm:text-3xl font-black text-white block">
-                        {timeLeft.hours}
-                      </span>
-                      <span className="text-[10px] uppercase tracking-wider text-emerald-300/70 font-semibold">
-                        Hours
-                      </span>
-                    </div>
-                    <div className="bg-forest-900 border border-white/10 rounded-lg p-3">
-                      <span className="text-2xl sm:text-3xl font-black text-white block">
-                        {timeLeft.minutes}
-                      </span>
-                      <span className="text-[10px] uppercase tracking-wider text-emerald-300/70 font-semibold">
-                        Mins
-                      </span>
-                    </div>
-                    <div className="bg-forest-900 border border-white/10 rounded-lg p-3">
-                      <span className="text-2xl sm:text-3xl font-black text-gold-400 block">
-                        {timeLeft.seconds}
-                      </span>
-                      <span className="text-[10px] uppercase tracking-wider text-emerald-300/70 font-semibold">
-                        Secs
-                      </span>
-                    </div>
+                    <CountdownUnit value={timeLeft.days} label="Days" tone="gold" />
+                    <CountdownUnit value={timeLeft.hours} label="Hours" tone="white" />
+                    <CountdownUnit value={timeLeft.minutes} label="Mins" tone="white" />
+                    <CountdownUnit value={timeLeft.seconds} label="Secs" tone="gold" />
                   </div>
 
                   {/* Registering Button Beside */}
@@ -683,7 +781,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   </div>
                 </div>
               </div>
-            </div>
+            </m.div>
           </div>
         </section>
       )}
@@ -696,7 +794,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
         id="upcoming-events"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
+          <m.div
+            {...reveal()}
+            className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4"
+          >
             <div>
               <span className="text-xs font-bold tracking-widest text-forest-700 uppercase bg-mist-200 px-3 py-1 rounded-full border border-mist-400">
                 CALENDAR & GATHERINGS
@@ -712,13 +813,19 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <span>VIEW ALL EVENTS</span>
               <ChevronRight className="w-4 h-4" />
             </button>
-          </div>
+          </m.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <m.div
+            {...staggerContainer(0.12)}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
             {events.slice(0, 3).map((event) => (
-              <div
+              <m.div
                 key={event.id}
-                className="bg-white rounded-2xl border border-mist-300 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between group"
+                variants={staggerItem}
+                whileHover={{ y: -6 }}
+                transition={LIFT_SPRING}
+                className="bg-white rounded-2xl border border-mist-300 overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between group"
               >
                 <div>
                   <div className="relative aspect-[16/9] overflow-hidden bg-forest-900">
@@ -766,9 +873,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     REGISTER NOW
                   </button>
                 </div>
-              </div>
+              </m.div>
             ))}
-          </div>
+          </m.div>
         </div>
       </section>
 
@@ -781,7 +888,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           id="testimonies"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-10 max-w-2xl">
+            <m.div {...reveal()} className="mb-10 max-w-2xl">
               <div>
                 <span className="text-[10px] font-bold tracking-[0.22em] text-forest-700 uppercase">
                   TESTIMONIALS
@@ -790,12 +897,16 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   How lives are transformed through love, and faith.
                 </h2>
               </div>
-            </div>
+            </m.div>
 
-            <div className="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <m.div
+              {...staggerContainer(0.08)}
+              className="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
               {publishedTestimonies.map((item) => (
-                <div
+                <m.div
                   key={item.id}
+                  variants={staggerItem}
                   className="min-w-[min(86vw,330px)] sm:min-w-[350px] snap-start bg-white rounded-[22px] p-6 sm:p-7 border border-mist-300 shadow-sm flex flex-col justify-between min-h-[280px]"
                 >
                   <div className="space-y-3">
@@ -821,9 +932,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       {item.category}
                     </span>
                   </div>
-                </div>
+                </m.div>
               ))}
-            </div>
+            </m.div>
 
             <button
               onClick={() => setShowTestimonyModal(true)}
@@ -843,7 +954,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
         className="py-16 bg-forest-900 text-white border-t border-white/10"
         id="giving-teaser"
       >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+        <m.div
+          {...reveal()}
+          className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4"
+        >
           <div className="w-12 h-12 bg-gold-500/20 border border-gold-500/40 rounded-full flex items-center justify-center mx-auto text-gold-400">
             <Heart className="w-6 h-6 fill-gold-500 text-gold-500" />
           </div>
@@ -865,7 +979,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
-        </div>
+        </m.div>
       </section>
 
       {/* Share Testimony Modal */}
@@ -985,7 +1099,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
             <div className="rounded-xl overflow-hidden border border-white/10 bg-black">
               <img
-                src="/wisdom_summit_banner.jpg"
+                src={optimizedImageUrl("/wisdom_summit_banner.jpg")}
                 alt="Wisdom Summit 2026"
                 className="w-full h-auto object-contain max-h-[75vh] mx-auto block"
                 referrerPolicy="no-referrer"
