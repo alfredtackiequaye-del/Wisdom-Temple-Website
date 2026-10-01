@@ -6,7 +6,6 @@ import {
   ChurchEvent,
   Testimony,
 } from "../types";
-import { CHURCH_INFO } from "../data/churchData";
 import { PastorsCorner } from "../components/PastorsCorner";
 import { useBanners } from "../utils/bannerManager";
 import { optimizedImageUrl } from "../utils/optimizedImage";
@@ -23,7 +22,6 @@ import {
   Heart,
   Flame,
   ChevronRight,
-  ChevronDown,
   CheckCircle2,
   Quote,
   Share2,
@@ -34,49 +32,6 @@ import {
 } from "lucide-react";
 import { PosterImage } from "../components/PosterImage";
 import { ScrollProgressRail } from "../components/ScrollProgressRail";
-
-interface ServiceSlot {
-  name: string;
-  day: number; // 0 = Sunday
-  time: string; // e.g. "8:00 AM"
-}
-
-const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-/** Next upcoming weekly service in Ghana time (GMT, no DST), or null if times can't be parsed. */
-const getNextService = (slots: ServiceSlot[], now = new Date()) => {
-  let best: { name: string; start: Date } | null = null;
-  for (const slot of slots) {
-    const match = slot.time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-    if (!match) continue;
-    const hours = (Number(match[1]) % 12) + (match[3].toUpperCase() === "PM" ? 12 : 0);
-    const start = new Date(now);
-    start.setUTCHours(hours, Number(match[2]), 0, 0);
-    start.setUTCDate(start.getUTCDate() + ((slot.day - now.getUTCDay() + 7) % 7));
-    // Treat a service as "now" for two hours after it starts.
-    if (start.getTime() + 2 * 3600_000 < now.getTime()) {
-      start.setUTCDate(start.getUTCDate() + 7);
-    }
-    if (!best || start < best.start) best = { name: slot.name, start };
-  }
-  if (!best) return null;
-  const msAway = best.start.getTime() - now.getTime();
-  const daysAway = Math.floor(
-    (Date.UTC(best.start.getUTCFullYear(), best.start.getUTCMonth(), best.start.getUTCDate()) -
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())) /
-      86_400_000,
-  );
-  const when =
-    msAway <= 0
-      ? "Happening now"
-      : daysAway === 0
-        ? "Today"
-        : daysAway === 1
-          ? "Tomorrow"
-          : DAY_NAMES[best.start.getUTCDay()];
-  const slot = slots.find((s) => s.name === best!.name)!;
-  return { name: best.name, label: msAway <= 0 ? when : `${when} · ${slot.time}` };
-};
 
 /** One odometer-style countdown digit: the old value slides out as the new one slides in. */
 const CountdownUnit: React.FC<{
@@ -149,11 +104,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
     (t) => t.approved && !/^\[.*\]$/.test(t.personName.trim()),
   );
 
-  const nextService = getNextService([
-    { name: content.sundayServiceName, day: 0, time: content.sundayServiceTime },
-    { name: content.midweekServiceName, day: 3, time: content.midweekServiceTime },
-  ]);
-
   // Latest message
   const latestSermon = sermons[0];
   const featuredSummit = events.find((e) => e.isFeaturedSummit) || events[0];
@@ -224,70 +174,46 @@ export const HomeView: React.FC<HomeViewProps> = ({
       <ScrollProgressRail sections={railSections} />
 
       {/* ========================================================================= */}
-      {/* 1. HERO SECTION - Minimal, Airy, Image-Forward (connection-rincon style) */}
+      {/* 1. HERO SECTION - Bold, minimal, full-bleed (Legacy Hills Church style) */}
       {/* ========================================================================= */}
       <section
         ref={heroRef}
-        className="premium-hero relative min-h-[78vh] lg:min-h-[86vh] flex flex-col justify-end overflow-hidden pt-24 sm:pt-32 pb-12 sm:pb-16"
+        className="premium-hero relative min-h-[78vh] lg:min-h-[86vh] flex flex-col justify-end overflow-hidden pt-24 sm:pt-32 pb-16 sm:pb-24 lg:pb-28"
         id="hero-section"
       >
         <m.div className="absolute inset-0 z-0 overflow-hidden" style={{ y: heroImageY }}>
-          <m.img
-            src={getBanner("hero_banner", "/hero_icgc_banner.jpg")}
-            onError={(e) => {
-              const target = e.currentTarget;
-              if (target.src !== "https://i.imgur.com/0ULg34j.png") {
-                target.src = "https://i.imgur.com/0ULg34j.png";
-              }
-            }}
-            alt="Wisdom Temple Official Banner"
-            initial={
-              prefersReducedMotion
-                ? { scale: 1, opacity: 0.7 }
-                : { scale: 1.12, opacity: 0.2 }
-            }
-            animate={
-              prefersReducedMotion
-                ? { scale: 1, opacity: 0.7 }
-                : { scale: [1.08, 1.12, 1.08], y: [0, -8, 0], opacity: 0.7 }
-            }
-            transition={{
-              opacity: {
-                duration: prefersReducedMotion ? 0 : 1.2,
-                ease: "easeOut",
-              },
-              scale: {
-                duration: 18,
-                repeat: prefersReducedMotion ? 0 : Infinity,
-                repeatType: "reverse",
-                ease: "easeInOut",
-              },
-              y: {
-                duration: 22,
-                repeat: prefersReducedMotion ? 0 : Infinity,
-                repeatType: "reverse",
-                ease: "easeInOut",
-              },
-            }}
-            className="w-full h-full object-cover object-center opacity-70"
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.05),_transparent_55%)]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-forest-950/35 via-forest-950/10 to-forest-950/90 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-r from-forest-950/80 via-forest-950/18 to-forest-950/28 pointer-events-none" />
+          {content.heroVideoUrl ? (
+            <video
+              className="w-full h-full object-cover object-center"
+              src={content.heroVideoUrl}
+              poster={getBanner("hero_banner", "/hero_icgc_banner.jpg")}
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <m.img
+              src={getBanner("hero_banner", "/hero_icgc_banner.jpg")}
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (target.src !== "https://i.imgur.com/0ULg34j.png") {
+                  target.src = "https://i.imgur.com/0ULg34j.png";
+                }
+              }}
+              alt="Wisdom Temple Official Banner"
+              initial={prefersReducedMotion ? { scale: 1 } : { scale: 1.08 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 2.4, ease: "easeOut" }}
+              className="w-full h-full object-cover object-center"
+              referrerPolicy="no-referrer"
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-b from-forest-950/55 via-forest-950/45 to-forest-950/95 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-forest-950/85 via-forest-950/15 to-transparent pointer-events-none" />
         </m.div>
 
         <div className="hero-content-column relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 text-left flex flex-col items-start">
-          <m.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
-            className="glass-chip inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-gold-200 text-[8px] sm:text-[9px] font-medium tracking-[0.32em] uppercase mb-6"
-          >
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-gold-200" />
-            <span>{content.heroEyebrow}</span>
-          </m.div>
-
           <h1
             aria-label={content.heroHeadline}
             className="max-w-3xl text-4xl sm:text-5xl md:text-6xl lg:text-[5.8rem] leading-[0.98] tracking-[-0.02em] font-bold text-white font-display text-shadow-hero drop-shadow-[0_5px_18px_rgba(0,0,0,0.5)]"
@@ -304,7 +230,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
                     duration: 0.75,
-                    delay: prefersReducedMotion ? 0 : 0.42 + i * 0.07,
+                    delay: prefersReducedMotion ? 0 : 0.15 + i * 0.06,
                     ease: EASE_OUT,
                   }}
                   className="inline-block mr-[0.22em] last:mr-0"
@@ -318,89 +244,36 @@ export const HomeView: React.FC<HomeViewProps> = ({
           <m.p
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.62, ease: "easeOut" }}
+            transition={{ duration: 0.75, delay: 0.55, ease: "easeOut" }}
             className="mt-7 max-w-md text-sm sm:text-base text-emerald-50/90 leading-[1.7] font-medium drop-shadow-[0_3px_12px_rgba(0,0,0,0.55)]"
           >
             {content.heroSubtitle}
           </m.p>
-          {nextService && (
-            <m.p
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.75, delay: 0.74, ease: "easeOut" }}
-              className="sm:hidden mt-4 flex items-center gap-2 text-xs font-semibold text-gold-200"
-            >
-              <Clock className="h-3.5 w-3.5" />
-              <span>
-                Next: {nextService.name} · {nextService.label}
-              </span>
-            </m.p>
-          )}
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 w-full mt-10">
+        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 w-full mt-9">
           <m.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.86, ease: "easeOut" }}
-            className="flex flex-col sm:flex-row items-start gap-3"
+            transition={{ duration: 0.75, delay: 0.75, ease: "easeOut" }}
+            className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-6"
           >
             <button
               onClick={() => onNavigate("new-here")}
-              className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-gold-200 via-gold-400 to-gold-500 text-forest-950 font-extrabold text-[10px] uppercase tracking-[0.2em] shadow-[0_18px_32px_rgba(196,149,58,0.22)] transition-all hover:-translate-y-0.5 hover:brightness-105 flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gold-400 text-forest-950 font-bold text-sm sm:text-base shadow-[0_14px_30px_rgba(0,0,0,0.35)] transition-all hover:-translate-y-0.5 hover:bg-gold-300 cursor-pointer"
             >
-              <span>{content.heroButtonPrimary}</span>
-              <ArrowRight className="w-4 h-4" />
+              {content.heroButtonPrimary}
             </button>
 
             <button
               onClick={() => onNavigate("events")}
-              className="w-full sm:w-auto px-8 py-4 rounded-full border border-white/12 bg-white/[0.04] text-gold-50 font-semibold text-[10px] uppercase tracking-[0.2em] backdrop-blur-sm transition-all hover:bg-white/[0.07] flex items-center justify-center gap-2 cursor-pointer"
+              className="group w-full sm:w-auto px-2 py-4 text-white font-semibold text-sm sm:text-base flex items-center justify-center sm:justify-start gap-2 transition-colors hover:text-gold-300 cursor-pointer"
             >
-              <Calendar className="w-4 h-4 text-gold-300" />
               <span>{content.heroButtonSecondary}</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </button>
           </m.div>
         </div>
-
-        <m.div
-          initial={{ opacity: 0, x: 18 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.6 }}
-          className="absolute right-5 sm:right-8 lg:right-10 bottom-8 hidden sm:flex items-center gap-3 rounded-2xl border border-white/25 bg-gold-50/95 px-4 py-3 text-forest-900 shadow-[0_16px_38px_rgba(3,32,20,0.28)] backdrop-blur-md"
-        >
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-forest-600 text-gold-300">
-            {nextService ? <Clock className="h-4 w-4" /> : <MapPin className="h-4 w-4" />}
-          </div>
-          <div>
-            <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-gold-600">
-              {nextService ? `Next · ${nextService.name}` : "Visit Wisdom Temple"}
-            </span>
-            <span className="block text-xs font-semibold">
-              {nextService
-                ? `${nextService.label} · ${CHURCH_INFO.landmark}`
-                : CHURCH_INFO.landmark}
-            </span>
-          </div>
-        </m.div>
-
-        <m.button
-          onClick={() =>
-            document
-              .getElementById("experience-row")
-              ?.scrollIntoView({ behavior: "smooth" })
-          }
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 1.3 }}
-          aria-label="Scroll to explore"
-          className="scroll-cue absolute left-1/2 -translate-x-1/2 bottom-3 z-10 hidden sm:flex flex-col items-center gap-1.5 text-gold-200/90 hover:text-white transition-colors cursor-pointer"
-        >
-          <span className="text-[9px] font-semibold uppercase tracking-[0.3em]">
-            Explore
-          </span>
-          <ChevronDown className="w-4 h-4" />
-        </m.button>
       </section>
 
       {/* ========================================================================= */}

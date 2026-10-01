@@ -3,11 +3,11 @@ import { SiteContentConfig, ContentSectionId } from "../types";
 
 export const DEFAULT_SITE_CONTENT: SiteContentConfig = {
   // --- Homepage & Hero ---
-  heroEyebrow: "A place to belong",
   heroHeadline: "Faith. Purpose. Community.",
   heroSubtitle: "A vibrant church family in the heart of Tabora.",
   heroButtonPrimary: "PLAN YOUR VISIT",
   heroButtonSecondary: "UPCOMING EVENTS",
+  heroVideoUrl: "",
   experienceSectionBadge: "EXPERIENCE WISDOM TEMPLE",
   experienceSectionTitle: "Get Connected & Grow in Faith",
   experienceSectionSubtitle:
@@ -150,7 +150,6 @@ export function loadSiteContent(): SiteContentConfig {
       storedContent.heroHeadline ===
       "Raising Leaders, Shaping Visions, Influencing Society Through Christ."
     ) {
-      storedContent.heroEyebrow = DEFAULT_SITE_CONTENT.heroEyebrow;
       storedContent.heroHeadline = DEFAULT_SITE_CONTENT.heroHeadline;
       storedContent.heroSubtitle = DEFAULT_SITE_CONTENT.heroSubtitle;
     }

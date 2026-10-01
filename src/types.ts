@@ -230,11 +230,11 @@ export type ContentSectionId =
 
 export interface SiteContentConfig {
   // --- Homepage & Hero ---
-  heroEyebrow: string;
   heroHeadline: string;
   heroSubtitle: string;
   heroButtonPrimary: string;
   heroButtonSecondary: string;
+  heroVideoUrl: string;
   experienceSectionBadge: string;
   experienceSectionTitle: string;
   experienceSectionSubtitle: string;

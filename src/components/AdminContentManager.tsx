@@ -46,14 +46,6 @@ interface FieldSpec {
 const FIELD_SPECS: FieldSpec[] = [
   // --- Hero & Homepage ---
   {
-    key: 'heroEyebrow',
-    label: 'Hero Top Badge / Service Times',
-    category: 'hero',
-    location: 'Homepage Top Hero Banner (Pill Badge)',
-    type: 'text',
-    hint: 'Short prominent service hours at the top of the hero banner.'
-  },
-  {
     key: 'heroHeadline',
     label: 'Hero Main Headline / Mandate',
     category: 'hero',
@@ -84,6 +76,14 @@ const FIELD_SPECS: FieldSpec[] = [
     category: 'hero',
     location: 'Homepage Hero Glassmorphism CTA Button',
     type: 'text',
+  },
+  {
+    key: 'heroVideoUrl',
+    label: 'Hero Background Video URL',
+    category: 'hero',
+    location: 'Homepage Hero (replaces the photo background when set)',
+    type: 'text',
+    hint: 'Optional. Paste a direct .mp4/.webm link to autoplay a muted looping video behind the hero. Leave blank to keep the photo.',
   },
   {
     key: 'experienceSectionBadge',
