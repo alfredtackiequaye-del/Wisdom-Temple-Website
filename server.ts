@@ -80,6 +80,18 @@ async function start() {
   );
   app.get("/healthz", (_req, res) => res.json({ ok: true, service: "wisdom-temple" }));
 
+  // Stricter than the general admin limit: slows password guessing.
+  app.use(
+    "/api/admin/login",
+    rateLimit({
+      windowMs: 15 * 60 * 1000,
+      limit: 10,
+      skipSuccessfulRequests: true,
+      standardHeaders: true,
+      legacyHeaders: false,
+      message: { error: "Too many sign-in attempts. Please wait 15 minutes and try again." },
+    }),
+  );
   app.post("/api/admin/login", loginAdmin);
   app.post("/api/admin/logout", logoutAdmin);
   app.get("/api/admin/session", requireAdmin, getAdminSession);

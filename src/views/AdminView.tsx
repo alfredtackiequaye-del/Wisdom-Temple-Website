@@ -106,6 +106,19 @@ const TAB_ACCESS: Record<AdminTab, StaffRole[]> = {
 };
 
 const SESSION_DURATION_MS = 8 * 60 * 60 * 1000;
+/** Lock the portal after this long without any interaction. */
+const IDLE_LOCK_MS = 30 * 60 * 1000;
+const MIN_STAFF_PASSWORD_LENGTH = 8;
+
+const SEARCHABLE_TABS: AdminTab[] = ["giving", "events", "prayers", "visits", "messages", "staff"];
+const SEARCH_HINTS: Partial<Record<AdminTab, string>> = {
+  giving: "Search donor, reference, phone or fund",
+  events: "Search name, event, code, phone or email",
+  prayers: "Search name, category, phone or request",
+  visits: "Search name, phone or email",
+  messages: "Search name, subject, phone or message",
+  staff: "Search name, email or role",
+};
 
 // Initial authorized personnel roster
 const INITIAL_STAFF_USERS: StaffUser[] = [
@@ -195,6 +208,12 @@ export const AdminView: React.FC<AdminViewProps> = ({
     initialEventRegistrations,
   );
 
+  // Feedback shown to staff: transient confirmations/errors and load failures.
+  const [notice, setNotice] = useState<{ tone: "success" | "error"; text: string } | null>(null);
+  const [loadError, setLoadError] = useState("");
+  const [lockedNotice, setLockedNotice] = useState("");
+  const notify = (tone: "success" | "error", text: string) => setNotice({ tone, text });
+
   // Login Form State
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPasscode, setLoginPasscode] = useState("");
@@ -268,6 +287,44 @@ export const AdminView: React.FC<AdminViewProps> = ({
     if (canAccessTab(tab)) setActiveTabState(tab);
   };
 
+  // Single source of truth for the section navigation. Counts show totals;
+  // `attention` is the number of items still waiting for a staff action.
+  const visibleTabs = [
+    { id: "content", group: "site", icon: Edit3, label: "Site Writings & Page Copy", short: "Writings & Copy" },
+    { id: "banners", group: "site", icon: ImageIcon, label: "Banners & Card Media", short: "Banners & Media" },
+    { id: "albums", group: "site", icon: Images, label: "Photo Albums", short: "Photo Albums" },
+    {
+      id: "giving", group: "records", icon: DollarSign, label: "Giving & MoMo Reconciliation", short: "Giving",
+      count: givingRecords.length,
+      attention: givingRecords.filter((r) => r.status === "pending-verification").length,
+    },
+    { id: "events", group: "records", icon: Ticket, label: "Event Passes & RSVPs", short: "Events", count: eventRegistrations.length },
+    {
+      id: "prayers", group: "records", icon: Heart, label: "Prayer Requests", short: "Prayer",
+      count: prayerRequests.length,
+      attention: prayerRequests.filter((r) => r.status === "new").length,
+    },
+    {
+      id: "visits", group: "records", icon: Users, label: "Guest Visits & Welcomes", short: "Visits",
+      count: visitPlans.length,
+      attention: visitPlans.filter((r) => r.status === "planned").length,
+    },
+    {
+      id: "messages", group: "records", icon: Mail, label: "Contact Inquiries", short: "Inquiries",
+      count: contactMessages.length,
+      attention: contactMessages.filter((r) => r.status === "unread").length,
+    },
+    { id: "staff", group: "records", icon: Shield, label: "Staff & Access", short: "Staff", count: staffUsers.length },
+  ].filter((tab) => canAccessTab(tab.id as AdminTab)) as {
+    id: AdminTab;
+    group: "site" | "records";
+    icon: React.ComponentType<{ className?: string }>;
+    label: string;
+    short: string;
+    count?: number;
+    attention?: number;
+  }[];
+
   // Validate the HttpOnly server session on every portal load.
   useEffect(() => {
     fetch("/api/admin/session")
@@ -291,23 +348,34 @@ export const AdminView: React.FC<AdminViewProps> = ({
       .finally(() => setCheckingSession(false));
   }, []);
 
-  useEffect(() => {
-    if (!currentStaff) return;
-
+  const loadRecords = React.useCallback(() => {
+    setLoadError("");
     fetch("/api/admin/records")
       .then(async (response) => {
+        if (response.status === 401) {
+          setCurrentStaff(null);
+          setLockedNotice("Your session expired. Please sign in again.");
+          return null;
+        }
         if (!response.ok) throw new Error("Could not load protected records.");
         return response.json();
       })
       .then((records) => {
+        if (!records) return;
         setGivingRecords(records.givingRecords || []);
         setEventRegistrations(records.eventRegistrations || []);
         setPrayerRequests(records.prayerRequests || []);
         setVisitPlans(records.visitPlans || []);
         setContactMessages(records.contactMessages || []);
       })
-      .catch(() => undefined);
-  }, [currentStaff]);
+      .catch(() =>
+        setLoadError("Could not load the latest records. What you see may be out of date."),
+      );
+  }, []);
+
+  useEffect(() => {
+    if (currentStaff) loadRecords();
+  }, [currentStaff, loadRecords]);
 
   useEffect(() => {
     if (!currentStaff || currentStaff.role !== "super-admin") return;
@@ -332,7 +400,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
           ),
         );
       })
-      .catch(() => undefined);
+      .catch(() => notify("error", "Could not load the staff directory."));
   }, [currentStaff]);
 
   // Handle Login Authentication
@@ -376,11 +444,12 @@ export const AdminView: React.FC<AdminViewProps> = ({
   };
 
   // Handle Logout / Lock
-  const handleLogout = () => {
+  const handleLogout = (reason = "") => {
     void fetch("/api/admin/logout", { method: "POST" });
     setCurrentStaff(null);
     setLoginPasscode("");
     setLoginError("");
+    setLockedNotice(reason);
   };
 
   const updateRecordStatus = async (
@@ -395,15 +464,24 @@ export const AdminView: React.FC<AdminViewProps> = ({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
       },
-    );
-    if (!response.ok) throw new Error("Could not update record status.");
+    ).catch(() => null);
+    if (!response || !response.ok) {
+      if (response?.status === 401) {
+        setCurrentStaff(null);
+        setLockedNotice("Your session expired. Please sign in again.");
+      }
+      notify("error", "Could not save that change. Please try again.");
+      return false;
+    }
+    notify("success", "Saved.");
+    return true;
   };
 
   const onUpdatePrayerStatus = async (
     id: string,
     status: "new" | "prayed" | "archived",
   ) => {
-    await updateRecordStatus("prayerRequests", id, status);
+    if (!(await updateRecordStatus("prayerRequests", id, status))) return;
     setPrayerRequests((records) =>
       records.map((record) =>
         record.id === id ? { ...record, status } : record,
@@ -416,7 +494,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
     id: string,
     status: "planned" | "welcomed" | "followup-assigned",
   ) => {
-    await updateRecordStatus("visitPlans", id, status);
+    if (!(await updateRecordStatus("visitPlans", id, status))) return;
     setVisitPlans((records) =>
       records.map((record) =>
         record.id === id ? { ...record, status } : record,
@@ -429,7 +507,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
     id: string,
     status: "unread" | "read" | "replied",
   ) => {
-    await updateRecordStatus("contactMessages", id, status);
+    if (!(await updateRecordStatus("contactMessages", id, status))) return;
     setContactMessages((records) =>
       records.map((record) =>
         record.id === id ? { ...record, status } : record,
@@ -442,7 +520,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
     id: string,
     status: "pending-verification" | "confirmed",
   ) => {
-    await updateRecordStatus("givingRecords", id, status);
+    if (!(await updateRecordStatus("givingRecords", id, status))) return;
     setGivingRecords((records) =>
       records.map((record) =>
         record.id === id ? { ...record, status } : record,
@@ -453,9 +531,41 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
   useEffect(() => {
     if (!currentStaff) return;
-    const timeoutId = window.setTimeout(handleLogout, SESSION_DURATION_MS);
+    const timeoutId = window.setTimeout(
+      () => handleLogout("Your session ended after 8 hours. Please sign in again."),
+      SESSION_DURATION_MS,
+    );
     return () => window.clearTimeout(timeoutId);
   }, [currentStaff]);
+
+  // Lock the portal when the screen is left unattended.
+  useEffect(() => {
+    if (!currentStaff) return;
+    let idleTimer = window.setTimeout(lock, IDLE_LOCK_MS);
+    function lock() {
+      handleLogout("Locked after 30 minutes of inactivity. Sign in to continue.");
+    }
+    const reset = () => {
+      window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(lock, IDLE_LOCK_MS);
+    };
+    const events = ["pointerdown", "keydown", "scroll"] as const;
+    events.forEach((name) => window.addEventListener(name, reset, { passive: true }));
+    return () => {
+      window.clearTimeout(idleTimer);
+      events.forEach((name) => window.removeEventListener(name, reset));
+    };
+  }, [currentStaff]);
+
+  // Confirmations fade away on their own; errors stay until dismissed.
+  useEffect(() => {
+    if (notice?.tone !== "success") return;
+    const id = window.setTimeout(() => setNotice(null), 3500);
+    return () => window.clearTimeout(id);
+  }, [notice]);
+
+  // A search typed on one list shouldn't silently filter the next one.
+  useEffect(() => setSearchQuery(""), [activeTab]);
 
   // Handle Add New Staff
   const handleCreateStaff = async (e: React.FormEvent) => {
@@ -466,6 +576,10 @@ export const AdminView: React.FC<AdminViewProps> = ({
       !newStaffPasscode.trim()
     )
       return;
+    if (newStaffPasscode.trim().length < MIN_STAFF_PASSWORD_LENGTH) {
+      notify("error", `Use a password of at least ${MIN_STAFF_PASSWORD_LENGTH} characters.`);
+      return;
+    }
 
     const response = await fetch("/api/admin/staff", {
       method: "POST",
@@ -478,7 +592,11 @@ export const AdminView: React.FC<AdminViewProps> = ({
         password: newStaffPasscode,
       }),
     });
-    if (!response.ok) return;
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      notify("error", payload.error || "Could not add that staff member.");
+      return;
+    }
     const { user } = await response.json();
     setStaffUsers((prev) => [
       ...prev,
@@ -493,6 +611,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
     setNewStaffEmail("");
     setNewStaffPhone("");
     setNewStaffPasscode("");
+    notify("success", "Staff member added.");
   };
 
   // Handle Toggle Active
@@ -507,18 +626,23 @@ export const AdminView: React.FC<AdminViewProps> = ({
         body: JSON.stringify({ isActive: !staff.isActive }),
       },
     );
-    if (response.ok)
-      setStaffUsers((prev) =>
-        prev.map((user) =>
-          user.id === staffId ? { ...user, isActive: !user.isActive } : user,
-        ),
-      );
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      notify("error", payload.error || "Could not change that account.");
+      return;
+    }
+    setStaffUsers((prev) =>
+      prev.map((user) =>
+        user.id === staffId ? { ...user, isActive: !user.isActive } : user,
+      ),
+    );
+    notify("success", staff.isActive ? "Account suspended." : "Account reactivated.");
   };
 
   // Handle Remove Staff
   const handleRemoveStaff = async (staffId: string) => {
     if (staffUsers.length <= 1) {
-      alert("Cannot delete the last remaining administrator.");
+      notify("error", "You can't remove the last remaining administrator.");
       return;
     }
     if (
@@ -530,8 +654,13 @@ export const AdminView: React.FC<AdminViewProps> = ({
         `/api/admin/staff/${encodeURIComponent(staffId)}`,
         { method: "DELETE" },
       );
-      if (response.ok)
-        setStaffUsers((prev) => prev.filter((u) => u.id !== staffId));
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        notify("error", payload.error || "Could not remove that account.");
+        return;
+      }
+      setStaffUsers((prev) => prev.filter((u) => u.id !== staffId));
+      notify("success", "Access revoked.");
     }
   };
 
@@ -678,6 +807,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
   }
 
   if (!currentStaff) {
+    const loginMessage = loginError || lockedNotice;
     return (
       <div className="min-h-screen bg-forest-950 flex flex-col selection:bg-gold-500 selection:text-forest-950">
         {/* Standalone Admin Header Bar */}
@@ -740,10 +870,19 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
             {/* Login Card */}
             <div className="bg-forest-900 rounded-3xl p-7 sm:p-9 border border-forest-600 shadow-2xl space-y-6">
-              {loginError && (
-                <div className="p-3.5 rounded-xl bg-red-950/80 border border-red-500/40 text-red-200 text-xs flex items-start space-x-2 animate-in fade-in duration-200">
-                  <ShieldAlert className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                  <span>{loginError}</span>
+              {loginMessage && (
+                <div
+                  role="alert"
+                  className={`p-3.5 rounded-xl border text-xs flex items-start space-x-2 animate-in fade-in duration-200 ${
+                    loginError
+                      ? "bg-red-950/80 border-red-500/40 text-red-200"
+                      : "bg-forest-850 border-gold-500/40 text-gold-200"
+                  }`}
+                >
+                  <ShieldAlert
+                    className={`w-4 h-4 shrink-0 mt-0.5 ${loginError ? "text-red-400" : "text-gold-400"}`}
+                  />
+                  <span>{loginMessage}</span>
                 </div>
               )}
 
@@ -828,8 +967,30 @@ export const AdminView: React.FC<AdminViewProps> = ({
   // =========================================================================
   return (
     <div className="bg-mist-50 min-h-screen text-slate-900 pb-24">
-      {/* Standalone Admin Top Navigation Bar */}
-      <header className="bg-forest-950 border-b border-forest-700 text-white py-3 px-4 sm:px-6 lg:px-8 sticky top-0 z-30 shadow-md">
+      {/* Confirmations and errors from staff actions */}
+      {notice && (
+        <div
+          role={notice.tone === "error" ? "alert" : "status"}
+          className={`fixed bottom-5 left-1/2 -translate-x-1/2 z-50 max-w-[calc(100vw-2rem)] px-4 py-3 rounded-xl shadow-xl text-xs font-semibold flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2 duration-200 ${
+            notice.tone === "error"
+              ? "bg-red-700 text-white"
+              : "bg-forest-900 text-gold-200 border border-gold-500/40"
+          }`}
+        >
+          <span>{notice.text}</span>
+          <button
+            type="button"
+            onClick={() => setNotice(null)}
+            aria-label="Dismiss message"
+            className="opacity-80 hover:opacity-100 cursor-pointer"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
+      {/* Standalone Admin Top Navigation Bar (scrolls away so the section tabs can stick) */}
+      <header className="bg-forest-950 border-b border-forest-700 text-white py-3 px-4 sm:px-6 lg:px-8 relative z-30 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <ICGCLogo
@@ -905,18 +1066,20 @@ export const AdminView: React.FC<AdminViewProps> = ({
                 <span className="hidden sm:inline">Guide</span>
               </button>
 
+              {activeTab !== "albums" && (
               <button
                 type="button"
                 onClick={handleExportTab}
                 className="px-4 py-2.5 rounded-lg bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center space-x-1.5 cursor-pointer"
               >
                 <Download className="w-4 h-4" />
-                <span>Export to CSV</span>
+                <span>{activeTab === "banners" || activeTab === "content" ? "Export backup" : "Export to CSV"}</span>
               </button>
+              )}
 
               <button
                 type="button"
-                onClick={handleLogout}
+                onClick={() => handleLogout()}
                 className="px-3.5 py-2.5 rounded-xl bg-red-950/60 hover:bg-red-900 border border-red-500/40 text-red-200 text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
                 title="Lock session and sign out"
               >
@@ -1116,169 +1279,85 @@ export const AdminView: React.FC<AdminViewProps> = ({
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 py-3">
             {/* Mobile / Compact Dropdown Selector */}
             <div className="lg:hidden flex items-center space-x-2">
-              <span className="text-xs font-bold text-slate-500 uppercase font-mono">
-                Tab:
-              </span>
+              <label
+                htmlFor="admin-tab-select"
+                className="text-xs font-bold text-slate-500 uppercase font-mono"
+              >
+                Section
+              </label>
               <select
+                id="admin-tab-select"
                 value={activeTab}
-                onChange={(e) => setActiveTab(e.target.value as any)}
+                onChange={(e) => setActiveTab(e.target.value as AdminTab)}
                 className="w-full px-3.5 py-2 rounded-xl bg-slate-100 border border-slate-300 text-xs font-bold text-forest-900 focus:ring-2 focus:ring-gold-500"
               >
-                <option value="content">
-                  📝 Site Writings & Page Copy (50+ Fields)
-                </option>
-                <option value="banners">
-                  🖼️ Banners & Card Media (22 Slots)
-                </option>
-                <option value="albums">📷 Photo Albums</option>
-                <option value="giving">
-                  💰 Giving & MoMo Reconciliation ({givingRecords.length})
-                </option>
-                <option value="events">
-                  🎟️ Event Passes & RSVPs ({eventRegistrations.length})
-                </option>
-                <option value="prayers">
-                  🙏 Prayer Altar Petitions ({prayerRequests.length})
-                </option>
-                <option value="visits">
-                  👥 Guest Visits & Welcomes ({visitPlans.length})
-                </option>
-                <option value="messages">
-                  ✉️ Contact Inquiries ({contactMessages.length})
-                </option>
-                <option value="staff">
-                  🛡️ Staff & Security PINs ({staffUsers.length})
-                </option>
+                {visibleTabs.map((tab) => (
+                  <option key={tab.id} value={tab.id}>
+                    {tab.label}
+                    {tab.count !== undefined ? ` (${tab.count})` : ""}
+                    {tab.attention ? ` - ${tab.attention} need attention` : ""}
+                  </option>
+                ))}
               </select>
             </div>
 
             {/* Desktop Full Tab Bar */}
-            <div className="hidden lg:flex flex-wrap items-center gap-1.5 text-xs font-bold">
-              <button
-                onClick={() => setActiveTab("content")}
-                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
-                  activeTab === "content"
-                    ? "bg-forest-900 text-gold-300 shadow-sm ring-1 ring-gold-500"
-                    : "text-slate-700 hover:bg-mist-100 hover:text-forest-900"
-                }`}
-              >
-                <Edit3 className="w-3.5 h-3.5 text-gold-500" />
-                <span>Writings & Copy</span>
-                <span className="ml-1 px-1.5 py-0.2 rounded-full bg-gold-500 text-forest-950 text-[10px]">
-                  50+
-                </span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab("banners")}
-                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
-                  activeTab === "banners"
-                    ? "bg-forest-900 text-gold-300 shadow-sm ring-1 ring-gold-500"
-                    : "text-slate-700 hover:bg-mist-100 hover:text-forest-900"
-                }`}
-              >
-                <ImageIcon className="w-3.5 h-3.5 text-gold-500" />
-                <span>Banners & Media</span>
-                <span className="ml-1 px-1.5 py-0.2 rounded-full bg-gold-500 text-forest-950 text-[10px]">
-                  22
-                </span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab("albums")}
-                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
-                  activeTab === "albums"
-                    ? "bg-forest-900 text-gold-300 shadow-sm ring-1 ring-gold-500"
-                    : "text-slate-700 hover:bg-mist-100 hover:text-forest-900"
-                }`}
-              >
-                <Images className="w-3.5 h-3.5 text-gold-500" />
-                <span>Photo Albums</span>
-              </button>
-
-              <span className="h-4 w-px bg-slate-200 mx-1" />
-
-              <button
-                onClick={() => setActiveTab("giving")}
-                className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
-                  activeTab === "giving"
-                    ? "bg-forest-900 text-gold-300 shadow-sm"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                }`}
-              >
-                <DollarSign className="w-3.5 h-3.5" />
-                <span>Giving & MoMo ({givingRecords.length})</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab("events")}
-                className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
-                  activeTab === "events"
-                    ? "bg-forest-900 text-gold-300 shadow-sm"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                }`}
-              >
-                <Ticket className="w-3.5 h-3.5" />
-                <span>Events ({eventRegistrations.length})</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab("prayers")}
-                className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
-                  activeTab === "prayers"
-                    ? "bg-forest-900 text-gold-300 shadow-sm"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                }`}
-              >
-                <Heart className="w-3.5 h-3.5" />
-                <span>Prayer Altar ({prayerRequests.length})</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab("visits")}
-                className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
-                  activeTab === "visits"
-                    ? "bg-forest-900 text-gold-300 shadow-sm"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                }`}
-              >
-                <Users className="w-3.5 h-3.5" />
-                <span>Visits ({visitPlans.length})</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab("messages")}
-                className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
-                  activeTab === "messages"
-                    ? "bg-forest-900 text-gold-300 shadow-sm"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                }`}
-              >
-                <Mail className="w-3.5 h-3.5" />
-                <span>Inquiries ({contactMessages.length})</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab("staff")}
-                className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
-                  activeTab === "staff"
-                    ? "bg-forest-900 text-gold-300 shadow-sm"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                }`}
-              >
-                <Shield className="w-3.5 h-3.5" />
-                <span>Staff ({staffUsers.length})</span>
-              </button>
+            <div
+              role="tablist"
+              aria-label="Admin sections"
+              className="hidden lg:flex flex-wrap items-center gap-1.5 text-xs font-bold"
+            >
+              {visibleTabs.map((tab, index) => {
+                const Icon = tab.icon;
+                const selected = activeTab === tab.id;
+                const startsRecords =
+                  tab.group === "records" &&
+                  visibleTabs[index - 1]?.group !== "records" &&
+                  index > 0;
+                return (
+                  <React.Fragment key={tab.id}>
+                    {startsRecords && (
+                      <span className="h-4 w-px bg-slate-200 mx-1" aria-hidden="true" />
+                    )}
+                    <button
+                      role="tab"
+                      aria-selected={selected}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                        selected
+                          ? "bg-forest-900 text-gold-300 shadow-sm"
+                          : "text-slate-600 hover:bg-mist-100 hover:text-forest-900"
+                      }`}
+                    >
+                      <Icon className="w-3.5 h-3.5" />
+                      <span>
+                        {tab.short}
+                        {tab.count !== undefined ? ` (${tab.count})` : ""}
+                      </span>
+                      {tab.attention ? (
+                        <span
+                          className="min-w-5 h-5 px-1.5 inline-flex items-center justify-center rounded-full bg-gold-500 text-forest-950 text-[10px]"
+                          title={`${tab.attention} need attention`}
+                        >
+                          {tab.attention}
+                        </span>
+                      ) : null}
+                    </button>
+                  </React.Fragment>
+                );
+              })}
             </div>
 
-            {/* Live Search Bar */}
+            {/* Live Search Bar (only for tabs that list records) */}
+            {SEARCHABLE_TABS.includes(activeTab) && (
             <div className="relative min-w-[240px]">
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by name, phone, code..."
+                placeholder={SEARCH_HINTS[activeTab] || "Search..."}
+                aria-label="Search this list"
                 className="w-full pl-9 pr-4 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:bg-white"
               />
               {searchQuery && (
@@ -1290,12 +1369,29 @@ export const AdminView: React.FC<AdminViewProps> = ({
                 </button>
               )}
             </div>
+            )}
           </div>
         </div>
       </div>
 
       {/* Main Content Area */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        {loadError && (
+          <div
+            role="alert"
+            className="mb-6 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs flex items-center justify-between gap-3"
+          >
+            <span>{loadError}</span>
+            <button
+              type="button"
+              onClick={loadRecords}
+              className="px-3 py-1.5 rounded-lg bg-red-700 hover:bg-red-800 text-white font-bold cursor-pointer"
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
         {/* =========================================================================
             TAB 1: GIVING & MOMO RECONCILIATION
             ========================================================================= */}

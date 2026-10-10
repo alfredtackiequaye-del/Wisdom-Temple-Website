@@ -132,6 +132,8 @@ function readSessionToken(req: Request) {
   return cookie?.slice(`${SESSION_COOKIE}=`.length);
 }
 
+const MIN_PASSWORD_LENGTH = 8;
+
 export async function loginAdmin(req: Request, res: Response) {
   const email = String(req.body?.email || "")
     .trim()
@@ -145,6 +147,11 @@ export async function loginAdmin(req: Request, res: Response) {
   if (!user || !user.isActive || !verifyPassword(password, user.passwordHash)) {
     res.status(401).json({ error: "Invalid staff credentials." });
     return;
+  }
+
+  // Drop expired sessions so the in-memory map can't grow without bound.
+  for (const [key, value] of sessions) {
+    if (value.expiresAt <= Date.now()) sessions.delete(key);
   }
 
   const token = crypto.randomBytes(32).toString("hex");
@@ -233,6 +240,13 @@ export async function createStaff(req: Request, res: Response) {
     return;
   }
 
+  if (String(password).length < MIN_PASSWORD_LENGTH) {
+    res.status(400).json({
+      error: `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`,
+    });
+    return;
+  }
+
   const users = await readUsers();
   if (
     users.some(
@@ -268,6 +282,16 @@ export async function updateStaff(req: Request, res: Response) {
     res.status(404).json({ error: "Staff account not found." });
     return;
   }
+  if (req.body?.isActive === false && user.id === res.locals.adminUser?.id) {
+    res.status(400).json({ error: "You can't suspend your own account." });
+    return;
+  }
+  if (req.body?.password && String(req.body.password).length < MIN_PASSWORD_LENGTH) {
+    res.status(400).json({
+      error: `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`,
+    });
+    return;
+  }
   if (typeof req.body?.isActive === "boolean")
     user.isActive = req.body.isActive;
   if (req.body?.password)
@@ -280,6 +304,10 @@ export async function removeStaff(req: Request, res: Response) {
   const users = await readUsers();
   if (users.length <= 1) {
     res.status(400).json({ error: "Cannot remove the last administrator." });
+    return;
+  }
+  if (req.params.id === res.locals.adminUser?.id) {
+    res.status(400).json({ error: "You can't remove your own account." });
     return;
   }
   const remaining = users.filter((user) => user.id !== req.params.id);
