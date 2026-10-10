@@ -11,6 +11,8 @@ import {
 } from 'lucide-react';
 import { PosterImage } from '../components/PosterImage';
 
+import { PageHero } from '../components/PageHero';
+import { ClosingInvite } from '../components/ClosingInvite';
 interface MinistriesViewProps {
   ministries: Ministry[];
   initialMinistryId?: string;
@@ -56,31 +58,18 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
   };
 
   return (
-    <div className="bg-mist-50 min-h-screen text-slate-900 pb-24">
+    <div className="page-warm-bg min-h-screen text-slate-900 pb-24 overflow-x-clip">
       {/* Header Banner - ICGC Forest & Gold */}
-      <section className="relative bg-forest-950 text-white py-16 sm:py-20 border-b border-forest-700 overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-15">
-          <img
-            src={getBanner('page_ministries_hero', '/assets/photos/wisdom-summit-team-lineup.webp')}
-            alt=""
-            className="w-full h-full object-cover object-[center_8%]"
-          />
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
-          <span className="text-xs text-gold-300 font-bold uppercase tracking-widest bg-forest-850 px-3.5 py-1.5 rounded-full border border-gold-500/40 inline-block">
-            BODY OF CHRIST • WISDOM TEMPLE
-          </span>
-          <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            Ministries Directory
-          </h1>
-          <p className="text-base sm:text-lg text-emerald-200/80 max-w-2xl mx-auto leading-relaxed">
-            Every member has a calling. Find your family, sharpen your talents, and impact society through our vibrant ministry departments.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        image={getBanner('page_ministries_hero', '/assets/photos/wisdom-summit-team-lineup.webp')}
+        imagePosition="center 8%"
+        eyebrow="Body of Christ · Wisdom Temple"
+        title="Ministries Directory"
+        text="Every member has a calling. Find your family, sharpen your talents, and impact society through our vibrant ministry departments."
+      />
 
       {/* Category Tabs */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
         <div className="bg-white rounded-2xl p-4 border border-mist-300 shadow-md flex items-center gap-2 overflow-x-auto">
           <span className="text-xs font-semibold text-forest-700 mr-2 flex items-center space-x-1 shrink-0">
             <Filter className="w-3.5 h-3.5 text-gold-500" />
@@ -122,9 +111,9 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
                 </div>
 
                 <div className="p-6 space-y-3">
-                  <h3 className="text-xl font-bold text-forest-900 font-serif-title">
+                  <h2 className="text-xl font-bold text-forest-900 font-serif-title">
                     {ministry.name}
-                  </h3>
+                  </h2>
 
                   <p className="text-xs text-slate-600 leading-relaxed">
                     {ministry.shortDescription}
@@ -240,6 +229,9 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
           </div>
         </div>
       )}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
+        <ClosingInvite onNavigate={onNavigate} />
+      </div>
     </div>
   );
 };

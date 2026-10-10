@@ -13,6 +13,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 
+import { PageHero } from '../components/PageHero';
 interface WatchListenViewProps {
   sermons: Sermon[];
   initialCategory?: string;
@@ -60,39 +61,23 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
   }, [sermons, selectedCategory, selectedSpeaker, searchQuery]);
 
   return (
-    <div className="bg-mist-50 min-h-screen text-slate-900 pb-24">
+    <div className="page-warm-bg min-h-screen text-slate-900 pb-24 overflow-x-clip">
       {/* Header Banner - ICGC Forest & Gold */}
-      <section className="relative bg-forest-950 text-white py-16 sm:py-20 border-b border-forest-700 overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-15">
-          <img
-            src={getBanner('page_watch_hero', 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1280&q=50')}
-            alt="Watch Listen Header"
-            className="w-full h-full object-cover"
-          />
+      <PageHero
+        image={getBanner('page_watch_hero', '/assets/optimized/hero_icgc_banner.webp')}
+        imagePosition="center 30%"
+        eyebrow="Digital sanctuary & teachings"
+        title="Watch & Listen"
+        text="Feast on the timeless, transformational counsel of God. Explore Sunday messages, midweek encounters at The Secret Place, and Wisdom Summit teachings."
+      >
+        <div className="inline-flex items-center space-x-2 px-4 py-2 bg-white/5 backdrop-blur border border-white/15 rounded-full text-xs text-emerald-100">
+          <Youtube className="w-4 h-4 text-red-500" />
+          <span>Official YouTube Channel: <strong className="text-gold-300">{CHURCH_INFO.social.youtube}</strong></span>
         </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
-          <span className="text-xs text-gold-300 font-bold uppercase tracking-widest bg-forest-850 px-3.5 py-1.5 rounded-full border border-gold-500/40 inline-block">
-            DIGITAL SANCTUARY & TEACHINGS
-          </span>
-          <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            Watch & Listen
-          </h1>
-          <p className="text-base sm:text-lg text-emerald-200/80 max-w-2xl mx-auto leading-relaxed">
-            Feast on the timeless, transformational counsel of God. Explore Sunday messages, midweek encounters at The Secret Place, and Wisdom Summit teachings.
-          </p>
-
-          {/* YouTube Channel Banner */}
-          <div className="pt-2">
-            <div className="inline-flex items-center space-x-2 px-4 py-2 bg-forest-850 border border-forest-700 rounded-full text-xs text-emerald-200">
-              <Youtube className="w-4 h-4 text-red-500" />
-              <span>Official YouTube Channel: <strong className="text-gold-300">{CHURCH_INFO.social.youtube}</strong></span>
-            </div>
-          </div>
-        </div>
-      </section>
+      </PageHero>
 
       {/* Search & Filter Controls */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
         <div className="bg-white rounded-2xl p-4 sm:p-6 border border-mist-300 shadow-lg space-y-4">
           {/* Search Input */}
           <div className="relative">
@@ -132,6 +117,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
             <div className="flex items-center space-x-2 text-xs">
               <span className="text-forest-700 font-semibold">Speaker:</span>
               <select
+                aria-label="Filter by speaker"
                 value={selectedSpeaker}
                 onChange={(e) => setSelectedSpeaker(e.target.value)}
                 className="px-3 py-1.5 bg-mist-50 border border-mist-300 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-gold-500"
@@ -300,7 +286,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
 
                   {/* Sermon Details */}
                   <div className="p-6 space-y-2.5">
-                    <div className="flex items-center justify-between text-xs text-slate-400">
+                    <div className="flex items-center justify-between text-xs text-slate-600">
                       <span className="">{sermon.date}</span>
                       {sermon.series && (
                         <span className="text-forest-700 font-semibold truncate max-w-[140px]">

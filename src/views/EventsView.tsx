@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import { PosterImage } from '../components/PosterImage';
 
+import { PageHero } from '../components/PageHero';
+import { ClosingInvite } from '../components/ClosingInvite';
 interface EventsViewProps {
   events: ChurchEvent[];
   initialSubTab?: string;
@@ -42,28 +44,15 @@ export const EventsView: React.FC<EventsViewProps> = ({
   const featuredSummit = events.find(e => e.isFeaturedSummit) || events[0];
 
   return (
-    <div className="bg-mist-50 min-h-screen text-slate-900 pb-24">
+    <div className="page-warm-bg min-h-screen text-slate-900 pb-24 overflow-x-clip">
       {/* Header Banner - ICGC Forest & Gold */}
-      <section className="relative bg-forest-950 text-white py-16 sm:py-20 border-b border-forest-700 overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-15">
-          <img
-            src={getBanner('page_events_hero', '/assets/photos/wisdom-summit-full-team.webp')}
-            alt=""
-            className="w-full h-full object-cover object-[center_30%]"
-          />
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
-          <span className="text-xs text-gold-300 font-bold uppercase tracking-widest bg-forest-850 px-3.5 py-1.5 rounded-full border border-gold-500/40 inline-block">
-            CALENDAR & SACRED GATHERINGS
-          </span>
-          <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            Events & Conferences
-          </h1>
-          <p className="text-base sm:text-lg text-emerald-200/80 max-w-2xl mx-auto leading-relaxed">
-            Experience spiritual elevation, transformative encounters, and fellowship at our conferences, prayer vigils, and seasonal summits.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        image={getBanner('page_events_hero', '/assets/photos/wisdom-summit-full-team.webp')}
+        imagePosition="center 30%"
+        eyebrow="Calendar & sacred gatherings"
+        title="Events & Conferences"
+        text="Experience spiritual elevation, transformative encounters, and fellowship at our conferences, prayer vigils, and seasonal summits."
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 space-y-16">
         {/* Featured Wisdom Summit Card */}
@@ -102,7 +91,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
                   <Ticket className="w-7 h-7 text-gold-500" />
                 </div>
                 <div>
-                  <h4 className="font-serif font-light text-white text-xl tracking-tight">WISDOM SUMMIT 2026</h4>
+                  <h2 className="font-serif font-light text-white text-xl tracking-tight">WISDOM SUMMIT 2026</h2>
                   <p className="text-xs text-emerald-300 mt-1">October 7 - 9 & 11, 2026</p>
                   <p className="text-xs text-emerald-200/80 mt-2">Admission is free. Register to reserve your seat and receive event notifications.</p>
                 </div>
@@ -123,7 +112,7 @@ export const EventsView: React.FC<EventsViewProps> = ({
           className="flex flex-wrap items-center justify-between gap-4 border-b border-mist-300 pb-4"
         >
           <div>
-            <h3 className="text-xl font-bold text-forest-900 font-serif-title">All Scheduled Gatherings</h3>
+            <h2 className="text-xl font-bold text-forest-900 font-serif-title">All Scheduled Gatherings</h2>
             <p className="text-xs text-slate-500">Filter church calendar by category</p>
           </div>
 
@@ -215,9 +204,9 @@ export const EventsView: React.FC<EventsViewProps> = ({
             <span className="text-[11px] font-semibold text-forest-600 uppercase tracking-[0.22em] bg-mist-100 px-3.5 py-2 rounded-full border border-mist-300 inline-block mb-4">
               Every Week
             </span>
-            <h3 className="text-3xl sm:text-4xl font-extrabold text-forest-900 font-serif-title tracking-[-0.03em]">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-forest-900 font-serif-title tracking-[-0.03em]">
               Regular Weekly Gatherings
-            </h3>
+            </h2>
             <p className="text-sm text-slate-600 mt-3 leading-relaxed">
               No registration needed — just come as you are.
             </p>
@@ -245,9 +234,9 @@ export const EventsView: React.FC<EventsViewProps> = ({
                   <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-forest-600">
                     {service.day.toUpperCase()} @ {service.time}
                   </span>
-                  <h4 className="text-xl font-bold text-forest-900 font-display tracking-[-0.03em]">
+                  <h3 className="text-xl font-bold text-forest-900 font-display tracking-[-0.03em]">
                     {service.name}
-                  </h4>
+                  </h3>
                 </div>
                 <p className="text-sm text-slate-600 leading-relaxed">
                   {service.description}
@@ -264,6 +253,9 @@ export const EventsView: React.FC<EventsViewProps> = ({
             ))}
           </m.div>
         </m.div>
+      </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
+        <ClosingInvite onNavigate={onNavigate} />
       </div>
     </div>
   );

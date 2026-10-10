@@ -379,7 +379,8 @@ h2.font-display {
 }
 
 /* Plan Your Visit: warm paper tone with a faint gold glow instead of flat grey-green. */
-.visit-page-bg {
+.visit-page-bg,
+.page-warm-bg {
   background:
     radial-gradient(60rem 30rem at 85% 28rem, rgba(223, 177, 91, 0.14), transparent 70%),
     radial-gradient(50rem 28rem at 0% 70rem, rgba(15, 118, 70, 0.07), transparent 70%),

@@ -90,39 +90,38 @@ export const GalleryView: React.FC<GalleryViewProps> = ({
   return (
     <div className="min-h-screen bg-forest-950 text-white pb-24">
       {/* Hero Header */}
-      <section className="relative py-20 lg:py-24 bg-forest-900 text-white overflow-hidden border-b border-gold-500/30">
-        {/* Background Ambient Header Image & Glow */}
-        <div className="absolute inset-0 opacity-15 pointer-events-none">
+      <section className="ambient-glow relative py-20 lg:py-24 bg-forest-950 text-white border-b border-gold-500/30">
+        {/* Background header image with the shared fade and grain */}
+        <div className="absolute inset-0 pointer-events-none">
           <img
             src={getBanner(
               "page_gallery_hero",
               "/assets/optimized/hero_icgc_banner.webp",
             )}
-            alt="Congregation worshipping during a church service"
-            className="w-full h-full object-cover"
+            alt=""
+            decoding="async"
+            className="hero-drift w-full h-full object-cover opacity-40"
           />
-        </div>
-        <div className="absolute inset-0 opacity-20 pointer-events-none">
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-gold-500 rounded-full filter blur-[120px]" />
-          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-forest-700 rounded-full filter blur-[120px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-forest-950/70 via-forest-950/55 to-forest-950" />
+          <div className="absolute inset-0 hero-grain" />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl space-y-4">
             <button
               onClick={() => onNavigate("home")}
-              className="inline-flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-gold-300 hover:text-white transition-colors cursor-pointer"
+              className="flex w-fit items-center space-x-2 text-xs font-bold uppercase tracking-wider text-gold-300 hover:text-white transition-colors cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Home</span>
             </button>
 
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-forest-700 text-gold-300 border border-gold-500/40 text-xs font-bold uppercase tracking-widest">
+            <div className="flex w-fit items-center space-x-2 px-3 py-1 rounded-full bg-forest-700 text-gold-300 border border-gold-500/40 text-xs font-bold uppercase tracking-widest">
               <Church className="w-3.5 h-3.5 text-gold-500" />
               <span>CHURCH SERVICES & SPECIAL EVENTS</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black font-serif-title tracking-tight text-white">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif-title leading-[1.08] text-white">
               Worship in <span className="text-gold-300">Focus</span>
             </h1>
 

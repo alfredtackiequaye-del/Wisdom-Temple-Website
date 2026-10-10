@@ -21,6 +21,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 
+import { PageHero } from '../components/PageHero';
 interface GiveViewProps {
   onNavigate: (page: PageId) => void;
   onSubmitGiving?: (record: Omit<GivingRecord, 'id' | 'dateSubmitted' | 'status'>) => void;
@@ -106,28 +107,15 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
   };
 
   return (
-    <div className="bg-mist-50 min-h-screen text-slate-900 pb-24">
+    <div className="page-warm-bg min-h-screen text-slate-900 pb-24 overflow-x-clip">
       {/* Header Banner - ICGC Deep Forest & Gold */}
-      <section className="relative bg-forest-950 text-white py-14 sm:py-20 border-b border-forest-700 overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-15">
-          <img
-            src={getBanner('page_give_hero', 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=1280&q=50')}
-            alt="Give Header"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 sm:space-y-4 relative z-10">
-          <span className="text-xs text-gold-300 font-bold uppercase tracking-widest bg-forest-850 px-3.5 py-1.5 rounded-full border border-gold-500/40 inline-block">
-            STEWARDSHIP & GENEROSITY
-          </span>
-          <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            {content.givingHeadline}
-          </h1>
-          <p className="text-sm sm:text-lg text-emerald-200/90 max-w-2xl mx-auto leading-relaxed">
-            {content.givingInstructions}
-          </p>
-        </div>
-      </section>
+      <PageHero
+        image={getBanner('page_give_hero', '/assets/photos/wisdom-summit-team-red.webp')}
+        imagePosition="center 30%"
+        eyebrow="Stewardship & generosity"
+        title={content.givingHeadline}
+        text={content.givingInstructions}
+      />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 space-y-8 sm:space-y-12">
         {/* Official Giving Flyer Banner Display */}
@@ -331,12 +319,13 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                       <input
                         type="radio"
                         name="giving-fund"
+                        aria-label={f.label}
                         checked={selectedFund === f.id}
                         onChange={() => setSelectedFund(f.id)}
                         className="text-gold-500 focus:ring-gold-500"
                       />
                     </div>
-                    <p className="text-[11px] sm:text-xs text-slate-500 mt-1 leading-snug">{f.desc}</p>
+                    <p className="text-[11px] sm:text-xs text-slate-600 mt-1 leading-snug">{f.desc}</p>
                   </div>
                 ))}
               </div>
@@ -446,10 +435,11 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <label className="block text-[11px] font-bold text-forest-900 uppercase mb-1">
+                    <label htmlFor="give-channel" className="block text-[11px] font-bold text-forest-900 uppercase mb-1">
                       Payment Channel Used
                     </label>
                     <select
+                      id="give-channel"
                       value={paymentMethod}
                       onChange={(e) => setPaymentMethod(e.target.value as any)}
                       className="w-full px-3.5 py-2.5 bg-mist-50 border border-mist-300 rounded-xl text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-gold-500"

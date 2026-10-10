@@ -10,6 +10,8 @@ import {
   Calendar
 } from 'lucide-react';
 
+import { PageHero } from '../components/PageHero';
+import { ClosingInvite } from '../components/ClosingInvite';
 interface GrowViewProps {
   onNavigate: (page: PageId) => void;
 }
@@ -28,28 +30,15 @@ export const GrowView: React.FC<GrowViewProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="bg-mist-50 min-h-screen text-slate-900 pb-24">
+    <div className="page-warm-bg min-h-screen text-slate-900 pb-24 overflow-x-clip">
       {/* Header Banner - ICGC Forest & Gold */}
-      <section className="relative bg-forest-950 text-white py-16 sm:py-20 border-b border-forest-700 overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-15">
-          <img
-            src={getBanner('page_grow_hero', 'https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=1280&q=50')}
-            alt="Grow Header"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
-          <span className="text-xs text-gold-300 font-bold uppercase tracking-widest bg-forest-850 px-3.5 py-1.5 rounded-full border border-gold-500/40 inline-block">
-            SPIRITUAL MATURITY & DISCIPLESHIP
-          </span>
-          <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            Grow in Christ
-          </h1>
-          <p className="text-base sm:text-lg text-emerald-200/80 max-w-2xl mx-auto leading-relaxed">
-            "Grow in the grace and knowledge of our Lord and Savior Jesus Christ." Equipping every believer with sound doctrine, fervent prayer, and daily fellowship with God.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        image={getBanner('page_grow_hero', '/assets/optimized/open_bible.webp')}
+        imagePosition="center 40%"
+        eyebrow="Spiritual maturity & discipleship"
+        title="Grow in Christ"
+        text={`"Grow in the grace and knowledge of our Lord and Savior Jesus Christ." Equipping every believer with sound doctrine, fervent prayer, and daily fellowship with God.`}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 space-y-16">
         {/* Section 1: Daily Devotional Feature */}
@@ -224,6 +213,9 @@ export const GrowView: React.FC<GrowViewProps> = ({ onNavigate }) => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
+        <ClosingInvite onNavigate={onNavigate} />
       </div>
     </div>
   );

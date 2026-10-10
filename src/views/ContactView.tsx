@@ -13,6 +13,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 
+import { PageHero } from '../components/PageHero';
 interface ContactViewProps {
   onNavigate: (page: PageId) => void;
   onSubmitContactMessage: (msg: Omit<ContactMessage, 'id' | 'dateSubmitted' | 'status'>) => void;
@@ -47,28 +48,15 @@ export const ContactView: React.FC<ContactViewProps> = ({
   };
 
   return (
-    <div className="bg-mist-50 min-h-screen text-slate-900 pb-24">
+    <div className="page-warm-bg min-h-screen text-slate-900 pb-24 overflow-x-clip">
       {/* Header Banner - ICGC Forest & Gold */}
-      <section className="relative bg-forest-950 text-white py-14 sm:py-18 border-b border-forest-700 overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-15">
-          <img
-            src={getBanner('page_contact_hero', '/assets/photos/wisdom-summit-sisters.webp')}
-            alt=""
-            className="w-full h-full object-cover object-[center_18%]"
-          />
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 relative z-10">
-          <span className="text-xs text-gold-300 font-bold uppercase tracking-widest bg-forest-850 px-3.5 py-1.5 rounded-full border border-gold-500/40 inline-block">
-            GET IN TOUCH
-          </span>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight font-serif-title">
-            Contact Us
-          </h1>
-          <p className="text-sm sm:text-base text-emerald-200/80 max-w-xl mx-auto leading-relaxed">
-            Have questions, counseling requests, or administrative inquiries? We would love to hear from you.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        image={getBanner('page_contact_hero', '/assets/photos/wisdom-summit-sisters.webp')}
+        imagePosition="center 18%"
+        eyebrow="Get in touch"
+        title="Contact Us"
+        text="Have questions, counseling requests, or administrative inquiries? We would love to hear from you."
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-12 space-y-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -76,7 +64,7 @@ export const ContactView: React.FC<ContactViewProps> = ({
           <div className="lg:col-span-5 space-y-6">
             {/* Quick Contact Card */}
             <div className="bg-white rounded-3xl p-6 sm:p-8 border border-mist-300 shadow-sm space-y-6">
-              <h3 className="text-xl font-bold text-forest-900 font-serif-title">Church Office & Sanctuary</h3>
+              <h2 className="text-xl font-bold text-forest-900 font-serif-title">Church Office & Sanctuary</h2>
               
               <div className="space-y-4 text-xs sm:text-sm text-slate-700">
                 <div className="flex items-start space-x-3">
@@ -112,7 +100,7 @@ export const ContactView: React.FC<ContactViewProps> = ({
                     >
                       {content.churchPhone}
                     </a>
-                    <span className="text-[11px] text-slate-400 block mt-0.5">WhatsApp & Direct Call Line</span>
+                    <span className="text-[11px] text-slate-600 block mt-0.5">WhatsApp & Direct Call Line</span>
                   </div>
                 </div>
 
@@ -238,8 +226,9 @@ export const ContactView: React.FC<ContactViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-forest-900 font-semibold uppercase mb-1.5">Subject / Department</label>
+                  <label htmlFor="contact-subject" className="block text-forest-900 font-semibold uppercase mb-1.5">Subject / Department</label>
                   <select
+                    id="contact-subject"
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     className="w-full px-4 py-3 bg-mist-50 border border-mist-300 rounded-xl text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500"

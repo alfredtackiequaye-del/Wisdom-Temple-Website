@@ -12,6 +12,7 @@ import {
   PhoneCall
 } from 'lucide-react';
 
+import { PageHero } from '../components/PageHero';
 interface PrayerRequestViewProps {
   onNavigate: (page: PageId) => void;
   onSubmitPrayerRequest: (request: Omit<PrayerRequest, 'id' | 'dateSubmitted' | 'status'>) => void;
@@ -72,28 +73,15 @@ export const PrayerRequestView: React.FC<PrayerRequestViewProps> = ({
   };
 
   return (
-    <div className="bg-mist-50 min-h-screen text-slate-900 pb-24">
+    <div className="page-warm-bg min-h-screen text-slate-900 pb-24 overflow-x-clip">
       {/* Header Banner - ICGC Forest & Gold */}
-      <section className="relative bg-forest-950 text-white py-14 sm:py-20 border-b border-forest-700 overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-15">
-          <img
-            src={getBanner('page_prayer_hero', 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=1280&q=50')}
-            alt="Prayer Request Header"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3 sm:space-y-4 relative z-10">
-          <span className="text-xs text-gold-300 font-bold uppercase tracking-widest bg-forest-850 px-3.5 py-1.5 rounded-full border border-gold-500/40 inline-block">
-            THE ALTAR OF INTERCESSION
-          </span>
-          <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            Submit a Prayer Request
-          </h1>
-          <p className="text-sm sm:text-lg text-emerald-200/80 max-w-2xl mx-auto leading-relaxed">
-            "The effectual fervent prayer of a righteous man availeth much." You do not walk alone. Our pastors and Secret Place intercessors stand with you in faith.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        image={getBanner('page_prayer_hero', '/assets/optimized/open_bible.webp')}
+        imagePosition="center 40%"
+        eyebrow="The altar of intercession"
+        title="Submit a Prayer Request"
+        text={`"The effectual fervent prayer of a righteous man availeth much." You do not walk alone. Our pastors and Secret Place intercessors stand with you in faith.`}
+      />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 space-y-8 sm:space-y-12">
         {/* Pastoral Assurance Card */}
@@ -102,9 +90,9 @@ export const PrayerRequestView: React.FC<PrayerRequestViewProps> = ({
             <Lock className="w-6 sm:w-7 h-6 sm:h-7 text-gold-500" />
           </div>
           <div className="space-y-1">
-            <h3 className="font-bold text-forest-900 text-base sm:text-lg font-serif-title">
+            <h2 className="font-bold text-forest-900 text-base sm:text-lg font-serif-title">
               Strict Pastoral Confidentiality
-            </h3>
+            </h2>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
               Every request is handled with spiritual reverence. If you select confidential, only Shepherd Rev. Gabriel Dela and the designated pastoral prayer intercessors receive your petition.
             </p>
@@ -278,9 +266,9 @@ export const PrayerRequestView: React.FC<PrayerRequestViewProps> = ({
         <div className="bg-gold-50 rounded-2xl p-5 sm:p-6 border border-gold-500/40 text-center space-y-2">
           <div className="flex items-center justify-center space-x-2 text-forest-700">
             <PhoneCall className="w-4 h-4 text-gold-500" />
-            <h4 className="font-bold text-forest-900 text-xs sm:text-sm font-serif-title">
+            <h2 className="font-bold text-forest-900 text-xs sm:text-sm font-serif-title">
               Urgent Prayer or Pastoral Need?
-            </h4>
+            </h2>
           </div>
           <p className="text-xs text-slate-700">
             For critical emergencies or immediate prayer counsel, call our 24/7 Church Line: <strong className="text-forest-700 font-bold">{CHURCH_INFO.phone}</strong>

@@ -398,9 +398,9 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     categoryLabel: "Page Header Banners",
     location: "Watch & Listen View (Top Header)",
     currentUrl:
-      "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1280&q=50",
+      "/assets/optimized/hero_icgc_banner.webp",
     defaultUrl:
-      "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1280&q=50",
+      "/assets/optimized/hero_icgc_banner.webp",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,
@@ -417,9 +417,9 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     categoryLabel: "Page Header Banners",
     location: "Grow View (Top Header)",
     currentUrl:
-      "https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=1280&q=50",
+      "/assets/optimized/open_bible.webp",
     defaultUrl:
-      "https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=1280&q=50",
+      "/assets/optimized/open_bible.webp",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,
@@ -452,9 +452,9 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     categoryLabel: "Page Header Banners",
     location: "Give View (Top Header)",
     currentUrl:
-      "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=1280&q=50",
+      "/assets/photos/wisdom-summit-team-red.webp",
     defaultUrl:
-      "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=1280&q=50",
+      "/assets/photos/wisdom-summit-team-red.webp",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,
@@ -486,9 +486,9 @@ export const DEFAULT_BANNERS: BannerConfig[] = [
     categoryLabel: "Page Header Banners",
     location: "Prayer Request View (Top Header)",
     currentUrl:
-      "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=1280&q=50",
+      "/assets/photos/wisdom-summit-sisters.webp",
     defaultUrl:
-      "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=1280&q=50",
+      "/assets/photos/wisdom-summit-sisters.webp",
     recommendedSize: "1920 × 600 px",
     aspectRatio: "3.2:1 Panoramic",
     width: 1920,
