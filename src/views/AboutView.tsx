@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { m } from 'motion/react';
 import { PageId } from '../types';
+import { reveal, staggerContainer, staggerItem, LIFT_SPRING } from '../utils/motion';
 import { CHURCH_INFO, BELIEFS } from '../data/churchData';
 import { PASTORAL_COUPLE_IMAGE } from '../assets/pastoralImage';
 import { optimizedImageUrl } from '../utils/optimizedImage';
@@ -13,15 +15,65 @@ import {
   History, 
   CheckCircle2, 
   Shield,
+  Flame,
+  Heart,
+  Clock,
+  MapPin,
+  ArrowRight,
   X
 } from 'lucide-react';
+import { ScrollStory } from '../components/ScrollStory';
 
 interface AboutViewProps {
   initialSubTab?: string;
   onNavigate: (page: PageId) => void;
 }
 
-export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
+/** Shared heading block used at the top of each About tab. */
+const TabIntro: React.FC<{ eyebrow: string; title: string; text?: string }> = ({ eyebrow, title, text }) => (
+  <m.div {...reveal()} className="text-center max-w-3xl mx-auto space-y-4">
+    <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em]">{eyebrow}</span>
+    <h2 className="text-4xl sm:text-5xl text-forest-900 font-serif-title leading-[1.08]">{title}</h2>
+    <span className="mx-auto flex items-center justify-center gap-3" aria-hidden="true">
+      <span className="h-px w-12 bg-gold-500/60" />
+      <span className="w-2 h-2 rotate-45 bg-gold-500" />
+      <span className="h-px w-12 bg-gold-500/60" />
+    </span>
+    {text && <p className="text-lg text-slate-600 leading-relaxed">{text}</p>}
+  </m.div>
+);
+
+/** Closing call-to-action shared by every About tab. */
+const ClosingInvite: React.FC<{ onNavigate: (page: PageId) => void }> = ({ onNavigate }) => (
+  <m.div {...reveal()} className="text-center max-w-2xl mx-auto space-y-5 pb-4">
+    <h3 className="text-3xl sm:text-4xl text-forest-900 font-serif-title">Come and see for yourself</h3>
+    <p className="text-slate-600 leading-relaxed">
+      Whether you join us on a Sunday morning, a Wednesday evening or online, there is a seat saved for you.
+    </p>
+    <div className="flex flex-wrap items-center justify-center gap-4">
+      <button
+        onClick={() => onNavigate('new-here')}
+        className="px-7 py-3.5 rounded-xl bg-forest-900 text-white text-sm font-bold hover:bg-forest-700 transition-colors cursor-pointer"
+      >
+        Plan your visit
+      </button>
+      <button
+        onClick={() => onNavigate('watch-listen')}
+        className="px-7 py-3.5 rounded-xl border border-forest-900/25 text-forest-900 text-sm font-bold hover:bg-white transition-colors cursor-pointer"
+      >
+        Watch online
+      </button>
+      <button
+        onClick={() => onNavigate('contact')}
+        className="px-4 py-3.5 text-sm font-semibold text-forest-700 hover:text-forest-500 cursor-pointer"
+      >
+        Get in touch
+      </button>
+    </div>
+  </m.div>
+);
+
+export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab, onNavigate }) => {
   const { getBanner } = useBanners();
   const { content } = useSiteContent();
   const [activeTab, setActiveTab] = useState<string>('who-we-are');
@@ -34,15 +86,17 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
   }, [initialSubTab]);
 
   return (
-    <div className="bg-mist-50 min-h-screen text-slate-900 pb-24">
+    <div className="bg-mist-50 min-h-screen text-slate-900 pb-24 overflow-x-clip">
       {/* Page Header Banner - ICGC Forest & Gold */}
-      <section className="relative bg-forest-950 text-white py-16 sm:py-20 border-b border-forest-700 overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-15">
+      <section className="ambient-glow relative bg-forest-950 text-white py-16 sm:py-20 border-b border-forest-700 overflow-hidden">
+        <div className="absolute inset-0 z-0">
           <img
             src={getBanner('page_about_hero', '/assets/photos/wisdom-summit-team-red.webp')}
             alt=""
-            className="w-full h-full object-cover object-[center_30%]"
+            className="hero-drift w-full h-full object-cover object-[center_30%] opacity-40"
           />
+          <div className="absolute inset-0 bg-gradient-to-b from-forest-950/70 via-forest-950/55 to-forest-950" />
+          <div className="absolute inset-0 hero-grain" />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
           <span className="text-xs text-gold-300 font-bold uppercase tracking-widest bg-forest-850 px-3.5 py-1.5 rounded-full border border-gold-500/40 inline-block">
@@ -90,348 +144,429 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
       </div>
 
       {/* Main Content Area */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16">
         {/* Tab 1: Who We Are */}
         {activeTab === 'who-we-are' && (
-          <div className="space-y-10 animate-in fade-in duration-150">
-            <div className="space-y-4">
-              <span className="text-xs text-forest-700 font-bold uppercase tracking-widest bg-mist-200 px-3 py-1 rounded-full border border-mist-400">
-                IDENTITY & NATURE
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-forest-900 font-serif-title">
-                A Christ-Centered Assembly in Ghana
-              </h2>
-              <p className="text-base text-slate-700 leading-relaxed">
-                {content.aboutWhoWeAre1}
-              </p>
-              <p className="text-base text-slate-700 leading-relaxed">
-                {content.aboutWhoWeAre2}
-              </p>
-            </div>
-
-            {/* Core Values Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-              <div className="bg-white p-6 rounded-2xl border border-mist-300 shadow-sm space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-mist-100 text-forest-700 border border-mist-400 flex items-center justify-center font-bold">
-                  1
-                </div>
-                <h3 className="text-lg font-bold text-forest-900 font-serif-title">Spiritual Fervor</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Passionate worship and dedicated prayer at our Sunday services and Wednesday's <em>The Secret Place</em>.
-                </p>
-              </div>
-
-              <div className="bg-white p-6 rounded-2xl border border-mist-300 shadow-sm space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-mist-100 text-forest-700 border border-mist-400 flex items-center justify-center font-bold">
-                  2
-                </div>
-                <h3 className="text-lg font-bold text-forest-900 font-serif-title">Intellectual Excellence</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Sound doctrine that engages the mind, provides practical solutions, and fosters marketplace dominance.
-                </p>
-              </div>
-
-              <div className="bg-white p-6 rounded-2xl border border-mist-300 shadow-sm space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-mist-100 text-forest-700 border border-mist-400 flex items-center justify-center font-bold">
-                  3
-                </div>
-                <h3 className="text-lg font-bold text-forest-900 font-serif-title">Social Responsibility</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Active commitment to our community, welfare programs, student mentoring, and civic righteousness.
-                </p>
-              </div>
-            </div>
-
-            {/* Service Schedule Banner */}
-            <div className="bg-forest-900 text-white rounded-3xl p-8 border border-forest-700 space-y-4 shadow-xl">
-              <h3 className="text-2xl font-bold font-serif-title text-gold-300">Join Us for Worship</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                <div className="p-4 bg-forest-950 rounded-xl border border-forest-700">
-                  <span className="text-xs text-gold-300 font-bold block">{content.sundayServiceName.toUpperCase()}</span>
-                  <p className="text-lg font-bold text-white mt-1">Every Sunday at {content.sundayServiceTime}</p>
-                  <p className="text-xs text-emerald-300/70 mt-1">{content.sundayServiceDesc}</p>
-                </div>
-                <div className="p-4 bg-forest-950 rounded-xl border border-forest-700">
-                  <span className="text-xs text-gold-300 font-bold block">{content.midweekServiceName.toUpperCase()}</span>
-                  <p className="text-lg font-bold text-white mt-1">Every Wednesday at {content.midweekServiceTime}</p>
-                  <p className="text-xs text-emerald-300/70 mt-1">{content.midweekServiceDesc}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Pastoral Leadership Feature on Who We Are */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-mist-300 shadow-sm flex flex-col md:flex-row gap-6 items-center">
-              <div 
-                onClick={() => setActiveTab('leadership')}
-                className="w-full md:w-56 shrink-0 aspect-[3/4] rounded-2xl overflow-hidden bg-forest-900 border-2 border-gold-500/40 shadow-md relative group cursor-pointer"
-              >
-                <img
-                  src={getBanner('pastoral_couple', PASTORAL_COUPLE_IMAGE)}
-                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/rev_gabriel_and_helena_dela.jpg'; }}
-                  alt={`${content.combinedPastoralTitle} - Shepherd and First Lady`}
-                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-                <div className="absolute bottom-2.5 left-2.5 right-2.5 text-white">
-                  <span className="text-[9px] text-gold-300 font-bold uppercase tracking-wider block">
-                    PASTORAL LEADERSHIP
-                  </span>
-                  <p className="text-xs font-bold font-serif-title leading-tight text-white mt-0.5">
-                    {content.combinedPastoralTitle}
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-3 flex-1 text-center md:text-left">
-                <span className="text-xs text-forest-700 font-bold uppercase tracking-widest bg-mist-200 px-3 py-1 rounded-full border border-mist-400 inline-block">
-                  SHEPHERD OF WISDOM TEMPLE
+          <div className="space-y-20 sm:space-y-24 animate-in fade-in duration-150">
+            {/* Intro: editorial two-column with an overlapping photo pair */}
+            <div className="grid lg:grid-cols-12 gap-12 items-center">
+              <m.div {...reveal()} className="lg:col-span-6 space-y-6">
+                <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em] inline-flex items-center gap-3">
+                  <span className="h-px w-8 bg-gold-500" aria-hidden="true" />
+                  Identity & nature
                 </span>
-                <h3 className="text-xl sm:text-2xl font-extrabold text-forest-900 font-serif-title">
-                  {content.combinedPastoralTitle}
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  {content.pastoralBio}
+                <h2 className="text-4xl sm:text-5xl text-forest-900 font-serif-title leading-[1.08]">
+                  A Christ-Centered Assembly <span className="text-gold-600">in Ghana</span>
+                </h2>
+                <p className="text-lg sm:text-xl text-slate-800 leading-relaxed font-serif-title !font-normal">
+                  {content.aboutWhoWeAre1}
                 </p>
+                <p className="text-base text-slate-600 leading-relaxed">
+                  {content.aboutWhoWeAre2}
+                </p>
+                <div className="flex flex-wrap items-center gap-4 pt-2">
+                  <button
+                    onClick={() => onNavigate('new-here')}
+                    className="px-6 py-3 rounded-lg bg-forest-900 text-white text-xs font-bold uppercase tracking-wider hover:bg-forest-700 transition-colors cursor-pointer"
+                  >
+                    Plan your visit
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('story')}
+                    className="group inline-flex items-center gap-2 text-sm font-semibold text-forest-700 hover:text-forest-500 cursor-pointer"
+                  >
+                    Read our story
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </button>
+                </div>
+              </m.div>
+
+              <m.div {...reveal(0.12)} className="lg:col-span-6">
+                <div className="relative pb-10 pr-6 sm:pr-10">
+                  <div className="absolute -inset-4 rounded-[2rem] bg-gold-400/15 blur-2xl" aria-hidden="true" />
+                  <img
+                    src="/assets/photos/wisdom-summit-full-team.webp"
+                    alt="The Wisdom Temple family celebrating together"
+                    className="relative w-full aspect-[4/3] object-cover rounded-3xl shadow-lift border border-white"
+                  />
+                  <img
+                    src="/assets/photos/wisdom-summit-sisters.webp"
+                    alt="Members of Wisdom Temple smiling together"
+                    loading="lazy"
+                    className="absolute bottom-0 right-0 w-1/2 aspect-[4/3] object-cover rounded-2xl shadow-xl border-4 border-gold-50"
+                  />
+                  <div className="absolute top-5 left-5 rounded-full bg-forest-950/90 backdrop-blur px-4 py-2 text-[11px] font-bold uppercase tracking-widest text-gold-300 border border-gold-500/40 inline-flex items-center gap-2">
+                    <MapPin className="w-3.5 h-3.5" /> Star Junction, Tabora
+                  </div>
+                </div>
+              </m.div>
+            </div>
+
+            {/* At a glance */}
+            <m.ul {...staggerContainer(0.1)} className="grid grid-cols-2 lg:grid-cols-4 gap-4 -mt-8">
+              {[
+                { icon: Clock, term: 'Sundays', desc: content.sundayServiceTime },
+                { icon: Flame, term: 'Wednesdays', desc: `${content.midweekServiceTime} · The Secret Place` },
+                { icon: MapPin, term: 'Find us', desc: CHURCH_INFO.landmark },
+                { icon: Heart, term: 'For the family', desc: 'Kingdom Kids, ages 1 to 12' },
+              ].map(({ icon: Icon, term, desc }) => (
+                <m.li key={term} variants={staggerItem} className="bg-white rounded-2xl border border-mist-300 shadow-sm p-5 flex items-start gap-3">
+                  <span className="w-10 h-10 rounded-xl bg-forest-900 flex items-center justify-center shrink-0">
+                    <Icon className="w-5 h-5 text-gold-300" />
+                  </span>
+                  <div>
+                    <span className="block text-[11px] uppercase tracking-wider text-gold-700 font-bold">{term}</span>
+                    <span className="block text-sm font-semibold text-forest-900 leading-snug">{desc}</span>
+                  </div>
+                </m.li>
+              ))}
+            </m.ul>
+
+            {/* Core values: a pinned photo that changes as you read each one */}
+            <div className="space-y-12">
+              <m.div {...reveal()} className="text-center max-w-2xl mx-auto space-y-3">
+                <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em]">What we hold dear</span>
+                <h3 className="text-3xl sm:text-4xl text-forest-900 font-serif-title">Three things shape everything we do</h3>
+              </m.div>
+              <ScrollStory
+                stickyTop="top-44"
+                steps={[
+                  {
+                    icon: Flame,
+                    label: '01 · Our worship',
+                    title: 'Spiritual Fervor',
+                    text: "Passionate worship and dedicated prayer at our Sunday services and Wednesday's The Secret Place.",
+                    image: '/assets/optimized/hero_icgc_banner.webp',
+                    alt: 'Worshippers gathered in the Wisdom Temple auditorium',
+                  },
+                  {
+                    icon: BookOpen,
+                    label: '02 · Our teaching',
+                    title: 'Intellectual Excellence',
+                    text: 'Sound doctrine that engages the mind, provides practical solutions, and fosters marketplace dominance.',
+                    image: '/assets/photos/wisdom-summit-team-lineup.webp',
+                    alt: 'Wisdom Temple team members posing together at the Wisdom Summit',
+                  },
+                  {
+                    icon: Heart,
+                    label: '03 · Our community',
+                    title: 'Social Responsibility',
+                    text: 'Active commitment to our community, welfare programs, student mentoring, and civic righteousness.',
+                    image: '/assets/photos/wisdom-summit-sisters.webp',
+                    alt: 'Members of the Wisdom Temple family smiling together',
+                  },
+                ]}
+              />
+            </div>
+
+            {/* Worship times on a patterned band */}
+            <section aria-labelledby="join-worship" className="pattern-band relative py-16 sm:py-20">
+              <m.div {...reveal()} className="text-center max-w-2xl mx-auto mb-10 space-y-3">
+                <span className="text-[11px] font-semibold text-gold-300 uppercase tracking-[0.22em]">Worship with us</span>
+                <h3 id="join-worship" className="text-3xl sm:text-4xl text-white font-serif-title">Join us for worship</h3>
+                <span className="mx-auto flex items-center justify-center gap-3" aria-hidden="true">
+                  <span className="h-px w-12 bg-gold-400/60" />
+                  <span className="w-2 h-2 rotate-45 bg-gold-400" />
+                  <span className="h-px w-12 bg-gold-400/60" />
+                </span>
+              </m.div>
+              <m.div {...staggerContainer(0.14)} className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                {[
+                  { name: content.sundayServiceName, when: `Every Sunday at ${content.sundayServiceTime}`, desc: content.sundayServiceDesc, icon: Clock },
+                  { name: content.midweekServiceName, when: `Every Wednesday at ${content.midweekServiceTime}`, desc: content.midweekServiceDesc, icon: Flame },
+                ].map(({ name, when, desc, icon: Icon }) => (
+                  <m.div
+                    key={name}
+                    variants={staggerItem}
+                    className="rounded-3xl bg-white/[0.06] backdrop-blur border border-white/15 p-7 hover:border-gold-400/60 transition-colors"
+                  >
+                    <span className="w-11 h-11 rounded-xl bg-gold-400/15 border border-gold-400/30 flex items-center justify-center">
+                      <Icon className="w-5 h-5 text-gold-300" />
+                    </span>
+                    <p className="mt-4 text-[11px] font-bold uppercase tracking-widest text-gold-300">{name}</p>
+                    <p className="mt-1 text-2xl text-white font-serif-title">{when}</p>
+                    <p className="mt-2 text-sm text-emerald-100/80 leading-relaxed">{desc}</p>
+                  </m.div>
+                ))}
+              </m.div>
+              <div className="text-center mt-10">
                 <button
-                  onClick={() => setActiveTab('leadership')}
-                  className="inline-flex items-center space-x-2 text-xs font-bold text-forest-700 hover:text-gold-500 transition-colors uppercase tracking-wider cursor-pointer pt-1"
+                  onClick={() => onNavigate('new-here')}
+                  className="cta-shine px-8 py-3.5 rounded-xl bg-gold-400 hover:bg-gold-300 text-forest-950 font-bold text-sm transition-colors cursor-pointer"
                 >
-                  <span>Read Full Leadership Profile & Vision</span>
-                  <span>→</span>
+                  Plan your first visit
                 </button>
               </div>
-            </div>
+            </section>
+
+            {/* Pastoral leadership feature */}
+            <m.div {...reveal()} className="ambient-glow relative overflow-hidden rounded-[2rem] bg-forest-950 text-white border border-gold-500/30 shadow-xl">
+              <div className="relative grid md:grid-cols-12 gap-8 p-6 sm:p-10 items-center">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('leadership')}
+                  aria-label="Read the full leadership profile"
+                  className="md:col-span-4 group relative aspect-[3/4] rounded-2xl overflow-hidden border-2 border-gold-500/50 shadow-2xl cursor-pointer"
+                >
+                  <img
+                    src={getBanner('pastoral_couple', PASTORAL_COUPLE_IMAGE)}
+                    onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/rev_gabriel_and_helena_dela.jpg'; }}
+                    alt={`${content.combinedPastoralTitle} - Shepherd and First Lady`}
+                    className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                  />
+                </button>
+                <div className="md:col-span-8 space-y-4 text-center md:text-left">
+                  <span className="text-[11px] font-semibold text-gold-300 uppercase tracking-[0.22em]">Shepherd of Wisdom Temple</span>
+                  <h3 className="text-3xl sm:text-4xl font-serif-title text-white">{content.combinedPastoralTitle}</h3>
+                  <p className="text-emerald-100/85 leading-relaxed">{content.pastoralBio}</p>
+                  <button
+                    onClick={() => setActiveTab('leadership')}
+                    className="group inline-flex items-center gap-2 text-sm font-semibold text-gold-300 hover:text-gold-200 cursor-pointer"
+                  >
+                    Read the full leadership profile
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </button>
+                </div>
+              </div>
+            </m.div>
+
+            {/* Closing invitation */}
+            <ClosingInvite onNavigate={onNavigate} />
           </div>
         )}
 
         {/* Tab 2: Vision & Mission */}
         {activeTab === 'vision-mission' && (
-          <div className="space-y-10 animate-in fade-in duration-150">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Vision Card */}
-              <div className="bg-white rounded-3xl p-8 border border-mist-300 shadow-sm space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-mist-100 text-forest-700 border border-mist-400 flex items-center justify-center">
-                  <Compass className="w-6 h-6" />
-                </div>
-                <span className="text-xs text-forest-700 font-bold uppercase tracking-widest block">
-                  OUR VISION
-                </span>
-                <h3 className="text-2xl font-bold text-forest-900 font-serif-title">
-                  {content.aboutVisionTitle}
-                </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  {content.aboutVisionText}
-                </p>
-              </div>
+          <div className="space-y-20 sm:space-y-24 animate-in fade-in duration-150">
+            <TabIntro
+              eyebrow="Where we are headed"
+              title="Our vision and mission"
+              text="Everything we do points toward one calling and one mandate."
+            />
 
-              {/* Mission Card */}
-              <div className="bg-white rounded-3xl p-8 border border-mist-300 shadow-sm space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-mist-100 text-forest-700 border border-mist-400 flex items-center justify-center">
-                  <Target className="w-6 h-6" />
-                </div>
-                <span className="text-xs text-forest-700 font-bold uppercase tracking-widest block">
-                  OUR MISSION
-                </span>
-                <h3 className="text-2xl font-bold text-forest-900 font-serif-title">
-                  {content.aboutMissionTitle}
-                </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  {content.aboutMissionText}
-                </p>
-              </div>
-            </div>
+            {/* Vision and mission on a patterned band */}
+            <section aria-label="Vision and mission" className="pattern-band relative py-16 sm:py-20">
+              <m.div {...staggerContainer(0.18)} className="grid md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
+                {[
+                  { icon: Compass, label: 'Our vision', title: content.aboutVisionTitle, text: content.aboutVisionText },
+                  { icon: Target, label: 'Our mission', title: content.aboutMissionTitle, text: content.aboutMissionText },
+                ].map(({ icon: Icon, label, title, text }) => (
+                  <m.div
+                    key={label}
+                    variants={staggerItem}
+                    className="rounded-3xl bg-white/[0.06] backdrop-blur border border-white/15 p-8 sm:p-10 hover:border-gold-400/60 transition-colors"
+                  >
+                    <span className="w-12 h-12 rounded-2xl bg-gold-400/15 border border-gold-400/30 flex items-center justify-center">
+                      <Icon className="w-6 h-6 text-gold-300" />
+                    </span>
+                    <p className="mt-6 text-[11px] font-bold uppercase tracking-[0.22em] text-gold-300">{label}</p>
+                    <h3 className="mt-2 text-2xl sm:text-3xl text-white font-serif-title leading-snug">{title}</h3>
+                    <p className="mt-4 text-emerald-100/85 leading-relaxed">{text}</p>
+                  </m.div>
+                ))}
+              </m.div>
+            </section>
 
-            {/* The 3 Pillars */}
-            <div className="bg-white rounded-3xl p-8 border border-mist-300 space-y-6">
-              <h3 className="text-xl font-bold text-forest-900 font-serif-title">
-                The Three Pillars of Our Mandate
-              </h3>
-              <div className="space-y-4 text-sm text-slate-700">
-                <div className="flex items-start space-x-3">
-                  <CheckCircle2 className="w-5 h-5 text-forest-700 shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-forest-900 block font-semibold">1. {content.pillar1Title}</strong>
-                    {content.pillar1Desc}
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <CheckCircle2 className="w-5 h-5 text-forest-700 shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-forest-900 block font-semibold">2. {content.pillar2Title}</strong>
-                    {content.pillar2Desc}
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <CheckCircle2 className="w-5 h-5 text-forest-700 shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-forest-900 block font-semibold">3. {content.pillar3Title}</strong>
-                    {content.pillar3Desc}
-                  </div>
-                </div>
-              </div>
-            </div>
+            {/* The three pillars */}
+            <section aria-labelledby="pillars-heading" className="space-y-12">
+              <m.div {...reveal()} className="text-center max-w-2xl mx-auto space-y-3">
+                <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em]">Our mandate</span>
+                <h3 id="pillars-heading" className="text-3xl sm:text-4xl text-forest-900 font-serif-title">The three pillars we build on</h3>
+              </m.div>
+              <m.ol {...staggerContainer(0.14)} className="grid md:grid-cols-3 gap-6">
+                {[
+                  { n: '01', title: content.pillar1Title, desc: content.pillar1Desc },
+                  { n: '02', title: content.pillar2Title, desc: content.pillar2Desc },
+                  { n: '03', title: content.pillar3Title, desc: content.pillar3Desc },
+                ].map((pillar) => (
+                  <m.li
+                    key={pillar.n}
+                    variants={staggerItem}
+                    whileHover={{ y: -6 }}
+                    transition={LIFT_SPRING}
+                    className="relative overflow-hidden bg-white rounded-3xl border border-mist-300 hover:border-gold-500/50 shadow-sm hover:shadow-lift p-8 transition-shadow"
+                  >
+                    <span
+                      data-num={pillar.n}
+                      className="absolute -top-4 -right-1 font-serif-title text-8xl text-gold-500/20 select-none before:content-[attr(data-num)]"
+                      aria-hidden="true"
+                    />
+                    <span className="relative block w-10 h-1 rounded-full bg-gold-500 mb-5" aria-hidden="true" />
+                    <h4 className="relative text-xl text-forest-900 font-serif-title">{pillar.title}</h4>
+                    <p className="relative mt-3 text-sm text-slate-600 leading-relaxed">{pillar.desc}</p>
+                  </m.li>
+                ))}
+              </m.ol>
+            </section>
+
+            <ClosingInvite onNavigate={onNavigate} />
           </div>
         )}
 
         {/* Tab 3: Beliefs */}
         {activeTab === 'beliefs' && (
-          <div className="space-y-8 animate-in fade-in duration-150">
-            <div className="space-y-2">
-              <span className="text-xs text-forest-700 font-bold uppercase tracking-widest bg-mist-200 px-3 py-1 rounded-full border border-mist-400">
-                DOCTRINAL STATEMENT
-              </span>
-              <h2 className="text-3xl font-extrabold text-forest-900 font-serif-title mt-2">
-                What We Believe
-              </h2>
-              <p className="text-sm text-slate-600">
-                Our faith is rooted in classical charismatic orthodoxy, centered on the infallible authority of the Holy Scriptures.
-              </p>
+          <div className="space-y-20 sm:space-y-24 animate-in fade-in duration-150">
+            <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+              {/* Pinned introduction */}
+              <m.div {...reveal()} className="lg:col-span-5 lg:sticky lg:top-44 space-y-6">
+                <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em] inline-flex items-center gap-3">
+                  <span className="h-px w-8 bg-gold-500" aria-hidden="true" />
+                  Doctrinal statement
+                </span>
+                <h2 className="text-4xl sm:text-5xl text-forest-900 font-serif-title leading-[1.08]">
+                  What we <span className="text-gold-600">believe</span>
+                </h2>
+                <p className="text-lg text-slate-600 leading-relaxed">
+                  Our faith is rooted in classical charismatic orthodoxy, centered on the infallible authority of the Holy Scriptures.
+                </p>
+                <div className="ambient-glow relative overflow-hidden rounded-3xl bg-forest-950 text-white p-7 border border-gold-500/30 shadow-xl">
+                  <BookOpen className="w-7 h-7 text-gold-300" aria-hidden="true" />
+                  <p className="mt-4 font-serif-title text-2xl leading-snug">
+                    {BELIEFS.length} articles of faith that guide how we worship, teach and live.
+                  </p>
+                  <button
+                    onClick={() => onNavigate('new-here')}
+                    className="mt-5 group inline-flex items-center gap-2 text-sm font-semibold text-gold-300 hover:text-gold-200 cursor-pointer"
+                  >
+                    Visit and hear it for yourself
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </button>
+                </div>
+              </m.div>
+
+              {/* Articles */}
+              <m.ol {...staggerContainer(0.08)} className="lg:col-span-7 space-y-4">
+                {BELIEFS.map((belief, idx) => (
+                  <m.li
+                    key={idx}
+                    variants={staggerItem}
+                    className="group bg-white rounded-2xl border border-mist-300 hover:border-gold-500/60 shadow-sm hover:shadow-md transition-all p-6 sm:p-7 flex gap-5"
+                  >
+                    <span className="font-serif-title text-4xl text-gold-700 leading-none pt-1 w-12 shrink-0" aria-hidden="true">
+                      {String(idx + 1).padStart(2, '0')}
+                    </span>
+                    <div>
+                      <h3 className="text-xl text-forest-900 font-serif-title">{belief.title}</h3>
+                      <p className="mt-1.5 text-sm text-slate-600 leading-relaxed">{belief.text}</p>
+                    </div>
+                  </m.li>
+                ))}
+              </m.ol>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {BELIEFS.map((belief, idx) => (
-                <div key={idx} className="bg-white p-6 rounded-2xl border border-mist-300 shadow-sm space-y-2">
-                  <div className="flex items-center space-x-2 text-forest-700 text-xs font-bold">
-                    <Shield className="w-4 h-4 text-gold-500" />
-                    <span>ARTICLE {idx + 1}</span>
-                  </div>
-                  <h3 className="text-lg font-bold text-forest-900 font-serif-title">{belief.title}</h3>
-                  <p className="text-xs text-slate-600 leading-relaxed">{belief.text}</p>
-                </div>
-              ))}
-            </div>
+            <ClosingInvite onNavigate={onNavigate} />
           </div>
         )}
 
         {/* Tab 4: Leadership */}
         {activeTab === 'leadership' && (
-          <div className="space-y-8 animate-in fade-in duration-150">
-            <div className="space-y-2">
-              <span className="text-xs text-forest-700 font-bold uppercase tracking-widest bg-mist-200 px-3 py-1 rounded-full border border-mist-400">
-                SPIRITUAL OVERSIGHT
-              </span>
-              <h2 className="text-3xl font-extrabold text-forest-900 font-serif-title mt-2">
-                Our Pastoral Leadership
-              </h2>
-              <p className="text-sm text-slate-600">
-                Dedicated servant-leaders guiding Wisdom Temple with pastoral care, biblical counsel, and vision.
-              </p>
-            </div>
+          <div className="space-y-20 sm:space-y-24 animate-in fade-in duration-150">
+            <TabIntro
+              eyebrow="Spiritual oversight"
+              title="Our pastoral leadership"
+              text="Dedicated servant-leaders guiding Wisdom Temple with pastoral care, biblical counsel, and vision."
+            />
 
-            {/* Senior Minister & Shepherd Profile Card */}
-            <div className="bg-white rounded-3xl p-6 sm:p-10 border border-mist-300 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              <div className="lg:col-span-5 rounded-2xl bg-forest-900 overflow-hidden relative border-2 border-gold-500/40 shadow-xl group aspect-[3/4] flex items-center justify-center">
-                <img
-                  src={getBanner('pastoral_couple', PASTORAL_COUPLE_IMAGE)}
-                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/rev_gabriel_and_helena_dela.jpg'; }}
-                  alt="Rev. Gabriel Dela and Lady Dr. Helena Dela - Shepherd and First Lady of Wisdom Temple"
-                  className="w-full h-full object-cover object-top group-hover:scale-102 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <span className="text-[10px] text-gold-300 font-bold uppercase tracking-widest bg-forest-950/90 px-2.5 py-1 rounded-md border border-gold-500/40 inline-block mb-1">
-                    PASTORAL COUPLE
-                  </span>
-                  <p className="font-serif-title font-bold text-base sm:text-lg text-white leading-tight">
-                    Rev. Gabriel Dela & Lady Dr. Helena Dela
-                  </p>
-                  <p className="text-[11px] text-emerald-200/80">
-                    Shepherd & First Lady • ICGC Wisdom Temple
-                  </p>
-                </div>
-              </div>
-
-              <div className="lg:col-span-7 space-y-5">
-                <div>
-                  <span className="text-xs text-forest-700 font-bold uppercase tracking-widest bg-mist-200 px-3 py-1 rounded-full border border-mist-400 inline-block mb-2">
-                    SHEPHERD OF WISDOM TEMPLE
-                  </span>
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-forest-900 font-serif-title">
-                    Rev. Gabriel Dela
-                  </h3>
-                  <div className="flex flex-wrap items-center gap-2 mt-1">
-                    <span className="text-xs text-gold-500 font-bold">Shepherd & Senior Minister</span>
-                    <span className="text-slate-300">•</span>
-                    <span className="text-xs text-slate-600 font-medium">With <strong className="text-forest-900">Lady Dr. Helena Dela</strong></span>
-                  </div>
-                </div>
-
-                <div className="space-y-3 text-sm text-slate-600 leading-relaxed">
-                  <p>
-                    <strong className="text-forest-900">Rev. Gabriel Dela</strong> is the Shepherd and Senior Minister of ICGC Wisdom Temple. Called with an apostolic heart and an unquenchable passion for the Kingdom of God, Rev. Gabriel leads the Wisdom Temple congregation with doctrinal clarity, prophetic insight, and a shepherd's compassionate care.
-                  </p>
-                  <p>
-                    Ministering side-by-side with him is his beloved wife, <strong className="text-forest-900">Lady Dr. Helena Dela</strong>, who serves graciously as the First Lady of Wisdom Temple. Lady Dr. Helena Dela is a pillar of wisdom, prayer, and encouragement, actively nurturing the women's fellowship, family life ministries, and raising believers who embody godly dignity and professional excellence.
-                  </p>
-                  <p>
-                    Together, Rev. Gabriel Dela and Lady Dr. Helena Dela are committed to fulfilling the God-given mandate of Wisdom Temple: <em>"Raising Leaders, Shaping Visions, and Influencing Society Through Christ."</em> Under their pastoral oversight, Wisdom Temple has flourished as a vibrant house of prayer, leadership excellence, and transformative ministry in Tabora, Accra, and across Ghana.
-                  </p>
-                </div>
-
-                {/* Key Ministry Pillars under their Pastoral Care */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                  <div className="p-3 bg-mist-50 rounded-xl border border-mist-300">
-                    <span className="text-[10px] text-forest-700 font-bold uppercase block">Core Emphasis</span>
-                    <p className="text-xs font-bold text-forest-900 mt-0.5">Biblical Exposition</p>
-                    <span className="text-[10px] text-slate-500 block mt-0.5">Practical life application</span>
-                  </div>
-                  <div className="p-3 bg-mist-50 rounded-xl border border-mist-300">
-                    <span className="text-[10px] text-forest-700 font-bold uppercase block">Prayer Altar</span>
-                    <p className="text-xs font-bold text-forest-900 mt-0.5">The Secret Place</p>
-                    <span className="text-[10px] text-slate-500 block mt-0.5">Midweek prayer & power</span>
-                  </div>
-                  <div className="p-3 bg-mist-50 rounded-xl border border-mist-300">
-                    <span className="text-[10px] text-forest-700 font-bold uppercase block">Leadership</span>
-                    <p className="text-xs font-bold text-forest-900 mt-0.5">Wisdom Summit</p>
-                    <span className="text-[10px] text-slate-500 block mt-0.5">Annual leadership conference</span>
-                  </div>
-                </div>
-
-                <div className="p-4 bg-mist-100 rounded-xl border border-mist-400 text-xs text-slate-700 space-y-1">
-                  <p className="font-bold text-forest-900 flex items-center space-x-1.5">
-                    <span className="w-2 h-2 rounded-full bg-forest-700"></span>
-                    <span>Pastoral Counsel & Consultation:</span>
-                  </p>
-                  <p>
-                    Pastoral sessions are available by scheduled appointment through the Church Administration Office at Wisdom Temple, Star Junction, Tabora.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Church Council, Pastoral Council & Leadership Governance */}
-            <div className="space-y-4 pt-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-forest-900 font-serif-title flex items-center space-x-2">
-                  <Shield className="w-5 h-5 text-gold-500" />
-                  <span>Church Governance & Leadership Councils</span>
-                </h3>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                {/* 1. Pastoral Council */}
-                <div className="bg-white p-6 rounded-2xl border border-mist-300 text-center space-y-2 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
-                  <div className="space-y-2">
-                    <div className="w-12 h-12 rounded-full bg-mist-100 text-forest-700 mx-auto flex items-center justify-center font-bold border border-mist-400">
-                      PC
+            {/* Shepherd spotlight */}
+            <m.div {...reveal()} className="ambient-glow relative overflow-hidden rounded-[2rem] bg-forest-950 text-white border border-gold-500/30 shadow-xl">
+              <div className="relative grid lg:grid-cols-12 gap-10 p-6 sm:p-10 lg:p-12 items-start">
+                <div className="lg:col-span-5 lg:sticky lg:top-44">
+                  <div className="relative aspect-[3/4] rounded-2xl overflow-hidden border-2 border-gold-500/50 shadow-2xl">
+                    <img
+                      src={getBanner('pastoral_couple', PASTORAL_COUPLE_IMAGE)}
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/rev_gabriel_and_helena_dela.jpg'; }}
+                      alt="Rev. Gabriel Dela and Lady Dr. Helena Dela - Shepherd and First Lady of Wisdom Temple"
+                      className="w-full h-full object-cover object-top"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-forest-950/90 to-transparent p-5 pt-16">
+                      <p className="text-[11px] font-bold uppercase tracking-widest text-gold-300">Pastoral couple</p>
+                      <p className="font-serif-title text-xl text-white leading-tight">Rev. Gabriel Dela & Lady Dr. Helena Dela</p>
+                      <p className="text-xs text-emerald-200/80 mt-1">Shepherd & First Lady · ICGC Wisdom Temple</p>
                     </div>
-                    <h4 className="text-sm font-bold text-forest-900 font-serif-title">Pastoral Council</h4>
-                    <p className="text-xs text-forest-700 font-semibold">Spiritual Oversight</p>
-                    <p className="text-[11px] text-slate-500 leading-relaxed">
-                      Doctrinal integrity, pastoral intercession, discipleship, and spiritual shepherd care across all congregations.
+                  </div>
+                </div>
+
+                <div className="lg:col-span-7 space-y-6">
+                  <div>
+                    <span className="text-[11px] font-semibold text-gold-300 uppercase tracking-[0.22em]">Shepherd of Wisdom Temple</span>
+                    <h3 className="mt-2 text-4xl sm:text-5xl font-serif-title text-white leading-tight">Rev. Gabriel Dela</h3>
+                    <p className="mt-2 text-sm text-emerald-200/80">
+                      <span className="text-gold-300 font-bold">Shepherd & Senior Minister</span> · With <strong className="text-white">Lady Dr. Helena Dela</strong>
                     </p>
                   </div>
-                  <span className="text-[10px] text-slate-400 block pt-2 border-t border-slate-100">
-                    Spiritual Authority
-                  </span>
-                </div>
 
-                {/* 2. Church Council (Formerly Church Board) with Official Photo */}
-                <div 
+                  <div className="space-y-4 text-emerald-100/85 leading-relaxed">
+                    <p>
+                      <strong className="text-white">Rev. Gabriel Dela</strong> is the Shepherd and Senior Minister of ICGC Wisdom Temple. Called with an apostolic heart and an unquenchable passion for the Kingdom of God, Rev. Gabriel leads the Wisdom Temple congregation with doctrinal clarity, prophetic insight, and a shepherd's compassionate care.
+                    </p>
+                    <p>
+                      Ministering side-by-side with him is his beloved wife, <strong className="text-white">Lady Dr. Helena Dela</strong>, who serves graciously as the First Lady of Wisdom Temple. Lady Dr. Helena Dela is a pillar of wisdom, prayer, and encouragement, actively nurturing the women's fellowship, family life ministries, and raising believers who embody godly dignity and professional excellence.
+                    </p>
+                    <p>
+                      Together, Rev. Gabriel Dela and Lady Dr. Helena Dela are committed to fulfilling the God-given mandate of Wisdom Temple: <em className="text-gold-200">"Raising Leaders, Shaping Visions, and Influencing Society Through Christ."</em> Under their pastoral oversight, Wisdom Temple has flourished as a vibrant house of prayer, leadership excellence, and transformative ministry in Tabora, Accra, and across Ghana.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                    {[
+                      { k: 'Core emphasis', v: 'Biblical Exposition', d: 'Practical life application' },
+                      { k: 'Prayer altar', v: 'The Secret Place', d: 'Midweek prayer & power' },
+                      { k: 'Leadership', v: 'Wisdom Summit', d: 'Annual leadership conference' },
+                    ].map((item) => (
+                      <div key={item.k} className="rounded-xl bg-white/[0.06] border border-white/15 p-4">
+                        <span className="block text-[10px] font-bold uppercase tracking-wider text-gold-300">{item.k}</span>
+                        <span className="block mt-1 text-sm font-semibold text-white">{item.v}</span>
+                        <span className="block mt-0.5 text-xs text-emerald-200/70">{item.d}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="rounded-xl border border-gold-500/30 bg-gold-400/10 p-4 text-sm text-emerald-100/90">
+                    <p className="font-bold text-gold-200">Pastoral counsel & consultation</p>
+                    <p className="mt-1">
+                      Pastoral sessions are available by scheduled appointment through the Church Administration Office at Wisdom Temple, Star Junction, Tabora.
+                    </p>
+                    <button
+                      onClick={() => onNavigate('contact')}
+                      className="mt-3 group inline-flex items-center gap-2 text-sm font-semibold text-gold-300 hover:text-gold-200 cursor-pointer"
+                    >
+                      Request an appointment
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </m.div>
+
+            {/* Governance */}
+            <section aria-labelledby="governance-heading" className="space-y-10">
+              <m.div {...reveal()} className="text-center max-w-2xl mx-auto space-y-3">
+                <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em]">Governance</span>
+                <h3 id="governance-heading" className="text-3xl sm:text-4xl text-forest-900 font-serif-title">Church governance & leadership councils</h3>
+              </m.div>
+
+              <m.div {...staggerContainer(0.14)} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Pastoral Council */}
+                <m.div variants={staggerItem} className="bg-white rounded-3xl border border-mist-300 shadow-sm hover:shadow-lift hover:border-gold-500/50 transition-all p-8 flex flex-col">
+                  <span className="w-12 h-12 rounded-2xl bg-forest-900 flex items-center justify-center">
+                    <Shield className="w-6 h-6 text-gold-300" />
+                  </span>
+                  <h4 className="mt-5 text-xl text-forest-900 font-serif-title">Pastoral Council</h4>
+                  <p className="text-xs font-bold uppercase tracking-wider text-gold-700 mt-1">Spiritual oversight</p>
+                  <p className="mt-3 text-sm text-slate-600 leading-relaxed flex-1">
+                    Doctrinal integrity, pastoral intercession, discipleship, and spiritual shepherd care across all congregations.
+                  </p>
+                  <span className="mt-5 pt-4 border-t border-mist-200 text-xs text-slate-600">Spiritual authority</span>
+                </m.div>
+
+                {/* Church Council with official photo */}
+                <m.button
+                  type="button"
+                  variants={staggerItem}
                   onClick={() => setShowCouncilModal(true)}
-                  className="bg-white rounded-2xl border-2 border-gold-500/50 hover:border-gold-500 overflow-hidden shadow-md hover:shadow-xl transition-all flex flex-col justify-between group cursor-pointer"
+                  className="group text-left bg-white rounded-3xl border-2 border-gold-500/50 hover:border-gold-500 overflow-hidden shadow-md hover:shadow-lift transition-all flex flex-col cursor-pointer"
                 >
-                  <div className="relative aspect-[16/11] bg-forest-950 overflow-hidden">
+                  <span className="relative block aspect-[16/11] bg-forest-950 overflow-hidden">
                     <img
                       src={optimizedImageUrl('/church_council.png')}
                       onError={(e) => {
@@ -441,86 +576,70 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab }) => {
                         }
                       }}
                       alt="ICGC Wisdom Temple Church Council"
-                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-                    <div className="absolute bottom-2.5 left-3 right-3 text-white">
-                      <span className="text-[9px] uppercase tracking-wider text-gold-300 font-bold block">
-                        STEWARDSHIP & GOVERNANCE
-                      </span>
-                      <span className="text-xs font-bold text-white block">Wisdom Temple</span>
-                    </div>
-                  </div>
-
-                  <div className="p-4 text-center space-y-1 bg-white flex-1 flex flex-col justify-between">
-                    <div>
-                      <h4 className="text-sm font-bold text-forest-900 font-serif-title group-hover:text-gold-500 transition-colors">
-                        Church Council
-                      </h4>
-                      <p className="text-xs text-forest-700 font-semibold">Governance & Administration</p>
-                      <p className="text-[11px] text-slate-500 leading-snug mt-1">
-                        Institutional policies, capital developments, annual budgets, and fiduciary kingdom stewardship.
-                      </p>
-                    </div>
-                    <span className="text-[10px] text-gold-500 font-bold block pt-2 border-t border-slate-100">
-                      Click to View Photo ↗
-                    </span>
-                  </div>
-                </div>
-
-                {/* 3. Ministry Deacons */}
-                <div className="bg-white p-6 rounded-2xl border border-mist-300 text-center space-y-2 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
-                  <div className="space-y-2">
-                    <div className="w-12 h-12 rounded-full bg-mist-100 text-forest-700 mx-auto flex items-center justify-center font-bold border border-mist-400">
-                      DM
-                    </div>
-                    <h4 className="text-sm font-bold text-forest-900 font-serif-title">Ministry Deacons</h4>
-                    <p className="text-xs text-forest-700 font-semibold">Sanctuary Operations</p>
-                    <p className="text-[11px] text-slate-500 leading-relaxed">
-                      Hospitality, protocol, member welfare, logistical execution, and order within the sanctuary.
-                    </p>
-                  </div>
-                  <span className="text-[10px] text-slate-400 block pt-2 border-t border-slate-100">
-                    Service & Operations
+                    <span className="absolute inset-0 bg-gradient-to-t from-forest-950/70 to-transparent" />
+                    <span className="absolute bottom-3 left-4 right-4 text-[10px] uppercase tracking-widest text-gold-300 font-bold">Stewardship & governance</span>
                   </span>
-                </div>
-              </div>
-            </div>
+                  <span className="p-8 pt-6 flex flex-col flex-1">
+                    <span className="text-xl text-forest-900 font-serif-title group-hover:text-gold-700 transition-colors">Church Council</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-gold-700 mt-1">Governance & administration</span>
+                    <span className="mt-3 text-sm text-slate-600 leading-relaxed flex-1">
+                      Institutional policies, capital developments, annual budgets, and fiduciary kingdom stewardship.
+                    </span>
+                    <span className="mt-5 pt-4 border-t border-mist-200 text-xs font-bold text-gold-700">View the council photo ↗</span>
+                  </span>
+                </m.button>
+
+                {/* Ministry Deacons */}
+                <m.div variants={staggerItem} className="bg-white rounded-3xl border border-mist-300 shadow-sm hover:shadow-lift hover:border-gold-500/50 transition-all p-8 flex flex-col">
+                  <span className="w-12 h-12 rounded-2xl bg-forest-900 flex items-center justify-center">
+                    <Heart className="w-6 h-6 text-gold-300" />
+                  </span>
+                  <h4 className="mt-5 text-xl text-forest-900 font-serif-title">Ministry Deacons</h4>
+                  <p className="text-xs font-bold uppercase tracking-wider text-gold-700 mt-1">Sanctuary operations</p>
+                  <p className="mt-3 text-sm text-slate-600 leading-relaxed flex-1">
+                    Hospitality, protocol, member welfare, logistical execution, and order within the sanctuary.
+                  </p>
+                  <span className="mt-5 pt-4 border-t border-mist-200 text-xs text-slate-600">Service & operations</span>
+                </m.div>
+              </m.div>
+            </section>
+
+            <ClosingInvite onNavigate={onNavigate} />
           </div>
         )}
 
         {/* Tab 5: Story & Heritage */}
         {activeTab === 'story' && (
-          <div className="space-y-8 animate-in fade-in duration-150">
-            <div className="space-y-3">
-              <span className="text-xs text-forest-700 font-bold uppercase tracking-widest bg-mist-200 px-3 py-1 rounded-full border border-mist-400">
-                OUR JOURNEY OF FAITH
-              </span>
-              <h2 className="text-3xl font-extrabold text-forest-900 font-serif-title mt-2">
-                {content.heritageStoryHeadline}
-              </h2>
-              <p className="text-base text-slate-700 leading-relaxed">
-                {content.churchDescription}
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <div className="border-l-4 border-gold-500 pl-6 space-y-2 bg-white p-6 rounded-r-2xl border border-l-0 border-mist-300">
-                <span className="text-xs text-forest-700 font-bold">FOUNDATIONAL PHILOSOPHY</span>
-                <h3 className="text-xl font-bold text-forest-900 font-serif-title">Dignity, Excellence & Empowerment</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  {content.heritageStoryText1}
-                </p>
-              </div>
-
-              <div className="border-l-4 border-gold-500 pl-6 space-y-2 bg-white p-6 rounded-r-2xl border border-l-0 border-mist-300">
-                <span className="text-xs text-forest-700 font-bold">LOOKING TO THE FUTURE</span>
-                <h3 className="text-xl font-bold text-forest-900 font-serif-title">Building for Generations</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  {content.heritageStoryText2}
-                </p>
-              </div>
-            </div>
+          <div className="space-y-20 sm:space-y-24 animate-in fade-in duration-150">
+            <TabIntro
+              eyebrow="Our journey of faith"
+              title={content.heritageStoryHeadline}
+              text={content.churchDescription}
+            />
+            <ScrollStory
+              stickyTop="top-44"
+              steps={[
+                {
+                  icon: History,
+                  label: 'Foundational philosophy',
+                  title: 'Dignity, Excellence & Empowerment',
+                  text: content.heritageStoryText1,
+                  image: '/assets/photos/wisdom-summit-team-red.webp',
+                  alt: 'Wisdom Temple team members welcoming guests with open hands',
+                },
+                {
+                  icon: Compass,
+                  label: 'Looking to the future',
+                  title: 'Building for Generations',
+                  text: content.heritageStoryText2,
+                  image: '/assets/photos/wisdom-summit-full-team.webp',
+                  alt: 'The Wisdom Summit team celebrating together',
+                },
+              ]}
+            />
+            <ClosingInvite onNavigate={onNavigate} />
           </div>
         )}
       </div>

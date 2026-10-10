@@ -243,3 +243,175 @@ h2.font-display {
     animation: none;
   }
 }
+
+/* ---- Ambient life: slow, low-contrast motion that never competes with content ---- */
+
+/* Dark sections: a soft gold light that drifts behind the content. */
+.ambient-glow {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.ambient-glow::before,
+.ambient-glow::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 38rem;
+  height: 38rem;
+  border-radius: 999px;
+  pointer-events: none;
+  filter: blur(70px);
+  will-change: transform;
+}
+
+.ambient-glow::before {
+  top: -14rem;
+  left: -10rem;
+  background: radial-gradient(circle, rgba(223, 177, 91, 0.16), transparent 68%);
+  animation: glow-drift-a 18s ease-in-out infinite alternate;
+}
+
+.ambient-glow::after {
+  bottom: -16rem;
+  right: -10rem;
+  background: radial-gradient(circle, rgba(15, 118, 70, 0.28), transparent 68%);
+  animation: glow-drift-b 22s ease-in-out infinite alternate;
+}
+
+@keyframes glow-drift-a {
+  to {
+    transform: translate(9rem, 4rem) scale(1.15);
+  }
+}
+
+@keyframes glow-drift-b {
+  to {
+    transform: translate(-8rem, -3rem) scale(1.1);
+  }
+}
+
+/* Hero photo: after the entrance zoom, keep a very slow drift so the scene breathes. */
+@keyframes hero-drift {
+  from {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.06) translate3d(-1.2%, -0.8%, 0);
+  }
+}
+
+.hero-drift {
+  animation: hero-drift 24s ease-in-out 2.4s infinite alternate;
+  will-change: transform;
+}
+
+/* Primary call-to-action: a gentle light sweep every few seconds. */
+.cta-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 65%
+  );
+  transform: translateX(-120%);
+  animation: cta-sweep 5.5s ease-in-out 3s infinite;
+  pointer-events: none;
+}
+
+@keyframes cta-sweep {
+  0%,
+  60% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+/* "Happening now" beacon. */
+.live-dot {
+  position: relative;
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: #ef4444;
+}
+
+.live-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #ef4444;
+  animation: live-ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes live-ping {
+  from {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-glow::before,
+  .ambient-glow::after,
+  .hero-drift,
+  .cta-shine::after,
+  .live-dot::after {
+    animation: none;
+  }
+}
+
+/* Plan Your Visit: warm paper tone with a faint gold glow instead of flat grey-green. */
+.visit-page-bg {
+  background:
+    radial-gradient(60rem 30rem at 85% 28rem, rgba(223, 177, 91, 0.14), transparent 70%),
+    radial-gradient(50rem 28rem at 0% 70rem, rgba(15, 118, 70, 0.07), transparent 70%),
+    linear-gradient(180deg, var(--color-gold-50) 0%, var(--color-mist-50) 38%, var(--color-mist-100) 100%);
+}
+
+/* Fine film grain so large dark areas don't look like a flat fill. */
+.hero-grain {
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Full-bleed deep green band with a fine gold lattice, used behind white cards. */
+.pattern-band {
+  isolation: isolate;
+}
+
+.pattern-band::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(40rem 18rem at 15% 0%, rgba(223, 177, 91, 0.18), transparent 70%),
+    radial-gradient(40rem 18rem at 90% 100%, rgba(15, 118, 70, 0.35), transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23dfb15b' stroke-opacity='0.16' stroke-width='1'%3E%3Cpath d='M32 4 60 32 32 60 4 32Z'/%3E%3Cpath d='M32 20 44 32 32 44 20 32Z'/%3E%3C/g%3E%3Ccircle cx='32' cy='32' r='1.6' fill='%23dfb15b' fill-opacity='0.32'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, var(--color-forest-900), var(--color-forest-950));
+  background-size: auto, auto, 64px 64px, auto;
+}

@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { PosterImage } from "../components/PosterImage";
 import { ScrollProgressRail } from "../components/ScrollProgressRail";
+import { ScrollStory } from "../components/ScrollStory";
 
 /** One odometer-style countdown digit: the old value slides out as the new one slides in. */
 const CountdownUnit: React.FC<{
@@ -98,6 +99,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
     [0, prefersReducedMotion ? 0 : 110],
   );
   const heroWords = content.heroHeadline.split(" ");
+  const heroSrc = getBanner("hero_banner", "/hero_icgc_banner.jpg");
 
   // Placeholder testimonies (e.g. "[CHURCH MEMBER NAME]") are never shown publicly.
   const publishedTestimonies = testimonies.filter(
@@ -110,31 +112,31 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const [playLatestInline, setPlayLatestInline] = useState(false);
   const [flyerModalOpen, setFlyerModalOpen] = useState(false);
 
-  // Wisdom Summit Countdown Timer (Target: October 7, 2026)
-  const [timeLeft, setTimeLeft] = useState({
-    days: 18,
-    hours: 2,
-    minutes: 7,
-    seconds: 0,
-  });
+  // Wisdom Summit Countdown Timer (starts October 7, 2026; final day is October 11)
+  const SUMMIT_START = new Date("2026-10-07T18:00:00").getTime();
+  const SUMMIT_END = new Date("2026-10-11T23:59:59").getTime();
+  const getTimeLeft = () => {
+    const difference = Math.max(0, SUMMIT_START - Date.now());
+    return {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
+    };
+  };
+  const [timeLeft, setTimeLeft] = useState(getTimeLeft);
+  const [summitStatus, setSummitStatus] = useState<"upcoming" | "live" | "ended">("upcoming");
 
   useEffect(() => {
-    const targetDate = new Date("2026-10-07T18:00:00");
-    const timer = setInterval(() => {
-      const now = new Date();
-      const difference = targetDate.getTime() - now.getTime();
-
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-        });
-      }
-    }, 1000);
-
+    const tick = () => {
+      const now = Date.now();
+      setTimeLeft(getTimeLeft());
+      setSummitStatus(now < SUMMIT_START ? "upcoming" : now <= SUMMIT_END ? "live" : "ended");
+    };
+    tick();
+    const timer = setInterval(tick, 1000);
     return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Testimony modal state
@@ -194,18 +196,26 @@ export const HomeView: React.FC<HomeViewProps> = ({
             />
           ) : (
             <m.img
-              src={getBanner("hero_banner", "/hero_icgc_banner.jpg")}
+              src={heroSrc}
               onError={(e) => {
                 const target = e.currentTarget;
                 if (target.src !== "https://i.imgur.com/0ULg34j.png") {
                   target.src = "https://i.imgur.com/0ULg34j.png";
                 }
               }}
+              srcSet={
+                /hero_icgc_banner\.(webp|jpg)$/.test(heroSrc)
+                  ? "/assets/optimized/hero_icgc_banner-mobile.webp 900w, /assets/optimized/hero_icgc_banner.webp 2048w"
+                  : undefined
+              }
+              sizes="100vw"
+              fetchPriority="high"
+              decoding="async"
               alt="Wisdom Temple Official Banner"
               initial={prefersReducedMotion ? { scale: 1 } : { scale: 1.08 }}
               animate={{ scale: 1 }}
               transition={{ duration: 2.4, ease: "easeOut" }}
-              className="w-full h-full object-cover object-center"
+              className="hero-drift w-full h-full object-cover object-center"
               referrerPolicy="no-referrer"
             />
           )}
@@ -260,7 +270,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           >
             <button
               onClick={() => onNavigate("new-here")}
-              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gold-400 text-forest-950 font-bold text-sm sm:text-base shadow-[0_14px_30px_rgba(0,0,0,0.35)] transition-all hover:-translate-y-0.5 hover:bg-gold-300 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl cta-shine bg-gold-400 text-forest-950 font-bold text-sm sm:text-base shadow-[0_14px_30px_rgba(0,0,0,0.35)] transition-all hover:-translate-y-0.5 hover:bg-gold-300 cursor-pointer"
             >
               {content.heroButtonPrimary}
             </button>
@@ -273,6 +283,41 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </button>
           </m.div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* THIS WEEK - the next services at a glance */}
+      {/* ========================================================================= */}
+      <section aria-label="Service times this week" className="bg-forest-950 border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 grid grid-cols-1 md:grid-cols-[auto_1fr_1fr_auto] items-center gap-4 md:gap-8">
+          <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-gold-400">
+            Join us this week
+          </span>
+          <div className="flex items-center gap-3 text-white">
+            <Clock className="w-5 h-5 text-gold-400 shrink-0" />
+            <p className="text-sm leading-snug">
+              <span className="font-semibold">{content.sundayServiceName}</span>
+              <span className="block text-emerald-200/80 text-xs">
+                Sundays at {content.sundayServiceTime}
+              </span>
+            </p>
+          </div>
+          <div className="flex items-center gap-3 text-white">
+            <Flame className="w-5 h-5 text-gold-400 shrink-0" />
+            <p className="text-sm leading-snug">
+              <span className="font-semibold">{content.midweekServiceName}</span>
+              <span className="block text-emerald-200/80 text-xs">
+                Wednesdays at {content.midweekServiceTime}
+              </span>
+            </p>
+          </div>
+          <button
+            onClick={() => onNavigate("watch-listen")}
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg border border-gold-400/60 text-gold-300 hover:bg-gold-400 hover:text-forest-950 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+          >
+            <Play className="w-3.5 h-3.5" /> Watch online
+          </button>
         </div>
       </section>
 
@@ -406,11 +451,75 @@ export const HomeView: React.FC<HomeViewProps> = ({
       </section>
 
       {/* ========================================================================= */}
+      {/* LIFE AT WISDOM TEMPLE - real people, real joy */}
+      {/* ========================================================================= */}
+      <section id="life-at-wisdom-temple" className="bg-gold-50 py-20 sm:py-24 border-b border-gold-200/60">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <m.div {...reveal()} className="text-center max-w-2xl mx-auto mb-12 space-y-4">
+            <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em]">
+              Life at Wisdom Temple
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl text-forest-900 font-serif-title">
+              A family you can belong to
+            </h2>
+            <p className="text-slate-600 leading-relaxed">
+              Behind every service and summit is a team of people who love God
+              and love people. Come as you are, and you will find a seat, a
+              smile and a place to serve.
+            </p>
+          </m.div>
+
+          <ScrollStory
+            stickyTop="top-28"
+            steps={[
+              {
+                icon: Flame,
+                label: "01 · Faith",
+                title: "Faith",
+                text: `Charismatic worship and sound teaching of the Word, every Sunday at ${content.sundayServiceTime} and on Wednesdays at ${content.midweekServiceTime} at The Secret Place.`,
+                image: "/assets/optimized/hero_icgc_banner.webp",
+                alt: "Worshippers gathered in the Wisdom Temple auditorium",
+                action: { label: "Watch a message", onClick: () => onNavigate("watch-listen") },
+              },
+              {
+                icon: Sparkles,
+                label: "02 · Purpose",
+                title: "Purpose",
+                text: "We exist to raise leaders, shape visions and influence society through Christ, from the classroom to the marketplace.",
+                image: "/assets/photos/wisdom-summit-team-lineup.webp",
+                alt: "Wisdom Temple team members posing together at the Wisdom Summit",
+                action: { label: "Explore our ministries", onClick: () => onNavigate("ministries") },
+              },
+              {
+                icon: Heart,
+                label: "03 · Community",
+                title: "Community",
+                text: "Whatever your season, you will find a seat, a smile and a place to serve. We would love to meet you.",
+                image: "/assets/photos/wisdom-summit-full-team.webp",
+                alt: "The Wisdom Summit team celebrating together",
+                action: { label: "Plan your visit", onClick: () => onNavigate("new-here") },
+              },
+            ]}
+          />
+
+          <div className="mt-12 text-center">
+            <button
+              onClick={() => onNavigate("gallery")}
+              className="group inline-flex items-center gap-2 text-sm font-semibold text-forest-700 hover:text-forest-500 cursor-pointer"
+            >
+              See more photos
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
       {/* 3. LATEST MESSAGE (MEDIA SECTION) - ICGC Deep Forest Theme */}
       {/* ========================================================================= */}
       {latestSermon && (
         <section
-          className="py-20 bg-forest-950 text-white border-b border-forest-700"
+          className="ambient-glow py-20 bg-forest-950 text-white border-b border-forest-700"
           id="latest-message"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -560,7 +669,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* ========================================================================= */}
       {featuredSummit && (
         <section
-          className="py-20 bg-forest-950 text-white relative border-b border-forest-700"
+          className="ambient-glow py-20 bg-forest-950 text-white relative border-b border-forest-700"
           id="wisdom-summit"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -625,20 +734,44 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <div className="lg:col-span-5 xl:col-span-4 bg-forest-950 rounded-xl border border-white/15 p-6 sm:p-8 text-center space-y-6">
                   <div>
                     <span className="text-xs uppercase tracking-widest text-gold-400 block font-bold">
-                      CONFERENCE COUNTDOWN
+                      {summitStatus === "upcoming"
+                        ? "CONFERENCE COUNTDOWN"
+                        : summitStatus === "live"
+                        ? "HAPPENING NOW"
+                        : "SUMMIT CONCLUDED"}
                     </span>
                     <p className="text-xs text-emerald-300/80 mt-1">
                       October 7 - 9 & 11, 2026
                     </p>
                   </div>
 
-                  {/* Timer Boxes */}
-                  <div className="grid grid-cols-4 gap-2.5 text-center">
-                    <CountdownUnit value={timeLeft.days} label="Days" tone="gold" />
-                    <CountdownUnit value={timeLeft.hours} label="Hours" tone="white" />
-                    <CountdownUnit value={timeLeft.minutes} label="Mins" tone="white" />
-                    <CountdownUnit value={timeLeft.seconds} label="Secs" tone="gold" />
-                  </div>
+                  {summitStatus === "upcoming" ? (
+                    <div className="grid grid-cols-4 gap-2.5 text-center">
+                      <CountdownUnit value={timeLeft.days} label="Days" tone="gold" />
+                      <CountdownUnit value={timeLeft.hours} label="Hours" tone="white" />
+                      <CountdownUnit value={timeLeft.minutes} label="Mins" tone="white" />
+                      <CountdownUnit value={timeLeft.seconds} label="Secs" tone="gold" />
+                    </div>
+                  ) : (
+                    <div className="bg-forest-900 border border-white/10 rounded-lg px-4 py-5 space-y-2">
+                      {summitStatus === "live" && (
+                        <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-white">
+                          <span className="live-dot" aria-hidden="true" />
+                          Live this week
+                        </span>
+                      )}
+                      <p className="font-display text-xl text-gold-300">
+                        {summitStatus === "live"
+                          ? "Wisdom Summit is on"
+                          : "Thank you for joining us"}
+                      </p>
+                      <p className="text-xs text-emerald-200/80 leading-relaxed">
+                        {summitStatus === "live"
+                          ? "Nightly at 6:30pm (Oct 7 - 9), and Sunday Oct 11 at 8:00am prompt."
+                          : "Watch the messages and see photos from the summit."}
+                      </p>
+                    </div>
+                  )}
 
                   {/* Registering Button Beside */}
                   <div className="space-y-2 pt-2">
@@ -753,6 +886,30 @@ export const HomeView: React.FC<HomeViewProps> = ({
       </section>
 
       {/* ========================================================================= */}
+      {/* SCRIPTURE BAND - a pause between sections */}
+      {/* ========================================================================= */}
+      <section className="relative isolate overflow-hidden py-24 sm:py-32 text-white text-center">
+        <img
+          src="/assets/photos/wisdom-summit-team-lineup.webp"
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 -z-10 w-full h-full object-cover object-center"
+        />
+        <div className="absolute inset-0 -z-10 bg-forest-950/85" />
+        <m.div {...reveal()} className="max-w-3xl mx-auto px-6 space-y-5">
+          <Quote className="w-9 h-9 text-gold-400 mx-auto" aria-hidden="true" />
+          <p className="font-display text-2xl sm:text-4xl leading-snug">
+            Happy is the one who finds wisdom, and the one who gets understanding.
+          </p>
+          <span className="block text-xs font-bold uppercase tracking-[0.25em] text-gold-400">
+            Proverbs 3:13
+          </span>
+        </m.div>
+      </section>
+
+      {/* ========================================================================= */}
       {/* 10. TESTIMONIES SECTION */}
       {/* ========================================================================= */}
       {publishedTestimonies.length > 0 && (
@@ -824,7 +981,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* 11. GIVING TEASER ON HOMEPAGE - Official ICGC Forest & Gold */}
       {/* ========================================================================= */}
       <section
-        className="py-16 bg-forest-900 text-white border-t border-white/10"
+        className="ambient-glow py-16 bg-forest-900 text-white border-t border-white/10"
         id="giving-teaser"
       >
         <m.div

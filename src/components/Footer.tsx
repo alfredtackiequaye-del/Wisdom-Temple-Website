@@ -265,7 +265,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         </div>
 
         {/* Bottom Bar: Copyright & Clean Links */}
-        <div className="mt-10 pt-6 border-t border-forest-700/60 flex flex-col sm:flex-row justify-between items-center text-xs text-emerald-400/70 gap-3">
+        <div className="mt-10 pt-6 border-t border-forest-700/60 flex flex-col sm:flex-row justify-between items-center text-xs text-emerald-400/70 gap-3 pb-16 sm:pb-12">
           <p>{content.footerCopyrightNotice}</p>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px]">
             <button onClick={() => handleNav('about', 'beliefs')} className="hover:text-white transition-colors cursor-pointer">
