@@ -1,0 +1,13 @@
+{
+  "name": "Wisdom Temple",
+  "short_name": "Wisdom Temple",
+  "description": "A Bible-believing charismatic church at Star Junction, Tabora - Accra, Ghana.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#032014",
+  "theme_color": "#032014",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

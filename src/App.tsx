@@ -41,6 +41,7 @@ import { ShareModal } from "./components/ShareModal";
 import { EventRegistrationModal } from "./components/EventRegistrationModal";
 import { useSiteContent } from "./utils/contentManager";
 import { useStructuredData } from "./utils/structuredData";
+import { usePageMeta } from "./utils/pageMeta";
 
 // Views are loaded only when their page is opened.
 const HomeView = lazy(() =>
@@ -217,6 +218,7 @@ export default function App() {
   const [events, setEvents] = useState<ChurchEvent[]>(INITIAL_EVENTS);
   const { content: siteContent } = useSiteContent();
   useStructuredData(siteContent, events);
+  usePageMeta(currentPage);
   const [ministries] = useState(INITIAL_MINISTRIES);
   const [testimonies] = useState(INITIAL_TESTIMONIES);
   const [photos] = useState<ChurchPhoto[]>(INITIAL_CHURCH_PHOTOS);
@@ -513,7 +515,7 @@ export default function App() {
     setVisitPlans((prev) => [newPlan, ...prev]);
     void submitServerRecord("visitPlans", newPlan);
     showToast(
-      "Your Sunday visit has been scheduled! Our host team will meet you.",
+      "Your visit has been scheduled! Our host team will meet you.",
     );
   };
 
@@ -613,7 +615,7 @@ export default function App() {
 
         {/* Main Viewport Content */}
         <main className="flex-1">
-          <Suspense fallback={<div className="min-h-[60vh]" />}>
+          <Suspense fallback={<div className="min-h-[100vh]" aria-hidden="true" />}>
             <AnimatePresence mode="wait">
               <m.div
                 key={currentPage}
@@ -756,7 +758,7 @@ export default function App() {
 
         {/* 6. Toast Notification */}
         {toastMessage && (
-          <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-forest-900 text-white border border-gold-500/60 px-5 py-3 rounded-2xl shadow-2xl text-xs font-semibold flex items-center space-x-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
+          <div role="status" className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-forest-900 text-white border border-gold-500/60 px-5 py-3 rounded-2xl shadow-2xl text-xs font-semibold flex items-center space-x-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
             <span className="w-2 h-2 rounded-full bg-gold-300 animate-pulse" />
             <span>{toastMessage}</span>
           </div>
