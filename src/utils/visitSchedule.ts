@@ -69,25 +69,41 @@ export const resolveVisit = (choice: string, now = Date.now()): CalendarVisit | 
   return null;
 };
 
-/** Builds an .ics file body that opens in Apple, Google and Outlook calendars. */
-export const buildIcs = (visit: CalendarVisit) =>
+/** Builds an .ics file body for one or more slots; opens in Apple, Google and Outlook calendars. */
+export const buildIcsMulti = (visits: CalendarVisit[], description = "Our welcome team will meet you at the door.") =>
   [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
     "PRODID:-//Wisdom Temple//Plan Your Visit//EN",
-    "BEGIN:VEVENT",
-    `UID:${visit.start}@wisdomtemple`,
-    `DTSTAMP:${icsStamp(Date.now())}`,
-    `DTSTART:${icsStamp(visit.start)}`,
-    `DTEND:${icsStamp(visit.start + visit.lengthH * HOUR)}`,
-    `SUMMARY:${visit.title}`,
-    `LOCATION:${visit.location}`,
-    "DESCRIPTION:Doors open 45 minutes before service. Our welcome team will meet you at the door.",
-    "BEGIN:VALARM",
-    "TRIGGER:-PT2H",
-    "ACTION:DISPLAY",
-    "DESCRIPTION:Wisdom Temple visit",
-    "END:VALARM",
-    "END:VEVENT",
+    ...visits.flatMap((visit) => [
+      "BEGIN:VEVENT",
+      `UID:${visit.start}@wisdomtemple`,
+      `DTSTAMP:${icsStamp(Date.now())}`,
+      `DTSTART:${icsStamp(visit.start)}`,
+      `DTEND:${icsStamp(visit.start + visit.lengthH * HOUR)}`,
+      `SUMMARY:${visit.title}`,
+      `LOCATION:${visit.location}`,
+      `DESCRIPTION:${description}`,
+      "BEGIN:VALARM",
+      "TRIGGER:-PT2H",
+      "ACTION:DISPLAY",
+      "DESCRIPTION:Wisdom Temple reminder",
+      "END:VALARM",
+      "END:VEVENT",
+    ]),
     "END:VCALENDAR",
   ].join("\r\n");
+
+/** Single-visit version used by the Plan a Visit page. */
+export const buildIcs = (visit: CalendarVisit) =>
+  buildIcsMulti([visit], "Doors open 45 minutes before service. Our welcome team will meet you at the door.");
+
+/** Saves an .ics string as a file the browser downloads. */
+export const downloadIcs = (body: string, filename: string) => {
+  const url = URL.createObjectURL(new Blob([body], { type: "text/calendar;charset=utf-8" }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+};
