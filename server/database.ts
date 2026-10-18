@@ -2,7 +2,7 @@ import Database from "better-sqlite3";
 import fs from "node:fs";
 import path from "node:path";
 
-const dataDirectory = path.resolve(process.cwd(), ".data");
+const dataDirectory = path.resolve(process.env.DATA_DIR || path.join(process.cwd(), ".data"));
 fs.mkdirSync(dataDirectory, { recursive: true });
 
 const db = new Database(path.join(dataDirectory, "wisdom-temple.sqlite"));

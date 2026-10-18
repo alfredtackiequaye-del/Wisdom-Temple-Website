@@ -31,7 +31,7 @@ interface Session {
 
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000;
 const SESSION_COOKIE = "wt_admin_session";
-const dataPath = path.resolve(process.cwd(), ".data/admin-users.json");
+const dataPath = path.resolve(process.env.DATA_DIR || path.join(process.cwd(), ".data"), "admin-users.json");
 const sessions = new Map<string, Session>();
 
 const seedUsers = [

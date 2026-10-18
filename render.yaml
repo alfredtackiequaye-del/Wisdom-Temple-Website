@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: wisdom-temple
+    runtime: node
+    plan: starter # persistent disks need a paid plan
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: DATA_DIR
+        value: /var/data
+      - key: UPLOAD_DIR
+        value: /var/data/uploads
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+    disk:
+      name: wisdom-temple-data
+      mountPath: /var/data
+      sizeGB: 5
