@@ -255,10 +255,26 @@ export const HomeView: React.FC<HomeViewProps> = ({
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.75, delay: 0.55, ease: "easeOut" }}
-            className="mt-7 max-w-md text-sm sm:text-base text-emerald-50/90 leading-[1.7] font-medium drop-shadow-[0_3px_12px_rgba(0,0,0,0.55)]"
+            className="mt-7 max-w-xl text-sm sm:text-base text-emerald-50/90 leading-[1.7] font-medium drop-shadow-[0_3px_12px_rgba(0,0,0,0.55)]"
           >
             {content.heroSubtitle}
           </m.p>
+
+          <m.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, delay: 0.68, ease: "easeOut" }}
+            className="mt-6 flex flex-wrap items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-50/80"
+          >
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 backdrop-blur-sm">
+              <Calendar className="w-3.5 h-3.5 text-gold-300" />
+              {content.sundayServiceDay} • {content.sundayServiceTime}
+            </span>
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 backdrop-blur-sm">
+              <Flame className="w-3.5 h-3.5 text-gold-300" />
+              {content.midweekServiceDay} • {content.midweekServiceTime}
+            </span>
+          </m.div>
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 w-full mt-9">
@@ -358,7 +374,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 </div>
                 <div className="space-y-1.5">
                   <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-forest-600">
-                    SUNDAYS @ {content.sundayServiceTime}
+                    {content.sundayServiceDay} @ {content.sundayServiceTime}
                   </span>
                   <h3 className="text-2xl font-bold text-forest-900 font-display tracking-[-0.04em]">
                     {content.experienceMod1Title}
@@ -373,7 +389,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   onClick={() => onNavigate("new-here")}
                   className="inline-flex items-center gap-2 text-xs font-bold text-forest-800 group-hover:text-gold-600 transition-colors cursor-pointer"
                 >
-                  <span>Plan Your Sunday Visit</span>
+                  <span>Plan your visit</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
               </div>
@@ -392,7 +408,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 </div>
                 <div className="space-y-1.5">
                   <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-forest-600">
-                    MESSAGES & PODCASTS
+                    TEACHING FOR EVERY SEASON
                   </span>
                   <h3 className="text-2xl font-bold text-forest-900 font-display tracking-[-0.04em]">
                     {content.experienceMod2Title}
@@ -407,7 +423,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   onClick={() => onNavigate("watch-listen")}
                   className="inline-flex items-center gap-2 text-xs font-bold text-forest-800 group-hover:text-gold-600 transition-colors cursor-pointer"
                 >
-                  <span>Browse Sermon Archive</span>
+                  <span>Explore the message library</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
               </div>
@@ -426,7 +442,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 </div>
                 <div className="space-y-1.5">
                   <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-forest-600">
-                    WEDNESDAYS @ {content.midweekServiceTime}
+                    {content.midweekServiceDay} @ {content.midweekServiceTime}
                   </span>
                   <h3 className="text-2xl font-bold text-forest-900 font-display tracking-[-0.04em]">
                     {content.experienceMod3Title}
@@ -441,7 +457,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   onClick={() => onNavigate("prayer")}
                   className="inline-flex items-center gap-2 text-xs font-bold text-forest-800 group-hover:text-gold-600 transition-colors cursor-pointer"
                 >
-                  <span>Submit Prayer / Join</span>
+                  <span>Share a prayer request</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
               </div>
@@ -457,15 +473,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <m.div {...reveal()} className="text-center max-w-2xl mx-auto mb-12 space-y-4">
             <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em]">
-              Life at Wisdom Temple
+              LIFE AT WISDOM TEMPLE
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl text-forest-900 font-serif-title">
-              A family you can belong to
+              Faith grows in community
             </h2>
             <p className="text-slate-600 leading-relaxed">
-              Behind every service and summit is a team of people who love God
-              and love people. Come as you are, and you will find a seat, a
-              smile and a place to serve.
+              We are a church family growing in faith, serving one another, and
+              sharing the love of Christ. Come as you are; there is a place for
+              you here.
             </p>
           </m.div>
 
@@ -529,17 +545,17 @@ export const HomeView: React.FC<HomeViewProps> = ({
             >
               <div>
                 <span className="text-xs text-gold-300 uppercase tracking-widest block font-bold">
-                  SPIRITUAL FEEDING & MEDIA
+                  BIBLICAL TEACHING FOR EVERY SEASON
                 </span>
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1 font-serif-title">
-                  Latest Message
+                  A Message for Your Journey
                 </h2>
               </div>
               <button
                 onClick={() => onNavigate("watch-listen")}
                 className="inline-flex items-center space-x-1 text-sm font-semibold text-gold-300 hover:text-white transition-colors"
               >
-                <span>VIEW ALL MESSAGES</span>
+                <span>Explore all messages</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
             </m.div>
@@ -692,7 +708,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   className="p-2 rounded-lg bg-forest-950 hover:bg-forest-800 text-emerald-200 hover:text-white transition-colors flex items-center space-x-1.5 text-xs font-semibold cursor-pointer border border-white/10"
                 >
                   <Share2 className="w-3.5 h-3.5 text-gold-500" />
-                  <span>Share Event</span>
+                  <span>Share gathering</span>
                 </button>
               </div>
 
@@ -718,7 +734,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
                       <span className="text-xs font-bold text-gold-400 flex items-center space-x-1.5 bg-forest-950 px-3.5 py-1.5 rounded-lg border border-white/20 shadow">
                         <ZoomIn className="w-3.5 h-3.5" />
-                        <span>Click to Enlarge Official Banner</span>
+                        <span>View the event banner</span>
                       </span>
                     </div>
 
@@ -775,15 +791,26 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
                   {/* Registering Button Beside */}
                   <div className="space-y-2 pt-2">
-                    <button
-                      onClick={() => onRegisterEvent(featuredSummit)}
-                      className="w-full py-3.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
-                    >
-                      REGISTER FOR WISDOM SUMMIT
-                    </button>
-                    <p className="text-[11px] text-emerald-300/70">
-                      Free Entry • Reserved Seating
-                    </p>
+                    {summitStatus === "ended" ? (
+                      <button
+                        onClick={() => onNavigate("watch-listen")}
+                        className="w-full py-3.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
+                      >
+                        Explore Summit Messages
+                      </button>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => onRegisterEvent(featuredSummit)}
+                          className="w-full py-3.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
+                        >
+                          Reserve your place
+                        </button>
+                        <p className="text-[11px] text-emerald-300/70">
+                          Free Entry • Reserved Seating
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -806,17 +833,17 @@ export const HomeView: React.FC<HomeViewProps> = ({
           >
             <div>
               <span className="text-xs font-bold tracking-widest text-forest-700 uppercase bg-mist-200 px-3 py-1 rounded-full border border-mist-400">
-                CALENDAR & GATHERINGS
+                GATHER, WORSHIP & GROW
               </span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-forest-900 mt-2 font-serif-title">
-                Upcoming Events
+                Gatherings & Events
               </h2>
             </div>
             <button
               onClick={() => onNavigate("events")}
               className="inline-flex items-center space-x-1 text-sm font-semibold text-forest-700 hover:text-forest-500 transition-colors"
             >
-              <span>VIEW ALL EVENTS</span>
+              <span>Explore all gatherings</span>
               <ChevronRight className="w-4 h-4" />
             </button>
           </m.div>
@@ -876,7 +903,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     onClick={() => onRegisterEvent(event)}
                     className="w-full py-2.5 bg-forest-900 hover:bg-forest-800 text-white font-bold text-xs rounded-xl transition-all cursor-pointer border border-gold-500/30"
                   >
-                    REGISTER NOW
+                    Event details & registration
                   </button>
                 </div>
               </m.div>
@@ -921,10 +948,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <m.div {...reveal()} className="mb-10 max-w-2xl">
               <div>
                 <span className="text-[10px] font-bold tracking-[0.22em] text-forest-700 uppercase">
-                  TESTIMONIALS
+                  STORIES OF FAITH
                 </span>
                 <h2 className="text-4xl sm:text-5xl font-extrabold leading-[0.98] text-forest-900 mt-3 font-serif-title">
-                  How lives are transformed through love, and faith.
+                  Stories of hope, faith & transformation
                 </h2>
               </div>
             </m.div>
@@ -970,7 +997,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               onClick={() => setShowTestimonyModal(true)}
               className="mt-8 inline-flex items-center space-x-2 text-forest-700 hover:text-gold-600 font-bold text-xs uppercase tracking-[0.14em] transition-colors cursor-pointer"
             >
-              <span>Share your testimony</span>
+              <span>Share your story</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -992,20 +1019,19 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <Heart className="w-6 h-6 fill-gold-500 text-gold-500" />
           </div>
           <h2 className="text-3xl sm:text-4xl font-light text-white font-serif">
-            Worship Through{" "}
-            <span className="font-normal text-gold-400">Giving</span>
+            Partner in the{" "}
+            <span className="font-normal text-gold-400">Mission</span>
           </h2>
           <p className="text-emerald-200/80 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Your generosity helps support the work of the ministry and enables
-            us to serve people, maintain our sanctuary, and advance the Gospel
-            in Ghana.
+            Your generosity helps sustain worship, discipleship, pastoral care,
+            outreach, and the work of the Gospel in our city and beyond.
           </p>
           <div className="pt-4">
             <button
               onClick={() => onNavigate("give")}
               className="px-8 py-3.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer inline-flex items-center space-x-2"
             >
-              <span>GIVE FIRST FRUIT & OFFERINGS</span>
+              <span>Give to the Mission</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

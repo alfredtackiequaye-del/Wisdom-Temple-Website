@@ -3,28 +3,29 @@ import { SiteContentConfig, ContentSectionId } from "../types";
 
 export const DEFAULT_SITE_CONTENT: SiteContentConfig = {
   // --- Homepage & Hero ---
-  heroHeadline: "Faith. Purpose. Community.",
-  heroSubtitle: "A vibrant church family in the heart of Tabora.",
-  heroButtonPrimary: "PLAN YOUR VISIT",
-  heroButtonSecondary: "UPCOMING EVENTS",
+  heroHeadline: "Encounter God. Grow in Purpose.",
+  heroSubtitle:
+    "A Christ-centered church family in Tabora, where worship, prayer, discipleship, and community help you live with faith and direction.",
+  heroButtonPrimary: "Plan Your Visit",
+  heroButtonSecondary: "See Upcoming Events",
   heroVideoUrl: "",
   experienceSectionBadge: "EXPERIENCE WISDOM TEMPLE",
-  experienceSectionTitle: "Get Connected & Grow in Faith",
+  experienceSectionTitle: "A Place to Worship, Pray & Belong",
   experienceSectionSubtitle:
-    "Whether joining in person or online, here are clear steps for you and your family.",
-  experienceMod1Title: "Visit In-Person",
+    "Whether you are visiting for the first time or looking to deepen your walk with God, there is a place for you here.",
+  experienceMod1Title: "Visit With Us",
   experienceMod1Desc:
-    "Join us at Star Junction, Tabora for charismatic praise, spirit-filled worship, and foundational biblical teaching.",
-  experienceMod2Title: "Watch on Demand",
+    "Join us in person at Star Junction, Tabora for vibrant worship, biblical teaching, and warm Christian fellowship.",
+  experienceMod2Title: "Watch the Message",
   experienceMod2Desc:
-    "Catch up on previous Sunday sermons, Wisdom Summit series, and midweek teachings anywhere on video or audio.",
-  experienceMod3Title: "The Secret Place Prayer Service",
+    "Catch up on Sunday teachings, Wisdom Summit messages, and prayer-filled sermons anytime from anywhere.",
+  experienceMod3Title: "Enter the Secret Place",
   experienceMod3Desc:
-    "Our midweek prayer service of passionate intercession, prophetic ministry, and personal renewal in God's presence.",
+    "Encounter God's presence through prayer, worship, and prophetic intercession in our midweek gathering.",
   firstTimeVisitorEyebrow: "Visiting for the First Time?",
-  firstTimeVisitorTitle: "You're Welcome Here",
+  firstTimeVisitorTitle: "You Belong Here",
   firstTimeVisitorDesc:
-    "Stepping into a new church should feel warm, uplifting, and inspiring. At Wisdom Temple, you are received as honored family from the moment you arrive.",
+    "Stepping into a new church should feel warm, uplifting, and inspiring. At Wisdom Temple, you are welcomed as part of the family from the moment you arrive.",
 
   // --- Church Identity & Contact ---
   churchName: "Wisdom Temple",
