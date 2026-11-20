@@ -33,7 +33,7 @@ const albumIdFromUrl = () =>
 
 const setAlbumInUrl = (albumId: string | null) => {
   try {
-    window.history.replaceState(null, "", albumId ? `/?album=${albumId}` : "/");
+    window.history.replaceState(null, "", albumId ? `/gallery?album=${albumId}` : "/gallery");
   } catch {
     // Non-critical: sharing links just won't reflect the open album.
   }
@@ -277,7 +277,7 @@ const AlbumDetail: React.FC<{ albumId: string; onBack: () => void }> = ({
   }, [albumId]);
 
   const share = async () => {
-    const url = `${window.location.origin}/?album=${albumId}`;
+    const url = `${window.location.origin}/gallery?album=${albumId}`;
     try {
       if (navigator.share) {
         await navigator.share({ title: album?.title, url });

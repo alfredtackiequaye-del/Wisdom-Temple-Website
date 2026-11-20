@@ -137,7 +137,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                 <button
                   type="button"
                   onClick={() => setFlyerModalOpen(true)}
-                  className="px-4 sm:px-5 py-2.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors flex items-center space-x-2 cursor-pointer"
+                  className="px-4 sm:px-5 py-2.5 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors flex items-center space-x-2 cursor-pointer"
                 >
                   <ZoomIn className="w-4 h-4" />
                   <span>VIEW FULL GIVING FLYER</span>
@@ -465,7 +465,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
 
                 <button
                   type="submit"
-                  className="w-full py-3.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer flex items-center justify-center space-x-2"
+                  className="w-full py-3.5 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer flex items-center justify-center space-x-2"
                 >
                   <Sparkles className="w-4 h-4" />
                   <span>LOG PAYMENT & GET DIGITAL RECEIPT</span>
@@ -680,7 +680,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                 <a
                   href="/giving_details_official.jpg"
                   download="Wisdom_Temple_Giving.jpg"
-                  className="px-4 py-2 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold rounded-lg text-xs uppercase tracking-wider flex items-center space-x-1.5 cursor-pointer shadow-sm transition-colors"
+                  className="px-4 py-2 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold rounded-lg text-xs uppercase tracking-wider flex items-center space-x-1.5 cursor-pointer shadow-sm transition-colors"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Download High-Res Flyer</span>

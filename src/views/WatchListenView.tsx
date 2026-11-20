@@ -202,7 +202,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
                 <div className="pt-2 flex flex-wrap gap-3">
                   <button
                     onClick={() => onPlayAudio(sermons[0])}
-                    className="px-4 py-2 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors flex items-center space-x-1.5 cursor-pointer shadow-sm"
+                    className="px-4 py-2 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors flex items-center space-x-1.5 cursor-pointer shadow-sm"
                   >
                     <Headphones className="w-4 h-4 fill-forest-950" />
                     <span>Listen Audio</span>

@@ -18,36 +18,12 @@ import {
   CalendarPlus,
   DoorOpen,
   Music,
-  MessageCircle
+  MessageCircle,
 } from 'lucide-react';
 import { reveal, staggerContainer, staggerItem, LIFT_SPRING, EASE_OUT } from '../utils/motion';
-import { getNextSunday, resolveVisit, buildIcs } from '../utils/visitSchedule';
+import { resolveVisit, buildIcs } from '../utils/visitSchedule';
 import { ScrollStory } from '../components/ScrollStory';
-
-/** Live countdown to the next Sunday service (or "on now"). Ticks every 30s; kept separate so only it re-renders. */
-const NextServicePill: React.FC = () => {
-  const [next, setNext] = useState(() => getNextSunday());
-  useEffect(() => {
-    const id = window.setInterval(() => setNext(getNextSunday()), 30000);
-    return () => window.clearInterval(id);
-  }, []);
-  return (
-    <div className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/5 backdrop-blur px-4 py-2 text-sm">
-      <span className="live-dot" aria-hidden="true" />
-      {next.status === 'live' ? (
-        <span className="font-semibold text-white">{next.label}. Come as you are.</span>
-      ) : (
-        <span className="text-emerald-100/90">
-          Next service in{' '}
-          <strong className="text-gold-300">
-            {next.days > 0 ? `${next.days}d ` : ''}{next.hours}h {next.minutes}m
-          </strong>
-          <span className="hidden sm:inline text-emerald-200/60"> · Sunday, 8:00 AM</span>
-        </span>
-      )}
-    </div>
-  );
-};
+import { NextServiceCard, WelcomePhoto, InvitationBand, SuccessCheck } from '../components/VisitExperience';
 
 const SUNDAY_STORY = [
   {
@@ -209,9 +185,9 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
 
   return (
     <div className="visit-page-bg min-h-screen text-slate-900 pb-24 overflow-x-clip">
-      {/* Hero: a warm welcome with the people who will greet you */}
-      <section ref={heroRef} className="ambient-glow relative isolate bg-forest-950 text-white overflow-hidden border-b border-gold-500/30">
-        <m.div className="absolute -inset-y-10 inset-x-0 -z-10" style={{ y: heroBgY }}>
+      {/* Hero: a cinematic welcome with the people who will greet you */}
+      <section ref={heroRef} className="relative isolate bg-forest-950 text-white overflow-hidden border-b border-gold-500/30 lg:min-h-[92vh] flex flex-col">
+        <m.div className="absolute -inset-y-10 inset-x-0 -z-20" style={{ y: heroBgY }}>
           <img
             src={heroBg}
             srcSet={
@@ -223,86 +199,115 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
             alt=""
             aria-hidden="true"
             decoding="async"
-            className="hero-drift w-full h-full object-cover opacity-45"
+            className="w-full h-full object-cover opacity-30"
           />
-          {/* Lets the photo glow on the right while keeping the headline readable on the left. */}
-          <div className="absolute inset-0 bg-gradient-to-r from-forest-950 via-forest-950/85 to-forest-950/25" />
-          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-forest-950 to-transparent" />
-          <div className="absolute inset-0 hero-grain" />
+          {/* Keeps the headline readable on the left while the photo glows on the right. */}
+          <div className="absolute inset-0 bg-gradient-to-r from-forest-950 via-forest-950/85 to-forest-950/40" />
+          <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-forest-950 to-transparent" />
         </m.div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 grid lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-7 space-y-6">
-            <m.span {...reveal()} className="text-xs text-gold-300 font-bold uppercase tracking-[0.22em] inline-flex items-center gap-2">
-              <span className="h-px w-8 bg-gold-400" aria-hidden="true" />
-              You are our honored guest
-            </m.span>
-            <m.h1 {...reveal(0.08)} className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white font-serif-title leading-[1.05]">
-              Plan your visit.
-              <span className="block text-gold-300">We saved you a seat.</span>
-            </m.h1>
-            <m.p {...reveal(0.16)} className="text-base sm:text-lg text-emerald-100/85 max-w-xl leading-relaxed">
-              Visiting a church for the first time should feel warm, easy and
-              unhurried. Here is exactly what to expect, from the car park to
-              the coffee afterwards.
-            </m.p>
-            <m.div {...reveal(0.24)} className="flex flex-wrap items-center gap-4 pt-2">
-              <a
-                href="#pre-register"
-                className="cta-shine px-7 py-3.5 rounded-xl bg-gold-400 hover:bg-gold-300 text-forest-950 font-bold text-sm transition-colors"
-              >
-                Pre-register my visit
-              </a>
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CHURCH_INFO.physicalAddress)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-gold-300 transition-colors"
-              >
-                Get directions
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </a>
-            </m.div>
-            <m.div {...reveal(0.32)} className="pt-2">
-              <NextServicePill />
-            </m.div>
-          </div>
+        <div className="absolute inset-0 -z-10 hero-grain" aria-hidden="true" />
 
-          <m.div {...reveal(0.12)} className="lg:col-span-5">
-            <div className="relative">
-              <div className="absolute -inset-3 rounded-[28px] bg-gold-400/15 blur-2xl" aria-hidden="true" />
-              <img
-                src="/assets/photos/wisdom-summit-full-team.webp"
-                alt="The Wisdom Temple welcome team smiling together"
-                className="relative w-full aspect-[4/3] object-cover rounded-3xl border border-white/15 shadow-2xl"
-              />
-              <div className="absolute -bottom-5 left-5 right-5 sm:left-auto sm:right-6 sm:w-64 rounded-2xl bg-forest-900/95 border border-gold-500/40 px-4 py-3 shadow-xl backdrop-blur">
-                <p className="text-[11px] uppercase tracking-widest text-gold-300 font-bold">Look for our hosts</p>
-                <p className="text-xs text-emerald-100/85 mt-0.5">Ushers in badges will meet you at the door.</p>
-              </div>
+        <div className="flex-1 flex items-center">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 grid lg:grid-cols-12 gap-14 lg:gap-10 items-center">
+            <div className="lg:col-span-6 space-y-7">
+              <m.p
+                initial={prefersReducedMotion ? false : { opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: EASE_OUT }}
+                className="text-sm text-gold-300 font-bold uppercase tracking-[0.26em] inline-flex items-center gap-3"
+              >
+                <m.span
+                  initial={prefersReducedMotion ? false : { scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ duration: 0.9, delay: 0.2, ease: EASE_OUT }}
+                  className="h-px w-10 bg-gold-400 origin-left"
+                  aria-hidden="true"
+                />
+                You are our honored guest
+              </m.p>
+              <m.h1
+                initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, delay: 0.1, ease: EASE_OUT }}
+                className="font-serif-title text-5xl sm:text-6xl lg:text-7xl text-white leading-[1.04]"
+              >
+                Plan your visit.
+                <span className="block text-gold-300 text-[0.82em] mt-2">We saved you a seat.</span>
+              </m.h1>
+              <m.p
+                initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.25, ease: EASE_OUT }}
+                className="text-lg sm:text-xl text-emerald-100/90 max-w-xl leading-relaxed"
+              >
+                Visiting a church for the first time should feel warm, easy and
+                unhurried. Here is exactly what to expect, from the car park to
+                the refreshments afterwards.
+              </m.p>
+              <m.div
+                initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.35, ease: EASE_OUT }}
+                className="flex flex-wrap items-center gap-5"
+              >
+                <a
+                  href="#pre-register"
+                  className="group inline-flex items-center gap-2.5 px-8 py-4 rounded-xl bg-gold-400 hover:bg-gold-300 text-forest-950 font-bold text-base shadow-lg transition-colors"
+                >
+                  Reserve my seat
+                  <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                </a>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CHURCH_INFO.physicalAddress)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-2 text-base font-semibold text-white hover:text-gold-300 transition-colors"
+                >
+                  <MapPin className="w-5 h-5 text-gold-300" />
+                  Get directions
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </a>
+              </m.div>
+              <m.div
+                initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.45, ease: EASE_OUT }}
+              >
+                <NextServiceCard />
+              </m.div>
             </div>
-          </m.div>
+
+            <div className="lg:col-span-6 pb-6">
+              <WelcomePhoto />
+            </div>
+          </div>
         </div>
 
         {/* Quick facts */}
         <div className="border-t border-white/10 bg-forest-950/70 backdrop-blur-sm">
-          <ul className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 grid grid-cols-2 md:grid-cols-4 gap-5 text-sm">
+          <m.ul
+            initial="hidden"
+            animate="visible"
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08, delayChildren: 0.5 } } }}
+            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-2 md:grid-cols-4 gap-5"
+          >
             {[
               { icon: Clock, term: 'Sundays', desc: '8:00 AM sharp' },
               { icon: Heart, term: 'Midweek', desc: 'Wednesdays, 7:00 PM' },
               { icon: MapPin, term: 'Where', desc: CHURCH_INFO.landmark },
               { icon: Baby, term: 'Kingdom Kids', desc: 'Ages 1 to 12' },
             ].map(({ icon: Icon, term, desc }) => (
-              <li key={term} className="flex items-center gap-3">
-                <span className="w-10 h-10 rounded-xl bg-gold-400/15 border border-gold-400/30 flex items-center justify-center shrink-0">
-                  <Icon className="w-5 h-5 text-gold-300" />
+              <m.li key={term} variants={staggerItem} className="flex items-center gap-3">
+                <span className="w-12 h-12 rounded-xl bg-gold-400/15 border border-gold-400/40 flex items-center justify-center shrink-0">
+                  <Icon className="w-6 h-6 text-gold-300" />
                 </span>
                 <div>
-                  <span className="block text-[11px] uppercase tracking-wider text-emerald-300/70 font-semibold">{term}</span>
-                  <span className="block font-semibold text-white">{desc}</span>
+                  <span className="block text-xs uppercase tracking-[0.18em] text-gold-300/90 font-bold">{term}</span>
+                  <span className="block text-base sm:text-lg font-semibold text-white">{desc}</span>
                 </div>
-              </li>
+              </m.li>
             ))}
-          </ul>
+          </m.ul>
         </div>
       </section>
 
@@ -330,7 +335,14 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
           </m.div>
 
           <m.ol {...staggerContainer(0.16)} className="relative grid grid-cols-1 md:grid-cols-3 gap-8">
-            <span className="hidden md:block absolute top-[3.25rem] left-[16%] right-[16%] h-px bg-gradient-to-r from-transparent via-gold-400/70 to-transparent" aria-hidden="true" />
+            <m.span
+              initial={prefersReducedMotion ? false : { scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.6, delay: 0.2, ease: EASE_OUT }}
+              className="hidden md:block absolute top-[3.25rem] left-[16%] right-[16%] h-0.5 origin-left bg-gradient-to-r from-gold-500/30 via-gold-300 to-gold-500/30"
+              aria-hidden="true"
+            />
             {[
               {
                 n: 1, tag: 'Before you come', title: 'Service times & directions', note: 'Doors open 45 minutes before service',
@@ -368,9 +380,15 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
                 className="relative bg-white rounded-3xl border border-mist-300 shadow-sm hover:shadow-lift hover:border-gold-500/50 transition-shadow flex flex-col"
               >
                 <div className="px-6 pt-6 flex items-center gap-4">
-                  <span className="w-14 h-14 rounded-2xl bg-forest-900 text-gold-300 border border-gold-500/40 flex items-center justify-center font-serif-title text-2xl shadow-md">
+                  <m.span
+                    initial={prefersReducedMotion ? false : { scale: 0.7, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.2 + step.n * 0.2, ease: EASE_OUT }}
+                    className="w-14 h-14 rounded-2xl bg-forest-900 text-gold-300 border border-gold-500/40 flex items-center justify-center font-serif-title text-3xl shadow-md lining-nums"
+                  >
                     {step.n}
-                  </span>
+                  </m.span>
                   <span className="text-[11px] font-bold uppercase tracking-wider text-gold-700">{step.tag}</span>
                 </div>
                 <div className="p-6 space-y-4 flex-1">
@@ -415,6 +433,9 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
           </m.div>
         </section>
 
+        {/* Closing invitation */}
+        <InvitationBand ctaHref="#pre-register" />
+
         {/* Plan Your Visit Interactive Form */}
         <div id="pre-register" className="grid lg:grid-cols-12 gap-8 items-start scroll-mt-28">
         <m.aside {...reveal()} className="lg:col-span-4 lg:sticky lg:top-28 space-y-5">
@@ -443,38 +464,60 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
         </m.aside>
         <div className="lg:col-span-8 bg-white rounded-3xl p-8 sm:p-12 border border-mist-300 shadow-md w-full">
           <div className="text-center mb-8 space-y-2">
-            <span className="text-xs font-bold uppercase tracking-widest text-forest-700 bg-mist-100 px-3 py-1 rounded-full border border-mist-400">
-              LET US KNOW YOU'RE COMING
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-gold-700">
+              Let us know you're coming
             </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-forest-900 font-serif-title mt-2">
-              Pre-Register Your Visit
+            <h2 className="text-4xl sm:text-5xl text-forest-900 font-serif-title">
+              Reserve your seat
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600">
+            <p className="text-sm sm:text-base text-slate-600 max-w-lg mx-auto">
               When you tell us you are coming, our host team will reserve seating, prepare children's registration, and meet you at the door.
             </p>
           </div>
 
           {planSubmitted ? (
-            <div className="py-8 sm:py-12 text-center space-y-4 animate-in zoom-in-95 duration-200">
-              <div className="w-14 sm:w-16 h-14 sm:h-16 rounded-full bg-gold-500/20 border border-gold-500/40 text-gold-300 flex items-center justify-center mx-auto">
-                <CheckCircle2 className="w-8 sm:w-10 h-8 sm:h-10 text-forest-700" />
-              </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-forest-900 font-serif-title">We Can't Wait to Meet You!</h3>
-              <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
-                Thank you, <strong>{fullName}</strong>. Our hospitality team has recorded your visit for {serviceDate.replace(/\s*\(.*\)/, '')} at {serviceTime}. A guest reception pass has been reserved in your name.
+            <m.div
+              initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, ease: EASE_OUT }}
+              className="py-6 sm:py-10 text-center space-y-5"
+            >
+              <SuccessCheck />
+              <h3 className="text-3xl sm:text-4xl text-forest-900 font-serif-title">We can't wait to meet you!</h3>
+              <p className="text-sm sm:text-base text-slate-600 max-w-md mx-auto leading-relaxed">
+                Thank you, <strong>{fullName}</strong>. Your seat is reserved for {serviceDate.replace(/\s*\(.*\)/, '')} at {serviceTime}. Our hosts will be looking out for you.
               </p>
 
-              <div className="p-4 bg-gold-50 rounded-2xl border border-gold-500/50 max-w-md mx-auto text-left space-y-1">
-                <span className="text-[10px] uppercase text-forest-700 font-bold block">
-                  VISITOR RESERVATION CODE
-                </span>
-                <span className="text-base sm:text-lg font-black text-forest-900 block">
-                  {reservationCode}
-                </span>
-                <span className="text-xs text-slate-600 block">
-                  Party: {adultsCount} Adult(s) {childrenCount > 0 ? `• ${childrenCount} Child(ren)` : ''}
-                </span>
-              </div>
+              {/* The reservation, styled as an admission ticket */}
+              <m.div
+                initial={prefersReducedMotion ? false : { opacity: 0, y: 30, rotate: -2 }}
+                animate={{ opacity: 1, y: 0, rotate: 0 }}
+                transition={{ type: 'spring', stiffness: 110, damping: 14, delay: 0.5 }}
+                className="relative max-w-md mx-auto rounded-2xl bg-forest-900 text-left text-white shadow-xl overflow-hidden"
+              >
+                <div className="px-6 pt-5 pb-4">
+                  <span className="text-[11px] uppercase tracking-[0.2em] text-gold-300 font-bold block">Wisdom Temple · Guest Pass</span>
+                  <span className="mt-1 block font-serif-title text-2xl">{fullName}</span>
+                </div>
+                <div className="relative border-t-2 border-dashed border-gold-500/40">
+                  <span className="absolute -left-3 -top-3 h-6 w-6 rounded-full bg-white" aria-hidden="true" />
+                  <span className="absolute -right-3 -top-3 h-6 w-6 rounded-full bg-white" aria-hidden="true" />
+                </div>
+                <div className="px-6 py-4 grid grid-cols-3 gap-3 text-sm">
+                  <div>
+                    <span className="block text-[10px] uppercase tracking-wider text-emerald-200/80 font-bold">Code</span>
+                    <span className="font-bold text-gold-300">{reservationCode}</span>
+                  </div>
+                  <div>
+                    <span className="block text-[10px] uppercase tracking-wider text-emerald-200/80 font-bold">Time</span>
+                    <span className="font-bold">{serviceTime}</span>
+                  </div>
+                  <div>
+                    <span className="block text-[10px] uppercase tracking-wider text-emerald-200/80 font-bold">Party</span>
+                    <span className="font-bold">{adultsCount}A{childrenCount > 0 ? ` · ${childrenCount}C` : ''}</span>
+                  </div>
+                </div>
+              </m.div>
 
               <div className="pt-3 flex flex-wrap justify-center gap-3">
                 <a
@@ -501,12 +544,12 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
                 </button>
                 <button
                   onClick={() => onNavigate('home')}
-                  className="px-6 py-2.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg cursor-pointer transition-colors"
+                  className="px-6 py-2.5 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg cursor-pointer transition-colors"
                 >
                   Return to Home
                 </button>
               </div>
-            </div>
+            </m.div>
           ) : (
             <form onSubmit={handleSubmit} noValidate className="text-xs">
               {/* Progress */}
@@ -525,6 +568,14 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
                   </li>
                 ))}
               </ol>
+              <div className="-mt-4 mb-8 h-1 rounded-full bg-mist-200 overflow-hidden" aria-hidden="true">
+                <m.div
+                  className="h-full rounded-full bg-gradient-to-r from-gold-500 to-gold-300"
+                  initial={false}
+                  animate={{ width: `${((step + 1) / 3) * 100}%` }}
+                  transition={{ duration: 0.6, ease: EASE_OUT }}
+                />
+              </div>
 
               <AnimatePresence mode="wait" initial={false}>
                 <m.div
@@ -550,7 +601,7 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
                           placeholder="e.g. Kwabena Osei"
                           aria-invalid={Boolean(errors.fullName)}
                           aria-describedby={errors.fullName ? 'visit-name-error' : undefined}
-                          className={`w-full px-4 py-3 bg-mist-50 border rounded-xl text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500${errors.fullName ? 'border-red-400' : 'border-mist-300'}`}
+                          className={`w-full px-4 py-3 bg-mist-50 border rounded-xl text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 ${errors.fullName ? 'border-red-400' : 'border-mist-300'}`}
                         />
                         {errors.fullName && <p id="visit-name-error" role="alert" className="mt-1.5 text-red-700 font-medium">{errors.fullName}</p>}
                       </div>
@@ -578,7 +629,7 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
                             placeholder="e.g. +233 24 000 0000"
                             aria-invalid={Boolean(errors.phone)}
                             aria-describedby={errors.phone ? 'visit-phone-error' : undefined}
-                            className={`w-full px-4 py-3 bg-mist-50 border rounded-xl text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500${errors.phone ? 'border-red-400' : 'border-mist-300'}`}
+                            className={`w-full px-4 py-3 bg-mist-50 border rounded-xl text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 ${errors.phone ? 'border-red-400' : 'border-mist-300'}`}
                           />
                           {errors.phone && <p id="visit-phone-error" role="alert" className="mt-1.5 text-red-700 font-medium">{errors.phone}</p>}
                         </div>
@@ -676,14 +727,14 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
                 {step < 2 ? (
                   <button
                     type="submit"
-                    className="px-8 py-3.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer inline-flex items-center gap-2"
+                    className="px-8 py-3.5 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer inline-flex items-center gap-2"
                   >
                     Continue <ArrowRight className="w-4 h-4" />
                   </button>
                 ) : (
                   <button
                     type="submit"
-                    className="px-8 py-3.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
+                    className="px-8 py-3.5 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
                   >
                     Confirm my visit
                   </button>
@@ -707,7 +758,7 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
           tabIndex={showStickyCta ? 0 : -1}
           className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gold-400 text-forest-950 font-bold text-sm shadow-xl"
         >
-          <CalendarPlus className="w-4 h-4" /> Pre-register my visit
+          <CalendarPlus className="w-4 h-4" /> Reserve my seat
         </a>
       </div>
     </div>

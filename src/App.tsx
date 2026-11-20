@@ -122,50 +122,67 @@ const submitServerRecord = (collection: string, record: unknown) => {
   });
 };
 
-// Helper to detect initial page from URL
-const getInitialPage = (): PageId => {
-  if (typeof window !== "undefined") {
-    const path = window.location.pathname.toLowerCase();
-    const hash = window.location.hash.toLowerCase();
-    const search = window.location.search.toLowerCase();
-    if (
-      path.includes("admin") ||
-      hash.includes("admin") ||
-      search.includes("admin") ||
-      search.includes("page=admin")
-    ) {
-      return "admin";
-    }
-    // Shared album links (/?album=<id>) open straight into the gallery.
-    if (new URLSearchParams(window.location.search).has("album")) {
-      return "gallery";
-    }
-  }
-  return "home";
+// ---- Routing: every page has its own address so refresh, Back and shared links work ----
+const PAGE_PATHS: Partial<Record<PageId, string>> = {
+  home: "/",
+  about: "/about",
+  "watch-listen": "/watch",
+  grow: "/grow",
+  ministries: "/ministries",
+  events: "/events",
+  gallery: "/gallery",
+  "new-here": "/plan-a-visit",
+  prayer: "/prayer",
+  "prayer-request": "/prayer",
+  give: "/give",
+  contact: "/contact",
+  connect: "/contact",
 };
 
+const PATH_PAGES: Record<string, PageId> = Object.fromEntries(
+  Object.entries(PAGE_PATHS)
+    .filter(([page]) => page !== "prayer-request" && page !== "connect")
+    .map(([page, path]) => [path, page as PageId]),
+);
+
+const isAdminLocation = () => {
+  const path = window.location.pathname.toLowerCase();
+  const hash = window.location.hash.toLowerCase();
+  const search = window.location.search.toLowerCase();
+  return path.includes("admin") || hash.includes("admin") || search.includes("admin");
+};
+
+/** Reads the page and sub-tab (e.g. About > Beliefs) from the current address. */
+const readLocation = (): { page: PageId; subTab?: string } => {
+  if (typeof window === "undefined") return { page: "home" };
+  if (isAdminLocation()) return { page: "admin" };
+  const params = new URLSearchParams(window.location.search);
+  // Shared album links (/?album=<id> or /gallery?album=<id>) open the gallery.
+  if (params.has("album")) return { page: "gallery" };
+  const path = window.location.pathname.replace(/\/+$/, "").toLowerCase() || "/";
+  return { page: PATH_PAGES[path] ?? "home", subTab: params.get("tab") ?? undefined };
+};
+
+const urlFor = (page: PageId, subTab?: string) =>
+  (PAGE_PATHS[page] ?? "/") + (subTab ? `?tab=${encodeURIComponent(subTab)}` : "");
+
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<PageId>(getInitialPage);
+  const [initialLocation] = useState(readLocation);
+  const [currentPage, setCurrentPage] = useState<PageId>(initialLocation.page);
   const [currentSubTab, setCurrentSubTab] = useState<string | undefined>(
-    undefined,
+    initialLocation.subTab,
   );
+  // Bumped on every navigation so a page re-opens on the chosen sub-tab even
+  // when you are already on it (e.g. About > Beliefs while on About).
+  const [navCount, setNavCount] = useState(0);
 
   // Sync browser URL with popstate/hashchange
   useEffect(() => {
     const handleLocationChange = () => {
-      const path = window.location.pathname.toLowerCase();
-      const hash = window.location.hash.toLowerCase();
-      const search = window.location.search.toLowerCase();
-      if (
-        path.includes("admin") ||
-        hash.includes("admin") ||
-        search.includes("admin") ||
-        search.includes("page=admin")
-      ) {
-        setCurrentPage("admin");
-      } else {
-        setCurrentPage((prev) => (prev === "admin" ? "home" : prev));
-      }
+      const { page, subTab } = readLocation();
+      setCurrentPage(page);
+      setCurrentSubTab(subTab);
+      setNavCount((n) => n + 1);
     };
 
     window.addEventListener("popstate", handleLocationChange);
@@ -214,7 +231,14 @@ export default function App() {
   });
 
   // State Collections for Interactive Church Features
-  const [sermons] = useState<Sermon[]>(INITIAL_SERMONS);
+  // Unfilled "[SPEAKER NAME]"-style placeholders never reach visitors.
+  const [sermons] = useState<Sermon[]>(() =>
+    INITIAL_SERMONS.map((sermon) =>
+      /^\[.*\]$/.test(sermon.speaker.trim())
+        ? { ...sermon, speaker: "Wisdom Temple" }
+        : sermon,
+    ),
+  );
   const [events, setEvents] = useState<ChurchEvent[]>(INITIAL_EVENTS);
   const { content: siteContent } = useSiteContent();
   useStructuredData(siteContent, events);
@@ -403,35 +427,18 @@ export default function App() {
   const handleNavigate = (page: PageId, subTab?: string) => {
     setCurrentPage(page);
     setCurrentSubTab(subTab);
+    setNavCount((n) => n + 1);
     window.scrollTo({ top: 0, behavior: "smooth" });
 
-    if (typeof window !== "undefined") {
-      if (page === "admin") {
-        if (
-          !window.location.hash.includes("admin") &&
-          !window.location.search.includes("admin")
-        ) {
-          try {
-            window.history.pushState(null, "", "/#admin");
-          } catch {
-            window.location.hash = "admin";
-          }
-        }
-      } else {
-        if (
-          window.location.hash.includes("admin") ||
-          window.location.search.includes("admin") ||
-          window.location.pathname.includes("admin")
-        ) {
-          try {
-            window.history.pushState(null, "", "/");
-          } catch {
-            window.location.hash = "";
-          }
-        } else if (window.location.search.includes("album=")) {
-          // Leaving an open album: drop its share link from the address bar.
-          window.history.replaceState(null, "", "/");
-        }
+    if (typeof window === "undefined") return;
+    const target =
+      page === "admin" ? "/#admin" : urlFor(page, subTab);
+    const here = window.location.pathname + window.location.search + window.location.hash;
+    if (target !== here) {
+      try {
+        window.history.pushState(null, "", target);
+      } catch {
+        /* sandboxed previews can block history; the page still changes */
       }
     }
   };
@@ -618,7 +625,7 @@ export default function App() {
           <Suspense fallback={<div className="min-h-[100vh]" aria-hidden="true" />}>
             <AnimatePresence mode="wait">
               <m.div
-                key={currentPage}
+                key={`${currentPage}:${navCount}`}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}

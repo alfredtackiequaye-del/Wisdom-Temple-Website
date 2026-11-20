@@ -841,7 +841,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
           <div className="flex flex-wrap items-center gap-2.5">
             <button
               onClick={() => handleSaveAllSection(selectedCategory)}
-              className="px-4 py-2.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-black text-xs uppercase tracking-wider rounded-xl shadow-lg transition-all flex items-center space-x-1.5 cursor-pointer hover:scale-102"
+              className="px-4 py-2.5 bg-gold-500 hover:bg-gold-400 text-forest-950 font-black text-xs uppercase tracking-wider rounded-xl shadow-lg transition-all flex items-center space-x-1.5 cursor-pointer hover:scale-102"
               title="Save all changes currently edited"
             >
               <Save className="w-4 h-4" />

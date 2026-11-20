@@ -118,7 +118,7 @@ export const VideoModal: React.FC<VideoModalProps> = ({ sermon, onClose, onShare
                   a.download = `${sermon.title.toLowerCase().replace(/\s+/g, '-')}-outline.txt`;
                   a.click();
                 }}
-                className="inline-flex items-center space-x-1.5 px-3 py-2 bg-gold-500 hover:bg-gold-600 text-forest-950 text-xs font-bold uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
+                className="inline-flex items-center space-x-1.5 px-3 py-2 bg-gold-500 hover:bg-gold-400 text-forest-950 text-xs font-bold uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Study Notes</span>

@@ -24,6 +24,15 @@ import {
 } from "lucide-react";
 import { reveal } from "../utils/motion";
 
+// Mosaic that tiles with no holes in both 2 and 4 columns. Every 14 photos:
+// a feature tile + four squares + two wide tiles, then the mirror image.
+const mosaicSpan = (index: number) => {
+  const p = index % 14;
+  if (p === 0 || p === 9) return "col-span-2 row-span-2";
+  if (p === 5 || p === 6 || p === 12 || p === 13) return "col-span-2";
+  return "";
+};
+
 interface PhotoGalleryProps {
   photos: ChurchPhoto[];
   title?: string;
@@ -238,7 +247,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   <span
                     className={`text-[10px] px-1.5 py-0.5 rounded-full ${
                       isActive
-                        ? "bg-forest-950/20 text-forest-950"
+                        ? "bg-forest-950/10 text-forest-950"
                         : "bg-black/30 text-emerald-200"
                     }`}
                   >
@@ -287,7 +296,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
               setSelectedCategory("All");
               setSearchQuery("");
             }}
-            className="mt-5 px-5 py-2.5 bg-gold-500 hover:bg-gold-600 text-forest-950 text-xs font-bold uppercase tracking-wider rounded-lg cursor-pointer shadow-sm transition-colors"
+            className="mt-5 px-5 py-2.5 bg-gold-500 hover:bg-gold-400 text-forest-950 text-xs font-bold uppercase tracking-wider rounded-lg cursor-pointer shadow-sm transition-colors"
           >
             Reset Filters
           </button>
@@ -296,7 +305,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
         <div
           className={
             layout === "editorial"
-              ? "grid grid-cols-2 md:grid-cols-4 auto-rows-[150px] sm:auto-rows-[190px] lg:auto-rows-[220px] gap-1.5 sm:gap-2 max-w-7xl mx-auto px-4 bg-forest-950"
+              ? "grid grid-flow-dense grid-cols-2 md:grid-cols-4 auto-rows-[150px] sm:auto-rows-[190px] lg:auto-rows-[220px] gap-1.5 sm:gap-2 max-w-7xl mx-auto px-4 bg-forest-950"
               : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-7xl mx-auto px-4"
           }
         >
@@ -307,7 +316,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
               whileHover={{ y: -6 }}
               className={
                 layout === "editorial"
-                  ? `group relative overflow-hidden bg-forest-900 border border-forest-950 cursor-pointer ${index % 7 === 0 ? "col-span-2 row-span-2" : index % 5 === 0 ? "row-span-2" : index % 3 === 0 ? "col-span-2" : ""}`
+                  ? `group relative overflow-hidden bg-forest-900 border border-forest-950 cursor-pointer ${mosaicSpan(index)}`
                   : "group relative rounded-3xl overflow-hidden bg-forest-900 border border-gold-500/30 hover:border-gold-500 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-gold-500/20 flex flex-col justify-between cursor-pointer"
               }
               onClick={() => {
@@ -438,7 +447,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
         <div className="text-center pt-4">
           <button
             onClick={onViewAll}
-            className="px-8 py-3.5 rounded-lg bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider shadow-sm transition-colors cursor-pointer inline-flex items-center space-x-2"
+            className="px-8 py-3.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider shadow-sm transition-colors cursor-pointer inline-flex items-center space-x-2"
           >
             <span>EXPLORE ALL CHURCH MOMENTS ({photos.length})</span>
             <ArrowRight className="w-4 h-4" />

@@ -4,6 +4,7 @@ import { PageId } from '../types';
 import { PASTORAL_COUPLE_IMAGE } from '../assets/pastoralImage';
 import { useBanners } from '../utils/bannerManager';
 import { useSiteContent } from '../utils/contentManager';
+import { reveal } from '../utils/motion';
 import { 
   Quote, 
   Sparkles, 
@@ -45,7 +46,6 @@ export const PastorsCorner: React.FC<PastorsCornerProps> = ({
   const { getBanner } = useBanners();
   const { content } = useSiteContent();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
 
   const pastorName = propPastorName || content.pastorName;
   const pastorTitle = propPastorTitle || content.pastorTitle;
@@ -57,160 +57,57 @@ export const PastorsCorner: React.FC<PastorsCornerProps> = ({
 
   const activePastorImage = getBanner('pastoral_couple', pastorImage);
 
-  const handleShare = () => {
-    const textToShare = `Pastor's Corner: "${weeklyTheme}" by ${pastorName}\n${weeklyScripture}\n\nRead more at Wisdom Temple: ${window.location.origin}`;
-    if (navigator.share) {
-      navigator.share({
-        title: `Pastor's Corner | ${pastorName}`,
-        text: textToShare,
-        url: window.location.origin,
-      }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(textToShare);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    }
-  };
-
   return (
-    <section className="py-20 bg-mist-50 border-b border-slate-200 relative" id="pastors-corner">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-2 mb-14">
-          <div className="text-xs uppercase tracking-[0.25em] font-semibold text-gold-700">
-            The Shepherd's Desk · Pastor's Corner
-          </div>
+    <section className="py-20 sm:py-28 bg-white border-b border-mist-200" id="pastors-corner">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+        <m.div {...reveal()} className="lg:col-span-5">
+          <img
+            src={activePastorImage}
+            onError={(e) => {
+              const target = e.currentTarget;
+              if (target.src !== '/rev_gabriel_and_helena_dela.jpg') {
+                target.src = '/rev_gabriel_and_helena_dela.jpg';
+              }
+            }}
+            alt={`${pastorName} - ${pastorTitle}`}
+            className="w-full max-w-md mx-auto aspect-[4/5] object-cover object-top rounded-2xl shadow-lg"
+          />
+        </m.div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-forest-900 font-serif tracking-tight">
-            A Word from our <span className="font-normal text-gold-600">Resident Pastor</span>
-          </h2>
-
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
-            Weekly spiritual nourishment, pastoral encouragement, and divine direction to anchor your life, family, and purpose.
+        <m.div {...reveal(0.1)} className="lg:col-span-7">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-700">
+            A word from our pastor
           </p>
-        </div>
+          <h2 className="mt-3 font-serif-title text-3xl sm:text-4xl lg:text-5xl text-forest-900">
+            {weeklyTheme}
+          </h2>
+          <p className="mt-3 text-sm text-slate-500 italic">{weeklyScripture}</p>
 
-        {/* Feature Layout: Image & Brief Text Block */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 lg:p-12 relative">
-          {/* Left Column: Space for Pastor's Portrait */}
-          <div className="lg:col-span-5 flex flex-col items-center">
-            <div className="relative w-full max-w-md aspect-[4/5] rounded-xl overflow-hidden bg-forest-950 border border-slate-200 group">
-              <img
-                src={activePastorImage}
-                onError={(e) => {
-                  const target = e.currentTarget;
-                  if (target.src !== '/rev_gabriel_and_helena_dela.jpg') {
-                    target.src = '/rev_gabriel_and_helena_dela.jpg';
-                  }
-                }}
-                alt={`${pastorName} - ${pastorTitle}`}
-                className="w-full h-full object-cover object-top group-hover:scale-102 transition-transform duration-500 ease-out"
-              />
+          <blockquote className="mt-7 border-l-2 border-gold-500 pl-6 text-lg leading-relaxed text-slate-700 line-clamp-6">
+            {greetingSummary}
+          </blockquote>
+          <p className="mt-5 pl-6 text-sm text-slate-600">
+            <span className="font-semibold text-forest-900">{pastorName}</span>
+            {' · '}
+            {pastorTitle}
+          </p>
 
-              {/* Bottom Scrim for text readability */}
-              <div className="absolute inset-x-0 bottom-0 bg-forest-950/95 border-t border-white/10 p-5 text-white pointer-events-none">
-                <span className="text-[11px] text-gold-400 uppercase tracking-wider block font-bold">
-                  RESIDENT PASTOR
-                </span>
-                <h3 className="text-xl sm:text-2xl font-serif text-white mt-0.5">
-                  {pastorName}
-                </h3>
-                <p className="text-xs text-emerald-200/90 mt-1 flex items-center space-x-1.5">
-                  <span>With Lady Dr. Helena Dela</span>
-                  <span>•</span>
-                  <span>Wisdom Temple</span>
-                </p>
-              </div>
-            </div>
-
-            {/* Quick Contact & Counseling Note */}
-            <div className="mt-4 flex items-center justify-between w-full max-w-md px-1 text-xs text-slate-500">
-              <span className="flex items-center space-x-1.5 text-slate-600 font-medium">
-                <Calendar className="w-3.5 h-3.5 text-gold-600" />
-                <span>{dateLabel}</span>
-              </span>
-              <button
-                onClick={() => onNavigate('about', 'leadership')}
-                className="text-forest-900 hover:text-gold-600 font-semibold inline-flex items-center space-x-0.5 cursor-pointer transition-colors"
-              >
-                <span>Read Biography</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
+          <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="px-6 py-3.5 rounded-xl bg-forest-900 hover:bg-forest-800 text-white font-semibold text-sm transition-colors cursor-pointer"
+            >
+              Read the full message
+            </button>
+            <button
+              onClick={() => onNavigate('about', 'leadership')}
+              className="group inline-flex items-center gap-2 text-sm font-semibold text-forest-900 hover:text-gold-700 transition-colors cursor-pointer"
+            >
+              Meet our pastors
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </button>
           </div>
-
-          {/* Right Column: Weekly Message / Greeting Text Block */}
-          <div className="lg:col-span-7 space-y-6">
-            {/* Theme & Scripture Block */}
-            <div className="p-5 rounded-xl bg-mist-50 border-l-4 border-gold-500 border-y border-r border-slate-200">
-              <span className="text-[11px] font-bold text-forest-900 uppercase tracking-wider block">
-                This Week's Pastoral Theme
-              </span>
-              <h3 className="text-xl sm:text-2xl font-serif font-bold text-forest-900 mt-1 tracking-tight">
-                {weeklyTheme}
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 italic mt-2 flex items-start space-x-2">
-                <BookOpen className="w-4 h-4 text-gold-500 shrink-0 mt-0.5" />
-                <span>{weeklyScripture}</span>
-              </p>
-            </div>
-
-            {/* Brief Text Block with Quote Decoration */}
-            <div className="relative pl-6 sm:pl-8 border-l-2 border-slate-200 space-y-3">
-              <Quote className="w-8 h-8 text-gold-500/20 absolute -left-4 -top-2 fill-gold-500/10" />
-
-              <p className="text-base sm:text-lg text-slate-800 leading-relaxed font-serif italic text-pretty">
-                "{greetingSummary}"
-              </p>
-            </div>
-
-            {/* Key Action Principles for the Week */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-              <div className="p-3 bg-mist-50 rounded-lg border border-slate-200">
-                <span className="text-[10px] text-forest-700 font-bold uppercase block">1. Focus</span>
-                <p className="text-xs font-bold text-forest-900 mt-0.5">Seek God First</p>
-                <span className="text-[10px] text-slate-500 block mt-0.5">Prioritize morning devotion</span>
-              </div>
-              <div className="p-3 bg-mist-50 rounded-lg border border-slate-200">
-                <span className="text-[10px] text-forest-700 font-bold uppercase block">2. Posture</span>
-                <p className="text-xs font-bold text-forest-900 mt-0.5">Guard Your Peace</p>
-                <span className="text-[10px] text-slate-500 block mt-0.5">Reject fear & negativity</span>
-              </div>
-              <div className="p-3 bg-mist-50 rounded-lg border border-slate-200">
-                <span className="text-[10px] text-forest-700 font-bold uppercase block">3. Expectation</span>
-                <p className="text-xs font-bold text-forest-900 mt-0.5">Walk in Boldness</p>
-                <span className="text-[10px] text-slate-500 block mt-0.5">God goes before you</span>
-              </div>
-            </div>
-
-            {/* Action CTA Buttons */}
-            <div className="pt-2 flex flex-wrap items-center gap-3">
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="px-6 py-3 rounded-lg bg-forest-900 hover:bg-forest-800 text-white font-semibold text-xs tracking-wider uppercase shadow-sm transition-colors cursor-pointer inline-flex items-center space-x-2"
-              >
-                <span>Read Full Weekly Charge</span>
-                <ArrowRight className="w-4 h-4 text-gold-400" />
-              </button>
-
-              <button
-                onClick={() => onNavigate('prayer-request')}
-                className="px-5 py-3 rounded-lg bg-mist-50 hover:bg-mist-200 text-forest-900 font-semibold text-xs tracking-wider uppercase border border-slate-300 transition-colors cursor-pointer inline-flex items-center space-x-1.5"
-              >
-                <HeartHandshake className="w-4 h-4 text-gold-500" />
-                <span>Request Pastoral Prayer</span>
-              </button>
-
-              <button
-                onClick={handleShare}
-                className="p-3 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer border border-slate-200"
-                title="Share Weekly Greeting"
-              >
-                {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Share2 className="w-4 h-4 text-slate-600" />}
-              </button>
-            </div>
-          </div>
-        </div>
+        </m.div>
       </div>
 
       {/* ========================================================================= */}

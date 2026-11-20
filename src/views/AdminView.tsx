@@ -936,7 +936,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                 <div className="pt-2 flex flex-col gap-2">
                   <button
                     type="submit"
-                    className="w-full py-3.5 rounded-lg bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center justify-center space-x-2 cursor-pointer"
+                    className="w-full py-3.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center justify-center space-x-2 cursor-pointer"
                   >
                     <Key className="w-4 h-4" />
                     <span>Authenticate & Enter Portal</span>
@@ -1070,7 +1070,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
               <button
                 type="button"
                 onClick={handleExportTab}
-                className="px-4 py-2.5 rounded-lg bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center space-x-1.5 cursor-pointer"
+                className="px-4 py-2.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center space-x-1.5 cursor-pointer"
               >
                 <Download className="w-4 h-4" />
                 <span>{activeTab === "banners" || activeTab === "content" ? "Export backup" : "Export to CSV"}</span>

@@ -17,7 +17,6 @@ import { CHURCH_INFO } from '../data/churchData';
 import { reveal, staggerContainer, staggerItem, LIFT_SPRING } from '../utils/motion';
 
 import { PageHero } from '../components/PageHero';
-import { ClosingInvite } from '../components/ClosingInvite';
 interface MinistriesViewProps {
   ministries: Ministry[];
   initialMinistryId?: string;
@@ -125,7 +124,7 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
           <m.div
             key={selectedCategory}
             {...staggerContainer(0.08)}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="flex flex-wrap justify-center gap-8"
           >
             {filteredMinistries.map((ministry) => (
               <m.article
@@ -133,7 +132,7 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
                 variants={staggerItem}
                 whileHover={{ y: -6 }}
                 transition={LIFT_SPRING}
-                className="group bg-white rounded-3xl border border-mist-300 overflow-hidden shadow-sm hover:shadow-lift hover:border-gold-500/40 transition-shadow flex flex-col justify-between"
+                className="group bg-white rounded-3xl border border-mist-300 overflow-hidden shadow-sm hover:shadow-lift hover:border-gold-500/40 transition-shadow flex flex-col justify-between w-full md:w-[calc((100%-2rem)/2)] lg:w-[calc((100%-4rem)/3)]"
               >
                 <div>
                   <div className="relative aspect-[16/10] bg-forest-950 overflow-hidden">
@@ -303,7 +302,7 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full py-3 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
+                    className="w-full py-3 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
                   >
                     Submit interest
                   </button>
@@ -315,7 +314,6 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
       )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
-        <ClosingInvite onNavigate={onNavigate} />
       </div>
     </div>
   );

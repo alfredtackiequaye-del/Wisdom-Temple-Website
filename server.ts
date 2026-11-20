@@ -54,7 +54,13 @@ async function start() {
 
   app.disable("x-powered-by");
   app.set("trust proxy", 1);
-  app.use(helmet({ contentSecurityPolicy: false }));
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+      // YouTube embeds refuse to play (error 153) without a referrer.
+      referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+    }),
+  );
   app.use(compression());
   // Banner uploads arrive as data: URLs and get their own, larger limit below.
   const smallJson = express.json({ limit: "256kb" });
