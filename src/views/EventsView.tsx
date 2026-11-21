@@ -4,21 +4,18 @@ import { ChurchEvent, PageId } from '../types';
 import { CHURCH_INFO } from '../data/churchData';
 import { useBanners } from '../utils/bannerManager';
 import { reveal, staggerContainer, staggerItem, LIFT_SPRING } from '../utils/motion';
-import { getEventDateParts, getEventStatus, EventStatus } from '../utils/eventStatus';
+import { getEventStatus, EventStatus } from '../utils/eventStatus';
 import { parseEventDates } from '../utils/structuredData';
 import { buildIcsMulti, downloadIcs, CalendarVisit } from '../utils/visitSchedule';
 import {
-  Calendar,
   CalendarPlus,
   Clock,
   MapPin,
   Share2,
-  Ticket,
   Sun,
   Flame,
 } from 'lucide-react';
 import { PosterImage } from '../components/PosterImage';
-import { PageHero } from '../components/PageHero';
 import { ClosingInvite } from '../components/ClosingInvite';
 
 interface EventsViewProps {
@@ -30,7 +27,7 @@ interface EventsViewProps {
 }
 
 const VENUE = 'Wisdom Temple, Star Junction, Tabora - Accra, Ghana';
-const SUMMIT_LENGTH_H = 3;
+const CATEGORIES = ['All', 'Conference', 'Prayer', 'Youth', 'Special Service'];
 
 /** One calendar slot for a single-day event whose date and time can be read, else null. */
 const slotForEvent = (event: ChurchEvent): CalendarVisit | null => {
@@ -39,30 +36,24 @@ const slotForEvent = (event: ChurchEvent): CalendarVisit | null => {
   return { title: event.name, start: Date.parse(parsed.startDate), lengthH: 3, location: event.venue || VENUE };
 };
 
-/** The Wisdom Summit runs over four sessions: three evenings and a Sunday morning (per the flyer). */
-const summitSlots = (name: string): CalendarVisit[] => [
-  ...[7, 8, 9].map((day) => ({ title: name, start: Date.UTC(2026, 9, day, 18, 30), lengthH: SUMMIT_LENGTH_H, location: VENUE })),
-  { title: name, start: Date.UTC(2026, 9, 11, 8, 0), lengthH: SUMMIT_LENGTH_H, location: VENUE },
-];
-
 const StatusChip: React.FC<{ status: EventStatus }> = ({ status }) => {
   if (status.kind === 'live') {
     return (
-      <span className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-forest-950/90 backdrop-blur text-[10px] font-bold uppercase tracking-wider text-white border border-white/20">
+      <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-red-700">
         <span className="live-dot" aria-hidden="true" /> Happening now
       </span>
     );
   }
   if (status.kind === 'soon') {
     return (
-      <span className="px-2.5 py-1 rounded-full bg-gold-400 text-forest-950 text-[10px] font-bold uppercase tracking-wider">
+      <span className="text-[10px] font-bold uppercase tracking-wider text-gold-700">
         {status.days === 1 ? 'Tomorrow' : `In ${status.days} days`}
       </span>
     );
   }
   if (status.kind === 'past') {
     return (
-      <span className="px-2.5 py-1 rounded-full bg-slate-700/90 text-white text-[10px] font-bold uppercase tracking-wider">
+      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
         Concluded
       </span>
     );
@@ -80,271 +71,213 @@ export const EventsView: React.FC<EventsViewProps> = ({
   const { getBanner } = useBanners();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
-  const categories = ['All', 'Conference', 'Prayer', 'Youth', 'Special Service'];
   const countFor = (cat: string) => (cat === 'All' ? events.length : events.filter((e) => e.category === cat).length);
 
   const filteredEvents = selectedCategory === 'All'
-    ? events
+    ? events.filter((event) => event.id !== (events.find((item) => item.isFeatured)?.id))
     : events.filter(e => e.category === selectedCategory);
 
-  const featuredSummit = events.find(e => e.isFeaturedSummit) || events[0];
-  const summitStatus = featuredSummit ? getEventStatus(featuredSummit.date, featuredSummit.time) : null;
-  const addSummitToCalendar = () =>
-    downloadIcs(buildIcsMulti(summitSlots(featuredSummit.name), 'Free entry. Register online to reserve your seat.'), 'wisdom-summit-2026.ics');
+  const featuredEvent = events.find(e => e.isFeatured) || events.find(e => getEventStatus(e.date, e.time).kind !== 'past') || events[0];
+  const featuredStatus = featuredEvent ? getEventStatus(featuredEvent.date, featuredEvent.time) : null;
+  const featuredSlot = featuredEvent ? slotForEvent(featuredEvent) : null;
 
   return (
     <div className="page-warm-bg min-h-screen text-slate-900 pb-24 overflow-x-clip">
-      <PageHero
-        image={getBanner('page_events_hero', '/assets/photos/wisdom-summit-full-team.webp')}
-        imagePosition="center 30%"
-        eyebrow="Calendar & sacred gatherings"
-        title="Events & Conferences"
-        text="Experience spiritual elevation, transformative encounters, and fellowship at our conferences, prayer vigils, and seasonal summits."
-      />
+      <section className="relative overflow-hidden bg-forest-950 text-white">
+        <div className="absolute inset-0 pointer-events-none opacity-60" aria-hidden="true">
+          <div className="absolute -top-40 right-[-8rem] h-[28rem] w-[28rem] rounded-full bg-gold-500/10 blur-3xl" />
+          <div className="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-white/[0.03] to-transparent" />
+        </div>
+        <div className="relative max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 pt-32 pb-12 sm:pt-36 sm:pb-16">
+          <div className="grid gap-10 lg:grid-cols-12 lg:items-end lg:gap-16">
+            <div className="lg:col-span-7">
+              <p className="text-xs uppercase tracking-[0.2em] text-gold-300">Church services & special gatherings</p>
+              <h1 className="mt-5 max-w-3xl font-display text-5xl sm:text-6xl lg:text-7xl leading-[0.98] text-white">
+                Make room for <span className="font-serif font-normal italic text-gold-400">what matters.</span>
+              </h1>
+              <p className="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-emerald-100/75">
+                Join us for worship, prayer and moments that bring our church family together.
+                There is always a place for you.
+              </p>
+            </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 space-y-20">
-        {/* Featured Wisdom Summit */}
-        {featuredSummit && (
+            <div className="lg:col-span-5 lg:pb-1">
+              <p className="mb-3 text-[11px] uppercase tracking-[0.18em] text-emerald-200/60">Gather with us every week</p>
+              <div className="grid grid-cols-2 divide-x divide-white/10 border-y border-white/15">
+                {[
+                  { icon: Sun, ...CHURCH_INFO.services.sunday },
+                  { icon: Flame, ...CHURCH_INFO.services.midweek },
+                ].map((service) => (
+                  <div key={service.name} className="min-w-0 py-5 first:pr-4 last:pl-5 sm:py-6">
+                    <div className="flex items-center gap-2 text-gold-300">
+                      <service.icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                      <span className="text-[11px] font-semibold uppercase tracking-wider">{service.day}</span>
+                    </div>
+                    <p className="mt-2 font-display text-2xl sm:text-3xl text-white">{service.time}</p>
+                    <p className="mt-1 text-xs text-emerald-100/65">{service.name}</p>
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={() => onNavigate('new-here')}
+                className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-gold-300 transition-colors hover:text-gold-200"
+              >
+                Plan your first visit <span aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-14 sm:py-20 space-y-16 sm:space-y-20">
+        {/* Featured programme */}
+        {featuredEvent && selectedCategory === 'All' && (
           <m.section
             {...reveal()}
             aria-label="Featured event"
-            className="ambient-glow relative overflow-hidden bg-forest-950 rounded-[2rem] border border-gold-500/30 p-6 sm:p-10 lg:p-12 text-white shadow-xl"
+            className="grid overflow-hidden rounded-3xl border border-mist-300 bg-white shadow-sm lg:grid-cols-12"
           >
-            <div className="relative flex flex-wrap items-center justify-between gap-4 mb-8">
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="px-3.5 py-1.5 bg-gold-400 text-forest-950 font-bold text-[11px] uppercase tracking-[0.18em] rounded-full">
-                  Annual flagship conference
-                </span>
-                {summitStatus && <StatusChip status={summitStatus} />}
-              </div>
-              <button
-                onClick={() => onShare(featuredSummit.name, `${featuredSummit.theme} - Register now for Wisdom Summit 2026 at Wisdom Temple`)}
-                className="px-3.5 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-emerald-100 hover:text-white transition-colors flex items-center gap-1.5 text-xs font-semibold cursor-pointer border border-white/15"
-              >
-                <Share2 className="w-3.5 h-3.5 text-gold-400" />
-                <span>Share Summit</span>
-              </button>
+            <div className="relative min-h-56 overflow-hidden bg-forest-950 sm:min-h-72 lg:col-span-5">
+              <PosterImage
+                src={getBanner('event_' + featuredEvent.id, featuredEvent.image)}
+                alt={featuredEvent.name}
+              />
             </div>
-
-            <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              <div className="lg:col-span-7 xl:col-span-8">
-                <div className="group relative rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-black">
-                  <img
-                    src={getBanner('wisdom_summit_banner', '/wisdom_summit_banner.png')}
-                    alt="Wisdom Summit 2026 flyer with the guest speakers and schedule"
-                    className="w-full h-auto object-cover block transition-transform duration-700 group-hover:scale-[1.02]"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
+            <div className="flex flex-col justify-center p-6 sm:p-9 lg:col-span-7 lg:p-12">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gold-700">Featured gathering</p>
+                {featuredStatus && <StatusChip status={featuredStatus} />}
               </div>
-
-              <div className="lg:col-span-5 xl:col-span-4 rounded-2xl bg-white/[0.06] backdrop-blur border border-white/15 p-6 sm:p-8 text-center space-y-5">
-                <div className="w-14 h-14 rounded-2xl bg-gold-400/15 border border-gold-400/30 flex items-center justify-center mx-auto">
-                  <Ticket className="w-7 h-7 text-gold-300" />
-                </div>
-                <div>
-                  <h2 className="font-serif-title text-2xl text-white">Wisdom Summit 2026</h2>
-                  <p className="text-sm text-gold-300 mt-1">October 7 - 9 & 11, 2026</p>
-                  <p className="text-xs text-emerald-100/80 mt-3 leading-relaxed">
-                    Admission is free. Register to reserve your seat and receive event notifications.
-                  </p>
-                </div>
-                <div className="space-y-3">
+              <h2 className="mt-4 max-w-xl font-display text-3xl sm:text-4xl text-forest-950">{featuredEvent.name}</h2>
+              {featuredEvent.theme && <p className="mt-2 text-base text-forest-700">{featuredEvent.theme}</p>}
+              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600">{featuredEvent.shortDescription}</p>
+              <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-600">
+                <span className="inline-flex items-center gap-2"><Clock className="h-4 w-4 text-gold-700" aria-hidden="true" />{featuredEvent.date} · {featuredEvent.time}</span>
+                <span className="inline-flex items-center gap-2"><MapPin className="h-4 w-4 text-gold-700" aria-hidden="true" />{featuredEvent.venue}</span>
+              </div>
+              <div className="mt-7 flex flex-wrap items-center gap-4">
+                <button
+                  onClick={() => featuredEvent.registrationRequired ? onRegisterEvent(featuredEvent) : onNavigate('new-here')}
+                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-gold-500 px-6 text-sm font-bold text-forest-950 transition-colors hover:bg-gold-400"
+                >
+                  {featuredEvent.registrationRequired ? 'Register now' : 'Plan your visit'}
+                </button>
+                <button
+                  onClick={() => onShare(featuredEvent.name, `${featuredEvent.theme || featuredEvent.shortDescription} — ${featuredEvent.date} at ICGC WISDOM TEMPLE`)}
+                  aria-label={`Share ${featuredEvent.name}`}
+                  className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-forest-700 transition-colors hover:text-gold-700"
+                >
+                  <Share2 className="h-4 w-4" aria-hidden="true" /> Share
+                </button>
+                {featuredSlot && featuredStatus?.kind !== 'past' && (
                   <button
-                    onClick={() => onRegisterEvent(featuredSummit)}
-                    className="cta-shine w-full py-3.5 bg-gold-400 hover:bg-gold-300 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
+                    onClick={() => downloadIcs(buildIcsMulti([featuredSlot], featuredEvent.shortDescription), `${featuredEvent.id}.ics`)}
+                    className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-forest-700 transition-colors hover:text-gold-700"
                   >
-                    Register for Wisdom Summit
+                    <CalendarPlus className="h-4 w-4" aria-hidden="true" /> Add to calendar
                   </button>
-                  {featuredSummit.id === 'wisdom-summit-2026' && summitStatus?.kind !== 'past' && (
-                    <button
-                      onClick={addSummitToCalendar}
-                      className="w-full py-3 rounded-lg border border-white/20 text-emerald-100 hover:bg-white/10 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer inline-flex items-center justify-center gap-2"
-                    >
-                      <CalendarPlus className="w-4 h-4 text-gold-300" /> Add to my calendar
-                    </button>
-                  )}
-                </div>
+                )}
               </div>
             </div>
           </m.section>
         )}
 
-        {/* Filter bar */}
+        {/* Upcoming events */}
         <m.div
           {...reveal()}
-          className="flex flex-wrap items-end justify-between gap-4 border-b border-mist-300 pb-5"
+          className="flex flex-col gap-6 border-b border-mist-300 pb-6 lg:flex-row lg:items-end lg:justify-between"
         >
           <div>
-            <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em]">On the calendar</span>
-            <h2 className="mt-1 text-3xl sm:text-4xl text-forest-900 font-serif-title">All scheduled gatherings</h2>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold-700">Come together</p>
+            <h2 className="mt-2 font-display text-3xl sm:text-4xl text-forest-950">Upcoming gatherings</h2>
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-600">Find a gathering that speaks to this season of your life.</p>
           </div>
 
           <div className="flex flex-wrap gap-2" role="group" aria-label="Filter events by category">
-            {categories.map((cat) => (
+            {CATEGORIES.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
                 aria-pressed={selectedCategory === cat}
-                className={`px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                className={`min-h-10 rounded-full border px-4 text-xs font-semibold transition-colors cursor-pointer ${
                   selectedCategory === cat
-                    ? 'bg-forest-900 text-gold-300 shadow-sm border border-gold-500/40'
-                    : 'bg-white text-forest-700 border border-mist-300 hover:border-gold-500/50'
+                    ? 'border-forest-950 bg-forest-950 text-white'
+                    : 'border-mist-300 bg-transparent text-forest-700 hover:border-forest-700'
                 }`}
               >
-                {cat} ({countFor(cat)})
+                {cat}<span className="ml-1.5 tabular-nums opacity-65">{countFor(cat)}</span>
               </button>
             ))}
           </div>
         </m.div>
 
-        {/* Events grid. flex-wrap so an incomplete last row centres itself. */}
         <m.div
           key={selectedCategory}
-          {...staggerContainer(0.1)}
-          className="flex flex-wrap justify-center gap-8 !mt-10"
+          {...staggerContainer(0.08)}
+          className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3"
         >
           {filteredEvents.map((event) => {
             const status = getEventStatus(event.date, event.time);
-            const parts = getEventDateParts(event.date, event.time);
             const slot = slotForEvent(event);
             const ended = status.kind === 'past';
             return (
               <m.article
                 key={event.id}
                 variants={staggerItem}
-                whileHover={{ y: -6 }}
+                whileHover={{ y: -3 }}
                 transition={LIFT_SPRING}
-                className={`group bg-white rounded-3xl border border-mist-300 overflow-hidden shadow-sm hover:shadow-lift hover:border-gold-500/40 transition-shadow flex flex-col justify-between w-full sm:w-[calc((100%-2rem)/2)] lg:w-[calc((100%-4rem)/3)] ${ended ? 'opacity-75' : ''}`}
+                className={`group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-mist-300 bg-white transition-[border-color,box-shadow,opacity] hover:border-gold-500/50 hover:shadow-lg ${ended ? 'opacity-70' : ''}`}
               >
-                <div>
-                  <div className="relative">
-                    <div className="relative aspect-[16/9] bg-forest-950 overflow-hidden">
-                      <PosterImage
-                        src={getBanner('event_' + event.id, event.image)}
-                        alt={event.name}
-                      />
-                      <span className="absolute top-3 left-3 px-2.5 py-1 bg-forest-950/90 backdrop-blur-md rounded-full text-[10px] font-bold text-gold-300 border border-gold-500/40">
-                        {event.category}
-                      </span>
-                      <span className="absolute bottom-3 left-3"><StatusChip status={status} /></span>
-                    </div>
-                    {parts && (
-                      <span className="absolute -bottom-6 right-5 z-10 w-14 rounded-xl overflow-hidden text-center shadow-lg bg-white border border-mist-300" aria-hidden="true">
-                        <span className="block bg-gold-500 text-forest-950 text-[10px] font-bold tracking-widest py-0.5">{parts.month}</span>
-                        <span className="block text-forest-900 font-serif-title text-2xl leading-tight py-1">{parts.day}</span>
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="p-6 space-y-4">
-                    <h3 className="text-xl text-forest-900 font-serif-title line-clamp-2 leading-snug pr-16">
-                      {event.name}
-                    </h3>
-
-                    <div className="space-y-1.5">
-                      <div className="flex items-start gap-1.5 text-xs text-forest-700 font-bold">
-                        <Calendar className="w-3.5 h-3.5 text-gold-600 shrink-0 mt-0.5" />
-                        <span>{event.date}</span>
-                      </div>
-                      <div className="flex items-start gap-1.5 text-xs text-slate-600 font-medium">
-                        <Clock className="w-3.5 h-3.5 text-slate-500 shrink-0 mt-0.5" />
-                        <span>{event.time}</span>
-                      </div>
-                      <div className="flex items-start gap-1.5 text-xs text-slate-600">
-                        <MapPin className="w-3.5 h-3.5 text-gold-600 shrink-0 mt-0.5" />
-                        <span>{event.venue}</span>
-                      </div>
-                    </div>
-
-                    <p className="text-sm text-slate-600 line-clamp-3 leading-relaxed">
-                      {event.shortDescription}
-                    </p>
-                  </div>
+                <div className="relative aspect-[16/9] overflow-hidden bg-forest-950">
+                  <PosterImage
+                    src={getBanner('event_' + event.id, event.image)}
+                    alt={event.name}
+                  />
                 </div>
 
-                <div className="p-6 pt-0 space-y-3">
-                  {event.registrationRequired === false ? (
+                <div className="flex flex-1 flex-col p-5 sm:p-6">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gold-700">{event.category}</p>
+                    <StatusChip status={status} />
+                  </div>
+                  <h3 className="mt-3 font-display text-xl leading-snug text-forest-950">{event.name}</h3>
+                  {event.theme && <p className="mt-1 text-sm text-slate-600">{event.theme}</p>}
+                  <div className="mt-4 space-y-2 border-t border-mist-200 pt-4 text-xs text-slate-600">
+                    <p className="flex items-start gap-2"><Clock className="mt-0.5 h-4 w-4 shrink-0 text-gold-700" aria-hidden="true" /><span>{event.date} · {event.time}</span></p>
+                    <p className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold-700" aria-hidden="true" /><span className="break-words">{event.venue}</span></p>
+                  </div>
+                  <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-slate-600">{event.shortDescription}</p>
+                  <div className="mt-auto flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-mist-200 pt-4">
                     <button
-                      onClick={() => onNavigate('new-here')}
-                      className="w-full py-3 bg-white hover:bg-mist-50 text-forest-900 font-bold text-xs uppercase tracking-wider rounded-xl transition-colors cursor-pointer border border-forest-900/25"
+                      onClick={() => event.registrationRequired ? onRegisterEvent(event) : onNavigate('new-here')}
+                      disabled={ended && event.registrationRequired}
+                      className="min-h-11 text-sm font-bold text-forest-950 transition-colors hover:text-gold-700 disabled:cursor-not-allowed disabled:text-slate-500"
                     >
-                      Just come. Plan your visit
+                      {ended && event.registrationRequired ? 'Registration closed' : event.registrationRequired ? 'Register' : 'Plan your visit'}
                     </button>
-                  ) : (
-                    <button
-                      onClick={() => onRegisterEvent(event)}
-                      disabled={ended}
-                      className="w-full py-3 bg-forest-900 hover:bg-forest-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-colors cursor-pointer border border-gold-500/30"
-                    >
-                      {ended ? 'Registration closed' : 'Register now'}
-                    </button>
-                  )}
                   {slot && !ended && (
                     <button
                       onClick={() => downloadIcs(buildIcsMulti([slot], event.shortDescription), `${event.id}.ics`)}
-                      className="w-full inline-flex items-center justify-center gap-2 text-xs font-semibold text-forest-700 hover:text-forest-500 cursor-pointer"
+                      className="inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-forest-700 transition-colors hover:text-gold-700"
                     >
-                      <CalendarPlus className="w-3.5 h-3.5" /> Add to my calendar
+                      <CalendarPlus className="h-4 w-4" aria-hidden="true" /> Add to calendar
                     </button>
                   )}
+                  </div>
                 </div>
               </m.article>
             );
           })}
+          {filteredEvents.length === 0 && (
+            <p className="col-span-full rounded-2xl border border-mist-300 bg-white px-6 py-10 text-center text-sm text-slate-600">
+              No gatherings are scheduled in this category right now. Please check back soon.
+            </p>
+          )}
         </m.div>
 
-        {/* Weekly regular services on a patterned band */}
-        <section aria-labelledby="weekly-heading" className="pattern-band relative py-16 sm:py-20">
-          <m.div {...reveal()} className="text-center max-w-2xl mx-auto mb-10 space-y-3">
-            <span className="text-[11px] font-semibold text-gold-300 uppercase tracking-[0.22em]">Every week</span>
-            <h2 id="weekly-heading" className="text-3xl sm:text-4xl text-white font-serif-title">Regular weekly gatherings</h2>
-            <span className="mx-auto flex items-center justify-center gap-3" aria-hidden="true">
-              <span className="h-px w-12 bg-gold-400/60" />
-              <span className="w-2 h-2 rotate-45 bg-gold-400" />
-              <span className="h-px w-12 bg-gold-400/60" />
-            </span>
-            <p className="text-emerald-100/80">No registration needed. Just come as you are.</p>
-          </m.div>
-
-          <m.div
-            {...staggerContainer(0.15)}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto"
-          >
-            {[
-              { icon: Sun, ...CHURCH_INFO.services.sunday },
-              { icon: Flame, ...CHURCH_INFO.services.midweek },
-            ].map((service) => (
-              <m.div
-                key={service.name}
-                variants={staggerItem}
-                whileHover={{ y: -6 }}
-                transition={LIFT_SPRING}
-                className="rounded-3xl bg-white/[0.06] backdrop-blur border border-white/15 hover:border-gold-400/60 transition-colors p-7 sm:p-8 flex flex-col gap-4"
-              >
-                <span className="w-12 h-12 rounded-xl bg-gold-400/15 border border-gold-400/30 flex items-center justify-center">
-                  <service.icon className="w-6 h-6 text-gold-300" />
-                </span>
-                <div className="space-y-1.5">
-                  <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-gold-300">
-                    {service.day} @ {service.time}
-                  </span>
-                  <h3 className="text-2xl text-white font-serif-title">{service.name}</h3>
-                </div>
-                <p className="text-sm text-emerald-100/80 leading-relaxed flex-1">{service.description}</p>
-                <button
-                  onClick={() => onNavigate('new-here')}
-                  className="self-start inline-flex items-center gap-2 text-sm font-semibold text-gold-300 hover:text-gold-200 cursor-pointer"
-                >
-                  Plan your visit →
-                </button>
-              </m.div>
-            ))}
-          </m.div>
-        </section>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 pt-2">
         <ClosingInvite onNavigate={onNavigate} />
       </div>
     </div>

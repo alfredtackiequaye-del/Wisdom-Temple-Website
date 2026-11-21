@@ -134,7 +134,7 @@ export const ContactView: React.FC<ContactViewProps> = ({
               <div className="pt-4 border-t border-slate-100">
                 <button
                   onClick={() => onNavigate('prayer-request')}
-                  className="w-full py-3 bg-forest-900 hover:bg-forest-800 text-white font-bold text-xs rounded-xl transition-all cursor-pointer text-center border border-gold-500/30 shadow-sm"
+                  className="w-full py-3 bg-forest-900 hover:bg-forest-800 text-white font-bold text-xs rounded-xl transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer text-center border border-gold-500/30 shadow-sm"
                 >
                   REQUEST PASTORAL PRAYER
                 </button>
@@ -237,7 +237,7 @@ export const ContactView: React.FC<ContactViewProps> = ({
                     <option value="Pastoral Counseling Appointment">Pastoral Counseling Appointment</option>
                     <option value="Baby Dedication / Wedding Inquiry">Baby Dedication / Wedding Inquiry</option>
                     <option value="Joining a Ministry Team">Joining a Ministry Team</option>
-                    <option value="Wisdom Summit Inquiries">Wisdom Summit 2026 Inquiries</option>
+                    <option value="Christmas and Crossover Inquiries">Christmas & Crossover Programme Inquiries</option>
                     <option value="Giving / Welfare Inquiries">Giving / Welfare Inquiries</option>
                   </select>
                 </div>
@@ -257,7 +257,7 @@ export const ContactView: React.FC<ContactViewProps> = ({
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full py-3.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer flex items-center justify-center space-x-2"
+                    className="w-full py-3.5 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer flex items-center justify-center space-x-2"
                   >
                     <Send className="w-4 h-4" />
                     <span>SEND MESSAGE TO OFFICE</span>

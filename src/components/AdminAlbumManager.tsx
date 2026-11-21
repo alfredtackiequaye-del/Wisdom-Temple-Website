@@ -177,7 +177,7 @@ const AlbumList: React.FC<{
         <button
           key={album.id}
           onClick={() => onOpen(album.id)}
-          className="group text-left bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md hover:border-gold-500 transition-all cursor-pointer"
+          className="group text-left bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md hover:border-gold-500 transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer"
         >
           <div className="relative aspect-[4/3] bg-mist-100">
             {album.cover ? (
@@ -652,7 +652,7 @@ const AlbumEditor: React.FC<{
             </div>
             <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
               <div
-                className="h-full bg-gold-500 transition-all"
+                className="h-full bg-gold-500 transition-[background-color,border-color,color,box-shadow,opacity,transform]"
                 style={{
                   width: `${((upload.done + upload.failed.length) / upload.total) * 100}%`,
                 }}

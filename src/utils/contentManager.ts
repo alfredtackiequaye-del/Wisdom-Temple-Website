@@ -9,7 +9,7 @@ export const DEFAULT_SITE_CONTENT: SiteContentConfig = {
   heroButtonPrimary: "Plan Your Visit",
   heroButtonSecondary: "See Upcoming Events",
   heroVideoUrl: "",
-  experienceSectionBadge: "EXPERIENCE WISDOM TEMPLE",
+  experienceSectionBadge: "EXPERIENCE ICGC WISDOM TEMPLE",
   experienceSectionTitle: "A Place to Worship, Pray & Belong",
   experienceSectionSubtitle:
     "Whether you are visiting for the first time or looking to deepen your walk with God, there is a place for you here.",
@@ -18,7 +18,7 @@ export const DEFAULT_SITE_CONTENT: SiteContentConfig = {
     "Join us in person at Star Junction, Tabora for vibrant worship, biblical teaching, and warm Christian fellowship.",
   experienceMod2Title: "Watch the Message",
   experienceMod2Desc:
-    "Catch up on Sunday teachings, Wisdom Summit messages, and prayer-filled sermons anytime from anywhere.",
+    "Catch up on Sunday teachings, conference messages, and prayer-filled sermons anytime from anywhere.",
   experienceMod3Title: "Enter the Secret Place",
   experienceMod3Desc:
     "Encounter God's presence through prayer, worship, and prophetic intercession in our midweek gathering.",
@@ -28,12 +28,12 @@ export const DEFAULT_SITE_CONTENT: SiteContentConfig = {
     "Stepping into a new church should feel warm, uplifting, and inspiring. At Wisdom Temple, you are welcomed as part of the family from the moment you arrive.",
 
   // --- Church Identity & Contact ---
-  churchName: "Wisdom Temple",
+  churchName: "ICGC WISDOM TEMPLE",
   churchTagline:
-    "Raising Leaders. Shaping Visions. Influencing Society Through Christ.",
+    "Raising Leaders. Shaping Vision. Influencing Society Through Christ.",
   churchDescription:
-    "A Bible-believing charismatic Church committed to raising leaders, shaping visions and influencing society through Christ.",
-  churchAddress: "Wisdom Temple, Star Junction, Tabora - Accra, Ghana",
+    "An assembly of the International Central Gospel Church: a Bible-believing charismatic church committed to raising leaders, shaping vision and influencing society through Christ.",
+  churchAddress: "ICGC Wisdom Temple, Star Junction, Tabora - Accra, Ghana",
   churchLandmark: "Star Junction, Tabora",
   churchPhone: "0245009764",
   churchWhatsApp: "0245009764",
@@ -63,34 +63,34 @@ export const DEFAULT_SITE_CONTENT: SiteContentConfig = {
     "May the peace of God which transcends all human understanding guard your heart and mind through Christ Jesus. You are blessed, highly favored, and destined for greatness!",
   ],
   pastoralBio:
-    "Rev. Gabriel Dela serves as the Shepherd and Senior Minister of ICGC Wisdom Temple. Alongside his wife, Lady Dr. Helena Dela, they shepherd the Wisdom Temple family with passionate biblical exposition, pastoral compassion, and prophetic intercession, dedicated to raising leaders, shaping visions, and influencing society through Christ.",
+    "Rev. Gabriel Dela serves as the Shepherd and Senior Minister of ICGC Wisdom Temple. Alongside his wife, Lady Dr. Helena Dela, they shepherd the Wisdom Temple family with passionate biblical exposition, pastoral compassion, and prophetic intercession, dedicated to raising leaders, shaping vision, and influencing society through Christ.",
 
   // --- About Us & Mandate ---
-  aboutHeadline: "ABOUT WISDOM TEMPLE",
+  aboutHeadline: "About ICGC WISDOM TEMPLE",
   aboutWhoWeAre1:
-    "Wisdom Temple is a Bible-believing, charismatic church committed to raising leaders, shaping visions, and influencing society through Jesus Christ, located in Star Junction, Tabora - Accra, Ghana.",
+    "ICGC Wisdom Temple is a local assembly of the International Central Gospel Church (ICGC): a Bible-believing, charismatic church committed to raising leaders, shaping vision, and influencing society through Jesus Christ, located in Star Junction, Tabora - Accra, Ghana.",
   aboutWhoWeAre2:
-    "At Wisdom Temple, we believe every human being possesses God-given potential waiting to be activated through the Word of God, charismatic prayer, and practical discipleship. Whether you are a student, an artisan, a corporate executive, or a parent, you will find a home where your faith is grounded, your gifts are sharpened, and your purpose is unleased.",
+    "At Wisdom Temple, we believe every human being possesses God-given potential waiting to be activated through the Word of God, charismatic prayer, and practical discipleship. Whether you are a student, an artisan, a corporate executive, or a parent, you will find a home where your faith is grounded, your gifts are sharpened, and your purpose is unleashed.",
   aboutVisionTitle:
-    "To Establish the House of God Through the Development of the Human Personality",
+    "To Establish the House of God Through the Development of Model New Testament Christians and Churches",
   aboutVisionText:
-    "We envision a congregation of believers who have discovered their god-given identity, walking in divine dignity, moral uprightness, and spiritual authority across Ghana, Africa, and the global diaspora.",
+    "This is the vision of the International Central Gospel Church worldwide, drawn from Acts 2:42. As an ICGC assembly, Wisdom Temple trains, equips and nurtures believers to grow into spiritual maturity in Christ, so that they manifest His character and build vibrant, Scripture-grounded churches.",
   aboutMissionTitle:
-    "Raising Leaders, Shaping Visions, and Influencing Society Through Christ",
+    "Raising Leaders, Shaping Vision, Influencing Society Through Christ",
   aboutMissionText:
-    "We accomplish this mission through regular exposition of the Holy Scriptures, fervent charismatic prayer at The Secret Place, leadership mentoring, and purposeful generational ministries.",
-  pillar1Title: "Raising Leaders",
+    "This is the mission of ICGC worldwide. Through our programmes and ministries we seek to improve the lives of people, redirecting their thinking and conduct to align with the Word of God, and so transforming homes, workplaces, schools and communities.",
+  pillar1Title: "Practical Christianity",
   pillar1Desc:
-    "Instilling godly discipline, ethical accountability, and servant leadership in every believer, from youth to seasoned executives.",
-  pillar2Title: "Shaping Visions",
+    "Christianity is not a myth. When the Word of God is preached and applied, it must produce practical, tangible results in everyday life.",
+  pillar2Title: "Human Dignity",
   pillar2Desc:
-    "Assisting men and women to discover divine purpose, formulate clear personal and family blueprints, and execute enterprise with biblical excellence.",
-  pillar3Title: "Influencing Society Through Christ",
+    "Every human being is created in the image and likeness of God, and so deserves to be treated with respect, honour and care.",
+  pillar3Title: "Excellence",
   pillar3Desc:
-    "Deploying believers into politics, healthcare, education, law, industry, and the arts as salt and light to reform systems with the mind of Christ.",
-  heritageStoryHeadline: "The Heritage & Journey of Wisdom Temple",
+    "Like Daniel, in whom an excellent spirit was found, everything we undertake should be done to the highest standard, for the glory of God.",
+  heritageStoryHeadline: "The Heritage & Journey of ICGC WISDOM TEMPLE",
   heritageStoryText1:
-    "Wisdom Temple was established in Accra, Ghana, with an uncompromising mandate to raise leaders, shape visions, and influence society through the transforming gospel of Jesus Christ.",
+    "ICGC Wisdom Temple was established in Accra, Ghana, as an assembly of the International Central Gospel Church, with an uncompromising mandate to raise leaders, shape vision, and influence society through the transforming gospel of Jesus Christ.",
   heritageStoryText2:
     "Wisdom Temple champions a powerful charismatic wave focused on human dignity, self-reliance, leadership development, and societal influence. Wisdom Temple carries this mantle with fervor in Star Junction, Tabora - Accra.",
   churchCouncilHeadline: "Church Governance & Leadership Councils",
@@ -139,13 +139,72 @@ export const DEFAULT_SITE_CONTENT: SiteContentConfig = {
 const STORAGE_KEY = "icgc_site_content_v1";
 const EVENT_NAME = "icgc_content_updated";
 
+/**
+ * Saving content stores the whole config in localStorage, so an admin's
+ * browser can hold copies of old defaults. Values that still match a
+ * retired default are upgraded to the current one; real edits are kept.
+ */
+const RETIRED_DEFAULTS: Partial<Record<keyof SiteContentConfig, string[]>> = {
+  churchName: ["Wisdom Temple", "ICGC Wisdom Temple"],
+  churchTagline: ["Raising Leaders. Shaping Visions. Influencing Society Through Christ."],
+  churchDescription: [
+    "A Bible-believing charismatic Church committed to raising leaders, shaping visions and influencing society through Christ.",
+  ],
+  churchAddress: ["Wisdom Temple, Star Junction, Tabora - Accra, Ghana"],
+  experienceSectionBadge: ["EXPERIENCE WISDOM TEMPLE"],
+  experienceMod2Desc: [
+    "Catch up on Sunday teachings, Wisdom Summit messages, and prayer-filled sermons anytime from anywhere.",
+  ],
+  aboutHeadline: ["ABOUT WISDOM TEMPLE", "About Wisdom Temple", "About ICGC Wisdom Temple"],
+  aboutWhoWeAre1: [
+    "Wisdom Temple is a Bible-believing, charismatic church committed to raising leaders, shaping visions, and influencing society through Jesus Christ, located in Star Junction, Tabora - Accra, Ghana.",
+  ],
+  aboutWhoWeAre2: [
+    "At Wisdom Temple, we believe every human being possesses God-given potential waiting to be activated through the Word of God, charismatic prayer, and practical discipleship. Whether you are a student, an artisan, a corporate executive, or a parent, you will find a home where your faith is grounded, your gifts are sharpened, and your purpose is unleased.",
+  ],
+  aboutVisionTitle: ["To Establish the House of God Through the Development of the Human Personality"],
+  aboutVisionText: [
+    "We envision a congregation of believers who have discovered their god-given identity, walking in divine dignity, moral uprightness, and spiritual authority across Ghana, Africa, and the global diaspora.",
+  ],
+  aboutMissionTitle: ["Raising Leaders, Shaping Visions, and Influencing Society Through Christ"],
+  aboutMissionText: [
+    "We accomplish this mission through regular exposition of the Holy Scriptures, fervent charismatic prayer at The Secret Place, leadership mentoring, and purposeful generational ministries.",
+  ],
+  pillar1Title: ["Raising Leaders"],
+  pillar1Desc: [
+    "Instilling godly discipline, ethical accountability, and servant leadership in every believer, from youth to seasoned executives.",
+  ],
+  pillar2Title: ["Shaping Visions"],
+  pillar2Desc: [
+    "Assisting men and women to discover divine purpose, formulate clear personal and family blueprints, and execute enterprise with biblical excellence.",
+  ],
+  pillar3Title: ["Influencing Society Through Christ"],
+  pillar3Desc: [
+    "Deploying believers into politics, healthcare, education, law, industry, and the arts as salt and light to reform systems with the mind of Christ.",
+  ],
+  heritageStoryHeadline: ["The Heritage & Journey of Wisdom Temple", "The Heritage & Journey of ICGC Wisdom Temple"],
+  heritageStoryText1: [
+    "Wisdom Temple was established in Accra, Ghana, with an uncompromising mandate to raise leaders, shape visions, and influence society through the transforming gospel of Jesus Christ.",
+  ],
+};
+
+const upgradeRetiredDefaults = (content: SiteContentConfig): SiteContentConfig => {
+  const upgraded = { ...content } as Record<string, unknown>;
+  for (const [key, retired] of Object.entries(RETIRED_DEFAULTS)) {
+    if (retired?.includes(upgraded[key] as string)) {
+      upgraded[key] = DEFAULT_SITE_CONTENT[key as keyof SiteContentConfig];
+    }
+  }
+  return upgraded as unknown as SiteContentConfig;
+};
+
 // Load stored content or fallback
 export function loadSiteContent(): SiteContentConfig {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_SITE_CONTENT;
     const parsed = JSON.parse(raw);
-    const storedContent = { ...DEFAULT_SITE_CONTENT, ...parsed };
+    const storedContent = upgradeRetiredDefaults({ ...DEFAULT_SITE_CONTENT, ...parsed });
 
     if (
       storedContent.heroHeadline ===
@@ -306,7 +365,7 @@ export function useSiteContent() {
       .then((response) => response.ok ? response.json() : {})
       .then((remoteContent) => {
         if (remoteContent && Object.keys(remoteContent).length) {
-          setContent({ ...DEFAULT_SITE_CONTENT, ...remoteContent });
+          setContent(upgradeRetiredDefaults({ ...DEFAULT_SITE_CONTENT, ...remoteContent }));
         }
       })
       .catch(() => undefined);

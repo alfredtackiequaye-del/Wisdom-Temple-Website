@@ -49,7 +49,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
     },
     { id: 'Offering', label: 'Sunday / General Offering', desc: 'Freewill thanksgiving seed for worship.' },
     { id: 'Pledges', label: 'Pledges & Vows', desc: 'Redeeming sacred vows made before God.' },
-    { id: 'Wisdom-Summit', label: 'Wisdom Summit 2026 Seed', desc: 'Partner towards conference staging, media, and guest hospitality.' },
+    { id: 'Seasonal-Programmes', label: 'Christmas & Crossover Programmes', desc: 'Partner towards worship, media, hospitality, and outreach for our year-end services.' },
     { id: 'Building', label: 'Temple Expansion Project', desc: 'Sanctuary development, seating, and media infrastructure.' },
     { id: 'Missions', label: 'Missions & Community Welfare', desc: 'Benevolence fund aiding widows, orphans, and local outreach.' },
   ];
@@ -125,7 +125,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
               <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-forest-950 border border-white/10 text-gold-400 text-[11px] sm:text-xs font-bold uppercase">
                 <span>OFFICIAL CHURCH GIVING FLYER</span>
               </div>
-              <h2 className="text-xl sm:text-3xl font-light text-white font-serif">
+              <h2 className="text-xl sm:text-3xl text-white font-display">
                 Direct Channels for Firstfruit, Offerings & Pledges
               </h2>
               <p className="text-emerald-100/90 text-xs sm:text-sm leading-relaxed max-w-xl">
@@ -137,7 +137,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                 <button
                   type="button"
                   onClick={() => setFlyerModalOpen(true)}
-                  className="px-4 sm:px-5 py-2.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors flex items-center space-x-2 cursor-pointer"
+                  className="px-4 sm:px-5 py-2.5 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors flex items-center space-x-2 cursor-pointer"
                 >
                   <ZoomIn className="w-4 h-4" />
                   <span>VIEW FULL GIVING FLYER</span>
@@ -156,7 +156,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
             {/* Clickable Flyer Preview Thumbnail */}
             <div 
               onClick={() => setFlyerModalOpen(true)}
-              className="group relative cursor-pointer rounded-2xl overflow-hidden border-2 border-gold-500/60 shadow-2xl hover:border-gold-300 transition-all transform hover:scale-[1.02] shrink-0 max-w-xs sm:max-w-sm w-full bg-black/40"
+              className="group relative cursor-pointer rounded-2xl overflow-hidden border-2 border-gold-500/60 shadow-2xl hover:border-gold-300 transition-[background-color,border-color,color,box-shadow,opacity,transform] transform hover:scale-[1.02] shrink-0 max-w-xs sm:max-w-sm w-full bg-black/40"
             >
               <img
                 src={getBanner('giving_flyer', '/giving_details_official.jpg')}
@@ -265,7 +265,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
               <button
                 type="button"
                 onClick={handlePrintReceipt}
-                className="flex-1 py-3 px-4 bg-forest-900 hover:bg-forest-800 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                className="flex-1 py-3 px-4 bg-forest-900 hover:bg-forest-800 text-white font-bold text-xs rounded-xl shadow transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center justify-center space-x-2 cursor-pointer"
               >
                 <Printer className="w-4 h-4 text-gold-300" />
                 <span>PRINT / SAVE RECEIPT</span>
@@ -273,7 +273,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
               <button
                 type="button"
                 onClick={() => setCompletedReceipt(null)}
-                className="flex-1 py-3 px-4 bg-white hover:bg-slate-50 text-forest-700 border border-mist-400 font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
+                className="flex-1 py-3 px-4 bg-white hover:bg-slate-50 text-forest-700 border border-mist-400 font-bold text-xs rounded-xl transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer text-center"
               >
                 Log Another Seed
               </button>
@@ -308,7 +308,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                   <div
                     key={f.id}
                     onClick={() => setSelectedFund(f.id)}
-                    className={`p-3.5 sm:p-4 rounded-2xl border transition-all cursor-pointer ${
+                    className={`p-3.5 sm:p-4 rounded-2xl border transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer ${
                       selectedFund === f.id
                         ? 'border-gold-500 bg-gold-50 shadow-xs ring-1 ring-gold-500'
                         : 'border-mist-300 hover:border-slate-300 bg-white'
@@ -340,7 +340,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                     <button
                       type="button"
                       onClick={() => setCurrency('GHS')}
-                      className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+                      className={`px-3 py-1 rounded-md transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer ${
                         currency === 'GHS' ? 'bg-forest-900 text-white shadow-xs' : 'text-slate-600'
                       }`}
                     >
@@ -349,7 +349,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                     <button
                       type="button"
                       onClick={() => setCurrency('USD')}
-                      className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+                      className={`px-3 py-1 rounded-md transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer ${
                         currency === 'USD' ? 'bg-forest-900 text-white shadow-xs' : 'text-slate-600'
                       }`}
                     >
@@ -365,7 +365,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                       key={q}
                       type="button"
                       onClick={() => setAmount(q)}
-                      className={`py-2 px-1 text-center rounded-xl text-xs font-bold border transition-all cursor-pointer truncate ${
+                      className={`py-2 px-1 text-center rounded-xl text-xs font-bold border transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer truncate ${
                         amount === q
                           ? 'bg-forest-900 text-gold-300 border-forest-900 shadow'
                           : 'bg-white text-slate-700 border-mist-300 hover:bg-mist-100'
@@ -465,7 +465,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
 
                 <button
                   type="submit"
-                  className="w-full py-3.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer flex items-center justify-center space-x-2"
+                  className="w-full py-3.5 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer flex items-center justify-center space-x-2"
                 >
                   <Sparkles className="w-4 h-4" />
                   <span>LOG PAYMENT & GET DIGITAL RECEIPT</span>
@@ -497,7 +497,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                       <button
                         type="button"
                         onClick={() => copyToClipboard(content.givingMomoMtn, 'mtn')}
-                        className="px-2.5 py-1 bg-white text-forest-900 hover:bg-forest-900 hover:text-white rounded-lg border border-gold-500 text-[11px] font-bold transition-all flex items-center space-x-1 cursor-pointer shadow-xs"
+                        className="px-2.5 py-1 bg-white text-forest-900 hover:bg-forest-900 hover:text-white rounded-lg border border-gold-500 text-[11px] font-bold transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-1 cursor-pointer shadow-xs"
                         title="Copy MTN MoMo Number"
                       >
                         {copiedKey === 'mtn' ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-gold-500" />}
@@ -556,7 +556,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                     <button
                       type="button"
                       onClick={() => copyToClipboard(content.givingBankAccountNumber, 'cbg-acc')}
-                      className="px-2.5 py-1 bg-white text-forest-900 hover:bg-forest-900 hover:text-white rounded-lg border border-mist-300 text-[11px] font-bold transition-all flex items-center space-x-1 cursor-pointer"
+                      className="px-2.5 py-1 bg-white text-forest-900 hover:bg-forest-900 hover:text-white rounded-lg border border-mist-300 text-[11px] font-bold transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-1 cursor-pointer"
                       title="Copy Account Number"
                     >
                       {copiedKey === 'cbg-acc' ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-gold-500" />}
@@ -650,7 +650,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                 </div>
                 <button
                   onClick={() => setFlyerModalOpen(false)}
-                  className="p-2 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full cursor-pointer transition-all"
+                  className="p-2 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full cursor-pointer transition-[background-color,border-color,color,box-shadow,opacity,transform]"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -680,7 +680,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
                 <a
                   href="/giving_details_official.jpg"
                   download="Wisdom_Temple_Giving.jpg"
-                  className="px-4 py-2 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold rounded-lg text-xs uppercase tracking-wider flex items-center space-x-1.5 cursor-pointer shadow-sm transition-colors"
+                  className="px-4 py-2 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold rounded-lg text-xs uppercase tracking-wider flex items-center space-x-1.5 cursor-pointer shadow-sm transition-colors"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Download High-Res Flyer</span>

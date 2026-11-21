@@ -45,7 +45,7 @@ export interface ChurchEvent {
   image: string;
   registrationRequired: boolean;
   registrationStatus: 'Open' | 'Closed' | 'Limited Seats';
-  isFeaturedSummit?: boolean;
+  isFeatured?: boolean;
 }
 
 export interface Ministry {

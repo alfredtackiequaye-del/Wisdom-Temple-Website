@@ -87,7 +87,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by sermon title, scripture (e.g. Proverbs 4:7), series, or keyword..."
-              className="w-full pl-12 pr-4 py-3.5 bg-mist-50 border border-mist-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 focus:bg-white transition-all"
+              className="w-full pl-12 pr-4 py-3.5 bg-mist-50 border border-mist-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 focus:bg-white transition-[background-color,border-color,color,box-shadow,opacity,transform]"
             />
           </div>
 
@@ -102,7 +102,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer ${
                     selectedCategory === cat
                       ? 'bg-forest-900 text-white shadow-sm border border-gold-500/40'
                       : 'bg-mist-100 text-forest-700 hover:bg-mist-200'
@@ -202,7 +202,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
                 <div className="pt-2 flex flex-wrap gap-3">
                   <button
                     onClick={() => onPlayAudio(sermons[0])}
-                    className="px-4 py-2 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors flex items-center space-x-1.5 cursor-pointer shadow-sm"
+                    className="px-4 py-2 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors flex items-center space-x-1.5 cursor-pointer shadow-sm"
                   >
                     <Headphones className="w-4 h-4 fill-forest-950" />
                     <span>Listen Audio</span>
@@ -210,7 +210,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
 
                   <button
                     onClick={() => onWatchVideo(sermons[0])}
-                    className="px-4 py-2.5 bg-forest-800 hover:bg-forest-700 text-emerald-100 font-bold text-xs rounded-xl border border-forest-700 transition-all flex items-center space-x-1.5 cursor-pointer"
+                    className="px-4 py-2.5 bg-forest-800 hover:bg-forest-700 text-emerald-100 font-bold text-xs rounded-xl border border-forest-700 transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-1.5 cursor-pointer"
                   >
                     <Play className="w-3.5 h-3.5 fill-emerald-100" />
                     <span>Video Details & Notes</span>
@@ -218,7 +218,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
 
                   <button
                     onClick={() => onShare(sermons[0].title, `Watch '${sermons[0].title}' from Wisdom Temple: https://www.youtube.com/watch?v=cnVwK9eU7EI`)}
-                    className="px-4 py-2.5 bg-forest-850 hover:bg-forest-800 text-emerald-200 font-bold text-xs rounded-xl border border-forest-700 transition-all flex items-center space-x-1.5 cursor-pointer"
+                    className="px-4 py-2.5 bg-forest-850 hover:bg-forest-800 text-emerald-200 font-bold text-xs rounded-xl border border-forest-700 transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-1.5 cursor-pointer"
                   >
                     <Share2 className="w-3.5 h-3.5 text-gold-500" />
                     <span>Share</span>
@@ -252,7 +252,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
             {filteredSermons.map((sermon) => (
               <div
                 key={sermon.id}
-                className="bg-white rounded-2xl border border-mist-300 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between group"
+                className="bg-white rounded-2xl border border-mist-300 overflow-hidden shadow-sm hover:shadow-md transition-[background-color,border-color,color,box-shadow,opacity,transform] flex flex-col justify-between group"
               >
                 <div>
                   {/* Thumbnail Container */}
@@ -319,7 +319,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
                   <div className="flex items-center justify-between pt-3 gap-2">
                     <button
                       onClick={() => onWatchVideo(sermon)}
-                      className="flex-1 py-2 bg-forest-900 hover:bg-forest-800 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center space-x-1.5 cursor-pointer border border-gold-500/30"
+                      className="flex-1 py-2 bg-forest-900 hover:bg-forest-800 text-white font-bold text-xs rounded-xl transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center justify-center space-x-1.5 cursor-pointer border border-gold-500/30"
                     >
                       <Play className="w-3.5 h-3.5 fill-gold-300 text-gold-300" />
                       <span>Watch</span>
@@ -327,7 +327,7 @@ export const WatchListenView: React.FC<WatchListenViewProps> = ({
 
                     <button
                       onClick={() => onPlayAudio(sermon)}
-                      className="flex-1 py-2 bg-gold-50 hover:bg-gold-50 text-gold-700 border border-gold-400/60 font-bold text-xs rounded-xl transition-all flex items-center justify-center space-x-1.5 cursor-pointer"
+                      className="flex-1 py-2 bg-gold-50 hover:bg-gold-50 text-gold-700 border border-gold-400/60 font-bold text-xs rounded-xl transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center justify-center space-x-1.5 cursor-pointer"
                     >
                       <Headphones className="w-3.5 h-3.5 text-gold-500" />
                       <span>Listen</span>

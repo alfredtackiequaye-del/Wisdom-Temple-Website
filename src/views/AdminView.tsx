@@ -238,7 +238,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
     ) {
       return initialTab as any;
     }
-    return "giving";
+    return "albums";
   });
 
   useEffect(() => {
@@ -287,34 +287,33 @@ export const AdminView: React.FC<AdminViewProps> = ({
     if (canAccessTab(tab)) setActiveTabState(tab);
   };
 
-  // Single source of truth for the section navigation. Counts show totals;
-  // `attention` is the number of items still waiting for a staff action.
+  // Keep the section navigation concise while showing record counts where useful.
   const visibleTabs = [
-    { id: "content", group: "site", icon: Edit3, label: "Site Writings & Page Copy", short: "Writings & Copy" },
-    { id: "banners", group: "site", icon: ImageIcon, label: "Banners & Card Media", short: "Banners & Media" },
     { id: "albums", group: "site", icon: Images, label: "Photo Albums", short: "Photo Albums" },
+    { id: "content", group: "site", icon: Edit3, label: "Website Text", short: "Website Text" },
+    { id: "banners", group: "site", icon: ImageIcon, label: "Banners & Images", short: "Banners" },
     {
-      id: "giving", group: "records", icon: DollarSign, label: "Giving & MoMo Reconciliation", short: "Giving",
+      id: "giving", group: "records", icon: DollarSign, label: "Giving", short: "Giving",
       count: givingRecords.length,
       attention: givingRecords.filter((r) => r.status === "pending-verification").length,
     },
-    { id: "events", group: "records", icon: Ticket, label: "Event Passes & RSVPs", short: "Events", count: eventRegistrations.length },
+    { id: "events", group: "records", icon: Ticket, label: "Event Registrations", short: "Events", count: eventRegistrations.length },
     {
       id: "prayers", group: "records", icon: Heart, label: "Prayer Requests", short: "Prayer",
       count: prayerRequests.length,
       attention: prayerRequests.filter((r) => r.status === "new").length,
     },
     {
-      id: "visits", group: "records", icon: Users, label: "Guest Visits & Welcomes", short: "Visits",
+      id: "visits", group: "records", icon: Users, label: "Visitors", short: "Visitors",
       count: visitPlans.length,
       attention: visitPlans.filter((r) => r.status === "planned").length,
     },
     {
-      id: "messages", group: "records", icon: Mail, label: "Contact Inquiries", short: "Inquiries",
+      id: "messages", group: "records", icon: Mail, label: "Messages", short: "Messages",
       count: contactMessages.length,
       attention: contactMessages.filter((r) => r.status === "unread").length,
     },
-    { id: "staff", group: "records", icon: Shield, label: "Staff & Access", short: "Staff", count: staffUsers.length },
+    { id: "staff", group: "records", icon: Shield, label: "Staff Access", short: "Staff", count: staffUsers.length },
   ].filter((tab) => canAccessTab(tab.id as AdminTab)) as {
     id: AdminTab;
     group: "site" | "records";
@@ -830,7 +829,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
             <button
               type="button"
               onClick={() => onNavigate("home")}
-              className="px-3.5 py-1.5 rounded-xl bg-forest-850 hover:bg-forest-800 text-emerald-200 hover:text-white border border-forest-700 text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer"
+              className="px-3.5 py-1.5 rounded-xl bg-forest-850 hover:bg-forest-800 text-emerald-200 hover:text-white border border-forest-700 text-xs font-semibold transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-1.5 cursor-pointer"
             >
               <ArrowRight className="w-3.5 h-3.5 rotate-180 text-gold-500" />
               <span>Return to Church Website</span>
@@ -936,7 +935,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                 <div className="pt-2 flex flex-col gap-2">
                   <button
                     type="submit"
-                    className="w-full py-3.5 rounded-lg bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center justify-center space-x-2 cursor-pointer"
+                    className="w-full py-3.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center justify-center space-x-2 cursor-pointer"
                   >
                     <Key className="w-4 h-4" />
                     <span>Authenticate & Enter Portal</span>
@@ -989,7 +988,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
         </div>
       )}
 
-      {/* Standalone Admin Top Navigation Bar (scrolls away so the section tabs can stick) */}
+      {/* Church identity and a link back to the public site */}
       <header className="bg-forest-950 border-b border-forest-700 text-white py-3 px-4 sm:px-6 lg:px-8 relative z-30 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -1010,10 +1009,10 @@ export const AdminView: React.FC<AdminViewProps> = ({
             <button
               type="button"
               onClick={() => onNavigate("home")}
-              className="px-3.5 py-1.5 rounded-xl bg-forest-900 hover:bg-forest-800 text-emerald-200 hover:text-white border border-forest-700 text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer"
+              className="px-3.5 py-1.5 rounded-xl bg-forest-900 hover:bg-forest-800 text-emerald-200 hover:text-white border border-forest-700 text-xs font-semibold transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-1.5 cursor-pointer"
             >
               <ArrowRight className="w-3.5 h-3.5 rotate-180 text-gold-500" />
-              <span>Return to Church Website</span>
+              <span>Church website</span>
             </button>
           </div>
         </div>
@@ -1026,15 +1025,14 @@ export const AdminView: React.FC<AdminViewProps> = ({
             <div>
               <div className="flex items-center space-x-2 text-gold-300 font-mono text-xs font-bold uppercase mb-1">
                 <Shield className="w-4 h-4 text-gold-500" />
-                <span>ECCLESIASTICAL LEADERSHIP & DISPATCH</span>
+                <span>ADMIN DASHBOARD</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-serif-title">
-                Wisdom Temple Church Administration
+                Church admin
               </h1>
               <p className="text-xs text-emerald-200/80 mt-1 max-w-2xl">
-                Restricted portal for church records, treasury reconciliation,
-                event passes, pastoral intercession petitions, and authorized
-                staff management.
+                Choose a section below to manage the website, photo albums, or
+                church submissions.
               </p>
             </div>
 
@@ -1060,7 +1058,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
               <button
                 type="button"
                 onClick={() => setShowGuideModal(true)}
-                className="px-3.5 py-2.5 rounded-xl bg-forest-850 hover:bg-forest-800 text-emerald-200 hover:text-white border border-forest-700 text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
+                className="px-3.5 py-2.5 rounded-xl bg-forest-850 hover:bg-forest-800 text-emerald-200 hover:text-white border border-forest-700 text-xs font-bold transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-1.5 cursor-pointer"
               >
                 <HelpCircle className="w-4 h-4 text-gold-300" />
                 <span className="hidden sm:inline">Guide</span>
@@ -1070,7 +1068,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
               <button
                 type="button"
                 onClick={handleExportTab}
-                className="px-4 py-2.5 rounded-lg bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center space-x-1.5 cursor-pointer"
+                className="px-4 py-2.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center space-x-1.5 cursor-pointer"
               >
                 <Download className="w-4 h-4" />
                 <span>{activeTab === "banners" || activeTab === "content" ? "Export backup" : "Export to CSV"}</span>
@@ -1080,7 +1078,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
               <button
                 type="button"
                 onClick={() => handleLogout()}
-                className="px-3.5 py-2.5 rounded-xl bg-red-950/60 hover:bg-red-900 border border-red-500/40 text-red-200 text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
+                className="px-3.5 py-2.5 rounded-xl bg-red-950/60 hover:bg-red-900 border border-red-500/40 text-red-200 text-xs font-bold transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-1.5 cursor-pointer"
                 title="Lock session and sign out"
               >
                 <LogOut className="w-4 h-4 text-red-300" />
@@ -1090,7 +1088,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate("home")}
-                className="px-3.5 py-2.5 rounded-xl bg-forest-900 hover:bg-forest-850 text-emerald-300 hover:text-white border border-forest-700 text-xs font-semibold transition-all flex items-center space-x-1 cursor-pointer"
+                className="px-3.5 py-2.5 rounded-xl bg-forest-900 hover:bg-forest-850 text-emerald-300 hover:text-white border border-forest-700 text-xs font-semibold transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-1 cursor-pointer"
               >
                 <span>Public Site</span>
                 <ArrowRight className="w-3.5 h-3.5 text-gold-500" />
@@ -1098,14 +1096,17 @@ export const AdminView: React.FC<AdminViewProps> = ({
             </div>
           </div>
 
-          {/* Command Deck & Quick Access Modules */}
-          <div className="mt-8 space-y-4">
+          <details className="mt-6 rounded-xl border border-forest-700 bg-forest-900/70">
+            <summary className="px-4 py-3 text-sm font-semibold text-emerald-100 cursor-pointer">
+              Optional: quick links and record totals
+            </summary>
+            <div className="p-4 pt-0 space-y-4">
             {/* Top Spotlight Cards: Content Writings & Banners Media */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
               {/* Card 1: Site Writings & Copy */}
               <div
                 onClick={() => setActiveTab("content")}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between group relative overflow-hidden ${
+                className={`p-4 rounded-2xl border transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer flex items-center justify-between group relative overflow-hidden ${
                   activeTab === "content"
                     ? "bg-forest-800 border-gold-500 shadow-lg ring-2 ring-gold-500/40"
                     : "bg-forest-900 border-forest-700 hover:border-gold-500/60 hover:bg-forest-850"
@@ -1139,7 +1140,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
               {/* Card 2: Banners & Visual Media */}
               <div
                 onClick={() => setActiveTab("banners")}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between group relative overflow-hidden ${
+                className={`p-4 rounded-2xl border transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer flex items-center justify-between group relative overflow-hidden ${
                   activeTab === "banners"
                     ? "bg-forest-800 border-gold-500 shadow-lg ring-2 ring-gold-500/40"
                     : "bg-forest-900 border-forest-700 hover:border-gold-500/60 hover:bg-forest-850"
@@ -1175,7 +1176,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
               <div
                 onClick={() => setActiveTab("giving")}
-                className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                className={`p-3 rounded-xl border transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer ${
                   activeTab === "giving"
                     ? "bg-forest-800 border-gold-500"
                     : "bg-forest-850 border-forest-700 hover:border-gold-500/40"
@@ -1191,7 +1192,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
               <div
                 onClick={() => setActiveTab("events")}
-                className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                className={`p-3 rounded-xl border transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer ${
                   activeTab === "events"
                     ? "bg-forest-800 border-gold-500"
                     : "bg-forest-850 border-forest-700 hover:border-gold-500/40"
@@ -1207,7 +1208,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
               <div
                 onClick={() => setActiveTab("prayers")}
-                className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                className={`p-3 rounded-xl border transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer ${
                   activeTab === "prayers"
                     ? "bg-forest-800 border-gold-500"
                     : "bg-forest-850 border-forest-700 hover:border-gold-500/40"
@@ -1223,7 +1224,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
               <div
                 onClick={() => setActiveTab("visits")}
-                className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                className={`p-3 rounded-xl border transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer ${
                   activeTab === "visits"
                     ? "bg-forest-800 border-gold-500"
                     : "bg-forest-850 border-forest-700 hover:border-gold-500/40"
@@ -1239,7 +1240,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
               <div
                 onClick={() => setActiveTab("messages")}
-                className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                className={`p-3 rounded-xl border transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer ${
                   activeTab === "messages"
                     ? "bg-forest-800 border-gold-500"
                     : "bg-forest-850 border-forest-700 hover:border-gold-500/40"
@@ -1255,7 +1256,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
               <div
                 onClick={() => setActiveTab("staff")}
-                className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                className={`p-3 rounded-xl border transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer ${
                   activeTab === "staff"
                     ? "bg-forest-800 border-gold-500"
                     : "bg-forest-850 border-forest-700 hover:border-gold-500/40"
@@ -1269,7 +1270,8 @@ export const AdminView: React.FC<AdminViewProps> = ({
                 </strong>
               </div>
             </div>
-          </div>
+            </div>
+          </details>
         </div>
       </section>
 
@@ -1323,7 +1325,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                       role="tab"
                       aria-selected={selected}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                      className={`px-3.5 py-2 rounded-xl transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
                         selected
                           ? "bg-forest-900 text-gold-300 shadow-sm"
                           : "text-slate-600 hover:bg-mist-100 hover:text-forest-900"
@@ -1934,7 +1936,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowAddStaffModal(true)}
-                  className="px-4 py-2.5 bg-forest-900 hover:bg-forest-800 text-white font-bold text-xs rounded-xl shadow-md flex items-center space-x-2 transition-all cursor-pointer border border-gold-500/40"
+                  className="px-4 py-2.5 bg-forest-900 hover:bg-forest-800 text-white font-bold text-xs rounded-xl shadow-md flex items-center space-x-2 transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer border border-gold-500/40"
                 >
                   <UserPlus className="w-4 h-4 text-gold-300" />
                   <span>Appoint New Staff Officer</span>
@@ -1947,7 +1949,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
               {filteredStaff.map((staff) => (
                 <div
                   key={staff.id}
-                  className={`bg-white rounded-3xl p-5 border transition-all shadow-sm space-y-4 relative ${
+                  className={`bg-white rounded-3xl p-5 border transition-[background-color,border-color,color,box-shadow,opacity,transform] shadow-sm space-y-4 relative ${
                     staff.isActive
                       ? "border-mist-300"
                       : "border-red-200 bg-red-50/20"
@@ -2229,7 +2231,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="w-1/2 py-2.5 rounded-xl bg-forest-900 hover:bg-forest-800 text-white font-bold transition-all shadow-md cursor-pointer border border-gold-500/40"
+                  className="w-1/2 py-2.5 rounded-xl bg-forest-900 hover:bg-forest-800 text-white font-bold transition-[background-color,border-color,color,box-shadow,opacity,transform] shadow-md cursor-pointer border border-gold-500/40"
                 >
                   Confirm Appointment
                 </button>
@@ -2334,7 +2336,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
               <button
                 type="button"
                 onClick={() => setShowGuideModal(false)}
-                className="w-full py-3 bg-forest-900 hover:bg-forest-800 text-white font-bold text-xs rounded-xl shadow cursor-pointer transition-all"
+                className="w-full py-3 bg-forest-900 hover:bg-forest-800 text-white font-bold text-xs rounded-xl shadow cursor-pointer transition-[background-color,border-color,color,box-shadow,opacity,transform]"
               >
                 Understood, Return to Portal
               </button>

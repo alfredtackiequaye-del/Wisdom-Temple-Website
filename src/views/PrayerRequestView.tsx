@@ -144,7 +144,7 @@ export const PrayerRequestView: React.FC<PrayerRequestViewProps> = ({
                     setSubmittedCode(null);
                     setRequestText('');
                   }}
-                  className="px-5 py-2.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg cursor-pointer transition-colors shadow-sm"
+                  className="px-5 py-2.5 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg cursor-pointer transition-colors shadow-sm"
                 >
                   Submit Another Request
                 </button>
@@ -166,7 +166,7 @@ export const PrayerRequestView: React.FC<PrayerRequestViewProps> = ({
                       type="button"
                       key={cat}
                       onClick={() => setCategory(cat)}
-                      className={`p-2.5 text-center rounded-xl text-xs font-semibold transition-all border cursor-pointer ${
+                      className={`p-2.5 text-center rounded-xl text-xs font-semibold transition-[background-color,border-color,color,box-shadow,opacity,transform] border cursor-pointer ${
                         category === cat
                           ? 'bg-forest-900 text-gold-300 border-forest-900 shadow'
                           : 'bg-mist-50 text-slate-700 border-mist-300 hover:bg-mist-100'
@@ -252,7 +252,7 @@ export const PrayerRequestView: React.FC<PrayerRequestViewProps> = ({
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full py-3.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer flex items-center justify-center space-x-2"
+                  className="w-full py-3.5 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer flex items-center justify-center space-x-2"
                 >
                   <Send className="w-4 h-4" />
                   <span>PLACE PETITION ON THE ALTAR</span>

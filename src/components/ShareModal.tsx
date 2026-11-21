@@ -48,7 +48,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, title, 
         <div className="space-y-2 pt-2">
           <button
             onClick={shareToWhatsApp}
-            className="w-full py-2.5 px-4 bg-whatsapp hover:bg-whatsapp-dark text-white font-bold rounded-xl flex items-center justify-center space-x-2 text-sm shadow transition-all cursor-pointer"
+            className="w-full py-2.5 px-4 bg-whatsapp hover:bg-whatsapp-dark text-white font-bold rounded-xl flex items-center justify-center space-x-2 text-sm shadow transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer"
           >
             <MessageSquare className="w-4 h-4" />
             <span>Share via WhatsApp</span>
@@ -56,7 +56,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, title, 
 
           <button
             onClick={copyToClipboard}
-            className="w-full py-2.5 px-4 bg-forest-850 hover:bg-forest-800 text-emerald-100 font-semibold rounded-xl flex items-center justify-center space-x-2 text-sm transition-all cursor-pointer border border-forest-700"
+            className="w-full py-2.5 px-4 bg-forest-850 hover:bg-forest-800 text-emerald-100 font-semibold rounded-xl flex items-center justify-center space-x-2 text-sm transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer border border-forest-700"
           >
             {copied ? <Check className="w-4 h-4 text-gold-300" /> : <Copy className="w-4 h-4 text-gold-500" />}
             <span>{copied ? 'Link Copied to Clipboard!' : 'Copy Link to Share'}</span>

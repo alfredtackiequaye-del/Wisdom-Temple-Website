@@ -126,7 +126,7 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
 
               <button
                 onClick={onClose}
-                className="w-full py-3 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
+                className="w-full py-3 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
               >
                 Done
               </button>
@@ -210,7 +210,7 @@ export const EventRegistrationModal: React.FC<EventRegistrationModalProps> = ({ 
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full py-3.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
+                  className="w-full py-3.5 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
                 >
                   CONFIRM FREE REGISTRATION
                 </button>

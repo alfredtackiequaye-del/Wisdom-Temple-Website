@@ -21,24 +21,46 @@ const nextOccurrence = (weekday: number, hour: number, lengthH: number, from: nu
 
 export type NextService =
   | { status: "live"; label: string }
-  | { status: "upcoming"; label: string; start: number; days: number; hours: number; minutes: number };
+  | {
+      status: "upcoming";
+      label: string;
+      start: number;
+      days: number;
+      hours: number;
+      minutes: number;
+      seconds: number;
+    };
 
-/** The next Sunday celebration, or "live" while it is on. */
-export const getNextSunday = (now = Date.now()): NextService => {
-  const start = nextOccurrence(0, SUNDAY_START_HOUR, SUNDAY_LENGTH_H, now);
-  if (now >= start && now < start + SUNDAY_LENGTH_H * HOUR) {
-    return { status: "live", label: "Sunday Celebration is on now" };
+const nextService = (
+  weekday: number,
+  hour: number,
+  lengthH: number,
+  label: string,
+  now: number,
+): NextService => {
+  const start = nextOccurrence(weekday, hour, lengthH, now);
+  if (now >= start && now < start + lengthH * HOUR) {
+    return { status: "live", label: `${label} is on now` };
   }
   const diff = start - now;
   return {
     status: "upcoming",
-    label: "Sunday Celebration",
+    label,
     start,
     days: Math.floor(diff / (24 * HOUR)),
     hours: Math.floor((diff / HOUR) % 24),
     minutes: Math.floor((diff / 60000) % 60),
+    seconds: Math.floor((diff / 1000) % 60),
   };
 };
+
+/** The next Sunday celebration, or "live" while it is on. */
+export const getNextSunday = (now = Date.now()): NextService =>
+  nextService(0, SUNDAY_START_HOUR, SUNDAY_LENGTH_H, "Sunday Celebration", now);
+
+/** The next Wednesday Secret Place service, or "live" while it is on. */
+export const getNextWednesday = (now = Date.now()): NextService =>
+  nextService(3, WEDNESDAY_START_HOUR, WEDNESDAY_LENGTH_H, "The Secret Place", now);
 
 const icsStamp = (ms: number) =>
   new Date(ms).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");

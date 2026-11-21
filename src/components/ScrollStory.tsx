@@ -56,7 +56,7 @@ export const ScrollStory: React.FC<ScrollStoryProps> = ({ steps, stickyTop = "to
               aria-hidden={i !== active}
               loading="lazy"
               decoding="async"
-              className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out ${
+              className={`absolute inset-0 w-full h-full object-cover transition-[background-color,border-color,color,box-shadow,opacity,transform] duration-700 ease-out ${
                 i === active ? "opacity-100 scale-100" : "opacity-0 scale-105"
               }`}
             />
@@ -71,7 +71,7 @@ export const ScrollStory: React.FC<ScrollStoryProps> = ({ steps, stickyTop = "to
               {steps.map((step, i) => (
                 <span
                   key={step.title}
-                  className={`h-1.5 rounded-full transition-all duration-500 ${
+                  className={`h-1.5 rounded-full transition-[background-color,border-color,color,box-shadow,opacity,transform] duration-500 ${
                     i === active ? "w-8 bg-gold-400" : "w-2 bg-white/40"
                   }`}
                 />

@@ -841,7 +841,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
           <div className="flex flex-wrap items-center gap-2.5">
             <button
               onClick={() => handleSaveAllSection(selectedCategory)}
-              className="px-4 py-2.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-black text-xs uppercase tracking-wider rounded-xl shadow-lg transition-all flex items-center space-x-1.5 cursor-pointer hover:scale-102"
+              className="px-4 py-2.5 bg-gold-500 hover:bg-gold-400 text-forest-950 font-black text-xs uppercase tracking-wider rounded-xl shadow-lg transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-1.5 cursor-pointer hover:scale-102"
               title="Save all changes currently edited"
             >
               <Save className="w-4 h-4" />
@@ -850,7 +850,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
 
             <button
               onClick={exportContentJson}
-              className="px-3.5 py-2.5 bg-forest-850 hover:bg-forest-800 text-emerald-200 hover:text-white border border-forest-700 hover:border-gold-500/50 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
+              className="px-3.5 py-2.5 bg-forest-850 hover:bg-forest-800 text-emerald-200 hover:text-white border border-forest-700 hover:border-gold-500/50 rounded-xl text-xs font-bold transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-1.5 cursor-pointer"
               title="Download full JSON backup of all text"
             >
               <Download className="w-3.5 h-3.5 text-gold-300" />
@@ -859,7 +859,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
 
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="px-3.5 py-2.5 bg-forest-850 hover:bg-forest-800 text-emerald-200 hover:text-white border border-forest-700 hover:border-gold-500/50 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
+              className="px-3.5 py-2.5 bg-forest-850 hover:bg-forest-800 text-emerald-200 hover:text-white border border-forest-700 hover:border-gold-500/50 rounded-xl text-xs font-bold transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-1.5 cursor-pointer"
               title="Upload previously exported JSON backup"
             >
               <Upload className="w-3.5 h-3.5 text-gold-300" />
@@ -868,7 +868,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
 
             <button
               onClick={handleResetAllDefaults}
-              className="px-3.5 py-2.5 bg-red-950/40 hover:bg-red-900/60 text-red-200 border border-red-800/50 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
+              className="px-3.5 py-2.5 bg-red-950/40 hover:bg-red-900/60 text-red-200 border border-red-800/50 rounded-xl text-xs font-bold transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-1.5 cursor-pointer"
               title="Reset all writings back to original church text"
             >
               <RotateCcw className="w-3.5 h-3.5 text-red-400" />
@@ -913,7 +913,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
               <button
                 key={tab.id}
                 onClick={() => setSelectedCategory(tab.id)}
-                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
+                className={`px-3.5 py-2 rounded-xl transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
                   isActive
                     ? 'bg-forest-900 text-gold-300 shadow-xs ring-1 ring-gold-500'
                     : 'text-slate-600 hover:bg-mist-100 hover:text-forest-900'
@@ -973,7 +973,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
             return (
               <div
                 key={spec.key}
-                className={`bg-white rounded-2xl p-5 sm:p-6 border transition-all shadow-xs space-y-4 ${
+                className={`bg-white rounded-2xl p-5 sm:p-6 border transition-[background-color,border-color,color,box-shadow,opacity,transform] shadow-xs space-y-4 ${
                   hasUnsavedChanges
                     ? 'border-gold-500 ring-1 ring-gold-500/40 bg-amber-50/20'
                     : isModified
@@ -1046,7 +1046,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
                       type="text"
                       value={currentValue as string || ''}
                       onChange={(e) => handleFieldChange(spec.key, e.target.value)}
-                      className="w-full px-4 py-2.5 bg-mist-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-forest-700 focus:border-forest-700 focus:bg-white transition-all"
+                      className="w-full px-4 py-2.5 bg-mist-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-forest-700 focus:border-forest-700 focus:bg-white transition-[background-color,border-color,color,box-shadow,opacity,transform]"
                     />
                   )}
 
@@ -1055,7 +1055,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
                       rows={spec.rows || 3}
                       value={currentValue as string || ''}
                       onChange={(e) => handleFieldChange(spec.key, e.target.value)}
-                      className="w-full px-4 py-2.5 bg-mist-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-forest-700 focus:border-forest-700 focus:bg-white transition-all leading-relaxed"
+                      className="w-full px-4 py-2.5 bg-mist-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-forest-700 focus:border-forest-700 focus:bg-white transition-[background-color,border-color,color,box-shadow,opacity,transform] leading-relaxed"
                     />
                   )}
 
@@ -1086,7 +1086,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
                               updated[pIdx] = e.target.value;
                               handleFieldChange(spec.key, updated);
                             }}
-                            className="w-full px-4 py-2.5 bg-mist-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-forest-700 focus:border-forest-700 focus:bg-white transition-all leading-relaxed"
+                            className="w-full px-4 py-2.5 bg-mist-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-forest-700 focus:border-forest-700 focus:bg-white transition-[background-color,border-color,color,box-shadow,opacity,transform] leading-relaxed"
                           />
                         </div>
                       ))}
@@ -1181,7 +1181,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
                   Website Typography Rendering
                 </span>
                 {Array.isArray(formValues[previewField.key]) ? (
-                  <div className="space-y-3 text-sm text-slate-800 leading-relaxed font-serif">
+                  <div className="space-y-3 text-sm text-slate-800 leading-relaxed">
                     {(formValues[previewField.key] as string[]).map((p, idx) => (
                       <p key={idx}>{p}</p>
                     ))}

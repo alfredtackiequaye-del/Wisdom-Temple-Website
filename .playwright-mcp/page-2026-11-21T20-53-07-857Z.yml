@@ -1,0 +1,76 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e8] [cursor=pointer]:
+        - generic "ICGC WISDOM TEMPLE" [ref=e9]:
+          - img "ICGC WISDOM TEMPLE emblem" [ref=e10]
+        - generic [ref=e11]: ICGC WISDOM TEMPLE
+      - generic [ref=e13]:
+        - button "GIVE" [ref=e14]
+        - button "Toggle Navigation Menu" [ref=e18] [cursor=pointer]
+  - main [ref=e20]
+  - button "Contact Wisdom Temple on WhatsApp" [ref=e23] [cursor=pointer]:
+    - generic [ref=e26]: WhatsApp Us
+  - contentinfo [ref=e27]:
+    - generic [ref=e30]:
+      - generic [ref=e31]:
+        - generic [ref=e32]: Weekly Bulletin & Devotionals
+        - heading "Stay connected with our church family." [level=3] [ref=e33]
+        - paragraph [ref=e34]: Receive weekly sermon highlights, prayer focuses, and church announcements straight to your inbox.
+      - generic [ref=e36]:
+        - textbox "Enter your email address" [ref=e37]
+        - button "Subscribe" [ref=e38] [cursor=pointer]
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - heading "Connect With Us" [level=4] [ref=e42]
+          - paragraph [ref=e43]: Stay inspired and connected through our official media broadcasts, weekly live streams, and ministry updates.
+          - generic [ref=e45]:
+            - link "YouTube" [ref=e46] [cursor=pointer]:
+              - /url: https://www.youtube.com/@icgcwisdomtemple
+            - link "Facebook" [ref=e50] [cursor=pointer]:
+              - /url: https://facebook.com
+              - text: f
+            - link "Instagram" [ref=e51] [cursor=pointer]:
+              - /url: https://instagram.com
+              - text: ig
+            - link "TikTok" [ref=e52] [cursor=pointer]:
+              - /url: https://tiktok.com
+              - text: tt
+            - button "Send Message" [ref=e53] [cursor=pointer]
+        - generic [ref=e57]:
+          - heading "Quick Links" [level=4] [ref=e58]
+          - generic [ref=e59]:
+            - button "About Us" [ref=e60] [cursor=pointer]
+            - button "Sermons & Media" [ref=e61] [cursor=pointer]
+            - button "Ministries" [ref=e62] [cursor=pointer]
+            - button "Events Calendar" [ref=e63] [cursor=pointer]
+            - button "Photo Gallery" [ref=e64] [cursor=pointer]
+            - button "Prayer Requests" [ref=e65] [cursor=pointer]
+            - button "Plan a Visit" [ref=e66] [cursor=pointer]
+            - button "Contact Office" [ref=e67] [cursor=pointer]
+            - button "Give Online (Tithes & Offering)" [ref=e68] [cursor=pointer]
+        - generic [ref=e72]:
+          - heading "Church Office & Sanctuary" [level=4] [ref=e73]
+          - generic [ref=e74]:
+            - generic [ref=e79]:
+              - generic [ref=e80]: Sanctuary
+              - generic [ref=e81]: ICGC Wisdom Temple, Star Junction, Tabora - Accra, Ghana
+            - generic [ref=e85]:
+              - generic [ref=e86]: WhatsApp / Phone
+              - link "0245009764" [ref=e87] [cursor=pointer]:
+                - /url: https://wa.me/233245009764
+            - generic [ref=e92]:
+              - generic [ref=e93]: Official Email
+              - link "icgcwisdomtemple@gmail.com" [ref=e94] [cursor=pointer]:
+                - /url: mailto:icgcwisdomtemple@gmail.com
+            - generic [ref=e99]:
+              - generic [ref=e100]: Office Hours
+              - generic [ref=e101]: "Tuesday – Friday: 8:30 AM – 4:30 PM"
+            - button "Get Directions & Contact Form" [ref=e103] [cursor=pointer]
+      - generic [ref=e104]:
+        - paragraph [ref=e105]: © 2026 ICGC. All rights reserved.
+        - generic [ref=e106]:
+          - button "Statement of Faith" [ref=e107] [cursor=pointer]
+          - generic [aria-hidden] [ref=e108]: ·
+          - button "Staff login" [ref=e109] [cursor=pointer]

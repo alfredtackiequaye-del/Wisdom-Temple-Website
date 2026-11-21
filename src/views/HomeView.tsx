@@ -17,7 +17,6 @@ import {
   Calendar,
   Clock,
   MapPin,
-  ArrowRight,
   Sparkles,
   Heart,
   Flame,
@@ -31,37 +30,7 @@ import {
   X,
 } from "lucide-react";
 import { PosterImage } from "../components/PosterImage";
-import { ScrollProgressRail } from "../components/ScrollProgressRail";
-import { ScrollStory } from "../components/ScrollStory";
-
-/** One odometer-style countdown digit: the old value slides out as the new one slides in. */
-const CountdownUnit: React.FC<{
-  value: number;
-  label: string;
-  tone: "gold" | "white";
-}> = ({ value, label, tone }) => (
-  <div className="bg-forest-900 border border-white/10 rounded-lg p-3">
-    <div className="relative h-8 sm:h-9 overflow-hidden flex items-center justify-center">
-      <AnimatePresence mode="popLayout" initial={false}>
-        <m.span
-          key={value}
-          initial={{ y: 18, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -18, opacity: 0 }}
-          transition={{ duration: 0.35, ease: EASE_OUT }}
-          className={`absolute text-2xl sm:text-3xl font-black ${
-            tone === "gold" ? "text-gold-400" : "text-white"
-          }`}
-        >
-          {String(value).padStart(2, "0")}
-        </m.span>
-      </AnimatePresence>
-    </div>
-    <span className="text-[10px] uppercase tracking-wider text-emerald-300/70 font-semibold block text-center mt-1">
-      {label}
-    </span>
-  </div>
-);
+import { SectionHeader } from "../components/SectionHeader";
 
 interface HomeViewProps {
   onNavigate: (page: PageId, subTab?: string) => void;
@@ -108,36 +77,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
   // Latest message
   const latestSermon = sermons[0];
-  const featuredSummit = events.find((e) => e.isFeaturedSummit) || events[0];
   const [playLatestInline, setPlayLatestInline] = useState(false);
-  const [flyerModalOpen, setFlyerModalOpen] = useState(false);
-
-  // Wisdom Summit Countdown Timer (starts October 7, 2026; final day is October 11)
-  const SUMMIT_START = new Date("2026-10-07T18:00:00").getTime();
-  const SUMMIT_END = new Date("2026-10-11T23:59:59").getTime();
-  const getTimeLeft = () => {
-    const difference = Math.max(0, SUMMIT_START - Date.now());
-    return {
-      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((difference / 1000 / 60) % 60),
-      seconds: Math.floor((difference / 1000) % 60),
-    };
-  };
-  const [timeLeft, setTimeLeft] = useState(getTimeLeft);
-  const [summitStatus, setSummitStatus] = useState<"upcoming" | "live" | "ended">("upcoming");
-
-  useEffect(() => {
-    const tick = () => {
-      const now = Date.now();
-      setTimeLeft(getTimeLeft());
-      setSummitStatus(now < SUMMIT_START ? "upcoming" : now <= SUMMIT_END ? "live" : "ended");
-    };
-    tick();
-    const timer = setInterval(tick, 1000);
-    return () => clearInterval(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // Testimony modal state
   const [showTestimonyModal, setShowTestimonyModal] = useState(false);
@@ -159,28 +99,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
     }, 2000);
   };
 
-  const railSections = [
-    { id: "hero-section", label: "Welcome" },
-    { id: "experience-row", label: "Experience" },
-    ...(latestSermon ? [{ id: "latest-message", label: "Latest Message" }] : []),
-    ...(featuredSummit ? [{ id: "wisdom-summit", label: "Wisdom Summit" }] : []),
-    { id: "upcoming-events", label: "Events" },
-    ...(publishedTestimonies.length > 0
-      ? [{ id: "testimonies", label: "Testimonies" }]
-      : []),
-    { id: "giving-teaser", label: "Give" },
-  ];
-
   return (
     <div className="space-y-0 text-slate-900">
-      <ScrollProgressRail sections={railSections} />
-
       {/* ========================================================================= */}
       {/* 1. HERO SECTION - Bold, minimal, full-bleed (Legacy Hills Church style) */}
       {/* ========================================================================= */}
       <section
         ref={heroRef}
-        className="premium-hero relative min-h-[78vh] lg:min-h-[86vh] flex flex-col justify-end overflow-hidden pt-24 sm:pt-32 pb-16 sm:pb-24 lg:pb-28"
+        className="premium-hero relative min-h-[92vh] flex flex-col justify-end overflow-hidden pt-28 sm:pt-36 pb-12 sm:pb-16"
         id="hero-section"
       >
         <m.div className="absolute inset-0 z-0 overflow-hidden" style={{ y: heroImageY }}>
@@ -219,14 +145,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
               referrerPolicy="no-referrer"
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-b from-forest-950/55 via-forest-950/45 to-forest-950/95 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-r from-forest-950/85 via-forest-950/15 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-forest-950/50 via-forest-950/30 to-forest-950 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-forest-950/70 via-transparent to-transparent pointer-events-none" />
         </m.div>
 
-        <div className="hero-content-column relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 text-left flex flex-col items-start">
+        <div className="hero-content-column relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
           <h1
             aria-label={content.heroHeadline}
-            className="max-w-3xl text-4xl sm:text-5xl md:text-6xl lg:text-[5.8rem] leading-[0.98] tracking-[-0.02em] font-bold text-white font-display text-shadow-hero drop-shadow-[0_5px_18px_rgba(0,0,0,0.5)]"
+            className="max-w-5xl text-[3.4rem] sm:text-7xl lg:text-[7.4rem] leading-[0.92] text-white font-display"
           >
             <span aria-hidden="true">
               {heroWords.map((word, i) => (
@@ -235,15 +161,18 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   initial={
                     prefersReducedMotion
                       ? { opacity: 1, y: 0 }
-                      : { opacity: 0, y: 34 }
+                      : { opacity: 0, y: 40 }
                   }
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
-                    duration: 0.75,
-                    delay: prefersReducedMotion ? 0 : 0.15 + i * 0.06,
+                    duration: 0.9,
+                    delay: prefersReducedMotion ? 0 : 0.15 + i * 0.07,
                     ease: EASE_OUT,
                   }}
-                  className="inline-block mr-[0.22em] last:mr-0"
+                  // The word that closes each sentence carries the meaning.
+                  className={`inline-block mr-[0.2em] last:mr-0 ${
+                    /[.!]$/.test(word) ? "text-gold-400 pr-[0.04em]" : ""
+                  }`}
                 >
                   {word}
                 </m.span>
@@ -251,282 +180,120 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </span>
           </h1>
 
-          <m.p
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.55, ease: "easeOut" }}
-            className="mt-7 max-w-xl text-sm sm:text-base text-emerald-50/90 leading-[1.7] font-medium drop-shadow-[0_3px_12px_rgba(0,0,0,0.55)]"
-          >
-            {content.heroSubtitle}
-          </m.p>
-
           <m.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.68, ease: "easeOut" }}
-            className="mt-6 flex flex-wrap items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-50/80"
+            transition={{ duration: 0.9, delay: 0.6, ease: EASE_OUT }}
+            className="mt-10 sm:mt-14 pt-8 border-t border-white/20 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-end"
           >
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 backdrop-blur-sm">
-              <Calendar className="w-3.5 h-3.5 text-gold-300" />
-              {content.sundayServiceDay} • {content.sundayServiceTime}
-            </span>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 backdrop-blur-sm">
-              <Flame className="w-3.5 h-3.5 text-gold-300" />
-              {content.midweekServiceDay} • {content.midweekServiceTime}
-            </span>
-          </m.div>
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 w-full mt-9">
-          <m.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.75, ease: "easeOut" }}
-            className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-6"
-          >
-            <button
-              onClick={() => onNavigate("new-here")}
-              className="w-full sm:w-auto px-8 py-4 rounded-xl cta-shine bg-gold-400 text-forest-950 font-bold text-sm sm:text-base shadow-[0_14px_30px_rgba(0,0,0,0.35)] transition-all hover:-translate-y-0.5 hover:bg-gold-300 cursor-pointer"
-            >
-              {content.heroButtonPrimary}
-            </button>
-
-            <button
-              onClick={() => onNavigate("events")}
-              className="group w-full sm:w-auto px-2 py-4 text-white font-semibold text-sm sm:text-base flex items-center justify-center sm:justify-start gap-2 transition-colors hover:text-gold-300 cursor-pointer"
-            >
-              <span>{content.heroButtonSecondary}</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </button>
-          </m.div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* THIS WEEK - the next services at a glance */}
-      {/* ========================================================================= */}
-      <section aria-label="Service times this week" className="bg-forest-950 border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 grid grid-cols-1 md:grid-cols-[auto_1fr_1fr_auto] items-center gap-4 md:gap-8">
-          <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-gold-400">
-            Join us this week
-          </span>
-          <div className="flex items-center gap-3 text-white">
-            <Clock className="w-5 h-5 text-gold-400 shrink-0" />
-            <p className="text-sm leading-snug">
-              <span className="font-semibold">{content.sundayServiceName}</span>
-              <span className="block text-emerald-200/80 text-xs">
-                Sundays at {content.sundayServiceTime}
-              </span>
+            <p className="lg:col-span-4 text-lg text-emerald-50/90 leading-relaxed">
+              {content.heroSubtitle}
             </p>
-          </div>
-          <div className="flex items-center gap-3 text-white">
-            <Flame className="w-5 h-5 text-gold-400 shrink-0" />
-            <p className="text-sm leading-snug">
-              <span className="font-semibold">{content.midweekServiceName}</span>
-              <span className="block text-emerald-200/80 text-xs">
-                Wednesdays at {content.midweekServiceTime}
-              </span>
-            </p>
-          </div>
-          <button
-            onClick={() => onNavigate("watch-listen")}
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg border border-gold-400/60 text-gold-300 hover:bg-gold-400 hover:text-forest-950 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
-          >
-            <Play className="w-3.5 h-3.5" /> Watch online
-          </button>
+
+            <dl className="lg:col-span-4 grid grid-cols-2 gap-6">
+              {[
+                { label: content.sundayServiceDay, time: content.sundayServiceTime },
+                { label: content.midweekServiceDay, time: content.midweekServiceTime },
+              ].map((service) => (
+                <div key={service.label}>
+                  <dt className="text-xs uppercase tracking-wider text-gold-300">
+                    {service.label}
+                  </dt>
+                  <dd className="mt-1.5 font-display text-3xl sm:text-4xl text-white">
+                    {service.time}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+
+            <div className="lg:col-span-4 flex flex-wrap lg:justify-end items-center gap-x-6 gap-y-4">
+              <button
+                onClick={() => onNavigate("new-here")}
+                className="px-8 py-4 bg-gold-500 hover:bg-gold-400 text-forest-950 font-semibold text-base transition-colors cursor-pointer"
+              >
+                {content.heroButtonPrimary}
+              </button>
+              <button
+                onClick={() => onNavigate("events")}
+                className="arrow-link text-white hover:text-gold-300 transition-colors cursor-pointer"
+              >
+                {content.heroButtonSecondary}
+              </button>
+            </div>
+          </m.div>
         </div>
       </section>
 
       {/* ========================================================================= */}
       {/* 2. MODULAR EXPERIENCE ROW - Inspired by connection-rincon.com */}
       {/* ========================================================================= */}
-      <section
-        id="experience-row"
-        className="cinematic-panel py-16 sm:py-20 border-b border-slate-200/80"
-      >
+      <section id="experience-row" className="py-20 sm:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <m.div {...reveal()} className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-[11px] font-semibold text-forest-600 uppercase tracking-[0.22em] bg-mist-100 px-3.5 py-2 rounded-full border border-mist-300 inline-block mb-4">
-              {content.experienceSectionBadge}
-            </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-forest-900 font-display tracking-[-0.06em]">
-              {content.experienceSectionTitle}
-            </h2>
-            <p className="text-sm sm:text-base text-slate-600 mt-3 leading-relaxed">
-              {content.experienceSectionSubtitle}
-            </p>
-          </m.div>
-
-          <m.div
-            {...staggerContainer(0.15)}
-            className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5"
-          >
-            {/* Module 1: Visit In-Person */}
-            <m.div
-              variants={staggerItem}
-              whileHover={{ y: -6 }}
-              transition={LIFT_SPRING}
-              className="editorial-card premium-card rounded-[4px] p-7 sm:p-8 md:col-span-5 group flex flex-col justify-between"
-            >
-              <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-forest-950 text-gold-300 flex items-center justify-center shadow-lift">
-                  <MapPin className="w-6 h-6 text-gold-400" />
-                </div>
-                <div className="space-y-1.5">
-                  <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-forest-600">
-                    {content.sundayServiceDay} @ {content.sundayServiceTime}
-                  </span>
-                  <h3 className="text-2xl font-bold text-forest-900 font-display tracking-[-0.04em]">
-                    {content.experienceMod1Title}
-                  </h3>
-                </div>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  {content.experienceMod1Desc}
-                </p>
-              </div>
-              <div className="pt-6 mt-5 border-t border-slate-200/80">
-                <button
-                  onClick={() => onNavigate("new-here")}
-                  className="inline-flex items-center gap-2 text-xs font-bold text-forest-800 group-hover:text-gold-600 transition-colors cursor-pointer"
-                >
-                  <span>Plan your visit</span>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </button>
-              </div>
-            </m.div>
-
-            {/* Module 2: Watch on Demand */}
-            <m.div
-              variants={staggerItem}
-              whileHover={{ y: -6 }}
-              transition={LIFT_SPRING}
-              className="editorial-card premium-card rounded-[4px] p-7 sm:p-8 md:col-span-4 group flex flex-col justify-between"
-            >
-              <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-forest-950 text-gold-300 flex items-center justify-center shadow-lift">
-                  <Play className="w-6 h-6 text-gold-400 fill-gold-400" />
-                </div>
-                <div className="space-y-1.5">
-                  <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-forest-600">
-                    TEACHING FOR EVERY SEASON
-                  </span>
-                  <h3 className="text-2xl font-bold text-forest-900 font-display tracking-[-0.04em]">
-                    {content.experienceMod2Title}
-                  </h3>
-                </div>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  {content.experienceMod2Desc}
-                </p>
-              </div>
-              <div className="pt-6 mt-5 border-t border-slate-200/80">
-                <button
-                  onClick={() => onNavigate("watch-listen")}
-                  className="inline-flex items-center gap-2 text-xs font-bold text-forest-800 group-hover:text-gold-600 transition-colors cursor-pointer"
-                >
-                  <span>Explore the message library</span>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </button>
-              </div>
-            </m.div>
-
-            {/* Module 3: The Secret Place */}
-            <m.div
-              variants={staggerItem}
-              whileHover={{ y: -6 }}
-              transition={LIFT_SPRING}
-              className="editorial-card premium-card rounded-[4px] p-7 sm:p-8 md:col-span-3 group flex flex-col justify-between"
-            >
-              <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-forest-950 text-gold-300 flex items-center justify-center shadow-lift">
-                  <Flame className="w-6 h-6 text-gold-400" />
-                </div>
-                <div className="space-y-1.5">
-                  <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-forest-600">
-                    {content.midweekServiceDay} @ {content.midweekServiceTime}
-                  </span>
-                  <h3 className="text-2xl font-bold text-forest-900 font-display tracking-[-0.04em]">
-                    {content.experienceMod3Title}
-                  </h3>
-                </div>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  {content.experienceMod3Desc}
-                </p>
-              </div>
-              <div className="pt-6 mt-5 border-t border-slate-200/80">
-                <button
-                  onClick={() => onNavigate("prayer")}
-                  className="inline-flex items-center gap-2 text-xs font-bold text-forest-800 group-hover:text-gold-600 transition-colors cursor-pointer"
-                >
-                  <span>Share a prayer request</span>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </button>
-              </div>
-            </m.div>
-          </m.div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* LIFE AT WISDOM TEMPLE - real people, real joy */}
-      {/* ========================================================================= */}
-      <section id="life-at-wisdom-temple" className="bg-gold-50 py-20 sm:py-24 border-b border-gold-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <m.div {...reveal()} className="text-center max-w-2xl mx-auto mb-12 space-y-4">
-            <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em]">
-              LIFE AT WISDOM TEMPLE
-            </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl text-forest-900 font-serif-title">
-              Faith grows in community
-            </h2>
-            <p className="text-slate-600 leading-relaxed">
-              We are a church family growing in faith, serving one another, and
-              sharing the love of Christ. Come as you are; there is a place for
-              you here.
-            </p>
-          </m.div>
-
-          <ScrollStory
-            stickyTop="top-28"
-            steps={[
-              {
-                icon: Flame,
-                label: "01 · Faith",
-                title: "Faith",
-                text: `Charismatic worship and sound teaching of the Word, every Sunday at ${content.sundayServiceTime} and on Wednesdays at ${content.midweekServiceTime} at The Secret Place.`,
-                image: "/assets/optimized/hero_icgc_banner.webp",
-                alt: "Worshippers gathered in the Wisdom Temple auditorium",
-                action: { label: "Watch a message", onClick: () => onNavigate("watch-listen") },
-              },
-              {
-                icon: Sparkles,
-                label: "02 · Purpose",
-                title: "Purpose",
-                text: "We exist to raise leaders, shape visions and influence society through Christ, from the classroom to the marketplace.",
-                image: "/assets/photos/wisdom-summit-team-lineup.webp",
-                alt: "Wisdom Temple team members posing together at the Wisdom Summit",
-                action: { label: "Explore our ministries", onClick: () => onNavigate("ministries") },
-              },
-              {
-                icon: Heart,
-                label: "03 · Community",
-                title: "Community",
-                text: "Whatever your season, you will find a seat, a smile and a place to serve. We would love to meet you.",
-                image: "/assets/photos/wisdom-summit-full-team.webp",
-                alt: "The Wisdom Summit team celebrating together",
-                action: { label: "Plan your visit", onClick: () => onNavigate("new-here") },
-              },
-            ]}
+          <SectionHeader
+            eyebrow={content.experienceSectionBadge}
+            title={content.experienceSectionTitle}
+            subtitle={content.experienceSectionSubtitle}
           />
 
-          <div className="mt-12 text-center">
-            <button
-              onClick={() => onNavigate("gallery")}
-              className="group inline-flex items-center gap-2 text-sm font-semibold text-forest-700 hover:text-forest-500 cursor-pointer"
-            >
-              See more photos
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </button>
-          </div>
+          <m.ol
+            {...staggerContainer(0.12)}
+            className="grid grid-cols-1 md:grid-cols-3 gap-5"
+          >
+            {[
+              {
+                icon: MapPin,
+                label: `${content.sundayServiceDay} · ${content.sundayServiceTime}`,
+                title: content.experienceMod1Title,
+                text: content.experienceMod1Desc,
+                cta: "Plan your visit",
+                go: () => onNavigate("new-here"),
+              },
+              {
+                icon: Play,
+                label: "Teaching for every season",
+                title: content.experienceMod2Title,
+                text: content.experienceMod2Desc,
+                cta: "Watch messages",
+                go: () => onNavigate("watch-listen"),
+              },
+              {
+                icon: Flame,
+                label: `${content.midweekServiceDay} · ${content.midweekServiceTime}`,
+                title: content.experienceMod3Title,
+                text: content.experienceMod3Desc,
+                cta: "Request prayer",
+                go: () => onNavigate("prayer"),
+              },
+            ].map((card, i) => (
+              <m.li
+                key={card.title}
+                variants={staggerItem}
+                className="group relative flex flex-col bg-mist-50 p-8 sm:p-10 transition-colors hover:bg-white"
+              >
+                <div className="flex items-start justify-between">
+                  <span className="font-display text-5xl text-forest-950/15 group-hover:text-gold-500 transition-colors">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <card.icon className="w-6 h-6 text-forest-950" aria-hidden="true" />
+                </div>
+                <p className="mt-10 text-xs uppercase tracking-wider text-gold-700">
+                  {card.label}
+                </p>
+                <h3 className="mt-2 font-display text-3xl text-forest-950">
+                  {card.title}
+                </h3>
+                <p className="mt-4 text-base text-slate-600 leading-relaxed flex-1">
+                  {card.text}
+                </p>
+                <button
+                  onClick={card.go}
+                  className="arrow-link mt-8 self-start text-forest-950 group-hover:text-gold-700 transition-colors cursor-pointer"
+                >
+                  {card.cta}
+                </button>
+              </m.li>
+            ))}
+          </m.ol>
         </div>
       </section>
 
@@ -535,38 +302,24 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* ========================================================================= */}
       {latestSermon && (
         <section
-          className="ambient-glow py-20 bg-forest-950 text-white border-b border-forest-700"
+          className="py-20 sm:py-28 bg-forest-950 text-white"
           id="latest-message"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <m.div
-              {...reveal()}
-              className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-forest-700 gap-4"
-            >
-              <div>
-                <span className="text-xs text-gold-300 uppercase tracking-widest block font-bold">
-                  BIBLICAL TEACHING FOR EVERY SEASON
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1 font-serif-title">
-                  A Message for Your Journey
-                </h2>
-              </div>
-              <button
-                onClick={() => onNavigate("watch-listen")}
-                className="inline-flex items-center space-x-1 text-sm font-semibold text-gold-300 hover:text-white transition-colors"
-              >
-                <span>Explore all messages</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </m.div>
+            <SectionHeader
+              tone="dark"
+              eyebrow="Latest message"
+              title="A Message for Your Journey"
+              action={{ label: "All messages", onClick: () => onNavigate("watch-listen") }}
+            />
 
             {/* Featured Message Layout */}
             <m.div
               {...reveal(0.1)}
-              className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-forest-900 rounded-3xl p-6 sm:p-8 border border-forest-700 shadow-2xl"
+              className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center"
             >
               {/* Media Thumbnail Container / Embedded Player */}
-              <div className="lg:col-span-7 relative rounded-2xl overflow-hidden shadow-2xl aspect-video bg-black border border-forest-700">
+              <div className="lg:col-span-7 relative rounded-2xl overflow-hidden aspect-video bg-black">
                 {playLatestInline && latestSermon.videoEmbedUrl ? (
                   <iframe
                     src={`${latestSermon.videoEmbedUrl}?autoplay=1&rel=0`}
@@ -585,7 +338,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center">
                       <button
                         onClick={() => setPlayLatestInline(true)}
-                        className="w-16 h-16 rounded-full bg-gold-500 hover:bg-gold-600 text-forest-950 flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95 cursor-pointer mb-2"
+                        className="w-16 h-16 rounded-full bg-gold-500 hover:bg-gold-400 text-forest-950 flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95 cursor-pointer mb-2"
                         aria-label="Play Message Video inline"
                       >
                         <Play className="w-7 h-7 ml-1 fill-forest-950" />
@@ -616,7 +369,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       {latestSermon.series}
                     </span>
                   </div>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-white leading-snug font-serif">
+                  <h3 className="text-2xl sm:text-3xl text-white leading-snug font-display">
                     {latestSermon.title}
                   </h3>
                   <p className="text-sm text-gold-400 font-medium">
@@ -640,7 +393,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                         onWatchVideo(latestSermon);
                       }
                     }}
-                    className="px-6 py-3 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors flex items-center space-x-2 cursor-pointer shadow-sm"
+                    className="px-6 py-3 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors flex items-center space-x-2 cursor-pointer shadow-sm"
                   >
                     <Play className="w-4 h-4 fill-forest-950" />
                     <span>
@@ -661,7 +414,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       href={latestSermon.youtubeUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-4 py-3 bg-red-950/70 hover:bg-red-900/80 text-red-200 font-bold text-xs rounded-xl border border-red-800/60 transition-all flex items-center space-x-1.5"
+                      className="px-4 py-3 bg-red-950/70 hover:bg-red-900/80 text-red-200 font-bold text-xs rounded-xl border border-red-800/60 transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-1.5"
                     >
                       <Youtube className="w-4 h-4 text-red-500" />
                       <span>YouTube</span>
@@ -681,259 +434,78 @@ export const HomeView: React.FC<HomeViewProps> = ({
       <PastorsCorner onNavigate={onNavigate} />
 
       {/* ========================================================================= */}
-      {/* 5. FEATURED ANNUAL EVENT: WISDOM SUMMIT 2026 */}
-      {/* ========================================================================= */}
-      {featuredSummit && (
-        <section
-          className="ambient-glow py-20 bg-forest-950 text-white relative border-b border-forest-700"
-          id="wisdom-summit"
-        >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <m.div
-              {...reveal()}
-              className="bg-forest-900 rounded-2xl border border-white/15 p-8 sm:p-12 relative shadow-xl"
-            >
-              {/* Event Badge */}
-              <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-                <span className="px-3.5 py-1 bg-gold-500 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-md">
-                  ANNUAL FLAGSHIP CONFERENCE
-                </span>
-                <button
-                  onClick={() =>
-                    onShare(
-                      featuredSummit.name,
-                      `${featuredSummit.theme} - Join us for Wisdom Summit 2026 at Wisdom Temple`,
-                    )
-                  }
-                  className="p-2 rounded-lg bg-forest-950 hover:bg-forest-800 text-emerald-200 hover:text-white transition-colors flex items-center space-x-1.5 text-xs font-semibold cursor-pointer border border-white/10"
-                >
-                  <Share2 className="w-3.5 h-3.5 text-gold-500" />
-                  <span>Share gathering</span>
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                {/* Official Wisdom Summit Banner */}
-                <div className="lg:col-span-7 xl:col-span-8 flex justify-center">
-                  <div
-                    onClick={() => setFlyerModalOpen(true)}
-                    className="group relative rounded-xl overflow-hidden border border-white/20 shadow-xl bg-black cursor-pointer w-full"
-                    title="Click to enlarge banner"
-                  >
-                    <img
-                      src={getBanner(
-                        "wisdom_summit_banner",
-                        "/wisdom_summit_banner.png",
-                      )}
-                      alt="Wisdom Summit 2026"
-                      className="w-full h-auto object-cover block"
-                      referrerPolicy="no-referrer"
-                    />
-
-                    {/* Hover Overlay with Enlarge Cue */}
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
-                      <span className="text-xs font-bold text-gold-400 flex items-center space-x-1.5 bg-forest-950 px-3.5 py-1.5 rounded-lg border border-white/20 shadow">
-                        <ZoomIn className="w-3.5 h-3.5" />
-                        <span>View the event banner</span>
-                      </span>
-                    </div>
-
-                    {/* Corner Badge */}
-                    <div className="absolute top-3 right-3 bg-forest-950/90 px-3 py-1 rounded-md border border-white/20 text-[10px] font-bold text-gold-400 uppercase tracking-wider flex items-center space-x-1">
-                      <Sparkles className="w-3 h-3 text-gold-400" />
-                      <span>Wisdom Summit</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Countdown & Registration Beside */}
-                <div className="lg:col-span-5 xl:col-span-4 bg-forest-950 rounded-xl border border-white/15 p-6 sm:p-8 text-center space-y-6">
-                  <div>
-                    <span className="text-xs uppercase tracking-widest text-gold-400 block font-bold">
-                      {summitStatus === "upcoming"
-                        ? "CONFERENCE COUNTDOWN"
-                        : summitStatus === "live"
-                        ? "HAPPENING NOW"
-                        : "SUMMIT CONCLUDED"}
-                    </span>
-                    <p className="text-xs text-emerald-300/80 mt-1">
-                      October 7 - 9 & 11, 2026
-                    </p>
-                  </div>
-
-                  {summitStatus === "upcoming" ? (
-                    <div className="grid grid-cols-4 gap-2.5 text-center">
-                      <CountdownUnit value={timeLeft.days} label="Days" tone="gold" />
-                      <CountdownUnit value={timeLeft.hours} label="Hours" tone="white" />
-                      <CountdownUnit value={timeLeft.minutes} label="Mins" tone="white" />
-                      <CountdownUnit value={timeLeft.seconds} label="Secs" tone="gold" />
-                    </div>
-                  ) : (
-                    <div className="bg-forest-900 border border-white/10 rounded-lg px-4 py-5 space-y-2">
-                      {summitStatus === "live" && (
-                        <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-white">
-                          <span className="live-dot" aria-hidden="true" />
-                          Live this week
-                        </span>
-                      )}
-                      <p className="font-display text-xl text-gold-300">
-                        {summitStatus === "live"
-                          ? "Wisdom Summit is on"
-                          : "Thank you for joining us"}
-                      </p>
-                      <p className="text-xs text-emerald-200/80 leading-relaxed">
-                        {summitStatus === "live"
-                          ? "Nightly at 6:30pm (Oct 7 - 9), and Sunday Oct 11 at 8:00am prompt."
-                          : "Watch the messages and see photos from the summit."}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Registering Button Beside */}
-                  <div className="space-y-2 pt-2">
-                    {summitStatus === "ended" ? (
-                      <button
-                        onClick={() => onNavigate("watch-listen")}
-                        className="w-full py-3.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
-                      >
-                        Explore Summit Messages
-                      </button>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => onRegisterEvent(featuredSummit)}
-                          className="w-full py-3.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-sm"
-                        >
-                          Reserve your place
-                        </button>
-                        <p className="text-[11px] text-emerald-300/70">
-                          Free Entry • Reserved Seating
-                        </p>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </m.div>
-          </div>
-        </section>
-      )}
-
-      {/* ========================================================================= */}
       {/* 6. UPCOMING EVENTS GRID */}
       {/* ========================================================================= */}
-      <section
-        className="py-16 sm:py-20 bg-mist-50 border-b border-mist-200"
-        id="upcoming-events"
-      >
+      <section className="py-20 sm:py-28" id="upcoming-events">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <m.div
-            {...reveal()}
-            className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4"
-          >
-            <div>
-              <span className="text-xs font-bold tracking-widest text-forest-700 uppercase bg-mist-200 px-3 py-1 rounded-full border border-mist-400">
-                GATHER, WORSHIP & GROW
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-forest-900 mt-2 font-serif-title">
-                Gatherings & Events
-              </h2>
-            </div>
-            <button
-              onClick={() => onNavigate("events")}
-              className="inline-flex items-center space-x-1 text-sm font-semibold text-forest-700 hover:text-forest-500 transition-colors"
-            >
-              <span>Explore all gatherings</span>
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </m.div>
+          <SectionHeader
+            eyebrow="Gather, worship & grow"
+            title="Upcoming Events"
+            action={{ label: "All events", onClick: () => onNavigate("events") }}
+          />
 
-          <m.div
-            {...staggerContainer(0.12)}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-          >
+          <m.ul {...staggerContainer(0.1)} className="divide-y divide-forest-950/15 border-b border-forest-950/15">
             {events.slice(0, 3).map((event) => (
-              <m.div
+              <m.li
                 key={event.id}
                 variants={staggerItem}
-                whileHover={{ y: -6 }}
-                transition={LIFT_SPRING}
-                className="bg-white rounded-2xl border border-mist-300 overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between group"
+                className="group grid grid-cols-1 sm:grid-cols-12 gap-5 sm:gap-8 items-center py-7 first:pt-0"
               >
-                <div>
-                  <div className="relative aspect-[16/9] overflow-hidden bg-forest-900">
-                    <PosterImage
-                      src={getBanner("event_" + event.id, event.image)}
-                      alt={event.name}
-                    />
-                    <span className="absolute top-3 left-3 px-2.5 py-1 bg-forest-950/90 text-gold-300 rounded text-xs font-bold backdrop-blur-md border border-gold-500/30">
-                      {event.category}
-                    </span>
-                  </div>
-
-                  <div className="p-6 space-y-3">
-                    <div className="text-xs text-forest-700 font-bold flex items-center space-x-2">
-                      <Calendar className="w-3.5 h-3.5 text-gold-500" />
-                      <span>{event.date}</span>
-                    </div>
-
-                    <h3 className="text-lg font-bold text-forest-900 group-hover:text-forest-700 transition-colors line-clamp-1 font-serif-title">
-                      {event.name}
-                    </h3>
-
-                    <p className="text-xs text-slate-600 line-clamp-2">
-                      {event.shortDescription}
-                    </p>
-
-                    <div className="text-xs text-slate-500 space-y-1 pt-2">
-                      <div className="flex items-center space-x-1.5 truncate">
-                        <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                        <span>{event.time}</span>
-                      </div>
-                      <div className="flex items-center space-x-1.5 truncate">
-                        <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                        <span className="truncate">{event.venue}</span>
-                      </div>
-                    </div>
-                  </div>
+                <div className="sm:col-span-3 relative aspect-[16/10] overflow-hidden rounded-2xl bg-forest-900">
+                  <PosterImage
+                    src={getBanner("event_" + event.id, event.image)}
+                    alt={event.name}
+                  />
                 </div>
-
-                <div className="p-6 pt-0">
+                <div className="sm:col-span-6">
+                  <p className="text-xs uppercase tracking-wider text-gold-700">
+                    {event.category} · {event.date}
+                  </p>
+                  <h3 className="mt-2 font-display text-2xl sm:text-3xl text-forest-950">
+                    {event.name}
+                  </h3>
+                  <p className="mt-2 text-base text-slate-600 line-clamp-2">
+                    {event.shortDescription}
+                  </p>
+                  <p className="mt-3 flex items-center gap-2 text-sm text-slate-500">
+                    <MapPin className="w-4 h-4 shrink-0" aria-hidden="true" />
+                    <span className="truncate">{event.venue}</span>
+                  </p>
+                </div>
+                <div className="sm:col-span-3 sm:text-right">
                   <button
                     onClick={() => onRegisterEvent(event)}
-                    className="w-full py-2.5 bg-forest-900 hover:bg-forest-800 text-white font-bold text-xs rounded-xl transition-all cursor-pointer border border-gold-500/30"
+                    className="px-6 py-3 bg-forest-950 hover:bg-forest-800 text-white font-semibold text-sm transition-colors cursor-pointer"
                   >
-                    Event details & registration
+                    Event details
                   </button>
                 </div>
-              </m.div>
+              </m.li>
             ))}
-          </m.div>
+          </m.ul>
         </div>
       </section>
 
       {/* ========================================================================= */}
       {/* SCRIPTURE BAND - a pause between sections */}
       {/* ========================================================================= */}
-      <section className="relative isolate overflow-hidden py-24 sm:py-32 text-white text-center">
+      <section className="relative isolate overflow-hidden bg-forest-950 py-28 sm:py-40 text-white">
         <img
           src="/assets/photos/wisdom-summit-team-lineup.webp"
           alt=""
           aria-hidden="true"
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 -z-10 w-full h-full object-cover object-center"
+          className="absolute inset-0 -z-10 w-full h-full object-cover object-center opacity-25 grayscale"
         />
-        <div className="absolute inset-0 -z-10 bg-forest-950/85" />
-        <m.div {...reveal()} className="max-w-3xl mx-auto px-6 space-y-5">
-          <Quote className="w-9 h-9 text-gold-400 mx-auto" aria-hidden="true" />
-          <p className="font-display text-2xl sm:text-4xl leading-snug">
-            Happy is the one who finds wisdom, and the one who gets understanding.
-          </p>
-          <span className="block text-xs font-bold uppercase tracking-[0.25em] text-gold-400">
+        <m.figure {...reveal()} className="max-w-5xl mx-auto px-6 text-center">
+          <blockquote className="font-serif text-4xl sm:text-6xl lg:text-7xl leading-[1.08] tracking-[-0.01em]">
+            “Happy is the one who finds <span className="italic text-gold-400">wisdom</span>, and the one who gets understanding.”
+          </blockquote>
+          <figcaption className="mt-8 text-sm uppercase tracking-wider text-gold-300">
             Proverbs 3:13
-          </span>
-        </m.div>
+          </figcaption>
+        </m.figure>
       </section>
 
       {/* ========================================================================= */}
@@ -941,20 +513,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* ========================================================================= */}
       {publishedTestimonies.length > 0 && (
         <section
-          className="py-20 bg-mist-50 border-b border-mist-200"
+          className="py-20 sm:py-28 bg-mist-100"
           id="testimonies"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <m.div {...reveal()} className="mb-10 max-w-2xl">
-              <div>
-                <span className="text-[10px] font-bold tracking-[0.22em] text-forest-700 uppercase">
-                  STORIES OF FAITH
-                </span>
-                <h2 className="text-4xl sm:text-5xl font-extrabold leading-[0.98] text-forest-900 mt-3 font-serif-title">
-                  Stories of hope, faith & transformation
-                </h2>
-              </div>
-            </m.div>
+            <SectionHeader
+              eyebrow="Stories of faith"
+              title="Stories of hope, faith & transformation"
+              action={{ label: "Share your story", onClick: () => setShowTestimonyModal(true) }}
+            />
 
             <m.div
               {...staggerContainer(0.08)}
@@ -964,79 +531,37 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <m.div
                   key={item.id}
                   variants={staggerItem}
-                  className="min-w-[min(86vw,330px)] sm:min-w-[350px] snap-start bg-white rounded-[22px] p-6 sm:p-7 border border-mist-300 shadow-sm flex flex-col justify-between min-h-[280px]"
+                  className="min-w-[min(86vw,330px)] sm:min-w-[360px] snap-start bg-mist-50 p-8 flex flex-col justify-between min-h-[300px]"
                 >
-                  <div className="space-y-3">
-                    <Quote className="w-8 h-8 text-forest-700/30" />
-                    <h3 className="text-base font-bold text-forest-900 font-serif-title">
+                  <div className="space-y-4">
+                    <Quote className="w-7 h-7 text-gold-500" aria-hidden="true" />
+                    <h3 className="font-display text-2xl text-forest-950">
                       {item.title}
                     </h3>
-                    <p className="text-slate-600 text-xs sm:text-sm leading-relaxed italic">
-                      "{item.testimony}"
+                    <p className="text-slate-600 text-base leading-relaxed">
+                      “{item.testimony}”
                     </p>
                   </div>
 
-                  <div className="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between text-xs">
+                  <div className="pt-6 mt-6 border-t border-forest-950/10 flex items-end justify-between gap-4">
                     <div>
-                      <span className="text-forest-900 font-bold block">
+                      <span className="text-forest-950 font-semibold block">
                         {item.personName}
                       </span>
-                      <span className="text-slate-600 text-[11px]">
+                      <span className="text-slate-500 text-sm">
                         {item.date}
                       </span>
                     </div>
-                    <span className="px-2 py-0.5 bg-mist-100 text-forest-700 rounded text-[10px] border border-mist-400">
+                    <span className="text-xs uppercase tracking-wider text-gold-700">
                       {item.category}
                     </span>
                   </div>
                 </m.div>
               ))}
             </m.div>
-
-            <button
-              onClick={() => setShowTestimonyModal(true)}
-              className="mt-8 inline-flex items-center space-x-2 text-forest-700 hover:text-gold-600 font-bold text-xs uppercase tracking-[0.14em] transition-colors cursor-pointer"
-            >
-              <span>Share your story</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
           </div>
         </section>
       )}
-
-      {/* ========================================================================= */}
-      {/* 11. GIVING TEASER ON HOMEPAGE - Official ICGC Forest & Gold */}
-      {/* ========================================================================= */}
-      <section
-        className="ambient-glow py-16 bg-forest-900 text-white border-t border-white/10"
-        id="giving-teaser"
-      >
-        <m.div
-          {...reveal()}
-          className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4"
-        >
-          <div className="w-12 h-12 bg-gold-500/20 border border-gold-500/40 rounded-full flex items-center justify-center mx-auto text-gold-400">
-            <Heart className="w-6 h-6 fill-gold-500 text-gold-500" />
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-light text-white font-serif">
-            Partner in the{" "}
-            <span className="font-normal text-gold-400">Mission</span>
-          </h2>
-          <p className="text-emerald-200/80 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Your generosity helps sustain worship, discipleship, pastoral care,
-            outreach, and the work of the Gospel in our city and beyond.
-          </p>
-          <div className="pt-4">
-            <button
-              onClick={() => onNavigate("give")}
-              className="px-8 py-3.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer inline-flex items-center space-x-2"
-            >
-              <span>Give to the Mission</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        </m.div>
-      </section>
 
       {/* Share Testimony Modal */}
       {showTestimonyModal && (
@@ -1114,68 +639,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full py-3 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer"
+                    className="w-full py-3 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors cursor-pointer"
                   >
                     SUBMIT PRAISE REPORT
                   </button>
                 </div>
               </form>
             )}
-          </div>
-        </div>
-      )}
-
-      {/* ========================================================================= */}
-      {/* WISDOM SUMMIT FLYER LIGHTBOX MODAL */}
-      {/* ========================================================================= */}
-      {flyerModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm"
-          onClick={() => setFlyerModalOpen(false)}
-        >
-          <div
-            className="relative max-w-4xl w-full bg-forest-950 rounded-2xl border border-white/20 p-4 sm:p-6 shadow-2xl overflow-hidden text-white"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
-              <div className="flex items-center space-x-2">
-                <Sparkles className="w-4 h-4 text-gold-500" />
-                <span className="font-bold text-sm tracking-wide text-gold-400">
-                  WISDOM SUMMIT 2026 — OFFICIAL BANNER
-                </span>
-              </div>
-              <button
-                onClick={() => setFlyerModalOpen(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                title="Close"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="rounded-xl overflow-hidden border border-white/10 bg-black">
-              <img
-                src={optimizedImageUrl("/wisdom_summit_banner.jpg")}
-                alt="Wisdom Summit 2026"
-                className="w-full h-auto object-contain max-h-[75vh] mx-auto block"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-
-            <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <span className="text-xs text-emerald-200/80">
-                October 7–9 & October 11, 2026
-              </span>
-              <button
-                onClick={() => {
-                  setFlyerModalOpen(false);
-                  if (featuredSummit) onRegisterEvent(featuredSummit);
-                }}
-                className="w-full sm:w-auto px-6 py-2.5 bg-gold-500 hover:bg-gold-600 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
-              >
-                REGISTER NOW
-              </button>
-            </div>
           </div>
         </div>
       )}
