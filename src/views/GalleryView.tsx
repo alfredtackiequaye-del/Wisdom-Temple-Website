@@ -146,6 +146,7 @@ const AlbumGrid: React.FC<{
             photos={INITIAL_CHURCH_PHOTOS}
             title="Featured Church Photos"
             subtitle="Selected moments of worship, fellowship, and church life at Wisdom Temple."
+            theme="light"
           />
         </div>
       </>

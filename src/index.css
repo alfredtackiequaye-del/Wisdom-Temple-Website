@@ -210,14 +210,16 @@ span.font-serif-title {
 
 /* Primary buttons are pills. Exact class tokens only, so tinted panels
    and option cards keep their shape. */
-:is(a, button):is(
-    [class~="bg-gold-400"],
-    [class~="bg-gold-500"],
-    [class~="bg-forest-900"],
-    [class~="bg-forest-950"],
-    [class~="bg-whatsapp"]
-  ) {
-  border-radius: 999px;
+@layer base {
+  :where(:is(a, button):is(
+      [class~="bg-gold-400"],
+      [class~="bg-gold-500"],
+      [class~="bg-forest-900"],
+      [class~="bg-forest-950"],
+      [class~="bg-whatsapp"]
+    )) {
+    border-radius: 999px;
+  }
 }
 
 ::selection {
