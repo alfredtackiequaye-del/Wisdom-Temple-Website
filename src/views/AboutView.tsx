@@ -77,7 +77,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab, onNavigate 
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center space-x-1.5 px-4 py-2.5 rounded-xl transition-all cursor-pointer ${
+                  className={`flex items-center space-x-1.5 px-4 py-2.5 rounded-xl transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer ${
                     isActive
                       ? 'bg-forest-900 text-white shadow-sm border border-gold-500/50'
                       : 'text-slate-600 hover:text-forest-900 hover:bg-mist-100'
@@ -390,7 +390,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab, onNavigate 
                   <m.li
                     key={idx}
                     variants={staggerItem}
-                    className="group bg-white rounded-2xl border border-mist-300 hover:border-gold-500/60 shadow-sm hover:shadow-md transition-all p-6 sm:p-7 flex gap-5"
+                    className="group bg-white rounded-2xl border border-mist-300 hover:border-gold-500/60 shadow-sm hover:shadow-md transition-[background-color,border-color,color,box-shadow,opacity,transform] p-6 sm:p-7 flex gap-5"
                   >
                     <span className="font-serif-title text-4xl text-gold-700 leading-none pt-1 w-12 shrink-0" aria-hidden="true">
                       {String(idx + 1).padStart(2, '0')}
@@ -497,7 +497,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab, onNavigate 
 
               <m.div {...staggerContainer(0.14)} className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Pastoral Council */}
-                <m.div variants={staggerItem} className="bg-white rounded-3xl border border-mist-300 shadow-sm hover:shadow-lift hover:border-gold-500/50 transition-all p-8 flex flex-col">
+                <m.div variants={staggerItem} className="bg-white rounded-3xl border border-mist-300 shadow-sm hover:shadow-lift hover:border-gold-500/50 transition-[background-color,border-color,color,box-shadow,opacity,transform] p-8 flex flex-col">
                   <span className="w-12 h-12 rounded-2xl bg-forest-900 flex items-center justify-center">
                     <Shield className="w-6 h-6 text-gold-300" />
                   </span>
@@ -514,7 +514,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab, onNavigate 
                   type="button"
                   variants={staggerItem}
                   onClick={() => setShowCouncilModal(true)}
-                  className="group text-left bg-white rounded-3xl border-2 border-gold-500/50 hover:border-gold-500 overflow-hidden shadow-md hover:shadow-lift transition-all flex flex-col cursor-pointer"
+                  className="group text-left bg-white rounded-3xl border-2 border-gold-500/50 hover:border-gold-500 overflow-hidden shadow-md hover:shadow-lift transition-[background-color,border-color,color,box-shadow,opacity,transform] flex flex-col cursor-pointer"
                 >
                   <span className="relative block aspect-[16/11] bg-forest-950 overflow-hidden">
                     <img
@@ -542,7 +542,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab, onNavigate 
                 </m.button>
 
                 {/* Ministry Deacons */}
-                <m.div variants={staggerItem} className="bg-white rounded-3xl border border-mist-300 shadow-sm hover:shadow-lift hover:border-gold-500/50 transition-all p-8 flex flex-col">
+                <m.div variants={staggerItem} className="bg-white rounded-3xl border border-mist-300 shadow-sm hover:shadow-lift hover:border-gold-500/50 transition-[background-color,border-color,color,box-shadow,opacity,transform] p-8 flex flex-col">
                   <span className="w-12 h-12 rounded-2xl bg-forest-900 flex items-center justify-center">
                     <Heart className="w-6 h-6 text-gold-300" />
                   </span>

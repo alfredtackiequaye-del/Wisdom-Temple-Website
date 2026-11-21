@@ -414,7 +414,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       href={latestSermon.youtubeUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-4 py-3 bg-red-950/70 hover:bg-red-900/80 text-red-200 font-bold text-xs rounded-xl border border-red-800/60 transition-all flex items-center space-x-1.5"
+                      className="px-4 py-3 bg-red-950/70 hover:bg-red-900/80 text-red-200 font-bold text-xs rounded-xl border border-red-800/60 transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-1.5"
                     >
                       <Youtube className="w-4 h-4 text-red-500" />
                       <span>YouTube</span>

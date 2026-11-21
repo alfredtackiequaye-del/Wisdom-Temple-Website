@@ -64,7 +64,7 @@ export const WhatsAppWidget: React.FC = () => {
               href={`https://wa.me/233${content.churchWhatsApp.replace(/^0/, '')}?text=Hello%20Wisdom%20Temple%2C%20I%20would%20like%20to%20connect%20with%20the%20church.`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-2.5 bg-whatsapp hover:bg-whatsapp-dark text-white font-bold rounded-xl flex items-center justify-center space-x-2 shadow-lg transition-all"
+              className="w-full py-2.5 bg-whatsapp hover:bg-whatsapp-dark text-white font-bold rounded-xl flex items-center justify-center space-x-2 shadow-lg transition-[background-color,border-color,color,box-shadow,opacity,transform]"
             >
               <Send className="w-3.5 h-3.5" />
               <span>Open WhatsApp Chat</span>
@@ -76,7 +76,7 @@ export const WhatsAppWidget: React.FC = () => {
       {/* Floating Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 p-3 sm:px-4 sm:py-3 bg-forest-900 hover:bg-forest-800 text-white rounded-full shadow-2xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer border-2 border-gold-500"
+        className="flex items-center space-x-2 p-3 sm:px-4 sm:py-3 bg-forest-900 hover:bg-forest-800 text-white rounded-full shadow-2xl transition-[background-color,border-color,color,box-shadow,opacity,transform] transform hover:scale-105 active:scale-95 cursor-pointer border-2 border-gold-500"
         aria-label="Contact Wisdom Temple on WhatsApp"
         id="whatsapp-floating-btn"
       >

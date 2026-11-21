@@ -375,7 +375,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
           <div className="flex flex-wrap items-center gap-2.5">
             <button
               onClick={handleExportJson}
-              className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold border border-white/20 backdrop-blur-sm transition-all flex items-center space-x-2 cursor-pointer"
+              className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold border border-white/20 backdrop-blur-sm transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-2 cursor-pointer"
               title="Download backup configuration of all banner URLs"
             >
               <Download className="w-4 h-4 text-gold-300" />
@@ -383,7 +383,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
             </button>
             <button
               onClick={handleResetAll}
-              className="px-4 py-2.5 bg-rose-950/40 hover:bg-rose-900/60 text-rose-200 rounded-xl text-xs font-bold border border-rose-500/30 transition-all flex items-center space-x-2 cursor-pointer"
+              className="px-4 py-2.5 bg-rose-950/40 hover:bg-rose-900/60 text-rose-200 rounded-xl text-xs font-bold border border-rose-500/30 transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-2 cursor-pointer"
               title="Reset all custom uploaded banners to original default assets"
             >
               <RotateCcw className="w-4 h-4 text-rose-400" />
@@ -512,7 +512,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
             <button
               key={cat.key}
               onClick={() => setSelectedCategory(cat.key)}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1.5 ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer flex items-center space-x-1.5 ${
                 selectedCategory === cat.key
                   ? "bg-forest-900 text-gold-300 shadow-md border border-gold-500/40"
                   : "bg-white text-slate-700 hover:bg-mist-100 border border-mist-300"
@@ -566,7 +566,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
           return (
             <div
               key={banner.id}
-              className={`bg-white rounded-2xl border transition-all duration-200 overflow-hidden shadow-sm hover:shadow-md flex flex-col justify-between ${
+              className={`bg-white rounded-2xl border transition-[background-color,border-color,color,box-shadow,opacity,transform] duration-200 overflow-hidden shadow-sm hover:shadow-md flex flex-col justify-between ${
                 isCustom
                   ? "border-gold-500 ring-1 ring-gold-500/30"
                   : "border-mist-300"
@@ -721,7 +721,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
                         onClick={() =>
                           fileInputRefs.current[banner.id]?.click()
                         }
-                        className="border-2 border-dashed border-mist-400 hover:border-forest-700 bg-mist-50 hover:bg-mist-100 rounded-xl p-4 text-center cursor-pointer transition-all space-y-1 group relative"
+                        className="border-2 border-dashed border-mist-400 hover:border-forest-700 bg-mist-50 hover:bg-mist-100 rounded-xl p-4 text-center cursor-pointer transition-[background-color,border-color,color,box-shadow,opacity,transform] space-y-1 group relative"
                       >
                         {isCompressing ? (
                           <div className="py-2 flex flex-col items-center justify-center space-y-1">
@@ -811,7 +811,7 @@ export const AdminBannerManager: React.FC<AdminBannerManagerProps> = ({
                 <div className="flex items-center gap-2 pt-3">
                   <button
                     onClick={() => handleSaveBanner(banner)}
-                    className="flex-1 py-2.5 bg-forest-900 hover:bg-forest-700 text-gold-300 font-bold text-xs rounded-xl shadow transition-all cursor-pointer flex items-center justify-center space-x-1.5 border border-gold-500/40"
+                    className="flex-1 py-2.5 bg-forest-900 hover:bg-forest-700 text-gold-300 font-bold text-xs rounded-xl shadow transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer flex items-center justify-center space-x-1.5 border border-gold-500/40"
                   >
                     <Check className="w-4 h-4 text-gold-300" />
                     <span>Save Live Banner</span>

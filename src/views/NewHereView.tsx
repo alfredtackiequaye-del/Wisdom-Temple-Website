@@ -748,7 +748,7 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
 
       {/* Mobile: keeps the main action in reach while reading */}
       <div
-        className={`lg:hidden fixed bottom-4 left-4 right-20 z-30 transition-all duration-300 ${
+        className={`lg:hidden fixed bottom-4 left-4 right-20 z-30 transition-[background-color,border-color,color,box-shadow,opacity,transform] duration-300 ${
           showStickyCta ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0 pointer-events-none'
         }`}
         aria-hidden={!showStickyCta}

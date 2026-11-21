@@ -71,10 +71,15 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-10">
         <div className="flex items-center justify-between h-[76px]">
           {/* Official ICGC Logo Identity in Pure White */}
-          <div
-            onClick={() => handleNavClick("home")}
-            className="cursor-pointer select-none group"
+          <a
+            href="/"
+            onClick={(event) => {
+              event.preventDefault();
+              handleNavClick("home");
+            }}
+            className="cursor-pointer select-none group rounded-md"
             id="brand-logo"
+            aria-label="ICGC Wisdom Temple home"
           >
             <ICGCLogo
               size="md"
@@ -82,7 +87,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               theme="dark"
               forceWhite={true}
             />
-          </div>
+          </a>
 
           {/* Desktop Navigation Links - Legacy Hills Church Streamlined Structure */}
           <nav className="hidden xl:flex items-center gap-0.5 font-sans text-[14px] font-medium whitespace-nowrap" aria-label="Primary navigation">

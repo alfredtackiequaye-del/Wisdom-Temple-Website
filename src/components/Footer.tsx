@@ -103,7 +103,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   href={content.socialYoutube}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-forest-900 border border-forest-700 hover:border-gold-500 text-emerald-300 hover:text-gold-300 flex items-center justify-center transition-all hover:scale-105 shadow-sm"
+                  className="w-9 h-9 rounded-full bg-forest-900 border border-forest-700 hover:border-gold-500 text-emerald-300 hover:text-gold-300 flex items-center justify-center transition-[background-color,border-color,color,box-shadow,opacity,transform] hover:scale-105 shadow-sm"
                   aria-label="YouTube"
                   title="YouTube"
                 >
@@ -113,7 +113,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   href={content.socialFacebook}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-forest-900 border border-forest-700 hover:border-gold-500 text-emerald-300 hover:text-gold-300 flex items-center justify-center transition-all hover:scale-105 shadow-sm font-bold text-xs"
+                  className="w-9 h-9 rounded-full bg-forest-900 border border-forest-700 hover:border-gold-500 text-emerald-300 hover:text-gold-300 flex items-center justify-center transition-[background-color,border-color,color,box-shadow,opacity,transform] hover:scale-105 shadow-sm font-bold text-xs"
                   aria-label="Facebook"
                   title="Facebook"
                 >
@@ -123,7 +123,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   href={content.socialInstagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-forest-900 border border-forest-700 hover:border-gold-500 text-emerald-300 hover:text-gold-300 flex items-center justify-center transition-all hover:scale-105 shadow-sm font-bold text-xs"
+                  className="w-9 h-9 rounded-full bg-forest-900 border border-forest-700 hover:border-gold-500 text-emerald-300 hover:text-gold-300 flex items-center justify-center transition-[background-color,border-color,color,box-shadow,opacity,transform] hover:scale-105 shadow-sm font-bold text-xs"
                   aria-label="Instagram"
                   title="Instagram"
                 >
@@ -133,7 +133,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   href={content.socialTiktok}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-forest-900 border border-forest-700 hover:border-gold-500 text-emerald-300 hover:text-gold-300 flex items-center justify-center transition-all hover:scale-105 shadow-sm font-bold text-xs"
+                  className="w-9 h-9 rounded-full bg-forest-900 border border-forest-700 hover:border-gold-500 text-emerald-300 hover:text-gold-300 flex items-center justify-center transition-[background-color,border-color,color,box-shadow,opacity,transform] hover:scale-105 shadow-sm font-bold text-xs"
                   aria-label="TikTok"
                   title="TikTok"
                 >
@@ -141,7 +141,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </a>
                 <button
                   onClick={() => handleNav('contact')}
-                  className="w-9 h-9 rounded-full bg-forest-900 border border-forest-700 hover:border-gold-500 text-emerald-300 hover:text-gold-300 flex items-center justify-center transition-all hover:scale-105 shadow-sm cursor-pointer"
+                  className="w-9 h-9 rounded-full bg-forest-900 border border-forest-700 hover:border-gold-500 text-emerald-300 hover:text-gold-300 flex items-center justify-center transition-[background-color,border-color,color,box-shadow,opacity,transform] hover:scale-105 shadow-sm cursor-pointer"
                   aria-label="Send Message"
                   title="Contact Church Office"
                 >
@@ -248,7 +248,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <div className="pt-1">
                 <button
                   onClick={() => handleNav('contact')}
-                  className="w-full py-2 px-3 bg-forest-900 hover:bg-forest-800 border border-forest-700 hover:border-gold-500/50 rounded-lg text-emerald-200 hover:text-white text-xs font-semibold text-center transition-all cursor-pointer"
+                  className="w-full py-2 px-3 bg-forest-900 hover:bg-forest-800 border border-forest-700 hover:border-gold-500/50 rounded-lg text-emerald-200 hover:text-white text-xs font-semibold text-center transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer"
                 >
                   Get Directions & Contact Form
                 </button>

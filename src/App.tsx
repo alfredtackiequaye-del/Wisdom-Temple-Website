@@ -20,14 +20,12 @@ import {
   ContactMessage,
   EventRegistration,
   GivingRecord,
-  ChurchPhoto,
 } from "./types";
 import {
   INITIAL_SERMONS,
   INITIAL_EVENTS,
   INITIAL_MINISTRIES,
   INITIAL_TESTIMONIES,
-  INITIAL_CHURCH_PHOTOS,
   CHURCH_INFO,
 } from "./data/churchData";
 
@@ -245,7 +243,6 @@ export default function App() {
   usePageMeta(currentPage);
   const [ministries] = useState(INITIAL_MINISTRIES);
   const [testimonies] = useState(INITIAL_TESTIMONIES);
-  const [photos] = useState<ChurchPhoto[]>(INITIAL_CHURCH_PHOTOS);
 
   // Initial Giving Records
   const initialGiving: GivingRecord[] = [
@@ -613,6 +610,13 @@ export default function App() {
       {/* Loads only the animation features the site uses; strict flags any full `motion.*` component. */}
       <LazyMotion features={domAnimation} strict>
       <div className="min-h-screen bg-mist-50 font-sans text-forest-900 flex flex-col selection:bg-gold-500 selection:text-forest-950">
+        <a
+          href="#main-content"
+          className="skip-link"
+        >
+          Skip to main content
+        </a>
+
         {/* Persistent Navigation */}
         <Navbar
           currentPage={currentPage}
@@ -621,7 +625,7 @@ export default function App() {
         />
 
         {/* Main Viewport Content */}
-        <main className="flex-1">
+        <main id="main-content" tabIndex={-1} className="flex-1">
           <Suspense fallback={<div className="min-h-[100vh]" aria-hidden="true" />}>
             <AnimatePresence mode="wait">
               <m.div
@@ -684,7 +688,7 @@ export default function App() {
                 )}
 
                 {currentPage === "gallery" && (
-                  <GalleryView photos={photos} onNavigate={handleNavigate} />
+                  <GalleryView />
                 )}
 
                 {currentPage === "new-here" && (

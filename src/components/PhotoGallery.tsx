@@ -9,29 +9,17 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  ZoomIn,
   Calendar,
   MapPin,
   Share2,
   Check,
   Search,
   Filter,
-  Sparkles,
   Maximize2,
   Minimize2,
   ArrowRight,
-  Eye,
 } from "lucide-react";
 import { reveal } from "../utils/motion";
-
-// Mosaic that tiles with no holes in both 2 and 4 columns. Every 14 photos:
-// a feature tile + four squares + two wide tiles, then the mirror image.
-const mosaicSpan = (index: number) => {
-  const p = index % 14;
-  if (p === 0 || p === 9) return "col-span-2 row-span-2";
-  if (p === 5 || p === 6 || p === 12 || p === 13) return "col-span-2";
-  return "";
-};
 
 interface PhotoGalleryProps {
   photos: ChurchPhoto[];
@@ -178,38 +166,31 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
   const isDark = theme === "dark";
 
   return (
-    <div className={`space-y-10 sm:space-y-12 ${className}`}>
+    <div className={`space-y-8 sm:space-y-10 ${className}`}>
       {/* Section Header */}
       {!hideHeader && (
-        <div className="text-center max-w-3xl mx-auto space-y-3 px-4">
-          <m.div
+        <div className="max-w-3xl space-y-3">
+          <m.p
             {...reveal()}
-            className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gold-500/15 border border-gold-500/40 text-gold-200 text-xs font-bold uppercase tracking-widest shadow-lg backdrop-blur-md"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-gold-300 animate-pulse" />
-            <span>MOMENTS OF FAITH & GLORY</span>
-          </m.div>
-
-          <m.h2
-            {...reveal()}
-            className={`text-3xl sm:text-4xl lg:text-5xl font-black font-serif-title tracking-tight uppercase ${
-              isDark ? "text-white" : "text-forest-900"
+            className={`text-xs font-semibold uppercase tracking-[0.18em] ${
+              isDark ? "text-gold-300" : "text-gold-700"
             }`}
           >
-            {title.includes("&") ? (
-              <>
-                {title.split("&")[0]}
-                <span className="text-gold-400">& {title.split("&")[1]}</span>
-              </>
-            ) : (
-              title
-            )}
+            Photo gallery
+          </m.p>
+          <m.h2
+            {...reveal()}
+            className={`font-display text-3xl sm:text-4xl lg:text-5xl ${
+              isDark ? "text-white" : "text-forest-950"
+            }`}
+          >
+            {title}
           </m.h2>
 
           {subtitle && (
             <m.p
               {...reveal()}
-              className={`text-sm sm:text-base leading-relaxed max-w-2xl mx-auto ${
+              className={`text-sm sm:text-base leading-relaxed max-w-2xl ${
                 isDark ? "text-emerald-100/80" : "text-slate-600"
               }`}
             >
@@ -223,113 +204,122 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
       {showFilters && (
         <m.div
           {...reveal()}
-          className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 max-w-6xl mx-auto px-4"
+          className="flex flex-col gap-4 border-y border-mist-300 py-4 lg:flex-row lg:items-center lg:justify-between"
         >
-          {/* Category Tabs Pill Bar */}
-          <div className="flex items-center space-x-1.5 overflow-x-auto pb-2 sm:pb-0 scrollbar-none p-1.5 rounded-2xl bg-forest-950/90 border border-gold-500/30 backdrop-blur-md shadow-xl">
-            {CATEGORIES.map((cat) => {
-              const isActive = selectedCategory === cat;
-              const count =
-                cat === "All"
-                  ? photos.length
-                  : photos.filter((p) => p.category === cat).length;
-              return (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors duration-200 cursor-pointer flex items-center space-x-1.5 ${
-                    isActive
-                      ? "bg-gold-500 text-forest-950 shadow-sm font-bold"
-                      : "text-emerald-100/80 hover:text-white hover:bg-white/10 font-medium"
-                  }`}
-                >
-                  <span>{cat === "All" ? "All Moments" : cat}</span>
-                  <span
-                    className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-                      isActive
-                        ? "bg-forest-950/10 text-forest-950"
-                        : "bg-black/30 text-emerald-200"
-                    }`}
-                  >
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Search Box */}
-          <div className="relative w-full lg:w-72 shrink-0">
-            <Search className="w-4 h-4 text-gold-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by event, keyword..."
-              className="w-full pl-10 pr-9 py-2.5 text-xs rounded-2xl bg-forest-950/90 border border-gold-500/35 focus:outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/20 shadow-xl text-white placeholder-emerald-200/50 backdrop-blur-md"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1 cursor-pointer"
+          <div className="grid w-full gap-3 sm:w-auto sm:flex-1 sm:grid-cols-2 lg:max-w-2xl">
+            <div>
+              <label htmlFor="gallery-category" className={`mb-1.5 block text-xs font-semibold ${isDark ? "text-emerald-100" : "text-slate-600"}`}>
+                Browse by category
+              </label>
+              <select
+                id="gallery-category"
+                name="gallery-category"
+                value={selectedCategory}
+                onChange={(event) => {
+                  const category = CATEGORIES.find((item) => item === event.target.value);
+                  if (category) setSelectedCategory(category);
+                }}
+                className={`min-h-11 w-full rounded-xl border px-3 text-sm ${
+                  isDark
+                    ? "border-forest-700 bg-forest-950 text-white"
+                    : "border-mist-300 bg-white text-forest-950"
+                }`}
               >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
+                {CATEGORIES.map((cat) => {
+                  const count =
+                    cat === "All"
+                      ? photos.length
+                      : photos.filter((photo) => photo.category === cat).length;
+                  return (
+                    <option key={cat} value={cat}>
+                      {cat === "All" ? "All photos" : cat} ({count})
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            <div className="relative w-full shrink-0 self-end">
+              <label htmlFor="gallery-search" className={`mb-1.5 block text-xs font-semibold ${isDark ? "text-emerald-100" : "text-slate-600"}`}>
+                Search the gallery
+              </label>
+              <Search className="pointer-events-none absolute left-3.5 top-[2.85rem] h-4 w-4 -translate-y-1/2 text-slate-500" aria-hidden="true" />
+              <input
+                id="gallery-search"
+                name="gallery-search"
+                autoComplete="off"
+                type="search"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder="Search events or moments…"
+                className={`min-h-11 w-full rounded-xl border py-2.5 pl-10 pr-10 text-sm ${
+                  isDark
+                    ? "border-forest-700 bg-forest-950 text-white placeholder:text-emerald-200/50"
+                    : "border-mist-300 bg-white text-forest-950 placeholder:text-slate-500"
+                }`}
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  aria-label="Clear photo search"
+                  className="absolute right-2 top-[2.85rem] -translate-y-1/2 rounded-full p-2 text-slate-500 transition-colors hover:text-forest-950"
+                >
+                  <X className="h-4 w-4" aria-hidden="true" />
+                </button>
+              )}
+            </div>
           </div>
         </m.div>
       )}
 
       {/* Grid of Church Moments */}
       {displayPhotos.length === 0 ? (
-        <div className="text-center py-16 bg-forest-900/80 rounded-3xl border border-gold-500/30 max-w-xl mx-auto p-8 shadow-xl backdrop-blur-md text-white">
-          <Filter className="w-12 h-12 text-gold-500/60 mx-auto mb-3" />
-          <h3 className="text-lg font-bold text-white font-serif-title">
-            No Moments Found
+        <div className="max-w-xl mx-auto rounded-3xl border border-mist-300 bg-white p-8 py-16 text-center text-forest-950">
+          <Filter className="mx-auto mb-3 h-10 w-10 text-gold-600" aria-hidden="true" />
+          <h3 className="font-display text-xl">
+            No photos found
           </h3>
-          <p className="text-xs text-emerald-200/70 mt-1 max-w-sm mx-auto">
+          <p className="mt-1 max-w-sm mx-auto text-sm text-slate-600">
             No church memories match "{searchQuery}" under the selected
             category.
           </p>
           <button
+            type="button"
             onClick={() => {
               setSelectedCategory("All");
               setSearchQuery("");
             }}
-            className="mt-5 px-5 py-2.5 bg-gold-500 hover:bg-gold-400 text-forest-950 text-xs font-bold uppercase tracking-wider rounded-lg cursor-pointer shadow-sm transition-colors"
+            className="mt-5 min-h-11 rounded-full bg-forest-950 px-5 text-sm font-bold text-white transition-colors hover:bg-forest-700"
           >
-            Reset Filters
+            Clear filters
           </button>
         </div>
       ) : (
         <div
           className={
             layout === "editorial"
-              ? "grid grid-flow-dense grid-cols-2 md:grid-cols-4 auto-rows-[150px] sm:auto-rows-[190px] lg:auto-rows-[220px] gap-1.5 sm:gap-2 max-w-7xl mx-auto px-4 bg-forest-950"
-              : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-7xl mx-auto px-4"
+              ? "grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3"
+              : "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
           }
         >
           {displayPhotos.map((photo, index) => (
-            <m.div
+            <m.button
               key={photo.id}
               {...reveal(Math.min(index, 6) * 0.05)}
-              whileHover={{ y: -6 }}
+              whileHover={{ y: -2 }}
+              type="button"
+              aria-label={`View ${photo.title}`}
               className={
                 layout === "editorial"
-                  ? `group relative overflow-hidden bg-forest-900 border border-forest-950 cursor-pointer ${mosaicSpan(index)}`
-                  : "group relative rounded-3xl overflow-hidden bg-forest-900 border border-gold-500/30 hover:border-gold-500 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-gold-500/20 flex flex-col justify-between cursor-pointer"
+                  ? "group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-mist-300 bg-white text-left shadow-sm transition-[border-color,box-shadow,transform] hover:border-gold-500/50 hover:shadow-lg"
+                  : "group relative rounded-3xl overflow-hidden bg-forest-900 border border-gold-500/30 hover:border-gold-500 transition-[background-color,border-color,color,box-shadow,opacity,transform] duration-500 shadow-xl hover:shadow-2xl hover:shadow-gold-500/20 flex flex-col justify-between cursor-pointer"
               }
-              onClick={() => {
-                const originalIndex = filteredPhotos.findIndex(
-                  (p) => p.id === photo.id,
-                );
-                setActivePhotoIndex(originalIndex !== -1 ? originalIndex : 0);
-              }}
+              onClick={() => setActivePhotoIndex(filteredPhotos.findIndex((p) => p.id === photo.id))}
             >
               <div
                 className={
                   layout === "editorial"
-                    ? "relative w-full h-full min-h-0 overflow-hidden bg-black/40"
+                    ? "relative aspect-[16/10] w-full overflow-hidden bg-mist-200"
                     : "relative w-full aspect-[16/11] overflow-hidden bg-black/40"
                 }
               >
@@ -338,8 +328,8 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   alt={photo.title}
                   width={1200}
                   height={825}
-                  sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                  className={`w-full h-full object-cover ${layout === "editorial" ? "object-top" : "object-center"} group-hover:scale-108 transition-transform duration-700 ease-out`}
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  className="h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                   loading="lazy"
                   decoding="async"
                   onError={(e) => {
@@ -351,42 +341,30 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   referrerPolicy="no-referrer"
                 />
 
-                <div
-                  className={
-                    layout === "editorial"
-                      ? "absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent pointer-events-none opacity-75 group-hover:opacity-45 transition-opacity"
-                      : "absolute inset-0 bg-black/40 pointer-events-none opacity-60 group-hover:opacity-40 transition-opacity"
-                  }
-                />
-
-                {/* Floating Category Badge */}
                 {!plainTiles && (
-                  <div
-                    className={
-                      layout === "editorial"
-                        ? "absolute inset-x-3 bottom-3 z-10 flex flex-col items-start gap-1.5"
-                        : "absolute top-3.5 left-3.5 z-10"
-                    }
-                  >
-                    {layout === "editorial" && (
-                      <span className="max-w-full px-2.5 py-1 rounded-md bg-forest-950/85 backdrop-blur-md border border-gold-500/25 text-white text-[10px] sm:text-xs font-bold uppercase tracking-[0.08em] sm:tracking-[0.14em] leading-snug shadow-md">
-                        <span className="line-clamp-2">{photo.title}</span>
-                      </span>
-                    )}
-                    <span
-                      className={`px-3 py-1 rounded-full bg-forest-950/90 text-gold-300 text-[10px] font-bold tracking-wider uppercase border border-gold-500/40 backdrop-blur-md shadow-md items-center space-x-1.5 ${layout === "editorial" ? "hidden sm:flex" : "flex"}`}
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-gold-500" />
-                      <span>{photo.category}</span>
-                    </span>
-                  </div>
+                  <span className="pointer-events-none absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-forest-950/75 text-white opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                    <Maximize2 className="h-4 w-4" aria-hidden="true" />
+                  </span>
                 )}
-
-                {/* Quick View / Lightbox Icon */}
-                <div className="absolute top-3.5 right-3.5 z-10 w-9 h-9 rounded-full bg-forest-950/85 backdrop-blur-md border border-gold-500/40 text-gold-300 flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-gold-500 group-hover:text-forest-950 transition-all duration-300">
-                  <Maximize2 className="w-4 h-4" />
-                </div>
               </div>
+
+              {layout === "editorial" && !plainTiles && (
+                <div className="flex flex-1 flex-col p-3 sm:p-4">
+                  <p className="truncate text-[9px] font-semibold uppercase tracking-[0.11em] text-gold-700 sm:text-[10px]">
+                    {photo.category}
+                  </p>
+                  <h3 className="mt-1 line-clamp-2 font-display text-sm leading-snug text-forest-950 sm:text-base">
+                    {photo.title}
+                  </h3>
+                  <p className="mt-2 hidden line-clamp-2 text-xs leading-relaxed text-slate-600 sm:block">
+                    {photo.caption}
+                  </p>
+                  <div className="mt-auto flex min-w-0 items-center justify-between gap-2 pt-3 text-[10px] text-slate-500 sm:text-xs">
+                    <span className="truncate">{photo.event}</span>
+                    <span className="shrink-0">{photo.date}</span>
+                  </div>
+                </div>
+              )}
 
               {layout === "cards" && (
                 <div className="h-[1px] w-full bg-white/10" />
@@ -437,7 +415,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   </span>
                 </div>
               </div>
-            </m.div>
+            </m.button>
           ))}
         </div>
       )}
@@ -464,6 +442,9 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Photo viewer: ${currentPhoto.title}`}
             className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col justify-between select-none"
             onClick={(e) => {
               if (e.target === e.currentTarget) handleClose();
@@ -485,7 +466,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <button
                   onClick={() => handleShare(currentPhoto)}
-                  className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-medium border border-white/15 transition-all flex items-center space-x-1.5 cursor-pointer"
+                  className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-medium border border-white/15 transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-1.5 cursor-pointer"
                   title="Share Photo"
                 >
                   {copiedNotification ? (
@@ -505,7 +486,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
 
                 <button
                   onClick={toggleFullscreen}
-                  className="p-2 sm:p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/15 transition-all cursor-pointer"
+                  className="p-2 sm:p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/15 transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer"
                   title="Toggle Fullscreen"
                 >
                   {isFullscreen ? (
@@ -517,7 +498,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
 
                 <button
                   onClick={handleClose}
-                  className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-red-600/80 hover:bg-red-600 text-white text-xs font-bold border border-red-500/50 transition-all flex items-center space-x-1 cursor-pointer"
+                  className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-red-600/80 hover:bg-red-600 text-white text-xs font-bold border border-red-500/50 transition-[background-color,border-color,color,box-shadow,opacity,transform] flex items-center space-x-1 cursor-pointer"
                   title="Close Lightbox (Esc)"
                 >
                   <X className="w-4 h-4" />
@@ -534,7 +515,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   e.stopPropagation();
                   handlePrev();
                 }}
-                className="absolute left-3 sm:left-8 top-1/2 -translate-y-1/2 z-30 p-3 sm:p-4 rounded-2xl bg-black/70 hover:bg-forest-700 text-white border border-white/20 hover:border-gold-500 transition-all cursor-pointer shadow-2xl backdrop-blur-md group"
+                className="absolute left-3 sm:left-8 top-1/2 -translate-y-1/2 z-30 p-3 sm:p-4 rounded-2xl bg-black/70 hover:bg-forest-700 text-white border border-white/20 hover:border-gold-500 transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer shadow-2xl backdrop-blur-md group"
                 title="Previous Photo (Left Arrow)"
               >
                 <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
@@ -566,7 +547,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   e.stopPropagation();
                   handleNext();
                 }}
-                className="absolute right-3 sm:right-8 top-1/2 -translate-y-1/2 z-30 p-3 sm:p-4 rounded-2xl bg-black/70 hover:bg-forest-700 text-white border border-white/20 hover:border-gold-500 transition-all cursor-pointer shadow-2xl backdrop-blur-md group"
+                className="absolute right-3 sm:right-8 top-1/2 -translate-y-1/2 z-30 p-3 sm:p-4 rounded-2xl bg-black/70 hover:bg-forest-700 text-white border border-white/20 hover:border-gold-500 transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer shadow-2xl backdrop-blur-md group"
                 title="Next Photo (Right Arrow)"
               >
                 <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
@@ -610,7 +591,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   <button
                     key={thumb.id}
                     onClick={() => setActivePhotoIndex(idx)}
-                    className={`relative w-14 h-12 rounded-lg overflow-hidden shrink-0 transition-all cursor-pointer ${
+                    className={`relative w-14 h-12 rounded-lg overflow-hidden shrink-0 transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer ${
                       idx === activePhotoIndex
                         ? "ring-2 ring-gold-500 scale-105 opacity-100"
                         : "opacity-50 hover:opacity-90"

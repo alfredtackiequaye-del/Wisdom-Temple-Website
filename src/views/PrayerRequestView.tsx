@@ -166,7 +166,7 @@ export const PrayerRequestView: React.FC<PrayerRequestViewProps> = ({
                       type="button"
                       key={cat}
                       onClick={() => setCategory(cat)}
-                      className={`p-2.5 text-center rounded-xl text-xs font-semibold transition-all border cursor-pointer ${
+                      className={`p-2.5 text-center rounded-xl text-xs font-semibold transition-[background-color,border-color,color,box-shadow,opacity,transform] border cursor-pointer ${
                         category === cat
                           ? 'bg-forest-900 text-gold-300 border-forest-900 shadow'
                           : 'bg-mist-50 text-slate-700 border-mist-300 hover:bg-mist-100'

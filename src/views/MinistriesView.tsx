@@ -148,7 +148,7 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
                   variants={staggerItem}
                   onClick={() => setSelectedPathway(active ? 'all' : id)}
                   aria-pressed={active}
-                  className={`text-left rounded-3xl border p-6 sm:p-7 transition-all cursor-pointer ${active ? 'bg-forest-950 border-gold-500 text-white shadow-lift' : 'bg-white border-mist-300 text-forest-900 hover:border-gold-500/60 hover:shadow-md'}`}
+                  className={`text-left rounded-3xl border p-6 sm:p-7 transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer ${active ? 'bg-forest-950 border-gold-500 text-white shadow-lift' : 'bg-white border-mist-300 text-forest-900 hover:border-gold-500/60 hover:shadow-md'}`}
                 >
                   <span className={`w-12 h-12 rounded-2xl flex items-center justify-center ${active ? 'bg-gold-400 text-forest-950' : 'bg-gold-50 text-gold-700'}`}>
                     <Icon className="w-6 h-6" />

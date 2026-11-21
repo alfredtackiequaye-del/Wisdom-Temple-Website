@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { m } from "motion/react";
 import { PhotoGallery } from "../components/PhotoGallery";
-import { ChurchPhoto, PageId, PhotoAlbum } from "../types";
+import { PhotoAlbum } from "../types";
 import { useBanners } from "../utils/bannerManager";
 import {
   albumToGalleryPhotos,
@@ -12,19 +12,12 @@ import {
 import { reveal } from "../utils/motion";
 import {
   Camera,
-  Church,
-  MapPin,
-  CalendarDays,
   ArrowLeft,
   Images,
   Share2,
   Check,
+  ArrowRight,
 } from "lucide-react";
-
-interface GalleryViewProps {
-  photos: ChurchPhoto[];
-  onNavigate: (page: PageId) => void;
-}
 
 const albumIdFromUrl = () =>
   typeof window === "undefined"
@@ -39,47 +32,21 @@ const setAlbumInUrl = (albumId: string | null) => {
   }
 };
 
-export const GalleryView: React.FC<GalleryViewProps> = ({
-  photos,
-  onNavigate,
-}) => {
+export const GalleryView: React.FC = () => {
   const { getBanner } = useBanners();
-  const { albums } = usePublishedAlbums();
+  const { albums, error: albumsError } = usePublishedAlbums();
   const [openAlbumId, setOpenAlbumId] = useState<string | null>(albumIdFromUrl);
   const albumsRef = useRef<HTMLDivElement>(null);
 
-  const bannerByPhotoId: Record<string, { id: string; fallback: string }> = {
-    "photo-1": {
-      id: "wisdom_summit_banner",
-      fallback: "/wisdom_summit_banner.png",
-    },
-    "photo-2": {
-      id: "secret_place_banner",
-      fallback: "/secret_place_banner.jpg",
-    },
-    "photo-4": { id: "event_youth_summit", fallback: "/youth_ministry.jpg" },
-    "photo-5": { id: "ministry_women", fallback: "/womens_fellowship.jpg" },
-    "photo-6": {
-      id: "ministry_children",
-      fallback:
-        "https://images.unsplash.com/photo-1485546246426-74dc88dec4d9?auto=format&fit=crop&w=1200&q=80",
-    },
-    "photo-11": {
-      id: "event_atmosphere_of_prayer",
-      fallback: "/atmosphere_of_prayer.jpg",
-    },
-  };
-
-  const serviceAndEventPhotos = photos
-    .filter((photo) => photo.id !== "photo-pastoral-shepherds")
-    .map((photo) => {
-      const banner = bannerByPhotoId[photo.id];
-      return banner
-        ? { ...photo, imageUrl: getBanner(banner.id, banner.fallback) }
-        : photo;
-    });
-
   const albumPhotoTotal = (albums || []).reduce((n, a) => n + a.photoCount, 0);
+  const albumSummary =
+    albums === null
+      ? "Loading program albums…"
+      : albumsError
+        ? "Program albums could not be loaded"
+        : albums.length === 0
+          ? "New program albums are coming soon"
+          : `${albums.length} ${albums.length === 1 ? "program album" : "program albums"} · ${albumPhotoTotal} photos`;
 
   const openAlbum = (albumId: string | null) => {
     setOpenAlbumId(albumId);
@@ -88,68 +55,39 @@ export const GalleryView: React.FC<GalleryViewProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-forest-950 text-white pb-24">
-      {/* Hero Header */}
-      <section className="ambient-glow relative py-20 lg:py-24 bg-forest-950 text-white border-b border-gold-500/30">
-        {/* Background header image with the shared fade and grain */}
-        <div className="absolute inset-0 pointer-events-none">
+    <div className="min-h-screen bg-mist-50 text-forest-950 pb-20">
+      <section className="relative isolate overflow-hidden bg-forest-950 text-white">
+        <div className="absolute inset-0 -z-10 pointer-events-none">
           <img
             src={getBanner(
               "page_gallery_hero",
               "/assets/optimized/hero_icgc_banner.webp",
             )}
             alt=""
+            width={1920}
+            height={1080}
             decoding="async"
-            className="hero-drift w-full h-full object-cover opacity-40"
+            className="hero-drift w-full h-full object-cover opacity-30"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-forest-950/70 via-forest-950/55 to-forest-950" />
-          <div className="absolute inset-0 hero-grain" />
+          <div className="absolute inset-0 bg-gradient-to-r from-forest-950 via-forest-950/90 to-forest-950/55" />
+          <div className="absolute inset-0 bg-gradient-to-t from-forest-950/80 via-transparent to-forest-950/25" />
         </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl space-y-4">
-            <button
-              onClick={() => onNavigate("home")}
-              className="flex w-fit items-center space-x-2 text-xs font-bold uppercase tracking-wider text-gold-300 hover:text-white transition-colors cursor-pointer"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Back to Home</span>
-            </button>
-
-            <div className="flex w-fit items-center space-x-2 px-3 py-1 rounded-full bg-forest-700 text-gold-300 border border-gold-500/40 text-xs font-bold uppercase tracking-widest">
-              <Church className="w-3.5 h-3.5 text-gold-500" />
-              <span>CHURCH SERVICES & SPECIAL EVENTS</span>
-            </div>
-
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif-title leading-[1.08] text-white">
-              Worship in <span className="text-gold-300">Focus</span>
-            </h1>
-
-            <p className="text-emerald-100/80 text-sm sm:text-base leading-relaxed max-w-2xl">
-              A dedicated visual record of life at Wisdom Temple, from Sunday
-              celebration services and midweek prayer altars to youth
-              gatherings, conferences, and the special events that bring our
-              church family together.
+        <div className="relative max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 pt-32 pb-14 sm:pt-40 sm:pb-20">
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-300">
+              Life at ICGC Wisdom Temple
             </p>
-
-            {/* Quick Stats Pill Strip */}
-            <div className="pt-4 flex flex-wrap gap-4 text-xs font-semibold text-emerald-200">
-              <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/10">
-                <Camera className="w-4 h-4 text-gold-300" />
-                <span>
-                  {albums && albums.length > 0
-                    ? `${albums.length} ${albums.length === 1 ? "Album" : "Albums"} · ${albumPhotoTotal} Photos`
-                    : `${serviceAndEventPhotos.length} Service & Event Photos`}
-                </span>
-              </div>
-              <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/10">
-                <MapPin className="w-4 h-4 text-gold-500" />
-                <span>Star Junction, Tabora - Accra</span>
-              </div>
-              <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/10">
-                <CalendarDays className="w-4 h-4 text-gold-300" />
-                <span>Sunday, Midweek & Special Gatherings</span>
-              </div>
+            <h1 className="mt-5 font-display text-5xl sm:text-6xl lg:text-7xl leading-[0.98] text-white">
+              Church life, <span className="font-serif font-normal italic text-gold-400">captured.</span>
+            </h1>
+            <p className="mt-6 max-w-2xl text-base sm:text-lg leading-relaxed text-emerald-100/80">
+              Browse photo albums from our worship services, conferences and
+              church programs. Each collection brings the moments of a program
+              together in one place.
+            </p>
+            <div className="mt-8 flex items-center gap-3 border-t border-white/15 pt-5 text-sm text-emerald-100/75">
+              <Camera className="h-4 w-4 text-gold-300" aria-hidden="true" />
+              <span>{albumSummary}</span>
             </div>
           </div>
         </div>
@@ -158,58 +96,55 @@ export const GalleryView: React.FC<GalleryViewProps> = ({
       {/* Albums */}
       <div
         ref={albumsRef}
-        className="scroll-mt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        className="scroll-mt-24 max-w-7xl mx-auto px-5 sm:px-8 lg:px-10"
       >
         {openAlbumId ? (
           <AlbumDetail albumId={openAlbumId} onBack={() => openAlbum(null)} />
         ) : (
-          (albums === null || albums.length > 0) && (
-            <AlbumGrid albums={albums} onOpen={openAlbum} />
-          )
+          <AlbumGrid albums={albums} error={albumsError} onOpen={openAlbum} />
         )}
       </div>
-
-      {/* Highlights */}
-      {!openAlbumId && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
-          <PhotoGallery
-            photos={serviceAndEventPhotos}
-            title="Church Services & Special Events"
-            subtitle="Browse photographs from worship services, prayer gatherings, conferences, youth programs, and special church events. Select any photo to view it in full size."
-            showFilters={true}
-            layout="editorial"
-          />
-        </section>
-      )}
     </div>
   );
 };
 
 const AlbumGrid: React.FC<{
   albums: PhotoAlbum[] | null;
+  error: boolean;
   onOpen: (albumId: string) => void;
-}> = ({ albums, onOpen }) => (
-  <section className="pt-14 sm:pt-16">
-    <m.div {...reveal()} className="max-w-2xl space-y-2 mb-8 sm:mb-10">
-      <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-gold-300">
-        Photo Albums
-      </span>
-      <h2 className="text-3xl sm:text-4xl text-white font-serif-title">
-        Programs & Church Life
-      </h2>
-      <p className="text-sm sm:text-base text-emerald-100/75 leading-relaxed">
-        Full photo collections from our services, conferences and special
-        programs. Open an album to browse every photo.
+}> = ({ albums, error, onOpen }) => (
+  <section className="pb-20 pt-12 sm:pt-16">
+    <m.div {...reveal()} className="mb-7 flex flex-col gap-3 border-b border-mist-300 pb-6 sm:mb-9 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold-700">Program collections</p>
+        <h2 className="mt-2 font-display text-3xl sm:text-4xl text-forest-950">Photo albums</h2>
+      </div>
+      <p className="max-w-lg text-sm leading-relaxed text-slate-600">
+        Select an album to explore all the photos from that service or program.
       </p>
     </m.div>
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
+    {error ? (
+      <div role="alert" className="rounded-2xl border border-red-200 bg-white px-6 py-10 text-center">
+        <h3 className="font-display text-xl text-forest-950">Albums are temporarily unavailable</h3>
+        <p className="mt-2 text-sm text-slate-600">Refresh the page to try loading the program albums again.</p>
+      </div>
+    ) : albums?.length === 0 ? (
+      <div className="rounded-2xl border border-dashed border-mist-400 bg-white px-6 py-12 text-center">
+        <Images className="mx-auto h-9 w-9 text-gold-700" aria-hidden="true" />
+        <h3 className="mt-4 font-display text-xl text-forest-950">Program albums are on the way</h3>
+        <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-slate-600">
+          New photo collections will appear here after they are added and published by the church team.
+        </p>
+      </div>
+    ) : (
+      <div className={albums?.length === 1 ? "grid grid-cols-1" : "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"}>
       {albums === null
         ? [0, 1, 2].map((i) => (
             <div key={i} className="space-y-4" aria-hidden="true">
-              <div className="aspect-[4/3] rounded-2xl bg-white/5 animate-pulse" />
-              <div className="h-3 w-1/3 rounded bg-white/5 animate-pulse" />
-              <div className="h-5 w-2/3 rounded bg-white/5 animate-pulse" />
+              <div className="aspect-[4/3] rounded-2xl bg-mist-200 animate-pulse" />
+              <div className="h-3 w-1/3 rounded bg-mist-200 animate-pulse" />
+              <div className="h-5 w-2/3 rounded bg-mist-200 animate-pulse" />
             </div>
           ))
         : albums.map((album, index) => (
@@ -217,42 +152,54 @@ const AlbumGrid: React.FC<{
               key={album.id}
               {...reveal(Math.min(index, 5) * 0.06)}
               onClick={() => onOpen(album.id)}
-              className="group text-left cursor-pointer"
+              className={`group grid w-full overflow-hidden rounded-3xl border border-mist-300 bg-white text-left shadow-sm transition-[border-color,box-shadow,transform] hover:-translate-y-1 hover:border-gold-500/50 hover:shadow-lg ${
+                albums.length === 1 ? "md:grid-cols-2" : "grid-cols-1"
+              }`}
             >
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-forest-900 ring-1 ring-white/10 group-hover:ring-gold-500/60 transition-all">
+              <div className={`relative overflow-hidden bg-forest-900 ${
+                albums.length === 1 ? "aspect-[16/9] md:aspect-auto md:min-h-72" : "aspect-[4/3]"
+              }`}>
                 {album.cover && (
                   <img
                     src={album.cover.thumbUrl}
                     alt=""
+                    width={1200}
+                    height={900}
                     loading="lazy"
                     decoding="async"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-forest-950/70 via-transparent to-transparent" />
-                <span className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-forest-950/80 backdrop-blur-md border border-white/15 text-[11px] font-semibold text-white">
-                  <Images className="w-3.5 h-3.5 text-gold-300" />
-                  {album.photoCount}{" "}
-                  {album.photoCount === 1 ? "photo" : "photos"}
+                <span className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-forest-950/85 px-3 py-1.5 text-xs font-semibold text-white">
+                  <Images className="h-4 w-4 text-gold-300" aria-hidden="true" />
+                  {album.photoCount} {album.photoCount === 1 ? "photo" : "photos"}
                 </span>
               </div>
-              <div className="mt-4 space-y-1.5">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gold-300">
-                  {album.category} · {formatAlbumDate(album.date)}
+              <div className={`flex flex-col justify-center p-5 sm:p-7 ${albums.length === 1 ? "sm:p-9" : ""}`}>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gold-700">
+                  {album.category} <span aria-hidden="true">·</span> {formatAlbumDate(album.date)}
                 </p>
-                <h3 className="text-xl text-white font-serif-title group-hover:text-gold-200 transition-colors">
+                <h3 className="mt-2 font-display text-2xl sm:text-3xl text-forest-950 transition-colors group-hover:text-gold-700">
                   {album.title}
                 </h3>
+                {album.description && (
+                  <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-600 line-clamp-3">
+                    {album.description}
+                  </p>
+                )}
                 {album.location && (
-                  <p className="text-xs text-emerald-100/60 flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-gold-500" />
+                  <p className="mt-3 text-xs text-slate-600">
                     {album.location}
                   </p>
                 )}
+                <span className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-forest-950">
+                  View album <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                </span>
               </div>
             </m.button>
           ))}
-    </div>
+      </div>
+    )}
   </section>
 );
 
@@ -292,7 +239,7 @@ const AlbumDetail: React.FC<{ albumId: string; onBack: () => void }> = ({
   };
 
   return (
-    <section className="pt-10 sm:pt-12 space-y-8">
+    <section className="mt-10 space-y-8 rounded-3xl bg-forest-950 p-5 sm:mt-12 sm:p-8">
       <button
         onClick={onBack}
         className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gold-300 hover:text-white transition-colors cursor-pointer"

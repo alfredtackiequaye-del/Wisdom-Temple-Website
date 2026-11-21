@@ -134,7 +134,7 @@ export const ContactView: React.FC<ContactViewProps> = ({
               <div className="pt-4 border-t border-slate-100">
                 <button
                   onClick={() => onNavigate('prayer-request')}
-                  className="w-full py-3 bg-forest-900 hover:bg-forest-800 text-white font-bold text-xs rounded-xl transition-all cursor-pointer text-center border border-gold-500/30 shadow-sm"
+                  className="w-full py-3 bg-forest-900 hover:bg-forest-800 text-white font-bold text-xs rounded-xl transition-[background-color,border-color,color,box-shadow,opacity,transform] cursor-pointer text-center border border-gold-500/30 shadow-sm"
                 >
                   REQUEST PASTORAL PRAYER
                 </button>

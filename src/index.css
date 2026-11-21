@@ -113,6 +113,34 @@ textarea {
   outline-offset: 3px;
 }
 
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  transform: translateY(-180%);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--color-gold-500);
+  color: var(--color-forest-950);
+  font-weight: 800;
+  box-shadow: 0 10px 30px rgba(12, 11, 10, 0.24);
+  transition: transform 150ms ease-out;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+:where(button, a) {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(240, 180, 41, 0.25);
+}
+
+:where(h1, h2, h3, h4, h5, h6)[id] {
+  scroll-margin-top: 6rem;
+}
+
 button:disabled,
 input:disabled,
 select:disabled,

@@ -212,7 +212,7 @@ export const INITIAL_EVENTS: ChurchEvent[] = [
     speaker: "Rev. Gabriel Dela and the Pastoral Team",
     scripture: "Psalm 65:11",
     category: "Special Service",
-    image: "/assets/optimized/christmas-crossover-2026-banner.webp",
+    image: "/assets/optimized/hero_icgc_banner.webp",
     registrationRequired: false,
     registrationStatus: "Open",
   },
