@@ -237,7 +237,7 @@ export const ContactView: React.FC<ContactViewProps> = ({
                     <option value="Pastoral Counseling Appointment">Pastoral Counseling Appointment</option>
                     <option value="Baby Dedication / Wedding Inquiry">Baby Dedication / Wedding Inquiry</option>
                     <option value="Joining a Ministry Team">Joining a Ministry Team</option>
-                    <option value="Wisdom Summit Inquiries">Wisdom Summit 2026 Inquiries</option>
+                    <option value="Christmas and Crossover Inquiries">Christmas & Crossover Programme Inquiries</option>
                     <option value="Giving / Welfare Inquiries">Giving / Welfare Inquiries</option>
                   </select>
                 </div>

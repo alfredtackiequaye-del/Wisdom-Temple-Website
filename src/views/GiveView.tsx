@@ -49,7 +49,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
     },
     { id: 'Offering', label: 'Sunday / General Offering', desc: 'Freewill thanksgiving seed for worship.' },
     { id: 'Pledges', label: 'Pledges & Vows', desc: 'Redeeming sacred vows made before God.' },
-    { id: 'Wisdom-Summit', label: 'Wisdom Summit 2026 Seed', desc: 'Partner towards conference staging, media, and guest hospitality.' },
+    { id: 'Seasonal-Programmes', label: 'Christmas & Crossover Programmes', desc: 'Partner towards worship, media, hospitality, and outreach for our year-end services.' },
     { id: 'Building', label: 'Temple Expansion Project', desc: 'Sanctuary development, seating, and media infrastructure.' },
     { id: 'Missions', label: 'Missions & Community Welfare', desc: 'Benevolence fund aiding widows, orphans, and local outreach.' },
   ];
@@ -125,7 +125,7 @@ export const GiveView: React.FC<GiveViewProps> = ({ onNavigate, onSubmitGiving }
               <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-forest-950 border border-white/10 text-gold-400 text-[11px] sm:text-xs font-bold uppercase">
                 <span>OFFICIAL CHURCH GIVING FLYER</span>
               </div>
-              <h2 className="text-xl sm:text-3xl font-light text-white font-serif">
+              <h2 className="text-xl sm:text-3xl text-white font-display">
                 Direct Channels for Firstfruit, Offerings & Pledges
               </h2>
               <p className="text-emerald-100/90 text-xs sm:text-sm leading-relaxed max-w-xl">

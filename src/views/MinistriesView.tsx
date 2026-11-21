@@ -8,9 +8,11 @@ import {
   UserCheck, 
   CheckCircle2, 
   X,
-  Filter,
   MessageCircle,
-  ArrowRight
+  Heart,
+  BookOpen,
+  Sparkles,
+  Eye
 } from 'lucide-react';
 import { PosterImage } from '../components/PosterImage';
 import { CHURCH_INFO } from '../data/churchData';
@@ -24,6 +26,35 @@ interface MinistriesViewProps {
   onJoinMinistry: (ministryName: string, name: string, email: string, phone: string) => void;
 }
 
+type PathwayId = 'all' | 'family' | 'formation' | 'service';
+
+const PATHWAYS = [
+  {
+    id: 'family' as const,
+    icon: Heart,
+    eyebrow: 'Belong',
+    title: 'For Me & My Family',
+    description: 'Age- and life-stage communities where every member of the family can be known, supported and strengthened.',
+    ministryIds: ['children', 'youth', 'young-adults', 'women', 'men', 'couples-marriage'],
+  },
+  {
+    id: 'formation' as const,
+    icon: BookOpen,
+    eyebrow: 'Grow',
+    title: 'Grow Spiritually',
+    description: 'Build strong foundations in the Word and deepen your life of prayer, discipleship and Christian maturity.',
+    ministryIds: ['discipleship', 'prayer'],
+  },
+  {
+    id: 'service' as const,
+    icon: Sparkles,
+    eyebrow: 'Serve',
+    title: 'Serve & Make an Impact',
+    description: 'Use your gifts to reach people, strengthen worship and help the Gospel make a practical difference.',
+    ministryIds: ['evangelism', 'multimedia'],
+  },
+];
+
 export const MinistriesView: React.FC<MinistriesViewProps> = ({
   ministries,
   initialMinistryId,
@@ -31,8 +62,9 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
   onJoinMinistry,
 }) => {
   const { getBanner } = useBanners();
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedPathway, setSelectedPathway] = useState<PathwayId>('all');
   const [activeJoinMinistry, setActiveJoinMinistry] = useState<Ministry | null>(null);
+  const [activeDetailMinistry, setActiveDetailMinistry] = useState<Ministry | null>(null);
 
   // Join modal form state
   const [userName, setUserName] = useState('');
@@ -40,11 +72,12 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
   const [userPhone, setUserPhone] = useState('');
   const [joinSuccess, setJoinSuccess] = useState(false);
 
-  const categories = ['All', 'Generational', 'Fellowship', 'Family Life', 'Missions', 'Production', 'Spiritual Fortress', 'Spiritual Growth'];
-
-  const filteredMinistries = selectedCategory === 'All' 
-    ? ministries 
-    : ministries.filter(m => m.category === selectedCategory || (selectedCategory === 'Generational' && (m.id === 'children' || m.id === 'youth' || m.id === 'young-adults')));
+  const selectedIds = selectedPathway === 'all'
+    ? null
+    : PATHWAYS.find((pathway) => pathway.id === selectedPathway)?.ministryIds;
+  const filteredMinistries = selectedIds
+    ? ministries.filter((ministry) => selectedIds.includes(ministry.id))
+    : ministries;
 
   const handleJoinSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,6 +104,19 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
     return () => window.removeEventListener('keydown', onKey);
   }, [activeJoinMinistry]);
 
+  useEffect(() => {
+    if (!initialMinistryId) return;
+    const requestedMinistry = ministries.find((ministry) => ministry.id === initialMinistryId);
+    if (requestedMinistry) setActiveDetailMinistry(requestedMinistry);
+  }, [initialMinistryId, ministries]);
+
+  useEffect(() => {
+    if (!activeDetailMinistry) return;
+    const onKey = (event: KeyboardEvent) => event.key === 'Escape' && setActiveDetailMinistry(null);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [activeDetailMinistry]);
+
   const whatsappHref = `https://wa.me/233${CHURCH_INFO.whatsapp.replace(/^0/, '')}?text=${encodeURIComponent('Hello Wisdom Temple, I would like help finding the right ministry for me.')}`;
 
   return (
@@ -84,107 +130,97 @@ export const MinistriesView: React.FC<MinistriesViewProps> = ({
         text="Every member has a calling. Find your family, sharpen your talents, and impact society through our vibrant ministry departments."
       />
 
-      {/* Category filter */}
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
-        <div className="bg-white rounded-2xl p-4 border border-mist-300 shadow-lg flex items-center gap-2 overflow-x-auto" role="group" aria-label="Filter ministries by category">
-          <span className="text-xs font-semibold text-forest-700 mr-2 flex items-center space-x-1 shrink-0">
-            <Filter className="w-3.5 h-3.5 text-gold-600" />
-            <span>Filter:</span>
-          </span>
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              aria-pressed={selectedCategory === cat}
-              className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                selectedCategory === cat
-                  ? 'bg-forest-900 text-gold-300 shadow-sm border border-gold-500/40'
-                  : 'bg-mist-100 text-forest-700 hover:bg-mist-200'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Ministries grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 space-y-20">
-        <div>
-          <m.div {...reveal()} className="mb-10 flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em]">Find your place</span>
-              <h2 className="mt-1 text-3xl sm:text-4xl text-forest-900 font-serif-title">A home for every season of life</h2>
-            </div>
-            <p className="text-sm text-slate-600" aria-live="polite">
-              Showing {filteredMinistries.length} {filteredMinistries.length === 1 ? 'ministry' : 'ministries'}
-            </p>
+        {/* Three visitor-centred pathways */}
+        <section aria-labelledby="pathways-heading" className="space-y-8">
+          <m.div {...reveal()} className="max-w-3xl">
+            <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em]">Start with what you need</span>
+            <h2 id="pathways-heading" className="mt-2 text-3xl sm:text-5xl text-forest-900 font-display">How would you like to connect?</h2>
+            <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed">Choose a pathway or explore every ministry below. You can learn more before deciding whether to express interest.</p>
           </m.div>
 
-          <m.div
-            key={selectedCategory}
-            {...staggerContainer(0.08)}
-            className="flex flex-wrap justify-center gap-8"
-          >
-            {filteredMinistries.map((ministry) => (
-              <m.article
-                key={ministry.id}
-                variants={staggerItem}
-                whileHover={{ y: -6 }}
-                transition={LIFT_SPRING}
-                className="group bg-white rounded-3xl border border-mist-300 overflow-hidden shadow-sm hover:shadow-lift hover:border-gold-500/40 transition-shadow flex flex-col justify-between w-full md:w-[calc((100%-2rem)/2)] lg:w-[calc((100%-4rem)/3)]"
-              >
-                <div>
-                  <div className="relative aspect-[16/10] bg-forest-950 overflow-hidden">
-                    <PosterImage
-                      src={getBanner('ministry_' + ministry.id, ministry.image)}
-                      alt={ministry.name}
-                    />
-                    <span className="absolute top-3 left-3 px-2.5 py-1 bg-forest-950/90 backdrop-blur-md rounded-full text-[10px] font-bold text-gold-300 border border-gold-500/40">
-                      {ministry.category}
-                    </span>
+          <m.div {...staggerContainer(0.12)} className="grid md:grid-cols-3 gap-5" role="group" aria-label="Choose a ministry pathway">
+            {PATHWAYS.map(({ id, icon: Icon, eyebrow, title, description }) => {
+              const active = selectedPathway === id;
+              return (
+                <m.button
+                  key={id}
+                  variants={staggerItem}
+                  onClick={() => setSelectedPathway(active ? 'all' : id)}
+                  aria-pressed={active}
+                  className={`text-left rounded-3xl border p-6 sm:p-7 transition-all cursor-pointer ${active ? 'bg-forest-950 border-gold-500 text-white shadow-lift' : 'bg-white border-mist-300 text-forest-900 hover:border-gold-500/60 hover:shadow-md'}`}
+                >
+                  <span className={`w-12 h-12 rounded-2xl flex items-center justify-center ${active ? 'bg-gold-400 text-forest-950' : 'bg-gold-50 text-gold-700'}`}>
+                    <Icon className="w-6 h-6" />
+                  </span>
+                  <span className={`mt-5 block text-[11px] font-bold uppercase tracking-[0.18em] ${active ? 'text-gold-300' : 'text-gold-700'}`}>{eyebrow}</span>
+                  <span className="mt-1 block text-2xl font-display">{title}</span>
+                  <span className={`mt-3 block text-sm leading-relaxed ${active ? 'text-emerald-100/85' : 'text-slate-600'}`}>{description}</span>
+                </m.button>
+              );
+            })}
+          </m.div>
+
+          {selectedPathway !== 'all' && (
+            <button onClick={() => setSelectedPathway('all')} className="text-sm font-semibold text-forest-700 hover:text-forest-950 underline underline-offset-4 cursor-pointer">
+              Show all ministries
+            </button>
+          )}
+        </section>
+
+        {/* Ministries grouped by visitor goal */}
+        <div className="space-y-20" aria-live="polite">
+          {PATHWAYS.map((pathway) => {
+            const sectionMinistries = filteredMinistries.filter((ministry) => pathway.ministryIds.includes(ministry.id));
+            if (!sectionMinistries.length) return null;
+            return (
+              <section key={pathway.id} aria-labelledby={`${pathway.id}-heading`} className="space-y-8">
+                <m.div {...reveal()} className="flex flex-wrap items-end justify-between gap-4 border-b border-mist-300 pb-5">
+                  <div>
+                    <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em]">{pathway.eyebrow}</span>
+                    <h2 id={`${pathway.id}-heading`} className="mt-1 text-3xl sm:text-4xl text-forest-900 font-display">{pathway.title}</h2>
+                    <p className="mt-2 max-w-2xl text-sm sm:text-base text-slate-600 leading-relaxed">{pathway.description}</p>
                   </div>
+                  <span className="text-sm text-slate-500">{sectionMinistries.length} {sectionMinistries.length === 1 ? 'ministry' : 'ministries'}</span>
+                </m.div>
 
-                  <div className="p-6 space-y-4">
-                    <h3 className="text-xl text-forest-900 font-serif-title leading-snug">
-                      {ministry.name}
-                    </h3>
-
-                    <p className="text-sm text-slate-600 leading-relaxed">
-                      {ministry.shortDescription}
-                    </p>
-
-                    <div className="pt-4 border-t border-mist-200 space-y-2.5 text-xs text-slate-700">
-                      <div className="flex items-start gap-2">
-                        <Users className="w-4 h-4 text-gold-600 shrink-0" />
-                        <span><strong className="text-forest-900">Who:</strong> {ministry.audience}</span>
+                <m.div key={`${selectedPathway}-${pathway.id}`} {...staggerContainer(0.08)} className="grid md:grid-cols-2 lg:grid-cols-3 gap-7">
+                  {sectionMinistries.map((ministry) => (
+                    <m.article
+                      key={ministry.id}
+                      variants={staggerItem}
+                      whileHover={{ y: -5 }}
+                      transition={LIFT_SPRING}
+                      className="group bg-white rounded-3xl border border-mist-300 overflow-hidden shadow-sm hover:shadow-lift hover:border-gold-500/40 transition-shadow flex flex-col"
+                    >
+                      <div className="relative aspect-[16/10] bg-forest-950 overflow-hidden">
+                        <PosterImage src={getBanner('ministry_' + ministry.id, ministry.image)} alt={ministry.name} />
+                        <span className="absolute top-3 left-3 px-2.5 py-1 bg-forest-950/90 backdrop-blur-md rounded-full text-[11px] font-bold text-gold-300 border border-gold-500/40">{pathway.eyebrow}</span>
                       </div>
-                      <div className="flex items-start gap-2">
-                        <Clock className="w-4 h-4 text-gold-600 shrink-0" />
-                        <span><strong className="text-forest-900">When:</strong> {ministry.meetingSchedule}</span>
-                      </div>
-                      {!/^\[.*\]$/.test(ministry.leadPlaceholder.trim()) && (
-                        <div className="flex items-start gap-2">
-                          <UserCheck className="w-4 h-4 text-gold-600 shrink-0" />
-                          <span><strong className="text-forest-900">Lead:</strong> {ministry.leadPlaceholder}</span>
+
+                      <div className="p-6 flex-1 space-y-4">
+                        <h3 className="text-xl text-forest-900 font-display leading-snug">{ministry.name}</h3>
+                        <p className="text-sm text-slate-600 leading-relaxed">{ministry.shortDescription}</p>
+                        <div className="pt-4 border-t border-mist-200 space-y-2.5 text-sm text-slate-700">
+                          <div className="flex items-start gap-2"><Users className="w-4 h-4 text-gold-600 shrink-0 mt-0.5" /><span><strong className="text-forest-900">For:</strong> {ministry.audience}</span></div>
+                          <div className="flex items-start gap-2"><Clock className="w-4 h-4 text-gold-600 shrink-0 mt-0.5" /><span><strong className="text-forest-900">Meets:</strong> {ministry.meetingSchedule}</span></div>
                         </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                      </div>
 
-                <div className="p-6 pt-0">
-                  <button
-                    onClick={() => setActiveJoinMinistry(ministry)}
-                    className="w-full py-3 bg-forest-900 hover:bg-forest-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-2 border border-gold-500/30"
-                  >
-                    <span>Join this ministry</span>
-                    <ArrowRight className="w-4 h-4 text-gold-300 transition-transform group-hover:translate-x-1" />
-                  </button>
-                </div>
-              </m.article>
-            ))}
-          </m.div>
+                      <div className="px-6 pb-6 grid grid-cols-2 gap-3">
+                        <button onClick={() => setActiveDetailMinistry(ministry)} className="py-3 border border-forest-900/20 text-forest-900 hover:bg-mist-100 font-bold text-xs uppercase tracking-wider rounded-xl transition-colors cursor-pointer inline-flex items-center justify-center gap-2">
+                          <Eye className="w-4 h-4" /> View ministry
+                        </button>
+                        <button onClick={() => setActiveJoinMinistry(ministry)} className="py-3 bg-forest-900 hover:bg-forest-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-colors cursor-pointer border border-gold-500/30">
+                          Express interest
+                        </button>
+                      </div>
+                    </m.article>
+                  ))}
+                </m.div>
+              </section>
+            );
+          })}
         </div>
 
         {/* Not sure where to start? */}

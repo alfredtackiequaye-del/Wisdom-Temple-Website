@@ -235,7 +235,7 @@ export default function App() {
   const [sermons] = useState<Sermon[]>(() =>
     INITIAL_SERMONS.map((sermon) =>
       /^\[.*\]$/.test(sermon.speaker.trim())
-        ? { ...sermon, speaker: "Wisdom Temple" }
+        ? { ...sermon, speaker: "ICGC WISDOM TEMPLE" }
         : sermon,
     ),
   );

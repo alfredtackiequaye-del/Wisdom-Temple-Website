@@ -5,6 +5,8 @@ import { reveal, staggerContainer, staggerItem, LIFT_SPRING } from '../utils/mot
 import { CHURCH_INFO, BELIEFS } from '../data/churchData';
 import { PASTORAL_COUPLE_IMAGE } from '../assets/pastoralImage';
 import { optimizedImageUrl } from '../utils/optimizedImage';
+import { PageHero } from '../components/PageHero';
+import { SectionHeader } from '../components/SectionHeader';
 import { useBanners } from '../utils/bannerManager';
 import { useSiteContent } from '../utils/contentManager';
 import { 
@@ -32,16 +34,7 @@ interface AboutViewProps {
 
 /** Shared heading block used at the top of each About tab. */
 const TabIntro: React.FC<{ eyebrow: string; title: string; text?: string }> = ({ eyebrow, title, text }) => (
-  <m.div {...reveal()} className="text-center max-w-3xl mx-auto space-y-4">
-    <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em]">{eyebrow}</span>
-    <h2 className="text-4xl sm:text-5xl text-forest-900 font-serif-title leading-[1.08]">{title}</h2>
-    <span className="mx-auto flex items-center justify-center gap-3" aria-hidden="true">
-      <span className="h-px w-12 bg-gold-500/60" />
-      <span className="w-2 h-2 rotate-45 bg-gold-500" />
-      <span className="h-px w-12 bg-gold-500/60" />
-    </span>
-    {text && <p className="text-lg text-slate-600 leading-relaxed">{text}</p>}
-  </m.div>
+  <SectionHeader eyebrow={eyebrow} title={title} subtitle={text} />
 );
 
 export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab, onNavigate }) => {
@@ -59,28 +52,13 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab, onNavigate 
   return (
     <div className="bg-mist-50 min-h-screen text-slate-900 pb-24 overflow-x-clip">
       {/* Page Header Banner - ICGC Forest & Gold */}
-      <section className="ambient-glow relative bg-forest-950 text-white py-16 sm:py-20 border-b border-forest-700 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img
-            src={getBanner('page_about_hero', '/assets/photos/wisdom-summit-team-red.webp')}
-            alt=""
-            className="hero-drift w-full h-full object-cover object-[center_30%] opacity-40"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-forest-950/70 via-forest-950/55 to-forest-950" />
-          <div className="absolute inset-0 hero-grain" />
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4 relative z-10">
-          <span className="text-xs text-gold-300 font-bold uppercase tracking-widest bg-forest-850 px-3.5 py-1.5 rounded-full border border-gold-500/40 inline-block">
-            {content.churchAddress.toUpperCase()}
-          </span>
-          <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-serif-title">
-            {content.aboutHeadline}
-          </h1>
-          <p className="text-base sm:text-lg text-emerald-200/80 max-w-2xl mx-auto leading-relaxed">
-            {content.churchDescription}
-          </p>
-        </div>
-      </section>
+      <PageHero
+        image={getBanner('page_about_hero', '/assets/photos/wisdom-summit-team-red.webp')}
+        imagePosition="center 30%"
+        eyebrow={content.churchAddress}
+        title={content.aboutHeadline}
+        text={content.churchDescription}
+      />
 
       {/* Sub-Navigation Tabs */}
       <div className="sticky top-20 z-30 bg-white/95 backdrop-blur-md border-b border-mist-300 shadow-sm">
@@ -88,7 +66,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab, onNavigate 
           <div className="flex space-x-1 py-3 min-w-max text-xs font-bold uppercase tracking-wider">
             {[
               { id: 'who-we-are', label: 'Who We Are', icon: Compass },
-              { id: 'vision-mission', label: 'Our Vision & Mission', icon: Target },
+              { id: 'vision-mission', label: 'Vision, Mission & Philosophy', icon: Target },
               { id: 'beliefs', label: 'Our Beliefs', icon: BookOpen },
               { id: 'leadership', label: 'Our Leadership', icon: UserCheck },
               { id: 'story', label: 'Our Story & Heritage', icon: History },
@@ -310,9 +288,9 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab, onNavigate 
         {activeTab === 'vision-mission' && (
           <div className="space-y-20 sm:space-y-24 animate-in fade-in duration-150">
             <TabIntro
-              eyebrow="Where we are headed"
-              title="Our vision and mission"
-              text="Everything we do points toward one calling and one mandate."
+              eyebrow="Our ICGC identity"
+              title="Vision, mission and philosophy"
+              text="As a local assembly of the International Central Gospel Church, we share the worldwide vision, mission and philosophy of ICGC."
             />
 
             {/* Vision and mission on a patterned band */}
@@ -330,7 +308,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab, onNavigate 
                     <span className="w-12 h-12 rounded-2xl bg-gold-400/15 border border-gold-400/30 flex items-center justify-center">
                       <Icon className="w-6 h-6 text-gold-300" />
                     </span>
-                    <p className="mt-6 text-[11px] font-bold uppercase tracking-[0.22em] text-gold-300">{label}</p>
+                    <p className="mt-6 text-[11px] font-bold uppercase tracking-[0.22em] text-gold-300">ICGC worldwide · {label}</p>
                     <h3 className="mt-2 text-2xl sm:text-3xl text-white font-serif-title leading-snug">{title}</h3>
                     <p className="mt-4 text-emerald-100/85 leading-relaxed">{text}</p>
                   </m.div>
@@ -338,11 +316,12 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab, onNavigate 
               </m.div>
             </section>
 
-            {/* The three pillars */}
+            {/* ICGC philosophy */}
             <section aria-labelledby="pillars-heading" className="space-y-12">
               <m.div {...reveal()} className="text-center max-w-2xl mx-auto space-y-3">
-                <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em]">Our mandate</span>
-                <h3 id="pillars-heading" className="text-3xl sm:text-4xl text-forest-900 font-serif-title">The three pillars we build on</h3>
+                <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em]">ICGC worldwide</span>
+                <h3 id="pillars-heading" className="text-3xl sm:text-4xl text-forest-900 font-serif-title">Our philosophy</h3>
+                <p className="text-base text-slate-600 leading-relaxed">These principles shape how ICGC expresses the Gospel and how ICGC WISDOM TEMPLE serves people and society.</p>
               </m.div>
               <m.ol {...staggerContainer(0.14)} className="grid md:grid-cols-3 gap-6">
                 {[
@@ -474,7 +453,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ initialSubTab, onNavigate 
                       Ministering side-by-side with him is his beloved wife, <strong className="text-white">Lady Dr. Helena Dela</strong>, who serves graciously as the First Lady of Wisdom Temple. Lady Dr. Helena Dela is a pillar of wisdom, prayer, and encouragement, actively nurturing the women's fellowship, family life ministries, and raising believers who embody godly dignity and professional excellence.
                     </p>
                     <p>
-                      Together, Rev. Gabriel Dela and Lady Dr. Helena Dela are committed to fulfilling the God-given mandate of Wisdom Temple: <em className="text-gold-200">"Raising Leaders, Shaping Visions, and Influencing Society Through Christ."</em> Under their pastoral oversight, Wisdom Temple has flourished as a vibrant house of prayer, leadership excellence, and transformative ministry in Tabora, Accra, and across Ghana.
+                      Together, Rev. Gabriel Dela and Lady Dr. Helena Dela are committed to fulfilling the God-given mandate of Wisdom Temple: <em className="text-gold-200">"Raising Leaders, Shaping Vision, and Influencing Society Through Christ."</em> Under their pastoral oversight, Wisdom Temple has flourished as a vibrant house of prayer, leadership excellence, and transformative ministry in Tabora, Accra, and across Ghana.
                     </p>
                   </div>
 

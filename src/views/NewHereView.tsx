@@ -23,6 +23,7 @@ import {
 import { reveal, staggerContainer, staggerItem, LIFT_SPRING, EASE_OUT } from '../utils/motion';
 import { resolveVisit, buildIcs } from '../utils/visitSchedule';
 import { ScrollStory } from '../components/ScrollStory';
+import { SectionHeader } from '../components/SectionHeader';
 import { NextServiceCard, WelcomePhoto, InvitationBand, SuccessCheck } from '../components/VisitExperience';
 
 const SUNDAY_STORY = [
@@ -314,25 +315,23 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 space-y-20">
         {/* Sunday at a glance: a pinned photo that changes as you scroll through the morning */}
         <section aria-labelledby="sunday-glance">
-          <m.div {...reveal()} className="text-center max-w-2xl mx-auto mb-12 space-y-3">
-            <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em]">Sunday at a glance</span>
-            <h2 id="sunday-glance" className="text-3xl sm:text-4xl text-forest-900 font-serif-title">A relaxed morning, start to finish</h2>
-          </m.div>
+          <SectionHeader
+            id="sunday-glance"
+            eyebrow="Sunday at a glance"
+            title="A relaxed morning, start to finish"
+          />
 
           <ScrollStory steps={SUNDAY_STORY} />
         </section>
 
         {/* Your visit, step by step */}
         <section aria-labelledby="visit-steps" className="pattern-band relative py-16 sm:py-20">
-          <m.div {...reveal()} className="text-center max-w-2xl mx-auto mb-12 space-y-3">
-            <span className="text-[11px] font-semibold text-gold-300 uppercase tracking-[0.22em]">Your visit, step by step</span>
-            <h2 id="visit-steps" className="text-3xl sm:text-4xl text-white font-serif-title">What to expect on Sunday</h2>
-            <span className="mx-auto flex items-center justify-center gap-3" aria-hidden="true">
-              <span className="h-px w-12 bg-gold-400/60" />
-              <span className="w-2 h-2 rotate-45 bg-gold-400" />
-              <span className="h-px w-12 bg-gold-400/60" />
-            </span>
-          </m.div>
+          <SectionHeader
+            tone="dark"
+            id="visit-steps"
+            eyebrow="Your visit, step by step"
+            title="What to expect on Sunday"
+          />
 
           <m.ol {...staggerContainer(0.16)} className="relative grid grid-cols-1 md:grid-cols-3 gap-8">
             <m.span
@@ -412,10 +411,11 @@ export const NewHereView: React.FC<NewHereViewProps> = ({ onNavigate, onSubmitVi
 
         {/* Common questions */}
         <section aria-labelledby="visit-faq" className="max-w-3xl mx-auto">
-          <m.div {...reveal()} className="text-center mb-10 space-y-3">
-            <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.22em]">Good to know</span>
-            <h2 id="visit-faq" className="text-3xl sm:text-4xl text-forest-900 font-serif-title">Questions first-time guests ask</h2>
-          </m.div>
+          <SectionHeader
+            id="visit-faq"
+            eyebrow="Good to know"
+            title="Questions first-time guests ask"
+          />
           <m.div {...staggerContainer(0.08)} className="space-y-3">
             {FAQS.map((item) => (
               <m.details

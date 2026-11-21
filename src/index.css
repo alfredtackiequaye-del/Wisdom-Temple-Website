@@ -1,71 +1,73 @@
 @import "tailwindcss";
 
 @theme {
-  /* "Wisdom" type system: a classical Garamond for headings (the voice of
-     Scripture and old books) and a humanist sans for easy reading. */
-  --font-sans:
-    "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, sans-serif;
-  --font-serif: "Cormorant Garamond", "EB Garamond", Georgia, "Times New Roman", serif;
-  --font-display: "Cormorant Garamond", "EB Garamond", Georgia, "Times New Roman", serif;
+  /* "Ink & Gold" type system
+     - Display: Inter Tight, heavy and tightly set, for confident headlines.
+     - Accent:  Instrument Serif italic for the one or two words that carry
+                the meaning ("God.", "Purpose.", "waiting.").
+     - Labels:  Spline Sans Mono, small caps-style labels and arrow links.
+     - Body:    Inter, for long, comfortable reading. */
+  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Inter Tight", "Inter", system-ui, sans-serif;
+  --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-mono: "Spline Sans Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* Brand palette — the ICGC green and gold, matured into a "library of
-     wisdom" scheme: deep evergreen like old leather bindings, burnished
-     brass gold, and warm parchment neutrals ("mist").
-     Use these tokens instead of hex values in classes. */
-  --color-forest-950: #04170f;
-  --color-forest-900: #062418;
-  --color-forest-850: #082d1e;
-  --color-forest-800: #0b3a27;
-  --color-forest-700: #0f4a32;
-  --color-forest-600: #155e40;
-  --color-forest-500: #1e7a53;
+  /* Palette. Token names are historical (forest/gold/mist) so every page
+     re-themes from here:
+     - forest = ink: warm near-blacks for dark sections and primary text
+     - gold   = marigold: the single signature accent
+     - mist   = stone: warm paper neutrals */
+  --color-forest-950: #0c0b0a;
+  --color-forest-900: #151412;
+  --color-forest-850: #1c1b18;
+  --color-forest-800: #24221f;
+  --color-forest-700: #2f2d29;
+  --color-forest-600: #45423c;
+  --color-forest-500: #5f5b54;
 
-  --color-gold-700: #7f5b12;
-  --color-gold-600: #9a7019;
-  --color-gold-500: #c39530;
-  --color-gold-400: #d6ae55;
-  --color-gold-300: #e9cb83;
-  --color-gold-200: #f4e2b0;
-  --color-gold-50: #fcf8ee;
+  --color-gold-700: #7c5200;
+  --color-gold-600: #9e6c00;
+  --color-gold-500: #f0b429;
+  --color-gold-400: #f5c451;
+  --color-gold-300: #f8d27a;
+  --color-gold-200: #fbe3a6;
+  --color-gold-50: #fff8e8;
 
-  --color-mist-50: #fbfaf6;
-  --color-mist-100: #f5f2ea;
-  --color-mist-200: #ece7dc;
-  --color-mist-300: #ddd6c7;
-  --color-mist-400: #c6bca8;
+  --color-mist-50: #fbfaf7;
+  --color-mist-100: #f4f1eb;
+  --color-mist-200: #ebe6dd;
+  --color-mist-300: #ddd6ca;
+  --color-mist-400: #c8bfb0;
 
-  /* Tailwind's mint "emerald" (used for light text on dark panels) and cool
-     "slate" greys are re-tuned to warm ivory, sage and ink so every page
-     shares the parchment-and-ink mood. */
-  --color-emerald-50: #f7f4ec;
-  --color-emerald-100: #ece7da;
-  --color-emerald-200: #dbd6c5;
-  --color-emerald-300: #c3c3ad;
-  --color-emerald-400: #b2b8a2;
-  --color-emerald-600: #4f6b5a;
-  --color-emerald-700: #3c5646;
-  --color-emerald-800: #2b4234;
-  --color-emerald-900: #1f3127;
+  /* Light text on dark panels ("emerald") and body greys ("slate"),
+     re-tuned to warm, neutral tones. */
+  --color-emerald-50: #f8f6f2;
+  --color-emerald-100: #ece8e1;
+  --color-emerald-200: #d9d4cb;
+  --color-emerald-300: #bfb9af;
+  --color-emerald-400: #a8a299;
+  --color-emerald-600: #5e5a53;
+  --color-emerald-700: #48453f;
+  --color-emerald-800: #35322e;
+  --color-emerald-900: #25231f;
 
-  --color-slate-50: #f8f7f3;
-  --color-slate-100: #f0eee8;
-  --color-slate-200: #e3dfd5;
-  --color-slate-300: #cbc6b9;
-  --color-slate-400: #9a9588;
-  --color-slate-500: #6e695d;
-  --color-slate-600: #545047;
-  --color-slate-700: #3f3c35;
-  --color-slate-800: #2a2924;
-  --color-slate-900: #1b1b17;
-
+  --color-slate-50: #f8f7f5;
+  --color-slate-100: #efede9;
+  --color-slate-200: #e2dfd9;
+  --color-slate-300: #c9c5bd;
+  --color-slate-400: #9b968d;
+  --color-slate-500: #6d6962;
+  --color-slate-600: #524f49;
+  --color-slate-700: #3c3a35;
+  --color-slate-800: #282622;
+  --color-slate-900: #171614;
 
   /* Third-party brand colour, only for WhatsApp buttons. */
   --color-whatsapp: #25d366;
   --color-whatsapp-dark: #20ba59;
 
   /* Elevation */
-  --shadow-lift: 0 15px 30px rgba(6, 36, 24, 0.2);
+  --shadow-lift: 0 18px 40px rgba(12, 11, 10, 0.16);
 }
 
 /* Custom scrollbar and smooth scrolling */
@@ -74,19 +76,14 @@ html {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #f8f6f0;
+  background: #f2eee8;
 }
 
 body {
   font-family: var(--font-sans);
-  color: #1f1f1a;
-  background:
-    radial-gradient(
-      circle at top left,
-      rgba(214, 174, 85, 0.1),
-      transparent 30%
-    ),
-    linear-gradient(180deg, #fbfaf6 0%, #f6f3ec 100%);
+  color: #171614;
+  background: #f2eee8;
+  font-feature-settings: "ss01", "cv11";
 }
 
 img {
@@ -98,8 +95,21 @@ button {
   font-family: var(--font-sans);
 }
 
+input,
+select,
+textarea {
+  font-family: var(--font-sans);
+}
+
+/* One display face for every public heading, even on older views that do not
+   yet carry the explicit font-display utility. */
+:where(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-display);
+  text-wrap: balance;
+}
+
 :where(button, a, input, select, textarea):focus-visible {
-  outline: 3px solid var(--color-gold-300);
+  outline: 3px solid var(--color-gold-500);
   outline-offset: 3px;
 }
 
@@ -111,13 +121,16 @@ textarea:disabled {
   opacity: 0.6;
 }
 
-/* Heading system: one serif, one weight, sentence/title case.
-   Unlayered, so these win over Tailwind weight/tracking utilities. */
+/* ================================================================== */
+/* Typography system (unlayered, so it wins over Tailwind utilities)   */
+/* ================================================================== */
+
+/* Headlines: heavy, tightly set Inter Tight. */
 .font-serif-title,
 .font-display {
-  font-family: var(--font-serif) !important;
-  font-weight: 600;
-  letter-spacing: -0.005em;
+  font-family: var(--font-display) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em;
 }
 
 h1.font-serif-title,
@@ -125,47 +138,83 @@ h2.font-serif-title,
 h1.font-display,
 h2.font-display {
   text-transform: none;
-  line-height: 1.08;
+  line-height: 1.02;
 }
 
-/* Gold accent words inside headings are set in italic Garamond — the way
-   old books and Bibles mark emphasis. */
-:is(.font-serif-title, .font-display) span[class*="text-gold"] {
+h3.font-serif-title,
+h4.font-serif-title,
+p.font-serif-title,
+span.font-serif-title {
+  font-weight: 700 !important;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* The words that carry the meaning: Instrument Serif italic. */
+:is(.font-serif-title, .font-display) span[class*="text-gold"],
+.accent-serif {
+  font-family: var(--font-serif) !important;
   font-style: italic;
+  font-weight: 400 !important;
+  letter-spacing: -0.01em;
+}
+
+/* Small uppercase labels and button text: Spline Sans Mono. */
+.uppercase:is([class*="tracking-["], .tracking-widest, .tracking-wider, .tracking-wide):not(
+    h1,
+    h2,
+    h3,
+    .font-serif-title,
+    .font-display
+  ) {
+  font-family: var(--font-mono);
   font-weight: 500;
+  letter-spacing: 0.06em !important;
+}
+
+/* Lift the tiniest labels so they stay legible in mono. */
+.uppercase.text-\[10px\] {
+  font-size: 11px;
+}
+.uppercase.text-\[11px\] {
+  font-size: 12px;
+}
+
+/* Primary buttons are pills. Exact class tokens only, so tinted panels
+   and option cards keep their shape. */
+:is(a, button):is(
+    [class~="bg-gold-400"],
+    [class~="bg-gold-500"],
+    [class~="bg-forest-900"],
+    [class~="bg-forest-950"],
+    [class~="bg-whatsapp"]
+  ) {
+  border-radius: 999px;
 }
 
 ::selection {
-  background: rgba(195, 149, 48, 0.24);
-  color: var(--color-forest-900);
+  background: rgba(240, 180, 41, 0.35);
+  color: var(--color-forest-950);
 }
 
 .text-shadow-hero {
-  text-shadow:
-    0 2px 10px rgba(0, 0, 0, 0.85),
-    0 1px 3px rgba(0, 0, 0, 0.7);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
 }
 
 .text-shadow-title {
-  text-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.9),
-    0 2px 6px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
 }
 
+/* ================================================================== */
+/* Surfaces                                                            */
+/* ================================================================== */
+
 .premium-hero {
-  background:
-    linear-gradient(120deg, rgba(6, 36, 24, 0.97), rgba(15, 74, 50, 0.86)),
-    radial-gradient(
-      circle at 18% 22%,
-      rgba(233, 203, 131, 0.2),
-      transparent 18%
-    ),
-    linear-gradient(135deg, var(--color-forest-900) 0%, var(--color-forest-600) 58%, var(--color-forest-900) 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: var(--color-forest-950);
 }
 
 .hero-content-column {
-  animation: hero-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: hero-rise 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .editorial-card {
@@ -174,11 +223,10 @@ h2.font-display {
   min-height: 286px;
 }
 
-
 @keyframes hero-rise {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(22px);
   }
   to {
     opacity: 1;
@@ -193,45 +241,37 @@ h2.font-display {
 }
 
 .cinematic-panel {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.98),
-    rgba(250, 247, 243, 1)
-  );
-  border: 1px solid rgba(15, 25, 21, 0.04);
-  box-shadow: 0 22px 52px rgba(8, 12, 11, 0.03);
+  background: #fbfaf7;
+  border: 0;
+  box-shadow: none;
 }
 
 .premium-card {
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(9, 13, 12, 0.05);
-  box-shadow: 0 12px 24px rgba(10, 15, 14, 0.03);
+  background: #fbfaf7;
+  border: 1px solid rgba(23, 22, 20, 0.08);
+  box-shadow: none;
 }
 
 .premium-card:hover {
-  box-shadow: 0 18px 32px rgba(8, 12, 11, 0.07);
-  border-color: rgba(195, 149, 48, 0.18);
+  box-shadow: 0 18px 40px rgba(12, 11, 10, 0.1);
+  border-color: rgba(23, 22, 20, 0.16);
 }
 
 .premium-panel {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.97),
-    rgba(248, 244, 238, 0.99)
-  );
-  border: 1px solid rgba(17, 28, 24, 0.05);
-  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.03);
+  background: #fbfaf7;
+  border: 1px solid rgba(23, 22, 20, 0.08);
+  box-shadow: none;
 }
 
 .glass-chip {
-  background: rgba(10, 22, 17, 0.34);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(12, 11, 10, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
 
 .bg-icgc-hero {
-  background-color: var(--color-forest-900);
+  background-color: var(--color-forest-950);
 }
 
 .bg-icgc-card {
@@ -239,14 +279,13 @@ h2.font-display {
 }
 
 .border-icgc-gold-subtle {
-  border-color: rgba(195, 149, 48, 0.25);
+  border-color: rgba(240, 180, 41, 0.3);
 }
 
 .text-icgc-gold-accent {
   color: var(--color-gold-400);
 }
 
-/* Hero scroll cue: a slow, deliberate bob inviting the visitor to keep going. */
 @keyframes scroll-cue-bob {
   0%,
   100% {
@@ -263,104 +302,44 @@ h2.font-display {
   animation: scroll-cue-bob 2.2s ease-in-out infinite;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .scroll-cue {
-    animation: none;
-  }
-}
-
-/* ---- Ambient life: slow, low-contrast motion that never competes with content ---- */
-
-/* Dark sections: a soft gold light that drifts behind the content. */
+/* Dark sections: one soft marigold light, barely there. */
 .ambient-glow {
   position: relative;
   isolation: isolate;
   overflow: hidden;
 }
 
-.ambient-glow::before,
-.ambient-glow::after {
+.ambient-glow::before {
   content: "";
   position: absolute;
   z-index: -1;
-  width: 38rem;
-  height: 38rem;
+  top: -16rem;
+  right: -12rem;
+  width: 40rem;
+  height: 40rem;
   border-radius: 999px;
   pointer-events: none;
-  filter: blur(70px);
-  will-change: transform;
+  background: radial-gradient(circle, rgba(240, 180, 41, 0.1), transparent 65%);
 }
 
-.ambient-glow::before {
-  top: -14rem;
-  left: -10rem;
-  background: radial-gradient(circle, rgba(214, 174, 85, 0.16), transparent 68%);
-  animation: glow-drift-a 18s ease-in-out infinite alternate;
-}
-
-.ambient-glow::after {
-  bottom: -16rem;
-  right: -10rem;
-  background: radial-gradient(circle, rgba(30, 122, 83, 0.28), transparent 68%);
-  animation: glow-drift-b 22s ease-in-out infinite alternate;
-}
-
-@keyframes glow-drift-a {
-  to {
-    transform: translate(9rem, 4rem) scale(1.15);
-  }
-}
-
-@keyframes glow-drift-b {
-  to {
-    transform: translate(-8rem, -3rem) scale(1.1);
-  }
-}
-
-/* Hero photo: after the entrance zoom, keep a very slow drift so the scene breathes. */
+/* Hero photo: a very slow drift so the scene breathes. */
 @keyframes hero-drift {
   from {
     transform: scale(1) translate3d(0, 0, 0);
   }
   to {
-    transform: scale(1.06) translate3d(-1.2%, -0.8%, 0);
+    transform: scale(1.05) translate3d(-1%, -0.6%, 0);
   }
 }
 
 .hero-drift {
-  animation: hero-drift 24s ease-in-out 2.4s infinite alternate;
+  animation: hero-drift 26s ease-in-out 2s infinite alternate;
   will-change: transform;
 }
 
-/* Primary call-to-action: a gentle light sweep every few seconds. */
+/* Kept as a hook; no sweep in this style. */
 .cta-shine {
   position: relative;
-  overflow: hidden;
-}
-
-.cta-shine::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 35%,
-    rgba(255, 255, 255, 0.45) 50%,
-    transparent 65%
-  );
-  transform: translateX(-120%);
-  animation: cta-sweep 5.5s ease-in-out 3s infinite;
-  pointer-events: none;
-}
-
-@keyframes cta-sweep {
-  0%,
-  60% {
-    transform: translateX(-120%);
-  }
-  100% {
-    transform: translateX(120%);
-  }
 }
 
 /* "Happening now" beacon. */
@@ -394,33 +373,27 @@ h2.font-display {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ambient-glow::before,
-  .ambient-glow::after,
+  .scroll-cue,
   .hero-drift,
-  .cta-shine::after,
   .live-dot::after {
     animation: none;
   }
 }
 
-/* Plan Your Visit: warm paper tone with a faint gold glow instead of flat grey-green. */
 .visit-page-bg,
 .page-warm-bg {
-  background:
-    radial-gradient(60rem 30rem at 85% 28rem, rgba(214, 174, 85, 0.14), transparent 70%),
-    radial-gradient(50rem 28rem at 0% 70rem, rgba(30, 122, 83, 0.07), transparent 70%),
-    linear-gradient(180deg, var(--color-gold-50) 0%, var(--color-mist-50) 38%, var(--color-mist-100) 100%);
+  background: #f2eee8;
 }
 
 /* Fine film grain so large dark areas don't look like a flat fill. */
 .hero-grain {
-  opacity: 0.07;
+  opacity: 0.06;
   mix-blend-mode: overlay;
   pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Full-bleed deep green band with a fine gold lattice, used behind white cards. */
+/* Full-bleed ink band behind light cards. */
 .pattern-band {
   isolation: isolate;
 }
@@ -434,10 +407,29 @@ h2.font-display {
   left: 50%;
   width: 100vw;
   transform: translateX(-50%);
-  background:
-    radial-gradient(40rem 18rem at 15% 0%, rgba(214, 174, 85, 0.18), transparent 70%),
-    radial-gradient(40rem 18rem at 90% 100%, rgba(30, 122, 83, 0.35), transparent 70%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23d6ae55' stroke-opacity='0.16' stroke-width='1'%3E%3Cpath d='M32 4 60 32 32 60 4 32Z'/%3E%3Cpath d='M32 20 44 32 32 44 20 32Z'/%3E%3C/g%3E%3Ccircle cx='32' cy='32' r='1.6' fill='%23d6ae55' fill-opacity='0.32'/%3E%3C/svg%3E"),
-    linear-gradient(180deg, var(--color-forest-900), var(--color-forest-950));
-  background-size: auto, auto, 64px 64px, auto;
+  background: var(--color-forest-950);
+}
+
+/* Arrow link: label, then a line that extends on hover. */
+.arrow-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.arrow-link::after {
+  content: "";
+  width: 3rem;
+  height: 1px;
+  background: currentColor;
+  transition: width 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.arrow-link:hover::after {
+  width: 4.5rem;
 }

@@ -8,14 +8,14 @@ import {
 import { PASTORAL_COUPLE_IMAGE } from "../assets/pastoralImage";
 
 export const CHURCH_INFO = {
-  name: "Wisdom Temple",
+  name: "ICGC WISDOM TEMPLE",
   tagline:
-    "Raising Leaders. Shaping Visions. Influencing Society Through Christ.",
+    "Raising Leaders. Shaping Vision. Influencing Society Through Christ.",
   description:
-    "A Bible-believing charismatic Church committed to raising leaders, shaping visions and influencing society through Christ.",
+    "A Bible-believing charismatic Church committed to raising leaders, shaping vision and influencing society through Christ.",
   location: "Star Junction, Tabora - Accra, Ghana",
   landmark: "Star Junction, Tabora",
-  physicalAddress: "Wisdom Temple, Star Junction, Tabora - Accra",
+  physicalAddress: "ICGC WISDOM TEMPLE, Star Junction, Tabora - Accra",
   phone: "0245009764",
   email: "icgcwisdomtemple@gmail.com",
   whatsapp: "0245009764",
@@ -27,8 +27,8 @@ export const CHURCH_INFO = {
     combinedTitle: "Rev. Gabriel Dela & Lady Dr. Helena Dela",
     image: PASTORAL_COUPLE_IMAGE,
     fallbackImage: "/assets/optimized/rev_gabriel_and_helena_dela.webp",
-    role: "Shepherd of Wisdom Temple",
-    bio: "Rev. Gabriel Dela serves as the Shepherd and Senior Minister of ICGC Wisdom Temple. Alongside his wife, Lady Dr. Helena Dela, they shepherd the Wisdom Temple family with passionate biblical exposition, pastoral compassion, and prophetic intercession, dedicated to raising leaders, shaping visions, and influencing society through Christ.",
+    role: "Shepherd of ICGC WISDOM TEMPLE",
+    bio: "Rev. Gabriel Dela serves as the Shepherd and Senior Minister of ICGC Wisdom Temple. Alongside his wife, Lady Dr. Helena Dela, they shepherd the Wisdom Temple family with passionate biblical exposition, pastoral compassion, and prophetic intercession, dedicated to raising leaders, shaping vision, and influencing society through Christ.",
   },
   services: {
     sunday: {
@@ -165,24 +165,23 @@ export const INITIAL_SERMONS: Sermon[] = [
 
 export const INITIAL_EVENTS: ChurchEvent[] = [
   {
-    id: "wisdom-summit-2026",
-    name: "WISDOM SUMMIT 2026",
-    theme: "Dominion Through Divine Insight",
-    date: "October 7 - 9 & October 11, 2026",
-    time: "6:30 PM each night (Oct 7 - 9) & 8:00 AM prompt (Oct 11)",
-    venue: "Wisdom Temple Auditorium, Star Junction, Tabora - Accra",
+    id: "christmas-celebration-service-2026",
+    name: "Christmas Celebration Service",
+    theme: "Celebrating Jesus, Our Saviour and King",
+    date: "December 25, 2026",
+    time: "Time to be announced",
+    venue: "ICGC Wisdom Temple Auditorium, Star Junction, Tabora - Accra",
     shortDescription:
-      "Wisdom Summit 2026: Raising visionary leaders and uncovering kingdom wisdom for destiny and societal impact.",
+      "Join the ICGC Wisdom Temple family for a joyful Christmas celebration centred on the birth of Jesus Christ, with worship, the Word and warm fellowship.",
     fullDescription:
-      "Wisdom Summit 2026 is Wisdom Temple’s premier annual conference with Host Rev Gabriel Dela and special guest ministers Rev Albert, Rev Dickson, and Rev Paul.",
-    speaker:
-      "Host: Rev Gabriel Dela • Guests: Rev Albert, Rev Dickson, Rev Paul",
-    scripture: "Proverbs 3:13-18",
-    category: "Conference",
-    image: "/assets/optimized/wisdom_summit_banner.webp",
-    registrationRequired: true,
-    registrationStatus: "Closed",
-    isFeaturedSummit: true,
+      "A special Christmas gathering for individuals and families as we celebrate the gift of Jesus Christ together. The confirmed service time and full programme will be announced soon.",
+    speaker: "Rev. Gabriel Dela and the Pastoral Team",
+    scripture: "Luke 2:10-14",
+    category: "Special Service",
+    image: "/assets/optimized/christmas-crossover-2026-banner.webp",
+    registrationRequired: false,
+    registrationStatus: "Open",
+    isFeatured: true,
   },
   {
     id: "atmosphere-of-prayer",
@@ -200,16 +199,20 @@ export const INITIAL_EVENTS: ChurchEvent[] = [
     registrationStatus: "Open",
   },
   {
-    id: "pvv-virtuous-women-conference",
-    name: "PVV Virtuous Women Conference",
-    date: "November 7, 2026",
-    time: "9:00 AM",
-    venue: "Wisdom Temple Auditorium, Star Junction, Tabora - Accra",
+    id: "crossover-night-2026",
+    name: "Crossover Night 2026",
+    theme: "Entering the New Year in God's Presence",
+    date: "December 31, 2026",
+    time: "Time to be announced",
+    venue: "ICGC Wisdom Temple Auditorium, Star Junction, Tabora - Accra",
     shortDescription:
-      "A day for women to be strengthened in faith, character and purpose at the PVV Virtuous Women Conference.",
-    speaker: "Wisdom Temple Women's Ministry",
-    category: "Conference",
-    image: "/assets/optimized/womens_fellowship.webp",
+      "End the year in thanksgiving and cross into 2027 with fervent worship, prayer, prophetic declarations and the Word of God.",
+    fullDescription:
+      "Gather with us for a powerful night in God's presence as we thank Him for 2026 and prayerfully enter 2027. The confirmed start time and full programme will be announced soon.",
+    speaker: "Rev. Gabriel Dela and the Pastoral Team",
+    scripture: "Psalm 65:11",
+    category: "Special Service",
+    image: "/assets/optimized/christmas-crossover-2026-banner.webp",
     registrationRequired: false,
     registrationStatus: "Open",
   },
@@ -222,7 +225,7 @@ export const INITIAL_EVENTS: ChurchEvent[] = [
     venue: "Youth Center, Star Junction, Tabora - Accra",
     shortDescription:
       "Empowering students and young professionals to take bold stands for Christ, navigate peer pressure, and excel academically and spiritually.",
-    speaker: "[YOUTH PASTOR / SPEAKER NAME]",
+    speaker: "ICGC WISDOM TEMPLE Youth Ministry Team",
     category: "Youth",
     image: "/assets/optimized/youth_ministry.webp",
     registrationRequired: true,
@@ -237,7 +240,7 @@ export const INITIAL_EVENTS: ChurchEvent[] = [
     venue: "Fellowship Hall, Star Junction, Tabora - Accra",
     shortDescription:
       "Practical, biblical insights for married couples and singles preparing for marital blessing in Christ.",
-    speaker: "[FAMILY LIFE COUNSELORS]",
+    speaker: "ICGC WISDOM TEMPLE Family Life Ministry Team",
     category: "Special Service",
     image:
       "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80",

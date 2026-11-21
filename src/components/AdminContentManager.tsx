@@ -1181,7 +1181,7 @@ export const AdminContentManager: React.FC<AdminContentManagerProps> = ({ onNavi
                   Website Typography Rendering
                 </span>
                 {Array.isArray(formValues[previewField.key]) ? (
-                  <div className="space-y-3 text-sm text-slate-800 leading-relaxed font-serif">
+                  <div className="space-y-3 text-sm text-slate-800 leading-relaxed">
                     {(formValues[previewField.key] as string[]).map((p, idx) => (
                       <p key={idx}>{p}</p>
                     ))}

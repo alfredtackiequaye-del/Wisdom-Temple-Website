@@ -1,19 +1,19 @@
 import { useEffect } from "react";
 import { PageId } from "../types";
 
-const SITE = "Wisdom Temple";
+const SITE = "ICGC WISDOM TEMPLE";
 
 /** Search/share title and description for each public page. */
 const PAGE_META: Record<PageId, { title: string; description: string }> = {
   home: {
-    title: `${SITE} | Raising Leaders, Shaping Visions`,
+    title: `${SITE} | Raising Leaders, Shaping Vision`,
     description:
       "A Bible-believing charismatic church at Star Junction, Tabora - Accra, Ghana. Join us Sundays at 8:00 AM and Wednesdays for The Secret Place.",
   },
   about: {
     title: `About Us | ${SITE}`,
     description:
-      "Meet Rev. Gabriel Dela and the Wisdom Temple family, and learn our vision, mission and what we believe.",
+      "Meet Rev. Gabriel Dela and the ICGC WISDOM TEMPLE family, and discover the worldwide ICGC vision, mission, philosophy and beliefs.",
   },
   "watch-listen": {
     title: `Watch & Listen | ${SITE}`,
@@ -33,7 +33,7 @@ const PAGE_META: Record<PageId, { title: string; description: string }> = {
   events: {
     title: `Events | ${SITE}`,
     description:
-      "Upcoming gatherings including Wisdom Summit 2026, Atmosphere of Prayer and youth events. Register online.",
+      "Upcoming gatherings at ICGC WISDOM TEMPLE, including Christmas services, Crossover Night and Atmosphere of Prayer.",
   },
   gallery: {
     title: `Photo Gallery | ${SITE}`,

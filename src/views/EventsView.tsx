@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { PosterImage } from '../components/PosterImage';
 import { PageHero } from '../components/PageHero';
+import { SectionHeader } from '../components/SectionHeader';
 import { ClosingInvite } from '../components/ClosingInvite';
 
 interface EventsViewProps {
@@ -30,7 +31,6 @@ interface EventsViewProps {
 }
 
 const VENUE = 'Wisdom Temple, Star Junction, Tabora - Accra, Ghana';
-const SUMMIT_LENGTH_H = 3;
 
 /** One calendar slot for a single-day event whose date and time can be read, else null. */
 const slotForEvent = (event: ChurchEvent): CalendarVisit | null => {
@@ -38,12 +38,6 @@ const slotForEvent = (event: ChurchEvent): CalendarVisit | null => {
   if (!parsed || parsed.endDate || !parsed.startDate.includes('T')) return null;
   return { title: event.name, start: Date.parse(parsed.startDate), lengthH: 3, location: event.venue || VENUE };
 };
-
-/** The Wisdom Summit runs over four sessions: three evenings and a Sunday morning (per the flyer). */
-const summitSlots = (name: string): CalendarVisit[] => [
-  ...[7, 8, 9].map((day) => ({ title: name, start: Date.UTC(2026, 9, day, 18, 30), lengthH: SUMMIT_LENGTH_H, location: VENUE })),
-  { title: name, start: Date.UTC(2026, 9, 11, 8, 0), lengthH: SUMMIT_LENGTH_H, location: VENUE },
-];
 
 const StatusChip: React.FC<{ status: EventStatus }> = ({ status }) => {
   if (status.kind === 'live') {
@@ -87,10 +81,9 @@ export const EventsView: React.FC<EventsViewProps> = ({
     ? events
     : events.filter(e => e.category === selectedCategory);
 
-  const featuredSummit = events.find(e => e.isFeaturedSummit) || events[0];
-  const summitStatus = featuredSummit ? getEventStatus(featuredSummit.date, featuredSummit.time) : null;
-  const addSummitToCalendar = () =>
-    downloadIcs(buildIcsMulti(summitSlots(featuredSummit.name), 'Free entry. Register online to reserve your seat.'), 'wisdom-summit-2026.ics');
+  const featuredEvent = events.find(e => e.isFeatured) || events.find(e => getEventStatus(e.date, e.time).kind !== 'past') || events[0];
+  const featuredStatus = featuredEvent ? getEventStatus(featuredEvent.date, featuredEvent.time) : null;
+  const featuredSlot = featuredEvent ? slotForEvent(featuredEvent) : null;
 
   return (
     <div className="page-warm-bg min-h-screen text-slate-900 pb-24 overflow-x-clip">
@@ -103,8 +96,8 @@ export const EventsView: React.FC<EventsViewProps> = ({
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 space-y-20">
-        {/* Featured Wisdom Summit */}
-        {featuredSummit && (
+        {/* Featured programme */}
+        {featuredEvent && (
           <m.section
             {...reveal()}
             aria-label="Featured event"
@@ -113,27 +106,25 @@ export const EventsView: React.FC<EventsViewProps> = ({
             <div className="relative flex flex-wrap items-center justify-between gap-4 mb-8">
               <div className="flex flex-wrap items-center gap-3">
                 <span className="px-3.5 py-1.5 bg-gold-400 text-forest-950 font-bold text-[11px] uppercase tracking-[0.18em] rounded-full">
-                  Annual flagship conference
+                  Upcoming special programme
                 </span>
-                {summitStatus && <StatusChip status={summitStatus} />}
+                {featuredStatus && <StatusChip status={featuredStatus} />}
               </div>
               <button
-                onClick={() => onShare(featuredSummit.name, `${featuredSummit.theme} - Register now for Wisdom Summit 2026 at Wisdom Temple`)}
+                onClick={() => onShare(featuredEvent.name, `${featuredEvent.theme || featuredEvent.shortDescription} — ${featuredEvent.date} at ICGC WISDOM TEMPLE`)}
                 className="px-3.5 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-emerald-100 hover:text-white transition-colors flex items-center gap-1.5 text-xs font-semibold cursor-pointer border border-white/15"
               >
                 <Share2 className="w-3.5 h-3.5 text-gold-400" />
-                <span>Share Summit</span>
+                <span>Share programme</span>
               </button>
             </div>
 
             <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-7 xl:col-span-8">
                 <div className="group relative rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-black">
-                  <img
-                    src={getBanner('wisdom_summit_banner', '/wisdom_summit_banner.png')}
-                    alt="Wisdom Summit 2026 flyer with the guest speakers and schedule"
-                    className="w-full h-auto object-cover block transition-transform duration-700 group-hover:scale-[1.02]"
-                    referrerPolicy="no-referrer"
+                  <PosterImage
+                    src={getBanner('event_' + featuredEvent.id, featuredEvent.image)}
+                    alt={featuredEvent.name}
                   />
                 </div>
               </div>
@@ -143,22 +134,31 @@ export const EventsView: React.FC<EventsViewProps> = ({
                   <Ticket className="w-7 h-7 text-gold-300" />
                 </div>
                 <div>
-                  <h2 className="font-serif-title text-2xl text-white">Wisdom Summit 2026</h2>
-                  <p className="text-sm text-gold-300 mt-1">October 7 - 9 & 11, 2026</p>
+                  <h2 className="font-serif-title text-2xl text-white">{featuredEvent.name}</h2>
+                  <p className="text-sm text-gold-300 mt-1">{featuredEvent.date}</p>
                   <p className="text-xs text-emerald-100/80 mt-3 leading-relaxed">
-                    Admission is free. Register to reserve your seat and receive event notifications.
+                    {featuredEvent.shortDescription}
                   </p>
                 </div>
                 <div className="space-y-3">
-                  <button
-                    onClick={() => onRegisterEvent(featuredSummit)}
-                    className="cta-shine w-full py-3.5 bg-gold-400 hover:bg-gold-300 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
-                  >
-                    Register for Wisdom Summit
-                  </button>
-                  {featuredSummit.id === 'wisdom-summit-2026' && summitStatus?.kind !== 'past' && (
+                  {featuredEvent.registrationRequired ? (
                     <button
-                      onClick={addSummitToCalendar}
+                      onClick={() => onRegisterEvent(featuredEvent)}
+                      className="cta-shine w-full py-3.5 bg-gold-400 hover:bg-gold-300 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
+                    >
+                      Register now
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => onNavigate('new-here')}
+                      className="cta-shine w-full py-3.5 bg-gold-400 hover:bg-gold-300 text-forest-950 font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-colors cursor-pointer"
+                    >
+                      Plan your visit
+                    </button>
+                  )}
+                  {featuredSlot && featuredStatus?.kind !== 'past' && (
+                    <button
+                      onClick={() => downloadIcs(buildIcsMulti([featuredSlot], featuredEvent.shortDescription), `${featuredEvent.id}.ics`)}
                       className="w-full py-3 rounded-lg border border-white/20 text-emerald-100 hover:bg-white/10 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer inline-flex items-center justify-center gap-2"
                     >
                       <CalendarPlus className="w-4 h-4 text-gold-300" /> Add to my calendar
@@ -296,16 +296,13 @@ export const EventsView: React.FC<EventsViewProps> = ({
 
         {/* Weekly regular services on a patterned band */}
         <section aria-labelledby="weekly-heading" className="pattern-band relative py-16 sm:py-20">
-          <m.div {...reveal()} className="text-center max-w-2xl mx-auto mb-10 space-y-3">
-            <span className="text-[11px] font-semibold text-gold-300 uppercase tracking-[0.22em]">Every week</span>
-            <h2 id="weekly-heading" className="text-3xl sm:text-4xl text-white font-serif-title">Regular weekly gatherings</h2>
-            <span className="mx-auto flex items-center justify-center gap-3" aria-hidden="true">
-              <span className="h-px w-12 bg-gold-400/60" />
-              <span className="w-2 h-2 rotate-45 bg-gold-400" />
-              <span className="h-px w-12 bg-gold-400/60" />
-            </span>
-            <p className="text-emerald-100/80">No registration needed. Just come as you are.</p>
-          </m.div>
+          <SectionHeader
+            tone="dark"
+            id="weekly-heading"
+            eyebrow="Every week"
+            title="Regular weekly gatherings"
+            subtitle="No registration needed. Just come as you are."
+          />
 
           <m.div
             {...staggerContainer(0.15)}

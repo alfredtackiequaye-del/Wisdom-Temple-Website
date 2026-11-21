@@ -43,7 +43,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   const isHome = currentPage === "home";
   // Frosted glass: the page shows through, the menu stays readable over photos.
   const frosted =
-    "bg-forest-900/[0.97] backdrop-blur-md border-b border-gold-500/25 shadow-lg shadow-black/25";
+    "bg-forest-950/95 backdrop-blur-md border-b border-white/10";
+  const dropdownPanelClass =
+    "absolute top-full left-0 flex w-72 flex-col whitespace-normal bg-forest-950 border border-white/10 rounded-xl shadow-2xl p-1.5 mt-1 z-50";
+  const dropdownItemClass =
+    "w-full text-left px-3.5 py-2.5 rounded-lg font-sans text-sm leading-snug text-emerald-100 hover:bg-white/5 hover:text-white transition-colors";
 
   const handleNavClick = (page: PageId, subTab?: string) => {
     onNavigate(page, subTab);
@@ -64,7 +68,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       }`}
     >
       {/* Main Navigation Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-10">
         <div className="flex items-center justify-between h-[76px]">
           {/* Official ICGC Logo Identity in Pure White */}
           <div
@@ -81,28 +85,28 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Desktop Navigation Links - Legacy Hills Church Streamlined Structure */}
-          <nav className="hidden xl:flex items-center space-x-0.5 2xl:space-x-2 text-sm font-medium whitespace-nowrap">
+          <nav className="hidden xl:flex items-center gap-0.5 font-sans text-[14px] font-medium whitespace-nowrap" aria-label="Primary navigation">
             <button
               onClick={() => handleNavClick("home")}
-              className={`px-3 py-2 rounded-md transition-all ${
+              className={`px-3 py-2 transition-colors ${
                 currentPage === "home"
-                  ? "text-gold-300 bg-forest-700 font-bold border-b-2 border-gold-500"
-                  : "text-emerald-100 hover:text-white hover:bg-forest-800"
+                  ? "text-white border-b-2 border-gold-500"
+                  : "text-emerald-100/80 hover:text-white border-b-2 border-transparent"
               }`}
             >
-              HOME
+              Home
             </button>
 
             {/* Plan A Visit (Signature Modern Church Navigation) */}
             <button
               onClick={() => handleNavClick("new-here")}
-              className={`px-3 py-2 rounded-md transition-all font-semibold ${
+              className={`px-3 py-2 transition-colors ${
                 currentPage === "new-here"
-                  ? "text-gold-200 bg-forest-700 font-bold border-b-2 border-gold-500"
-                  : "text-emerald-100 hover:text-white hover:bg-forest-800"
+                  ? "text-white border-b-2 border-gold-500"
+                  : "text-emerald-100/80 hover:text-white border-b-2 border-transparent"
               }`}
             >
-              PLAN A VISIT
+              Plan a Visit
             </button>
 
             {/* About Dropdown */}
@@ -110,55 +114,68 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="relative"
               onMouseEnter={() => setAboutDropdownOpen(true)}
               onMouseLeave={() => setAboutDropdownOpen(false)}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node)) setAboutDropdownOpen(false);
+              }}
             >
               <button
-                onClick={() => handleNavClick("about")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md transition-all ${
+                onClick={() => {
+                  setAboutDropdownOpen((open) => !open);
+                  setWatchDropdownOpen(false);
+                  setConnectDropdownOpen(false);
+                }}
+                onKeyDown={(event) => event.key === "Escape" && setAboutDropdownOpen(false)}
+                aria-expanded={aboutDropdownOpen}
+                aria-controls="about-menu"
+                aria-haspopup="menu"
+                className={`flex items-center space-x-1 px-3 py-2 transition-colors ${
                   currentPage === "about"
-                    ? "text-gold-300 bg-forest-700 font-bold border-b-2 border-gold-500"
-                    : "text-emerald-100 hover:text-white hover:bg-forest-800"
+                    ? "text-white border-b-2 border-gold-500"
+                    : "text-emerald-100/80 hover:text-white border-b-2 border-transparent"
                 }`}
               >
-                <span>ABOUT</span>
+                <span>About</span>
                 <ChevronDown className="w-3.5 h-3.5 text-gold-500" />
               </button>
 
               <AnimatePresence>
                 {aboutDropdownOpen && (
                   <m.div
+                    id="about-menu"
+                    role="menu"
                     initial={{ opacity: 0, y: 8, scale: 0.96 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 6, scale: 0.96 }}
                     transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute top-full left-0 flex flex-col w-56 bg-forest-850 border border-gold-500/30 rounded-lg shadow-2xl py-2 mt-0 z-50 backdrop-blur-md"
+                    className={dropdownPanelClass}
                   >
                     <button
                       onClick={() => handleNavClick("about", "who-we-are")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
+                      className={dropdownItemClass}
                     >
                       Who We Are
                     </button>
                     <button
                       onClick={() => handleNavClick("about", "vision-mission")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
+                      className={dropdownItemClass}
                     >
-                      Our Vision & Mission
+                      Vision, Mission & Philosophy
                     </button>
                     <button
                       onClick={() => handleNavClick("about", "beliefs")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
+                      className={dropdownItemClass}
                     >
                       Our Beliefs
                     </button>
                     <button
                       onClick={() => handleNavClick("about", "leadership")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
+                      className={dropdownItemClass}
                     >
                       Our Leadership
                     </button>
                     <button
                       onClick={() => handleNavClick("about", "story")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
+                      className={dropdownItemClass}
                     >
                       Our Story & Heritage
                     </button>
@@ -172,31 +189,44 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="relative"
               onMouseEnter={() => setWatchDropdownOpen(true)}
               onMouseLeave={() => setWatchDropdownOpen(false)}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node)) setWatchDropdownOpen(false);
+              }}
             >
               <button
-                onClick={() => handleNavClick("watch-listen")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md transition-all ${
+                onClick={() => {
+                  setWatchDropdownOpen((open) => !open);
+                  setAboutDropdownOpen(false);
+                  setConnectDropdownOpen(false);
+                }}
+                onKeyDown={(event) => event.key === "Escape" && setWatchDropdownOpen(false)}
+                aria-expanded={watchDropdownOpen}
+                aria-controls="watch-menu"
+                aria-haspopup="menu"
+                className={`flex items-center space-x-1 px-3 py-2 transition-colors ${
                   currentPage === "watch-listen"
-                    ? "text-gold-300 bg-forest-700 font-bold border-b-2 border-gold-500"
-                    : "text-emerald-100 hover:text-white hover:bg-forest-800"
+                    ? "text-white border-b-2 border-gold-500"
+                    : "text-emerald-100/80 hover:text-white border-b-2 border-transparent"
                 }`}
               >
-                <span>WATCH</span>
+                <span>Watch</span>
                 <ChevronDown className="w-3.5 h-3.5 text-gold-500" />
               </button>
 
               <AnimatePresence>
                 {watchDropdownOpen && (
                   <m.div
+                    id="watch-menu"
+                    role="menu"
                     initial={{ opacity: 0, y: 8, scale: 0.96 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 6, scale: 0.96 }}
                     transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute top-full left-0 flex flex-col w-56 bg-forest-850 border border-gold-500/30 rounded-lg shadow-2xl py-2 mt-0 z-50 backdrop-blur-md"
+                    className={dropdownPanelClass}
                   >
                     <button
                       onClick={() => handleNavClick("watch-listen", "all")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
+                      className={dropdownItemClass}
                     >
                       All Sermons & Media
                     </button>
@@ -204,7 +234,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onClick={() =>
                         handleNavClick("watch-listen", "Sunday Message")
                       }
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
+                      className={dropdownItemClass}
                     >
                       Sunday Messages
                     </button>
@@ -212,7 +242,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onClick={() =>
                         handleNavClick("watch-listen", "The Secret Place")
                       }
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
+                      className={dropdownItemClass}
                     >
                       The Secret Place (Wednesdays)
                     </button>
@@ -220,7 +250,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onClick={() =>
                         handleNavClick("watch-listen", "Wisdom Summit")
                       }
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
+                      className={dropdownItemClass}
                     >
                       Wisdom Summit Archive
                     </button>
@@ -229,52 +259,28 @@ export const Navbar: React.FC<NavbarProps> = ({
               </AnimatePresence>
             </div>
 
-            {/* Grow */}
-            <button
-              onClick={() => handleNavClick("grow")}
-              className={`px-3 py-2 rounded-md transition-all ${
-                currentPage === "grow"
-                  ? "text-gold-300 bg-forest-700 font-bold border-b-2 border-gold-500"
-                  : "text-emerald-100 hover:text-white hover:bg-forest-800"
-              }`}
-            >
-              GROW
-            </button>
-
             {/* Ministries */}
             <button
               onClick={() => handleNavClick("ministries")}
-              className={`px-3 py-2 rounded-md transition-all ${
+              className={`px-3 py-2 transition-colors ${
                 currentPage === "ministries"
-                  ? "text-gold-300 bg-forest-700 font-bold border-b-2 border-gold-500"
-                  : "text-emerald-100 hover:text-white hover:bg-forest-800"
+                  ? "text-white border-b-2 border-gold-500"
+                  : "text-emerald-100/80 hover:text-white border-b-2 border-transparent"
               }`}
             >
-              MINISTRIES
+              Ministries
             </button>
 
             {/* Events */}
             <button
               onClick={() => handleNavClick("events")}
-              className={`px-3 py-2 rounded-md transition-all ${
+              className={`px-3 py-2 transition-colors ${
                 currentPage === "events"
-                  ? "text-gold-300 bg-forest-700 font-bold border-b-2 border-gold-500"
-                  : "text-emerald-100 hover:text-white hover:bg-forest-800"
+                  ? "text-white border-b-2 border-gold-500"
+                  : "text-emerald-100/80 hover:text-white border-b-2 border-transparent"
               }`}
             >
-              EVENTS
-            </button>
-
-            {/* Photo Gallery */}
-            <button
-              onClick={() => handleNavClick("gallery")}
-              className={`px-3 py-2 rounded-md transition-all ${
-                currentPage === "gallery"
-                  ? "text-gold-300 bg-forest-700 font-bold border-b-2 border-gold-500"
-                  : "text-emerald-100 hover:text-white hover:bg-forest-800"
-              }`}
-            >
-              GALLERY
+              Events
             </button>
 
             {/* Connect Dropdown */}
@@ -282,54 +288,75 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="relative"
               onMouseEnter={() => setConnectDropdownOpen(true)}
               onMouseLeave={() => setConnectDropdownOpen(false)}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node)) setConnectDropdownOpen(false);
+              }}
             >
               <button
-                onClick={() => handleNavClick("contact")}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md transition-all ${
+                onClick={() => {
+                  setConnectDropdownOpen((open) => !open);
+                  setAboutDropdownOpen(false);
+                  setWatchDropdownOpen(false);
+                }}
+                onKeyDown={(event) => event.key === "Escape" && setConnectDropdownOpen(false)}
+                aria-expanded={connectDropdownOpen}
+                aria-controls="connect-menu"
+                aria-haspopup="menu"
+                className={`flex items-center space-x-1 px-3 py-2 transition-colors ${
                   currentPage === "connect" ||
                   currentPage === "prayer" ||
                   currentPage === "prayer-request" ||
-                  currentPage === "contact"
-                    ? "text-gold-300 bg-forest-700 font-bold border-b-2 border-gold-500"
-                    : "text-emerald-100 hover:text-white hover:bg-forest-800"
+                  currentPage === "contact" ||
+                  currentPage === "grow" ||
+                  currentPage === "gallery"
+                    ? "text-white border-b-2 border-gold-500"
+                    : "text-emerald-100/80 hover:text-white border-b-2 border-transparent"
                 }`}
               >
-                <span>CONNECT</span>
+                <span>Connect</span>
                 <ChevronDown className="w-3.5 h-3.5 text-gold-500" />
               </button>
 
               <AnimatePresence>
                 {connectDropdownOpen && (
                   <m.div
+                    id="connect-menu"
+                    role="menu"
                     initial={{ opacity: 0, y: 8, scale: 0.96 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 6, scale: 0.96 }}
                     transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute top-full left-0 flex flex-col w-56 bg-forest-850 border border-gold-500/30 rounded-lg shadow-2xl py-2 mt-0 z-50 backdrop-blur-md"
+                    className={`${dropdownPanelClass} !left-auto right-0`}
                   >
                     <button
                       onClick={() => handleNavClick("new-here")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
+                      className={dropdownItemClass}
                     >
                       I'm New / Plan Your Visit
                     </button>
                     <button
                       onClick={() => handleNavClick("prayer")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
+                      className={dropdownItemClass}
                     >
                       Prayer Request
                     </button>
                     <button
                       onClick={() => handleNavClick("contact")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
+                      className={dropdownItemClass}
                     >
                       Contact Us
                     </button>
                     <button
                       onClick={() => handleNavClick("grow")}
-                      className="w-full text-left px-4 py-2 text-sm text-emerald-100 hover:bg-forest-600 hover:text-gold-300 transition-colors"
+                      className={dropdownItemClass}
                     >
                       Membership & Growth
+                    </button>
+                    <button
+                      onClick={() => handleNavClick("gallery")}
+                      className={dropdownItemClass}
+                    >
+                      Photo Gallery
                     </button>
                   </m.div>
                 )}
@@ -338,7 +365,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Right Action: Give Button */}
-          <div className="hidden sm:flex items-center space-x-2.5">
+          <div className="hidden xl:flex items-center space-x-2.5">
             <button
               onClick={() => handleNavClick("give")}
               className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-sm"

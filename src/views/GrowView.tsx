@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 
 import { PageHero } from '../components/PageHero';
+import { SectionHeader } from '../components/SectionHeader';
 import { ClosingInvite } from '../components/ClosingInvite';
 
 interface GrowViewProps {
@@ -125,15 +126,12 @@ export const GrowView: React.FC<GrowViewProps> = ({ onNavigate }) => {
 
         {/* Growth tracks on a patterned band */}
         <section aria-labelledby="tracks-heading" className="pattern-band relative py-16 sm:py-20">
-          <m.div {...reveal()} className="text-center max-w-2xl mx-auto mb-12 space-y-3">
-            <span className="text-[11px] font-semibold text-gold-300 uppercase tracking-[0.22em]">Structured discipleship</span>
-            <h2 id="tracks-heading" className="text-3xl sm:text-4xl text-white font-serif-title">Core spiritual growth tracks</h2>
-            <span className="mx-auto flex items-center justify-center gap-3" aria-hidden="true">
-              <span className="h-px w-12 bg-gold-400/60" />
-              <span className="w-2 h-2 rotate-45 bg-gold-400" />
-              <span className="h-px w-12 bg-gold-400/60" />
-            </span>
-          </m.div>
+          <SectionHeader
+            tone="dark"
+            id="tracks-heading"
+            eyebrow="Structured discipleship"
+            title="Core spiritual growth tracks"
+          />
 
           <m.ol {...staggerContainer(0.16)} className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {tracks.map((track) => {

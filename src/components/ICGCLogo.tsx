@@ -66,12 +66,12 @@ export const ICGCLogo: React.FC<ICGCLogoProps> = ({
   const emblem = (
     <div
       className={`relative flex items-center justify-center shrink-0 select-none ${dims.wrapper}`}
-      title="Wisdom Temple"
+      title="ICGC WISDOM TEMPLE"
     >
       {!imageError ? (
         <img
           src={optimizedImageUrl(logoSrc)}
-          alt="Wisdom Temple Emblem"
+          alt="ICGC WISDOM TEMPLE emblem"
           width={580}
           height={470}
           className="w-full h-full object-contain drop-shadow-sm transition-transform duration-200 group-hover:scale-105"
@@ -132,7 +132,7 @@ export const ICGCLogo: React.FC<ICGCLogoProps> = ({
         <span
           className={`${dims.title} tracking-tight font-sans ${isLight ? "text-forest-800" : "text-white"}`}
         >
-          WISDOM TEMPLE
+          ICGC WISDOM TEMPLE
         </span>
       </div>
     </div>

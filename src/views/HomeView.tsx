@@ -17,7 +17,6 @@ import {
   Calendar,
   Clock,
   MapPin,
-  ArrowRight,
   Sparkles,
   Heart,
   Flame,
@@ -31,6 +30,7 @@ import {
   X,
 } from "lucide-react";
 import { PosterImage } from "../components/PosterImage";
+import { SectionHeader } from "../components/SectionHeader";
 
 interface HomeViewProps {
   onNavigate: (page: PageId, subTab?: string) => void;
@@ -106,7 +106,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* ========================================================================= */}
       <section
         ref={heroRef}
-        className="premium-hero relative min-h-[78vh] lg:min-h-[86vh] flex flex-col justify-end overflow-hidden pt-24 sm:pt-32 pb-16 sm:pb-24 lg:pb-28"
+        className="premium-hero relative min-h-[92vh] flex flex-col justify-end overflow-hidden pt-28 sm:pt-36 pb-12 sm:pb-16"
         id="hero-section"
       >
         <m.div className="absolute inset-0 z-0 overflow-hidden" style={{ y: heroImageY }}>
@@ -145,14 +145,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
               referrerPolicy="no-referrer"
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-b from-forest-950/55 via-forest-950/45 to-forest-950/95 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-r from-forest-950/85 via-forest-950/15 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-forest-950/50 via-forest-950/30 to-forest-950 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-forest-950/70 via-transparent to-transparent pointer-events-none" />
         </m.div>
 
-        <div className="hero-content-column relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 text-left flex flex-col items-start">
+        <div className="hero-content-column relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
           <h1
             aria-label={content.heroHeadline}
-            className="max-w-3xl text-4xl sm:text-5xl md:text-6xl lg:text-[5.8rem] leading-[0.98] tracking-[-0.02em] font-bold text-white font-display text-shadow-hero drop-shadow-[0_5px_18px_rgba(0,0,0,0.5)]"
+            className="max-w-5xl text-[3.4rem] sm:text-7xl lg:text-[7.4rem] leading-[0.92] text-white font-display"
           >
             <span aria-hidden="true">
               {heroWords.map((word, i) => (
@@ -161,15 +161,18 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   initial={
                     prefersReducedMotion
                       ? { opacity: 1, y: 0 }
-                      : { opacity: 0, y: 34 }
+                      : { opacity: 0, y: 40 }
                   }
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
-                    duration: 0.75,
-                    delay: prefersReducedMotion ? 0 : 0.15 + i * 0.06,
+                    duration: 0.9,
+                    delay: prefersReducedMotion ? 0 : 0.15 + i * 0.07,
                     ease: EASE_OUT,
                   }}
-                  className="inline-block mr-[0.22em] last:mr-0"
+                  // The word that closes each sentence carries the meaning.
+                  className={`inline-block mr-[0.2em] last:mr-0 ${
+                    /[.!]$/.test(word) ? "text-gold-400 pr-[0.04em]" : ""
+                  }`}
                 >
                   {word}
                 </m.span>
@@ -177,67 +180,46 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </span>
           </h1>
 
-          <m.p
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.55, ease: "easeOut" }}
-            className="mt-7 max-w-xl text-sm sm:text-base text-emerald-50/90 leading-[1.7] font-medium drop-shadow-[0_3px_12px_rgba(0,0,0,0.55)]"
-          >
-            {content.heroSubtitle}
-          </m.p>
-
           <m.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.68, ease: "easeOut" }}
-            className="mt-7 flex flex-wrap items-center gap-3 sm:gap-4"
+            transition={{ duration: 0.9, delay: 0.6, ease: EASE_OUT }}
+            className="mt-10 sm:mt-14 pt-8 border-t border-white/20 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-end"
           >
-            <span className="inline-flex items-center gap-3 rounded-2xl border border-gold-400/50 bg-forest-950/60 px-4 sm:px-5 py-3 backdrop-blur-md text-white">
-              <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-gold-300" />
-              <span className="flex flex-col leading-tight">
-                <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-gold-300">
-                  {content.sundayServiceDay}
-                </span>
-                <span className="text-lg sm:text-2xl font-bold">
-                  {content.sundayServiceTime}
-                </span>
-              </span>
-            </span>
-            <span className="inline-flex items-center gap-3 rounded-2xl border border-gold-400/50 bg-forest-950/60 px-4 sm:px-5 py-3 backdrop-blur-md text-white">
-              <Flame className="w-5 h-5 sm:w-6 sm:h-6 text-gold-300" />
-              <span className="flex flex-col leading-tight">
-                <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-gold-300">
-                  {content.midweekServiceDay}
-                </span>
-                <span className="text-lg sm:text-2xl font-bold">
-                  {content.midweekServiceTime}
-                </span>
-              </span>
-            </span>
-          </m.div>
-        </div>
+            <p className="lg:col-span-4 text-lg text-emerald-50/90 leading-relaxed">
+              {content.heroSubtitle}
+            </p>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 w-full mt-9">
-          <m.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.75, ease: "easeOut" }}
-            className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-6"
-          >
-            <button
-              onClick={() => onNavigate("new-here")}
-              className="w-full sm:w-auto px-8 py-4 rounded-xl cta-shine bg-gold-400 text-forest-950 font-bold text-sm sm:text-base shadow-[0_14px_30px_rgba(0,0,0,0.35)] transition-all hover:-translate-y-0.5 hover:bg-gold-300 cursor-pointer"
-            >
-              {content.heroButtonPrimary}
-            </button>
+            <dl className="lg:col-span-4 grid grid-cols-2 gap-6">
+              {[
+                { label: content.sundayServiceDay, time: content.sundayServiceTime },
+                { label: content.midweekServiceDay, time: content.midweekServiceTime },
+              ].map((service) => (
+                <div key={service.label}>
+                  <dt className="text-xs uppercase tracking-wider text-gold-300">
+                    {service.label}
+                  </dt>
+                  <dd className="mt-1.5 font-display text-3xl sm:text-4xl text-white">
+                    {service.time}
+                  </dd>
+                </div>
+              ))}
+            </dl>
 
-            <button
-              onClick={() => onNavigate("events")}
-              className="group w-full sm:w-auto px-2 py-4 text-white font-semibold text-sm sm:text-base flex items-center justify-center sm:justify-start gap-2 transition-colors hover:text-gold-300 cursor-pointer"
-            >
-              <span>{content.heroButtonSecondary}</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </button>
+            <div className="lg:col-span-4 flex flex-wrap lg:justify-end items-center gap-x-6 gap-y-4">
+              <button
+                onClick={() => onNavigate("new-here")}
+                className="px-8 py-4 bg-gold-500 hover:bg-gold-400 text-forest-950 font-semibold text-base transition-colors cursor-pointer"
+              >
+                {content.heroButtonPrimary}
+              </button>
+              <button
+                onClick={() => onNavigate("events")}
+                className="arrow-link text-white hover:text-gold-300 transition-colors cursor-pointer"
+              >
+                {content.heroButtonSecondary}
+              </button>
+            </div>
           </m.div>
         </div>
       </section>
@@ -245,129 +227,73 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* ========================================================================= */}
       {/* 2. MODULAR EXPERIENCE ROW - Inspired by connection-rincon.com */}
       {/* ========================================================================= */}
-      <section
-        id="experience-row"
-        className="cinematic-panel py-16 sm:py-20 border-b border-slate-200/80"
-      >
+      <section id="experience-row" className="py-20 sm:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <m.div {...reveal()} className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-[11px] font-semibold text-forest-600 uppercase tracking-[0.22em] bg-mist-100 px-3.5 py-2 rounded-full border border-mist-300 inline-block mb-4">
-              {content.experienceSectionBadge}
-            </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-forest-900 font-display tracking-[-0.06em]">
-              {content.experienceSectionTitle}
-            </h2>
-            <p className="text-sm sm:text-base text-slate-600 mt-3 leading-relaxed">
-              {content.experienceSectionSubtitle}
-            </p>
-          </m.div>
+          <SectionHeader
+            eyebrow={content.experienceSectionBadge}
+            title={content.experienceSectionTitle}
+            subtitle={content.experienceSectionSubtitle}
+          />
 
-          <m.div
-            {...staggerContainer(0.15)}
-            className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5"
+          <m.ol
+            {...staggerContainer(0.12)}
+            className="grid grid-cols-1 md:grid-cols-3 gap-5"
           >
-            {/* Module 1: Visit In-Person */}
-            <m.div
-              variants={staggerItem}
-              whileHover={{ y: -6 }}
-              transition={LIFT_SPRING}
-              className="editorial-card premium-card rounded-[4px] p-7 sm:p-8 md:col-span-5 group flex flex-col justify-between"
-            >
-              <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-forest-950 text-gold-300 flex items-center justify-center shadow-lift">
-                  <MapPin className="w-6 h-6 text-gold-400" />
-                </div>
-                <div className="space-y-1.5">
-                  <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-forest-600">
-                    {content.sundayServiceDay} @ {content.sundayServiceTime}
+            {[
+              {
+                icon: MapPin,
+                label: `${content.sundayServiceDay} · ${content.sundayServiceTime}`,
+                title: content.experienceMod1Title,
+                text: content.experienceMod1Desc,
+                cta: "Plan your visit",
+                go: () => onNavigate("new-here"),
+              },
+              {
+                icon: Play,
+                label: "Teaching for every season",
+                title: content.experienceMod2Title,
+                text: content.experienceMod2Desc,
+                cta: "Watch messages",
+                go: () => onNavigate("watch-listen"),
+              },
+              {
+                icon: Flame,
+                label: `${content.midweekServiceDay} · ${content.midweekServiceTime}`,
+                title: content.experienceMod3Title,
+                text: content.experienceMod3Desc,
+                cta: "Request prayer",
+                go: () => onNavigate("prayer"),
+              },
+            ].map((card, i) => (
+              <m.li
+                key={card.title}
+                variants={staggerItem}
+                className="group relative flex flex-col bg-mist-50 p-8 sm:p-10 transition-colors hover:bg-white"
+              >
+                <div className="flex items-start justify-between">
+                  <span className="font-display text-5xl text-forest-950/15 group-hover:text-gold-500 transition-colors">
+                    {String(i + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="text-2xl font-bold text-forest-900 font-display tracking-[-0.04em]">
-                    {content.experienceMod1Title}
-                  </h3>
+                  <card.icon className="w-6 h-6 text-forest-950" aria-hidden="true" />
                 </div>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  {content.experienceMod1Desc}
+                <p className="mt-10 text-xs uppercase tracking-wider text-gold-700">
+                  {card.label}
                 </p>
-              </div>
-              <div className="pt-6 mt-5 border-t border-slate-200/80">
-                <button
-                  onClick={() => onNavigate("new-here")}
-                  className="inline-flex items-center gap-2 text-xs font-bold text-forest-800 group-hover:text-gold-600 transition-colors cursor-pointer"
-                >
-                  <span>Plan your visit</span>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </button>
-              </div>
-            </m.div>
-
-            {/* Module 2: Watch on Demand */}
-            <m.div
-              variants={staggerItem}
-              whileHover={{ y: -6 }}
-              transition={LIFT_SPRING}
-              className="editorial-card premium-card rounded-[4px] p-7 sm:p-8 md:col-span-4 group flex flex-col justify-between"
-            >
-              <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-forest-950 text-gold-300 flex items-center justify-center shadow-lift">
-                  <Play className="w-6 h-6 text-gold-400 fill-gold-400" />
-                </div>
-                <div className="space-y-1.5">
-                  <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-forest-600">
-                    TEACHING FOR EVERY SEASON
-                  </span>
-                  <h3 className="text-2xl font-bold text-forest-900 font-display tracking-[-0.04em]">
-                    {content.experienceMod2Title}
-                  </h3>
-                </div>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  {content.experienceMod2Desc}
+                <h3 className="mt-2 font-display text-3xl text-forest-950">
+                  {card.title}
+                </h3>
+                <p className="mt-4 text-base text-slate-600 leading-relaxed flex-1">
+                  {card.text}
                 </p>
-              </div>
-              <div className="pt-6 mt-5 border-t border-slate-200/80">
                 <button
-                  onClick={() => onNavigate("watch-listen")}
-                  className="inline-flex items-center gap-2 text-xs font-bold text-forest-800 group-hover:text-gold-600 transition-colors cursor-pointer"
+                  onClick={card.go}
+                  className="arrow-link mt-8 self-start text-forest-950 group-hover:text-gold-700 transition-colors cursor-pointer"
                 >
-                  <span>Explore the message library</span>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  {card.cta}
                 </button>
-              </div>
-            </m.div>
-
-            {/* Module 3: The Secret Place */}
-            <m.div
-              variants={staggerItem}
-              whileHover={{ y: -6 }}
-              transition={LIFT_SPRING}
-              className="editorial-card premium-card rounded-[4px] p-7 sm:p-8 md:col-span-3 group flex flex-col justify-between"
-            >
-              <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-forest-950 text-gold-300 flex items-center justify-center shadow-lift">
-                  <Flame className="w-6 h-6 text-gold-400" />
-                </div>
-                <div className="space-y-1.5">
-                  <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-forest-600">
-                    {content.midweekServiceDay} @ {content.midweekServiceTime}
-                  </span>
-                  <h3 className="text-2xl font-bold text-forest-900 font-display tracking-[-0.04em]">
-                    {content.experienceMod3Title}
-                  </h3>
-                </div>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  {content.experienceMod3Desc}
-                </p>
-              </div>
-              <div className="pt-6 mt-5 border-t border-slate-200/80">
-                <button
-                  onClick={() => onNavigate("prayer")}
-                  className="inline-flex items-center gap-2 text-xs font-bold text-forest-800 group-hover:text-gold-600 transition-colors cursor-pointer"
-                >
-                  <span>Share a prayer request</span>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </button>
-              </div>
-            </m.div>
-          </m.div>
+              </m.li>
+            ))}
+          </m.ol>
         </div>
       </section>
 
@@ -376,38 +302,24 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* ========================================================================= */}
       {latestSermon && (
         <section
-          className="ambient-glow py-20 bg-forest-950 text-white border-b border-forest-700"
+          className="py-20 sm:py-28 bg-forest-950 text-white"
           id="latest-message"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <m.div
-              {...reveal()}
-              className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-forest-700 gap-4"
-            >
-              <div>
-                <span className="text-xs text-gold-300 uppercase tracking-widest block font-bold">
-                  BIBLICAL TEACHING FOR EVERY SEASON
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1 font-serif-title">
-                  A Message for Your Journey
-                </h2>
-              </div>
-              <button
-                onClick={() => onNavigate("watch-listen")}
-                className="inline-flex items-center space-x-1 text-sm font-semibold text-gold-300 hover:text-white transition-colors"
-              >
-                <span>Explore all messages</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </m.div>
+            <SectionHeader
+              tone="dark"
+              eyebrow="Latest message"
+              title="A Message for Your Journey"
+              action={{ label: "All messages", onClick: () => onNavigate("watch-listen") }}
+            />
 
             {/* Featured Message Layout */}
             <m.div
               {...reveal(0.1)}
-              className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-forest-900 rounded-3xl p-6 sm:p-8 border border-forest-700 shadow-2xl"
+              className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center"
             >
               {/* Media Thumbnail Container / Embedded Player */}
-              <div className="lg:col-span-7 relative rounded-2xl overflow-hidden shadow-2xl aspect-video bg-black border border-forest-700">
+              <div className="lg:col-span-7 relative rounded-2xl overflow-hidden aspect-video bg-black">
                 {playLatestInline && latestSermon.videoEmbedUrl ? (
                   <iframe
                     src={`${latestSermon.videoEmbedUrl}?autoplay=1&rel=0`}
@@ -457,7 +369,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       {latestSermon.series}
                     </span>
                   </div>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-white leading-snug font-serif">
+                  <h3 className="text-2xl sm:text-3xl text-white leading-snug font-display">
                     {latestSermon.title}
                   </h3>
                   <p className="text-sm text-gold-400 font-medium">
@@ -524,118 +436,76 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* ========================================================================= */}
       {/* 6. UPCOMING EVENTS GRID */}
       {/* ========================================================================= */}
-      <section
-        className="py-16 sm:py-20 bg-mist-50 border-b border-mist-200"
-        id="upcoming-events"
-      >
+      <section className="py-20 sm:py-28" id="upcoming-events">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <m.div
-            {...reveal()}
-            className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4"
-          >
-            <div>
-              <span className="text-xs font-bold tracking-widest text-forest-700 uppercase bg-mist-200 px-3 py-1 rounded-full border border-mist-400">
-                GATHER, WORSHIP & GROW
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-forest-900 mt-2 font-serif-title">
-                Gatherings & Events
-              </h2>
-            </div>
-            <button
-              onClick={() => onNavigate("events")}
-              className="inline-flex items-center space-x-1 text-sm font-semibold text-forest-700 hover:text-forest-500 transition-colors"
-            >
-              <span>Explore all gatherings</span>
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </m.div>
+          <SectionHeader
+            eyebrow="Gather, worship & grow"
+            title="Upcoming Events"
+            action={{ label: "All events", onClick: () => onNavigate("events") }}
+          />
 
-          <m.div
-            {...staggerContainer(0.12)}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-          >
+          <m.ul {...staggerContainer(0.1)} className="divide-y divide-forest-950/15 border-b border-forest-950/15">
             {events.slice(0, 3).map((event) => (
-              <m.div
+              <m.li
                 key={event.id}
                 variants={staggerItem}
-                whileHover={{ y: -6 }}
-                transition={LIFT_SPRING}
-                className="bg-white rounded-2xl border border-mist-300 overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between group"
+                className="group grid grid-cols-1 sm:grid-cols-12 gap-5 sm:gap-8 items-center py-7 first:pt-0"
               >
-                <div>
-                  <div className="relative aspect-[16/9] overflow-hidden bg-forest-900">
-                    <PosterImage
-                      src={getBanner("event_" + event.id, event.image)}
-                      alt={event.name}
-                    />
-                    <span className="absolute top-3 left-3 px-2.5 py-1 bg-forest-950/90 text-gold-300 rounded text-xs font-bold backdrop-blur-md border border-gold-500/30">
-                      {event.category}
-                    </span>
-                  </div>
-
-                  <div className="p-6 space-y-3">
-                    <div className="text-xs text-forest-700 font-bold flex items-center space-x-2">
-                      <Calendar className="w-3.5 h-3.5 text-gold-500" />
-                      <span>{event.date}</span>
-                    </div>
-
-                    <h3 className="text-lg font-bold text-forest-900 group-hover:text-forest-700 transition-colors line-clamp-1 font-serif-title">
-                      {event.name}
-                    </h3>
-
-                    <p className="text-xs text-slate-600 line-clamp-2">
-                      {event.shortDescription}
-                    </p>
-
-                    <div className="text-xs text-slate-500 space-y-1 pt-2">
-                      <div className="flex items-center space-x-1.5 truncate">
-                        <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                        <span>{event.time}</span>
-                      </div>
-                      <div className="flex items-center space-x-1.5 truncate">
-                        <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                        <span className="truncate">{event.venue}</span>
-                      </div>
-                    </div>
-                  </div>
+                <div className="sm:col-span-3 relative aspect-[16/10] overflow-hidden rounded-2xl bg-forest-900">
+                  <PosterImage
+                    src={getBanner("event_" + event.id, event.image)}
+                    alt={event.name}
+                  />
                 </div>
-
-                <div className="p-6 pt-0">
+                <div className="sm:col-span-6">
+                  <p className="text-xs uppercase tracking-wider text-gold-700">
+                    {event.category} · {event.date}
+                  </p>
+                  <h3 className="mt-2 font-display text-2xl sm:text-3xl text-forest-950">
+                    {event.name}
+                  </h3>
+                  <p className="mt-2 text-base text-slate-600 line-clamp-2">
+                    {event.shortDescription}
+                  </p>
+                  <p className="mt-3 flex items-center gap-2 text-sm text-slate-500">
+                    <MapPin className="w-4 h-4 shrink-0" aria-hidden="true" />
+                    <span className="truncate">{event.venue}</span>
+                  </p>
+                </div>
+                <div className="sm:col-span-3 sm:text-right">
                   <button
                     onClick={() => onRegisterEvent(event)}
-                    className="w-full py-2.5 bg-forest-900 hover:bg-forest-800 text-white font-bold text-xs rounded-xl transition-all cursor-pointer border border-gold-500/30"
+                    className="px-6 py-3 bg-forest-950 hover:bg-forest-800 text-white font-semibold text-sm transition-colors cursor-pointer"
                   >
-                    Event details & registration
+                    Event details
                   </button>
                 </div>
-              </m.div>
+              </m.li>
             ))}
-          </m.div>
+          </m.ul>
         </div>
       </section>
 
       {/* ========================================================================= */}
       {/* SCRIPTURE BAND - a pause between sections */}
       {/* ========================================================================= */}
-      <section className="relative isolate overflow-hidden py-24 sm:py-32 text-white text-center">
+      <section className="relative isolate overflow-hidden bg-forest-950 py-28 sm:py-40 text-white">
         <img
           src="/assets/photos/wisdom-summit-team-lineup.webp"
           alt=""
           aria-hidden="true"
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 -z-10 w-full h-full object-cover object-center"
+          className="absolute inset-0 -z-10 w-full h-full object-cover object-center opacity-25 grayscale"
         />
-        <div className="absolute inset-0 -z-10 bg-forest-950/85" />
-        <m.div {...reveal()} className="max-w-3xl mx-auto px-6 space-y-5">
-          <Quote className="w-9 h-9 text-gold-400 mx-auto" aria-hidden="true" />
-          <p className="font-display text-2xl sm:text-4xl leading-snug">
-            Happy is the one who finds wisdom, and the one who gets understanding.
-          </p>
-          <span className="block text-xs font-bold uppercase tracking-[0.25em] text-gold-400">
+        <m.figure {...reveal()} className="max-w-5xl mx-auto px-6 text-center">
+          <blockquote className="font-serif text-4xl sm:text-6xl lg:text-7xl leading-[1.08] tracking-[-0.01em]">
+            “Happy is the one who finds <span className="italic text-gold-400">wisdom</span>, and the one who gets understanding.”
+          </blockquote>
+          <figcaption className="mt-8 text-sm uppercase tracking-wider text-gold-300">
             Proverbs 3:13
-          </span>
-        </m.div>
+          </figcaption>
+        </m.figure>
       </section>
 
       {/* ========================================================================= */}
@@ -643,20 +513,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* ========================================================================= */}
       {publishedTestimonies.length > 0 && (
         <section
-          className="py-20 bg-mist-50 border-b border-mist-200"
+          className="py-20 sm:py-28 bg-mist-100"
           id="testimonies"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <m.div {...reveal()} className="mb-10 max-w-2xl">
-              <div>
-                <span className="text-[10px] font-bold tracking-[0.22em] text-forest-700 uppercase">
-                  STORIES OF FAITH
-                </span>
-                <h2 className="text-4xl sm:text-5xl font-extrabold leading-[0.98] text-forest-900 mt-3 font-serif-title">
-                  Stories of hope, faith & transformation
-                </h2>
-              </div>
-            </m.div>
+            <SectionHeader
+              eyebrow="Stories of faith"
+              title="Stories of hope, faith & transformation"
+              action={{ label: "Share your story", onClick: () => setShowTestimonyModal(true) }}
+            />
 
             <m.div
               {...staggerContainer(0.08)}
@@ -666,42 +531,34 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <m.div
                   key={item.id}
                   variants={staggerItem}
-                  className="min-w-[min(86vw,330px)] sm:min-w-[350px] snap-start bg-white rounded-[22px] p-6 sm:p-7 border border-mist-300 shadow-sm flex flex-col justify-between min-h-[280px]"
+                  className="min-w-[min(86vw,330px)] sm:min-w-[360px] snap-start bg-mist-50 p-8 flex flex-col justify-between min-h-[300px]"
                 >
-                  <div className="space-y-3">
-                    <Quote className="w-8 h-8 text-forest-700/30" />
-                    <h3 className="text-base font-bold text-forest-900 font-serif-title">
+                  <div className="space-y-4">
+                    <Quote className="w-7 h-7 text-gold-500" aria-hidden="true" />
+                    <h3 className="font-display text-2xl text-forest-950">
                       {item.title}
                     </h3>
-                    <p className="text-slate-600 text-xs sm:text-sm leading-relaxed italic">
-                      "{item.testimony}"
+                    <p className="text-slate-600 text-base leading-relaxed">
+                      “{item.testimony}”
                     </p>
                   </div>
 
-                  <div className="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between text-xs">
+                  <div className="pt-6 mt-6 border-t border-forest-950/10 flex items-end justify-between gap-4">
                     <div>
-                      <span className="text-forest-900 font-bold block">
+                      <span className="text-forest-950 font-semibold block">
                         {item.personName}
                       </span>
-                      <span className="text-slate-600 text-[11px]">
+                      <span className="text-slate-500 text-sm">
                         {item.date}
                       </span>
                     </div>
-                    <span className="px-2 py-0.5 bg-mist-100 text-forest-700 rounded text-[10px] border border-mist-400">
+                    <span className="text-xs uppercase tracking-wider text-gold-700">
                       {item.category}
                     </span>
                   </div>
                 </m.div>
               ))}
             </m.div>
-
-            <button
-              onClick={() => setShowTestimonyModal(true)}
-              className="mt-8 inline-flex items-center space-x-2 text-forest-700 hover:text-gold-600 font-bold text-xs uppercase tracking-[0.14em] transition-colors cursor-pointer"
-            >
-              <span>Share your story</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
           </div>
         </section>
       )}
