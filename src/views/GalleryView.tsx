@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { m } from "motion/react";
 import { PhotoGallery } from "../components/PhotoGallery";
 import { PhotoAlbum } from "../types";
+import { INITIAL_CHURCH_PHOTOS } from "../data/churchData";
 import { useBanners } from "../utils/bannerManager";
 import {
   albumToGalleryPhotos,
@@ -124,19 +125,30 @@ const AlbumGrid: React.FC<{
       </p>
     </m.div>
 
-    {error ? (
-      <div role="alert" className="rounded-2xl border border-red-200 bg-white px-6 py-10 text-center">
-        <h3 className="font-display text-xl text-forest-950">Albums are temporarily unavailable</h3>
-        <p className="mt-2 text-sm text-slate-600">Refresh the page to try loading the program albums again.</p>
-      </div>
-    ) : albums?.length === 0 ? (
-      <div className="rounded-2xl border border-dashed border-mist-400 bg-white px-6 py-12 text-center">
-        <Images className="mx-auto h-9 w-9 text-gold-700" aria-hidden="true" />
-        <h3 className="mt-4 font-display text-xl text-forest-950">Program albums are on the way</h3>
-        <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-slate-600">
-          New photo collections will appear here after they are added and published by the church team.
-        </p>
-      </div>
+    {error || albums?.length === 0 ? (
+      <>
+        <div
+          role={error ? "alert" : "status"}
+          className="rounded-2xl border border-mist-300 bg-white px-6 py-8 text-center"
+        >
+          <Images className="mx-auto h-9 w-9 text-gold-700" aria-hidden="true" />
+          <h3 className="mt-4 font-display text-xl text-forest-950">
+            {error ? "Program albums are temporarily unavailable" : "Program albums are on the way"}
+          </h3>
+          <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-slate-600">
+            {error
+              ? "You can still browse these featured church photos while we restore the album service."
+              : "New program albums will appear here when published. Browse these featured church photos in the meantime."}
+          </p>
+        </div>
+        <div className="mt-12">
+          <PhotoGallery
+            photos={INITIAL_CHURCH_PHOTOS}
+            title="Featured Church Photos"
+            subtitle="Selected moments of worship, fellowship, and church life at Wisdom Temple."
+          />
+        </div>
+      </>
     ) : (
       <div className={albums?.length === 1 ? "grid grid-cols-1" : "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"}>
       {albums === null
