@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { m } from "motion/react";
 import { PhotoGallery } from "../components/PhotoGallery";
-import { PhotoAlbum } from "../types";
-import { INITIAL_CHURCH_PHOTOS } from "../data/churchData";
+import { AlbumPhoto, PhotoAlbum } from "../types";
 import { useBanners } from "../utils/bannerManager";
 import {
   albumToGalleryPhotos,
@@ -19,6 +18,66 @@ import {
   Check,
   ArrowRight,
 } from "lucide-react";
+
+const SUMMIT_ALBUM_ID = "wisdom-summit-2026-local";
+const SUMMIT_PHOTOS: AlbumPhoto[] = [
+  {
+    id: "wisdom-summit-full-team",
+    width: 1600,
+    height: 1164,
+    caption: "Wisdom Summit guests and host team",
+    uploadedAt: "2026-10-11T00:00:00.000Z",
+    url: "/assets/photos/wisdom-summit-full-team.webp",
+    thumbUrl: "/assets/photos/wisdom-summit-full-team.webp",
+  },
+  {
+    id: "wisdom-summit-sisters",
+    width: 1600,
+    height: 1067,
+    caption: "Wisdom Summit participants",
+    uploadedAt: "2026-10-11T00:00:00.000Z",
+    url: "/assets/photos/wisdom-summit-sisters.webp",
+    thumbUrl: "/assets/photos/wisdom-summit-sisters.webp",
+  },
+  {
+    id: "wisdom-summit-team-lineup",
+    width: 1600,
+    height: 1181,
+    caption: "Wisdom Summit team",
+    uploadedAt: "2026-10-11T00:00:00.000Z",
+    url: "/assets/photos/wisdom-summit-team-lineup.webp",
+    thumbUrl: "/assets/photos/wisdom-summit-team-lineup.webp",
+  },
+  {
+    id: "wisdom-summit-team-red",
+    width: 1600,
+    height: 1003,
+    caption: "Wisdom Summit attendees",
+    uploadedAt: "2026-10-11T00:00:00.000Z",
+    url: "/assets/photos/wisdom-summit-team-red.webp",
+    thumbUrl: "/assets/photos/wisdom-summit-team-red.webp",
+  },
+];
+const BUNDLED_ALBUMS: PhotoAlbum[] = [
+  {
+    id: SUMMIT_ALBUM_ID,
+    title: "Wisdom Summit 2026",
+    description: "Photos from Wisdom Summit 2026.",
+    category: "Conferences & Summits",
+    date: "2026-10-11",
+    location: "ICGC Wisdom Temple, Tabora",
+    coverPhotoId: SUMMIT_PHOTOS[0].id,
+    published: true,
+    createdAt: "2026-10-11T00:00:00.000Z",
+    updatedAt: "2026-10-11T00:00:00.000Z",
+    photoCount: SUMMIT_PHOTOS.length,
+    cover: {
+      url: SUMMIT_PHOTOS[0].url,
+      thumbUrl: SUMMIT_PHOTOS[0].thumbUrl,
+    },
+    photos: SUMMIT_PHOTOS,
+  },
+];
 
 const albumIdFromUrl = () =>
   typeof window === "undefined"
@@ -39,15 +98,23 @@ export const GalleryView: React.FC = () => {
   const [openAlbumId, setOpenAlbumId] = useState<string | null>(albumIdFromUrl);
   const albumsRef = useRef<HTMLDivElement>(null);
 
-  const albumPhotoTotal = (albums || []).reduce((n, a) => n + a.photoCount, 0);
+  const displayedAlbums =
+    albums === null
+      ? null
+      : albums.length === 0
+        ? BUNDLED_ALBUMS
+        : albums;
+  const visibleAlbums = displayedAlbums ?? [];
+  const albumPhotoTotal = visibleAlbums.reduce(
+    (n, album) => n + album.photoCount,
+    0,
+  );
   const albumSummary =
     albums === null
       ? "Loading program albums…"
       : albumsError
-        ? "Program albums could not be loaded"
-        : albums.length === 0
-          ? "New program albums are coming soon"
-          : `${albums.length} ${albums.length === 1 ? "program album" : "program albums"} · ${albumPhotoTotal} photos`;
+        ? "Showing a local event photo album while online albums are unavailable"
+        : `${visibleAlbums.length} ${visibleAlbums.length === 1 ? "program album" : "program albums"} · ${albumPhotoTotal} photos`;
 
   const openAlbum = (albumId: string | null) => {
     setOpenAlbumId(albumId);
@@ -102,7 +169,11 @@ export const GalleryView: React.FC = () => {
         {openAlbumId ? (
           <AlbumDetail albumId={openAlbumId} onBack={() => openAlbum(null)} />
         ) : (
-          <AlbumGrid albums={albums} error={albumsError} onOpen={openAlbum} />
+          <AlbumGrid
+            albums={displayedAlbums}
+            error={albumsError}
+            onOpen={openAlbum}
+          />
         )}
       </div>
     </div>
@@ -125,31 +196,24 @@ const AlbumGrid: React.FC<{
       </p>
     </m.div>
 
-    {error || albums?.length === 0 ? (
-      <>
-        <div
-          role={error ? "alert" : "status"}
-          className="rounded-2xl border border-mist-300 bg-white px-6 py-8 text-center"
-        >
-          <Images className="mx-auto h-9 w-9 text-gold-700" aria-hidden="true" />
-          <h3 className="mt-4 font-display text-xl text-forest-950">
-            {error ? "Program albums are temporarily unavailable" : "Program albums are on the way"}
-          </h3>
-          <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-slate-600">
-            {error
-              ? "You can still browse these featured church photos while we restore the album service."
-              : "New program albums will appear here when published. Browse these featured church photos in the meantime."}
-          </p>
-        </div>
-        <div className="mt-12">
-          <PhotoGallery
-            photos={INITIAL_CHURCH_PHOTOS}
-            title="Featured Church Photos"
-            subtitle="Selected moments of worship, fellowship, and church life at Wisdom Temple."
-            theme="light"
-          />
-        </div>
-      </>
+    {error && (
+      <div
+        role="alert"
+        className="mb-8 rounded-2xl border border-mist-300 bg-white px-6 py-6 text-center"
+      >
+        <h3 className="font-display text-xl text-forest-950">
+          Online program albums are temporarily unavailable
+        </h3>
+        <p className="mt-2 text-sm text-slate-600">
+          Showing the locally available Wisdom Summit photo album.
+        </p>
+      </div>
+    )}
+    {albums?.length === 0 ? (
+      <div className="rounded-2xl border border-dashed border-mist-400 bg-white px-6 py-12 text-center">
+        <Images className="mx-auto h-9 w-9 text-gold-700" aria-hidden="true" />
+        <h3 className="mt-4 font-display text-xl text-forest-950">Program albums are on the way</h3>
+      </div>
     ) : (
       <div className={albums?.length === 1 ? "grid grid-cols-1" : "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"}>
       {albums === null
@@ -228,6 +292,14 @@ const AlbumDetail: React.FC<{ albumId: string; onBack: () => void }> = ({
     let active = true;
     setAlbum(null);
     setMissing(false);
+    const bundledAlbum = BUNDLED_ALBUMS.find((item) => item.id === albumId);
+    if (bundledAlbum) {
+      setAlbum(bundledAlbum);
+      return () => {
+        active = false;
+      };
+    }
+
     fetchAlbum(albumId)
       .then((data) => active && setAlbum(data))
       .catch(() => active && setMissing(true));
